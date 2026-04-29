@@ -1,0 +1,166 @@
+@import 'tailwindcss' source(none);
+@source '../**/*.{js,ts,jsx,tsx}';
+
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: 'DM Sans', 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Playfair Display', 'Cairo', Georgia, serif;
+}
+
+@layer base {
+  * { box-sizing: border-box; }
+
+  html { font-size: 16px; }
+
+  html[dir="rtl"] { font-family: 'Cairo', 'DM Sans', system-ui, sans-serif; }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--background);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    color: var(--foreground);
+    letter-spacing: -0.015em;
+  }
+
+  h1 { font-size: 2rem; line-height: 1.15; }
+  h2 { font-size: 1.5rem; line-height: 1.25; }
+  h3 { font-size: 1.125rem; line-height: 1.4; }
+  h4 { font-size: 1rem; line-height: 1.5; }
+
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: color-mix(in oklab, var(--foreground) 20%, transparent); border-radius: 100px; }
+  ::-webkit-scrollbar-thumb:hover { background: color-mix(in oklab, var(--foreground) 35%, transparent); }
+
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+  .safe-area-pb { padding-bottom: env(safe-area-inset-bottom); }
+
+  .font-display { font-family: var(--font-display); }
+}
+
+/* HajArafa brand overrides — applied on top of @make-kits/untitled-ui-pro tokens */
+:root {
+  /* Saffron / burnt amber primary */
+  --primary: #C4622D;
+  --primary-foreground: #FFFFFF;
+  --ring: #C4622D;
+  --accent: #F4E7DA;
+  --accent-foreground: #9A4A20;
+  --chart-1: #C4622D;
+  --chart-2: #5C6F4A;
+  --chart-3: #B8860B;
+  --chart-4: #7B5E3A;
+  --chart-5: #1B1B1B;
+
+  /* Warm, paper-cream base */
+  --background: #FBF7F1;
+  --foreground: #1B1B1B;
+  --card: #FFFFFF;
+  --card-foreground: #1B1B1B;
+  --popover: #FFFFFF;
+  --popover-foreground: #1B1B1B;
+  --secondary: #FFFFFF;
+  --secondary-foreground: #1B1B1B;
+  --muted: #F4EFE6;
+  --muted-foreground: #7A7672;
+  --border: #ECE6DC;
+  --input: #FFFFFF;
+  --input-background: #FFFFFF;
+  --radius: 14px;
+  --radius-button: 12px;
+  --radius-card: 18px;
+  --radius-input: 12px;
+
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #1B1B1B;
+  --sidebar-primary: #C4622D;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F4E7DA;
+  --sidebar-accent-foreground: #9A4A20;
+  --sidebar-border: #ECE6DC;
+  --sidebar-ring: #C4622D;
+}
+
+.dark {
+  /* Warm dark — matches saffron brand */
+  --background: #14110E;
+  --foreground: #F5EFE5;
+  --card: #1F1A14;
+  --card-foreground: #F5EFE5;
+  --popover: #1F1A14;
+  --popover-foreground: #F5EFE5;
+  --primary: #E08B57;
+  --primary-foreground: #14110E;
+  --secondary: #2A231C;
+  --secondary-foreground: #F5EFE5;
+  --muted: #251F18;
+  --muted-foreground: #B0A89E;
+  --accent: #3A2A1C;
+  --accent-foreground: #F0C8A4;
+  --destructive: #E26B5C;
+  --destructive-foreground: #FFFFFF;
+  --border: #2E251D;
+  --input: #1F1A14;
+  --input-background: #1F1A14;
+  --ring: #E08B57;
+  --chart-1: #E08B57;
+  --chart-2: #9DB287;
+  --chart-3: #E5B143;
+  --chart-4: #C9A06B;
+  --chart-5: #F5EFE5;
+
+  --sidebar: #1F1A14;
+  --sidebar-foreground: #F5EFE5;
+  --sidebar-primary: #E08B57;
+  --sidebar-primary-foreground: #14110E;
+  --sidebar-accent: #3A2A1C;
+  --sidebar-accent-foreground: #F0C8A4;
+  --sidebar-border: #2E251D;
+  --sidebar-ring: #E08B57;
+}
