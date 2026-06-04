@@ -1,0 +1,218 @@
+import React, { useState } from "react";
+import { ArrowLeft, Mail, Phone, MessageSquare, Send, CheckCircle2 } from "lucide-react";
+import { Link } from "react-router";
+import { useAppSettings } from "../context/AppSettingsContext";
+import { motion, AnimatePresence } from "motion/react";
+
+export function Contact() {
+  const { t, isRTL } = useAppSettings();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: ""
+  });
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+    if (!formData.name.trim()) {
+      newErrors.name = isRTL ? "الاسم مطلوب" : "Name is required";
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = isRTL ? "البريد الإلكتروني مطلوب" : "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = isRTL ? "البريد الإلكتروني غير صالح" : "Invalid email address";
+    }
+    if (!formData.message.trim()) {
+      newErrors.message = isRTL ? "الرسالة مطلوبة" : "Message is required";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    setLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setLoading(false);
+      setSubmitted(true);
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    }, 1200);
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+        {/* Navigation & Header */}
+        <div className="flex flex-col gap-4">
+          <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-brand-terracotta text-sm transition-colors w-fit">
+            <ArrowLeft size={16} className="rtl-flip" />
+            {isRTL ? "العودة للرئيسية" : "Back to Home"}
+          </Link>
+          <div className="flex items-center gap-3">
+            <Phone size={24} className="text-brand-terracotta fill-brand-peach/50" />
+            <h1 className="text-foreground font-display text-2xl sm:text-3xl">{t.contactUs}</h1>
+          </div>
+          <p className="text-muted-foreground text-sm max-w-xl">
+            {isRTL 
+              ? "لديك أي أسئلة أو استفسارات؟ فريق خدمة عملاء حاج عارفة يسعده الرد على اتصالاتكم ورسائلكم في أي وقت." 
+              : "Have questions or feedback? The HajArafa Customer Care team is here to support you with any inquiries."}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+          {/* Quick contact info panel */}
+          <div className="md:col-span-1 space-y-4">
+            <div className="bg-card border border-border rounded-2xl p-5 shadow-soft space-y-4">
+              <h3 className="text-foreground font-display text-sm sm:text-base border-b border-border/50 pb-2">
+                {isRTL ? "اتصال سريع" : "Direct Support"}
+              </h3>
+
+              {/* Phone support */}
+              <div className="space-y-1">
+                <span className="eyebrow text-[10px] block">{isRTL ? "الخط الساخن" : "Hotline"}</span>
+                <a href="tel:+201012345678" className="text-foreground font-semibold hover:text-brand-terracotta flex items-center gap-2 text-sm sm:text-base">
+                  <Phone size={14} className="text-brand-terracotta" /> +20 101 234 5678
+                </a>
+              </div>
+
+              {/* Email Support */}
+              <div className="space-y-1">
+                <span className="eyebrow text-[10px] block">{isRTL ? "البريد الإلكتروني" : "Email Support"}</span>
+                <a href="mailto:support@hajarafa.com" className="text-foreground font-semibold hover:text-brand-terracotta flex items-center gap-2 text-sm sm:text-base break-all">
+                  <Mail size={14} className="text-brand-terracotta" /> support@hajarafa.com
+                </a>
+              </div>
+
+              {/* WhatsApp instant support button */}
+              <div className="pt-2">
+                <span className="eyebrow text-[10px] block mb-2">{isRTL ? "دعم واتساب الفوري" : "Instant WhatsApp"}</span>
+                <a
+                  href="https://wa.me/201012345678"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-[#25D366] text-white hover:bg-[#128C7E] px-4 py-2.5 rounded-xl transition-all text-xs font-semibold uppercase tracking-wider"
+                >
+                  <MessageSquare size={14} /> WhatsApp Chat
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Form panel */}
+          <div className="md:col-span-2">
+            <div className="bg-card border border-border rounded-2xl p-5 sm:p-6 shadow-soft">
+              <AnimatePresence mode="wait">
+                {submitted ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="text-center py-10 space-y-4"
+                  >
+                    <div className="w-12 h-12 bg-green-100 dark:bg-green-950/30 rounded-full flex items-center justify-center mx-auto">
+                      <CheckCircle2 className="text-green-600 dark:text-green-400" size={24} />
+                    </div>
+                    <div className="space-y-2">
+                      <h2 className="text-foreground font-display text-xl">
+                        {isRTL ? "تم إرسال رسالتك بنجاح" : "Message Sent Successfully"}
+                      </h2>
+                      <p className="text-muted-foreground text-sm max-w-sm mx-auto">
+                        {isRTL 
+                          ? "شكراً لتواصلك معنا. سنقوم بالرد على استفسارك خلال ٢٤ ساعة عمل." 
+                          : "Thank you for reaching out. We will review your message and respond within 24 working hours."}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setSubmitted(false)}
+                      className="bg-brand-peach text-brand-terracotta hover:bg-brand-terracotta hover:text-white px-5 py-2.5 rounded-xl text-xs font-semibold uppercase transition-all"
+                    >
+                      {isRTL ? "إرسال رسالة أخرى" : "Send Another Message"}
+                    </button>
+                  </motion.div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <h3 className="text-foreground font-display text-sm sm:text-base border-b border-border/50 pb-2">
+                      {isRTL ? "أرسل لنا رسالة" : "Send a Message"}
+                    </h3>
+
+                    {/* Name */}
+                    <div>
+                      <label className="block text-xs text-muted-foreground mb-1.5">{isRTL ? "الاسم بالكامل" : "Full Name"} *</label>
+                      <input
+                        type="text"
+                        value={formData.name}
+                        onChange={e => setFormData(p => ({ ...p, name: e.target.value }))}
+                        className={`w-full px-4 py-2.5 border ${errors.name ? "border-destructive focus:border-destructive" : "border-border focus:border-brand-terracotta"} bg-background text-foreground rounded-xl text-sm outline-none transition-colors`}
+                      />
+                      {errors.name && <span className="text-destructive text-xs mt-1 block">{errors.name}</span>}
+                    </div>
+
+                    {/* Email */}
+                    <div>
+                      <label className="block text-xs text-muted-foreground mb-1.5">{isRTL ? "البريد الإلكتروني" : "Email Address"} *</label>
+                      <input
+                        type="email"
+                        value={formData.email}
+                        onChange={e => setFormData(p => ({ ...p, email: e.target.value }))}
+                        className={`w-full px-4 py-2.5 border ${errors.email ? "border-destructive focus:border-destructive" : "border-border focus:border-brand-terracotta"} bg-background text-foreground rounded-xl text-sm outline-none transition-colors`}
+                      />
+                      {errors.email && <span className="text-destructive text-xs mt-1 block">{errors.email}</span>}
+                    </div>
+
+                    {/* Subject */}
+                    <div>
+                      <label className="block text-xs text-muted-foreground mb-1.5">{isRTL ? "الموضوع (اختياري)" : "Subject (Optional)"}</label>
+                      <input
+                        type="text"
+                        value={formData.subject}
+                        onChange={e => setFormData(p => ({ ...p, subject: e.target.value }))}
+                        className="w-full px-4 py-2.5 border border-border focus:border-brand-terracotta bg-background text-foreground rounded-xl text-sm outline-none transition-colors"
+                      />
+                    </div>
+
+                    {/* Message */}
+                    <div>
+                      <label className="block text-xs text-muted-foreground mb-1.5">{isRTL ? "الرسالة" : "Your Message"} *</label>
+                      <textarea
+                        value={formData.message}
+                        rows={4}
+                        onChange={e => setFormData(p => ({ ...p, message: e.target.value }))}
+                        className={`w-full px-4 py-2.5 border ${errors.message ? "border-destructive focus:border-destructive" : "border-border focus:border-brand-terracotta"} bg-background text-foreground rounded-xl text-sm outline-none transition-colors resize-none`}
+                      />
+                      {errors.message && <span className="text-destructive text-xs mt-1 block">{errors.message}</span>}
+                    </div>
+
+                    {/* Submit Button */}
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full inline-flex items-center justify-center gap-2 bg-brand-terracotta disabled:bg-brand-terracotta/60 text-white px-6 py-3 rounded-xl hover:bg-brand-terracotta-dark transition-all active:scale-[0.98] font-medium shadow-sm"
+                    >
+                      {loading ? (
+                        <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <>
+                          {isRTL ? "إرسال الرسالة" : "Send Message"} <Send size={14} />
+                        </>
+                      )}
+                    </button>
+                  </form>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="h-20 sm:h-6" />
+    </div>
+  );
+}

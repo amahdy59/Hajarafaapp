@@ -88,7 +88,7 @@ export function Home() {
           title={t.herbalEssentials}
           viewAllHref="/products"
         >
-          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {featured.map(p => (
               <ProductCard key={p.id} product={p} />
             ))}
@@ -122,7 +122,7 @@ export function Home() {
 
         {/* Departments */}
         <Section title={t.browseDepartments}>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {departments.map(d => (
               <Link
                 key={d.id}

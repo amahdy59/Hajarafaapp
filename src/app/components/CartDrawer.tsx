@@ -76,7 +76,7 @@ export function CartDrawer() {
                       exit={{ opacity: 0, x: isRTL ? 20 : -20 }}
                       className="flex gap-3 bg-card rounded-2xl p-3 border border-border"
                     >
-                      <div className="w-16 h-16 rounded-xl overflow-hidden bg-brand-cream-2 flex-shrink-0 flex items-center justify-center p-1">
+                      <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#FAF6F0] flex-shrink-0 flex items-center justify-center p-1">
                         <img
                           src={item.product.image}
                           alt={item.product.name}

@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { User, Package, Heart, Settings, ChevronRight, Bell, Shield, HelpCircle, LogOut, Star, MapPin, CreditCard, Gift, Award } from "lucide-react";
-import { Link } from "react-router";
-import { motion } from "motion/react";
+import { useState, useEffect } from "react";
+import { User, Package, Heart, Settings, ChevronRight, Bell, Shield, HelpCircle, LogOut, Star, MapPin, CreditCard, Gift, Award, Plus, Trash2, X } from "lucide-react";
+import { Link, useSearchParams } from "react-router";
+import { motion, AnimatePresence } from "motion/react";
 import { useWishlist } from "../context/WishlistContext";
 import { useAppSettings } from "../context/AppSettingsContext";
 
@@ -28,9 +28,33 @@ const statusTranslations: Record<string, { en: string; ar: string }> = {
 type Tab = "overview" | "orders" | "settings";
 
 export function Account() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tabParam = searchParams.get("tab") as Tab;
   const [activeTab, setActiveTab] = useState<Tab>("overview");
   const { items: wishlistItems } = useWishlist();
   const { t, isRTL, locale } = useAppSettings();
+
+  useEffect(() => {
+    if (tabParam && ["overview", "orders", "settings"].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
+
+  const handleTabChange = (tab: Tab) => {
+    setActiveTab(tab);
+    setSearchParams({ tab });
+  };
+
+  const [isAddressesOpen, setIsAddressesOpen] = useState(false);
+  const [isPaymentsOpen, setIsPaymentsOpen] = useState(false);
+  const [addresses, setAddresses] = useState([
+    { id: "1", type: isRTL ? "المنزل" : "Home", details: isRTL ? "١٢ شارع النيل، العجوزة، الجيزة" : "12 El-Nile St, Agouza, Giza" },
+    { id: "2", type: isRTL ? "العمل" : "Work", details: isRTL ? "المبنى ٣، شارع التسعين، التجمع الخامس، القاهرة" : "Building 3, El-Taseen St, Fifth Settlement, Cairo" }
+  ]);
+  const [payments, setPayments] = useState([
+    { id: "1", type: "Visa", number: "**** **** **** 4242", expiry: "12/28" },
+    { id: "2", type: "Mastercard", number: "**** **** **** 8821", expiry: "06/27" }
+  ]);
 
   const [profile, setProfile] = useState({
     firstName: "Alex",
@@ -91,7 +115,7 @@ export function Account() {
           ] as const).map(tab => (
             <button
               key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
+              onClick={() => handleTabChange(tab.key)}
               className={`flex-1 py-2.5 rounded-xl text-sm capitalize transition-all font-medium ${
                 activeTab === tab.key
                   ? "bg-brand-terracotta text-white shadow-sm"
@@ -131,24 +155,26 @@ export function Account() {
             <div className="bg-card rounded-2xl p-5 border border-border shadow-soft">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-foreground font-display">{t.recentOrders}</h3>
-                <button onClick={() => setActiveTab("orders")} className="text-xs text-brand-terracotta hover:underline font-medium">{t.viewAll}</button>
+                <button onClick={() => handleTabChange("orders")} className="text-xs text-brand-terracotta hover:underline font-medium">{t.viewAll}</button>
               </div>
               <div className="space-y-3">
                 {mockOrders.slice(0, 2).map(order => (
                   <div key={order.id} className="flex items-center gap-3 bg-background rounded-xl p-3 border border-border/40">
                     <img src={order.image} alt="" className="w-10 h-10 rounded-lg object-cover" />
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm text-foreground font-medium">{order.id}</p>
-                        <span className={`text-xs px-2 py-0.5 rounded-full capitalize ${statusColors[order.status]}`}>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="text-sm text-foreground font-medium whitespace-nowrap">{order.id}</p>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium whitespace-nowrap ${statusColors[order.status]}`}>
                           {statusTranslations[order.status]?.[locale] || order.status}
                         </span>
                       </div>
-                      <p className="text-xs text-muted-foreground">
-                        {isRTL ? order.dateAr : order.dateEn} · {order.items} {t.items}
-                      </p>
+                      <div className="flex items-center gap-1.5 flex-wrap text-xs text-muted-foreground mt-0.5">
+                        <span>{isRTL ? order.dateAr : order.dateEn}</span>
+                        <span className="w-1 h-1 rounded-full bg-border" />
+                        <span>{order.items} {t.items}</span>
+                      </div>
                     </div>
-                    <span className="text-sm text-brand-terracotta font-medium">{t.currency} {order.total.toFixed(2)}</span>
+                    <span className="text-sm text-brand-terracotta font-medium whitespace-nowrap">{t.currency} {order.total.toFixed(2)}</span>
                   </div>
                 ))}
               </div>
@@ -176,34 +202,51 @@ export function Account() {
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
             <h2 className="text-foreground font-display mb-4">{t.myOrders}</h2>
             {mockOrders.map(order => (
-              <div key={order.id} className="bg-card border border-border rounded-2xl p-5 shadow-soft">
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="text-foreground font-medium">{order.id}</p>
-                      <span className={`text-xs px-2.5 py-0.5 rounded-full capitalize ${statusColors[order.status]}`}>
-                        {statusTranslations[order.status]?.[locale] || order.status}
-                      </span>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {isRTL ? order.dateAr : order.dateEn} · {order.items} {t.items}
-                    </p>
+              <div key={order.id} className="bg-card border border-border rounded-2xl p-4 sm:p-5 shadow-soft hover:shadow-md transition-all">
+                {/* Top Row: Order ID, Status, and Total Price */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border/50 pb-3 mb-3">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-sm text-foreground font-semibold font-mono whitespace-nowrap">#{order.id}</span>
+                    <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-medium whitespace-nowrap ${statusColors[order.status]}`}>
+                      {statusTranslations[order.status]?.[locale] || order.status}
+                    </span>
                   </div>
-                  <span className="text-brand-terracotta font-medium">{t.currency} {order.total.toFixed(2)}</span>
+                  <div className="flex items-center gap-1.5 justify-between sm:justify-end">
+                    <span className="text-xs text-muted-foreground sm:hidden">{isRTL ? "الإجمالي" : "Total"}</span>
+                    <span className="text-sm font-semibold text-brand-terracotta whitespace-nowrap">
+                      {t.currency} {order.total.toFixed(2)}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <img src={order.image} alt="" className="w-12 h-12 rounded-xl object-cover" />
-                  <div className="flex-1">
-                    <div className="bg-muted rounded-full h-1.5 mb-1">
-                      <div
-                        className={`h-1.5 rounded-full ${order.status === "delivered" ? "bg-green-500 w-full" : "bg-blue-500 w-2/3"}`}
-                      />
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {order.status === "delivered" ? t.deliveredSuccessfully : t.onTheWay}
-                    </p>
+
+                {/* Middle Row: Date, Items Count */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs text-muted-foreground mb-4">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span>{isRTL ? order.dateAr : order.dateEn}</span>
+                    <span className="w-1 h-1 rounded-full bg-border" />
+                    <span>{order.items} {t.items}</span>
                   </div>
-                  <button className="text-xs text-brand-terracotta hover:underline font-medium">{t.details}</button>
+                  <div>
+                    <span className="font-medium text-foreground">
+                      {order.status === "delivered" ? t.deliveredSuccessfully : t.onTheWay}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Bottom Row: Product Image & Details Button */}
+                <div className="flex items-center justify-between gap-3 bg-background/50 p-2.5 rounded-xl border border-border/40">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-[#FAF6F0] p-1 flex items-center justify-center border border-border/40 flex-shrink-0">
+                      <img src={order.image} alt="" className="w-full h-full object-contain mix-blend-multiply" />
+                    </div>
+                    <div className="text-xs">
+                      <p className="text-foreground font-medium line-clamp-1">{isRTL ? "تفاصيل الشحنة" : "Shipment Details"}</p>
+                      <p className="text-muted-foreground">{order.items} {isRTL ? "منتجات طبيعية" : "natural products"}</p>
+                    </div>
+                  </div>
+                  <button className="text-xs bg-brand-terracotta/10 text-brand-terracotta px-3 py-1.5 rounded-lg hover:bg-brand-terracotta hover:text-white transition-all font-medium whitespace-nowrap">
+                    {t.details}
+                  </button>
                 </div>
               </div>
             ))}
@@ -273,27 +316,158 @@ export function Account() {
             {/* Account actions */}
             <div className="bg-card rounded-2xl border border-border overflow-hidden shadow-soft">
               {[
-                { icon: CreditCard, label: t.paymentMethods, color: "text-foreground/80 hover:text-brand-terracotta" },
-                { icon: MapPin, label: t.savedAddresses, color: "text-foreground/80 hover:text-brand-terracotta" },
-                { icon: Shield, label: t.privacySecurity, color: "text-foreground/80 hover:text-brand-terracotta" },
-                { icon: HelpCircle, label: t.helpSupport, color: "text-foreground/80 hover:text-brand-terracotta" },
-                { icon: LogOut, label: t.signOut, color: "text-destructive hover:text-destructive-dark font-medium" },
-              ].map((item, i) => (
-                <button
-                  key={item.label}
-                  className={`w-full flex items-center justify-between px-5 py-3.5 hover:bg-muted transition-colors ${i > 0 ? "border-t border-border" : ""}`}
-                >
-                  <div className="flex items-center gap-3">
-                    <item.icon size={18} className={item.color.includes("destructive") ? "text-destructive" : "text-brand-ink-soft"} />
-                    <span className={`text-sm ${item.color}`}>{item.label}</span>
-                  </div>
-                  <ChevronRight size={16} className="text-brand-ink-soft rtl-flip" />
-                </button>
-              ))}
+                { icon: CreditCard, label: t.paymentMethods, color: "text-foreground/80 hover:text-brand-terracotta", onClick: () => setIsPaymentsOpen(true) },
+                { icon: MapPin, label: t.savedAddresses, color: "text-foreground/80 hover:text-brand-terracotta", onClick: () => setIsAddressesOpen(true) },
+                { icon: Shield, label: t.privacySecurity, color: "text-foreground/80 hover:text-brand-terracotta", to: "/help" },
+                { icon: HelpCircle, label: t.helpSupport, color: "text-foreground/80 hover:text-brand-terracotta", to: "/help" },
+                { icon: LogOut, label: t.signOut, color: "text-destructive hover:text-destructive-dark font-medium", onClick: () => alert(isRTL ? "تم تسجيل الخروج بنجاح!" : "Signed out successfully!") },
+              ].map((item, i) => {
+                const inner = (
+                  <>
+                    <div className="flex items-center gap-3">
+                      <item.icon size={18} className={item.color.includes("destructive") ? "text-destructive" : "text-brand-ink-soft"} />
+                      <span className={`text-sm ${item.color}`}>{item.label}</span>
+                    </div>
+                    <ChevronRight size={16} className="text-brand-ink-soft rtl-flip" />
+                  </>
+                );
+                const classStr = `w-full flex items-center justify-between px-5 py-3.5 hover:bg-muted transition-colors ${i > 0 ? "border-t border-border" : ""}`;
+                if (item.to) {
+                  return (
+                    <Link key={item.label} to={item.to} className={classStr}>
+                      {inner}
+                    </Link>
+                  );
+                }
+                return (
+                  <button key={item.label} onClick={item.onClick} className={classStr}>
+                    {inner}
+                  </button>
+                );
+              })}
             </div>
           </motion.div>
         )}
       </div>
+
+      {/* Saved Addresses Modal */}
+      <AnimatePresence>
+        {isAddressesOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsAddressesOpen(false)}
+              className="fixed inset-0 bg-brand-ink/45 backdrop-blur-sm z-50"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="fixed inset-x-4 bottom-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full max-w-md bg-card border border-border rounded-3xl p-6 z-50 shadow-elev"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-foreground font-display text-base sm:text-lg">{t.savedAddresses}</h3>
+                <button onClick={() => setIsAddressesOpen(false)} className="text-muted-foreground hover:text-foreground">
+                  <X size={18} />
+                </button>
+              </div>
+              <div className="space-y-3">
+                {addresses.map(addr => (
+                  <div key={addr.id} className="bg-background border border-border/60 rounded-xl p-3.5 flex justify-between items-start">
+                    <div>
+                      <span className="bg-brand-peach text-brand-terracotta text-xs px-2 py-0.5 rounded-full font-medium mb-1 inline-block">
+                        {addr.type}
+                      </span>
+                      <p className="text-foreground text-sm font-medium">{addr.details}</p>
+                    </div>
+                    <button 
+                      onClick={() => setAddresses(addresses.filter(a => a.id !== addr.id))}
+                      className="text-destructive hover:text-destructive-dark p-1"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                ))}
+                <button 
+                  onClick={() => {
+                    const newType = prompt(isRTL ? "نوع العنوان (مثال: المنزل، العمل):" : "Address type (e.g. Home, Work):");
+                    const newDetails = prompt(isRTL ? "تفاصيل العنوان بالكامل:" : "Complete address details:");
+                    if (newType && newDetails) {
+                      setAddresses([...addresses, { id: Date.now().toString(), type: newType, details: newDetails }]);
+                    }
+                  }}
+                  className="w-full py-2.5 bg-brand-peach text-brand-terracotta hover:bg-brand-terracotta hover:text-white rounded-xl text-xs font-semibold uppercase transition-all flex items-center justify-center gap-2"
+                >
+                  <Plus size={14} /> {isRTL ? "إضافة عنوان جديد" : "Add New Address"}
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Payment Methods Modal */}
+      <AnimatePresence>
+        {isPaymentsOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsPaymentsOpen(false)}
+              className="fixed inset-0 bg-brand-ink/45 backdrop-blur-sm z-50"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="fixed inset-x-4 bottom-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full max-w-md bg-card border border-border rounded-3xl p-6 z-50 shadow-elev"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-foreground font-display text-base sm:text-lg">{t.paymentMethods}</h3>
+                <button onClick={() => setIsPaymentsOpen(false)} className="text-muted-foreground hover:text-foreground">
+                  <X size={18} />
+                </button>
+              </div>
+              <div className="space-y-3">
+                {payments.map(pay => (
+                  <div key={pay.id} className="bg-background border border-border/60 rounded-xl p-3.5 flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-6 bg-brand-peach/40 rounded flex items-center justify-center font-bold text-xs text-brand-terracotta">
+                        {pay.type}
+                      </div>
+                      <div>
+                        <p className="text-foreground text-sm font-mono font-medium">{pay.number}</p>
+                        <p className="text-muted-foreground text-[10px]">{isRTL ? "تنتهي في" : "Expires"} {pay.expiry}</p>
+                      </div>
+                    </div>
+                    <button 
+                      onClick={() => setPayments(payments.filter(p => p.id !== pay.id))}
+                      className="text-destructive hover:text-destructive-dark p-1"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                ))}
+                <button 
+                  onClick={() => {
+                    const number = prompt(isRTL ? "رقم البطاقة (١٦ رقماً):" : "Card Number (16 digits):");
+                    const expiry = prompt(isRTL ? "تاريخ الانتهاء (شهر/سنة):" : "Expiry (MM/YY):");
+                    if (number && expiry) {
+                      setPayments([...payments, { id: Date.now().toString(), type: number.startsWith("4") ? "Visa" : "MC", number: `**** **** **** ${number.slice(-4)}`, expiry }]);
+                    }
+                  }}
+                  className="w-full py-2.5 bg-brand-peach text-brand-terracotta hover:bg-brand-terracotta hover:text-white rounded-xl text-xs font-semibold uppercase transition-all flex items-center justify-center gap-2"
+                >
+                  <Plus size={14} /> {isRTL ? "إضافة بطاقة جديدة" : "Add New Card"}
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
       <div className="h-20 sm:h-4" />
     </div>
   );

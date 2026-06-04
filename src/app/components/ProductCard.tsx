@@ -54,7 +54,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
         className="bg-card rounded-md border border-border overflow-hidden"
       >
         <Link to={`/products/${product.id}`} className="flex gap-3 p-3">
-          <div className="relative w-24 h-24 flex-shrink-0 rounded-sm overflow-hidden bg-brand-cream-2">
+          <div className="relative w-24 h-24 flex-shrink-0 rounded-sm overflow-hidden bg-[#FAF6F0]">
             <img src={product.image} alt={product.name} className="w-full h-full object-contain mix-blend-multiply p-2" />
           </div>
           <div className="flex-1 min-w-0 flex flex-col justify-between gap-1">
@@ -93,7 +93,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
       className="bg-card rounded-md border border-border overflow-hidden flex flex-col h-full"
     >
       <Link to={`/products/${product.id}`} className="flex flex-col flex-1">
-        <div className="relative aspect-square bg-brand-cream-2 overflow-hidden flex items-center justify-center p-4">
+        <div className="relative aspect-square bg-[#FAF6F0] overflow-hidden flex items-center justify-center p-4">
           <img
             src={product.image}
             alt={product.name}

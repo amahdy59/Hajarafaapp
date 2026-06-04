@@ -30,7 +30,7 @@ export function Root() {
           <Outlet />
         </div>
       ) : (
-        <main className="pt-16 pb-24 sm:pb-8">
+        <main className={`${!["/checkout", "/account"].includes(location.pathname) ? "pt-[108px]" : "pt-16"} pb-24 sm:pb-8`}>
           <Outlet />
         </main>
       )}

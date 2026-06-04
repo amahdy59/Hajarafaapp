@@ -106,7 +106,7 @@ export function ProductDetail() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="relative aspect-square bg-brand-cream-2 rounded-3xl overflow-hidden"
+              className="relative aspect-square bg-[#FAF6F0] rounded-3xl overflow-hidden"
             >
               <img
                 src={product.images[activeImage] || product.image}
@@ -131,7 +131,7 @@ export function ProductDetail() {
                   <button
                     key={i}
                     onClick={() => setActiveImage(i)}
-                    className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-colors bg-brand-cream-2 ${
+                    className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-colors bg-[#FAF6F0] ${
                       activeImage === i ? "border-brand-terracotta" : "border-transparent"
                     }`}
                   >
@@ -391,7 +391,7 @@ export function ProductDetail() {
         {relatedProducts.length > 0 && (
           <section className="mb-10">
             <h2 className="text-foreground mb-5" style={{ fontSize: "1.1rem" }}>{t.youMightAlsoLike}</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {relatedProducts.map(p => (
                 <ProductCard key={p.id} product={p} />
               ))}

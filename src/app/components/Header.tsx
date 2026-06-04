@@ -1,17 +1,19 @@
 import { useState, useEffect } from "react";
 import { Search, ShoppingBag, Heart, Menu, X } from "lucide-react";
-import { Link, useNavigate, useLocation } from "react-router";
+import { Link, useNavigate, useLocation, useSearchParams } from "react-router";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { SettingsDrawer } from "./SettingsDrawer";
 import { IconButton } from "./ui/IconButton";
 import { motion, AnimatePresence } from "motion/react";
+import { categories } from "../data/categories";
 
 export function Header() {
   const { totalItems, setCartOpen } = useCart();
   const { items: wishlistItems } = useWishlist();
-  const { t } = useAppSettings();
+  const { t, isRTL } = useAppSettings();
+  const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -81,6 +83,42 @@ export function Header() {
             </IconButton>
           </div>
         </div>
+
+        {/* Category Navigation Rail */}
+        {!["/checkout", "/account"].includes(location.pathname) && (
+          <div className="border-t border-border overflow-x-auto scrollbar-hide py-2 px-3 sm:px-4">
+            <div className="max-w-[1280px] mx-auto flex gap-2">
+              <Link
+                to="/products"
+                className={`px-3.5 py-1.5 rounded-full text-xs whitespace-nowrap transition-all border flex-shrink-0 font-medium ${
+                  location.pathname === "/products" && !searchParams.get("category")
+                    ? "bg-brand-terracotta text-white border-brand-terracotta"
+                    : "bg-card text-foreground border-border hover:bg-brand-peach"
+                }`}
+              >
+                {isRTL ? "الكل" : "All Products"}
+              </Link>
+              {categories.map(cat => {
+                const catName = isRTL && cat.nameAr ? cat.nameAr : cat.name;
+                const active = location.pathname === `/category/${cat.slug}` ||
+                               (location.pathname === "/products" && searchParams.get("category") === cat.slug);
+                return (
+                  <Link
+                    key={cat.id}
+                    to={`/category/${cat.slug}`}
+                    className={`px-3.5 py-1.5 rounded-full text-xs whitespace-nowrap transition-all border flex-shrink-0 font-medium ${
+                      active
+                        ? "bg-brand-terracotta text-white border-brand-terracotta"
+                        : "bg-card text-foreground border-border hover:bg-brand-peach"
+                    }`}
+                  >
+                    <span className="me-1">{cat.icon}</span> {catName}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </header>
 
       <AnimatePresence>

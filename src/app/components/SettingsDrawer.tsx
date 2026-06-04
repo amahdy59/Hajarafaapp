@@ -55,7 +55,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
     { icon: Heart, label: t.yourWishlist, to: "/wishlist" },
   ];
   const help = [
-    { icon: HelpCircle, label: t.customerService, to: "/account?tab=help" },
+    { icon: HelpCircle, label: t.customerService, to: "/help" },
     { icon: Info, label: t.aboutUs, to: "/about" },
     { icon: MapPin, label: t.branches, to: "/branches" },
     { icon: Phone, label: t.contactUs, to: "/contact" },

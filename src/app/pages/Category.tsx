@@ -48,25 +48,6 @@ export function Category() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Other categories */}
-        <div className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide">
-          {categories.map(cat => {
-            const catName = isRTL && cat.nameAr ? cat.nameAr : cat.name;
-            return (
-              <Link
-                key={cat.id}
-                to={`/category/${cat.slug}`}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl whitespace-nowrap text-sm transition-all border flex-shrink-0 font-medium ${
-                  cat.slug === slug
-                    ? "bg-brand-terracotta text-white border-brand-terracotta active:scale-[0.98]"
-                    : "bg-card text-foreground hover:bg-brand-peach border-border hover:border-brand-terracotta"
-                }`}
-              >
-                {cat.icon} {catName}
-              </Link>
-            );
-          })}
-        </div>
 
         {categoryProducts.length === 0 ? (
           <div className="text-center py-20 bg-card border border-border rounded-2xl shadow-soft">
@@ -79,7 +60,7 @@ export function Category() {
             <div className="flex items-center justify-between mb-4">
               <p className="text-muted-foreground text-sm">{categoryProducts.length} {t.productsFound}</p>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {categoryProducts.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}

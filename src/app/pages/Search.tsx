@@ -106,7 +106,7 @@ export function Search() {
             {/* All products preview */}
             <div>
               <h3 className="text-muted-foreground eyebrow mb-3">{t.featuredProducts}</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {products.slice(0, 6).map(p => (
                   <ProductCard key={p.id} product={p} />
                 ))}
@@ -143,7 +143,7 @@ export function Search() {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {results.map(p => (
                   <ProductCard key={p.id} product={p} />
                 ))}
