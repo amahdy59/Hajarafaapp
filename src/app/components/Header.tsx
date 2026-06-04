@@ -8,6 +8,7 @@ import { SettingsDrawer } from "./SettingsDrawer";
 import { IconButton } from "./ui/IconButton";
 import { motion, AnimatePresence } from "motion/react";
 import { categories } from "../data/categories";
+import logoImg from "../../assets/logo.png";
 
 export function Header() {
   const { totalItems, setCartOpen } = useCart();
@@ -54,16 +55,8 @@ export function Header() {
             <Menu size={20} />
           </IconButton>
 
-          <Link to="/" className="flex items-center justify-center gap-2 min-w-0">
-            <div className="w-9 h-9 rounded-full bg-brand-terracotta flex items-center justify-center flex-shrink-0">
-              <span className="font-display text-white" style={{ fontSize: "1.05rem" }}>H</span>
-            </div>
-            <span
-              className="font-display text-foreground truncate hidden xs:inline sm:inline"
-              style={{ fontSize: "1.15rem", letterSpacing: "-0.01em" }}
-            >
-              {t.appName}
-            </span>
+          <Link to="/" className="flex items-center justify-center min-w-0 h-10">
+            <img src={logoImg} alt={t.appName} className="h-8 xs:h-9 w-auto object-contain max-w-[140px]" />
           </Link>
 
           <div className="flex items-center gap-0.5">

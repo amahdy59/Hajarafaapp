@@ -58,14 +58,17 @@ function FilterPanel({
         <h4 className="text-sm text-foreground/80 mb-3">{t.shopByCategory}</h4>
         <div className="space-y-2">
           {categories.map(cat => (
-            <label key={cat.id} className="flex items-center gap-2.5 cursor-pointer group">
+            <label
+              key={cat.id}
+              className="flex items-center gap-2.5 cursor-pointer group select-none"
+              onClick={() => toggleCategory(cat.slug)}
+            >
               <div
                 className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-colors ${
                   selectedCategories.includes(cat.slug)
                     ? "border-brand-terracotta bg-brand-terracotta"
                     : "border-border group-hover:border-brand-terracotta"
                 }`}
-                onClick={() => toggleCategory(cat.slug)}
               >
                 {selectedCategories.includes(cat.slug) && (
                   <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
@@ -116,7 +119,7 @@ function FilterPanel({
         <h4 className="text-sm text-foreground/80 mb-3">{t.minRating}</h4>
         <div className="space-y-2">
           {[4, 3, 2].map(r => (
-            <label key={r} className="flex items-center gap-2 cursor-pointer text-muted-foreground">
+            <label key={r} className="flex items-center gap-2 cursor-pointer text-muted-foreground select-none">
               <input
                 type="radio"
                 checked={minRating === r}
@@ -135,10 +138,12 @@ function FilterPanel({
       </div>
 
       {/* Organic only */}
-      <label className="flex items-center gap-3 cursor-pointer">
+      <label
+        className="flex items-center gap-3 cursor-pointer select-none"
+        onClick={() => setShowOrganic(!showOrganic)}
+      >
         <div
           className={`w-10 h-6 rounded-full transition-colors relative ${showOrganic ? "bg-brand-terracotta" : "bg-border"}`}
-          onClick={() => setShowOrganic(!showOrganic)}
         >
           <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${showOrganic ? (isRTL ? "-translate-x-5" : "translate-x-5") : "translate-x-1"}`} />
         </div>
