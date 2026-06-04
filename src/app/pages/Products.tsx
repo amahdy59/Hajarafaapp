@@ -22,6 +22,7 @@ interface FilterPanelProps {
   showOrganic: boolean;
   setShowOrganic: (show: boolean) => void;
   clearFilters: () => void;
+  hideHeader?: boolean;
 }
 
 function FilterPanel({
@@ -37,17 +38,20 @@ function FilterPanel({
   showOrganic,
   setShowOrganic,
   clearFilters,
+  hideHeader = false,
 }: FilterPanelProps) {
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h3 className="text-foreground font-medium">{t.filters}</h3>
-        {hasActiveFilters && (
-          <button onClick={clearFilters} className="text-xs text-brand-terracotta hover:underline flex items-center gap-1">
-            <X size={12} /> {t.clearAll}
-          </button>
-        )}
-      </div>
+      {!hideHeader && (
+        <div className="flex items-center justify-between">
+          <h3 className="text-foreground font-medium">{t.filters}</h3>
+          {hasActiveFilters && (
+            <button onClick={clearFilters} className="text-xs text-brand-terracotta hover:underline flex items-center gap-1">
+              <X size={12} /> {t.clearAll}
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Categories */}
       <div>
@@ -254,12 +258,12 @@ export function Products() {
                 )}
               </button>
 
-              <div className="flex items-center gap-3 ml-auto">
+              <div className="flex items-center gap-3 ms-auto">
                 <div className="relative">
                   <select
                     value={sort}
                     onChange={e => setSort(e.target.value as SortOption)}
-                    className="appearance-none bg-brand-peach pl-3 pr-8 py-2 rounded-lg text-sm text-brand-terracotta font-medium outline-none cursor-pointer"
+                    className="appearance-none bg-brand-peach ps-3 pe-8 py-2 rounded-lg text-sm text-brand-terracotta font-medium outline-none cursor-pointer"
                   >
                     <option value="featured">{t.trending}</option>
                     <option value="price-asc">{isRTL ? "السعر: من الأقل للأعلى" : "Price: Low to High"}</option>
@@ -267,7 +271,7 @@ export function Products() {
                     <option value="rating">{isRTL ? "الأعلى تقييماً" : "Top Rated"}</option>
                     <option value="new">{t.newArrivals}</option>
                   </select>
-                  <ChevronDown size={13} className="absolute right-2 top-1/2 -translate-y-1/2 text-brand-terracotta pointer-events-none" />
+                  <ChevronDown size={13} className="absolute end-2 top-1/2 -translate-y-1/2 text-brand-terracotta pointer-events-none" />
                 </div>
 
                 <div className="flex items-center gap-1 bg-brand-peach rounded-lg p-1">
@@ -304,6 +308,12 @@ export function Products() {
                     {t.organicOnly} <button onClick={() => setShowOrganic(false)}><X size={11} /></button>
                   </span>
                 )}
+                <button
+                  onClick={clearFilters}
+                  className="inline-flex items-center gap-1 bg-brand-peach hover:bg-brand-terracotta text-brand-terracotta hover:text-white text-xs px-3 py-1.5 rounded-full border border-brand-terracotta/30 transition-all font-semibold"
+                >
+                  <X size={11} /> {t.clearAll}
+                </button>
               </div>
             )}
 
@@ -347,12 +357,22 @@ export function Products() {
               className={`fixed ${isRTL ? "right-0" : "left-0"} top-0 bottom-0 w-80 bg-card z-50 overflow-y-auto p-5 shadow-elev border-r border-border`}
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-foreground font-display">{t.filters}</h2>
+                <div className="flex items-center gap-3">
+                  <h2 className="text-foreground font-display">{t.filters}</h2>
+                  {hasActiveFilters && (
+                    <button 
+                      onClick={clearFilters}
+                      className="text-xs text-brand-terracotta hover:underline font-semibold"
+                    >
+                      {t.clearAll}
+                    </button>
+                  )}
+                </div>
                 <button onClick={() => setIsFilterOpen(false)}>
                   <X size={20} className="text-muted-foreground hover:text-foreground" />
                 </button>
               </div>
-              <FilterPanel {...panelProps} />
+              <FilterPanel {...panelProps} hideHeader />
               <button
                 onClick={() => setIsFilterOpen(false)}
                 className="w-full bg-brand-terracotta text-white py-3 rounded-xl mt-6 font-medium active:scale-[0.98] transition-all"

@@ -86,8 +86,8 @@ export function Header() {
 
         {/* Category Navigation Rail */}
         {!["/checkout", "/account"].includes(location.pathname) && (
-          <div className="border-t border-border overflow-x-auto scrollbar-hide py-2 px-3 sm:px-4">
-            <div className="max-w-[1280px] mx-auto flex gap-2">
+          <div className="border-t border-border overflow-x-auto scrollbar-hide py-2 px-3 sm:px-4 w-full max-w-full">
+            <div className="max-w-[1280px] mx-auto flex gap-2 w-max">
               <Link
                 to="/products"
                 className={`px-3.5 py-1.5 rounded-full text-xs whitespace-nowrap transition-all border flex-shrink-0 font-medium ${
