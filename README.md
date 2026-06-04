@@ -1,7 +1,7 @@
 
-  # Haj Arafa App
+  # <> Haj Arafa
 
-  This is a code bundle for Haj Arafa App. The original project is available at https://www.figma.com/design/MN6XEI5KhZGE87Q5VbHGNz/Haj-Arafa-App.
+  This is a code bundle for <> Haj Arafa. The original project is available at https://www.figma.com/design/MN6XEI5KhZGE87Q5VbHGNz/%3C%3E-Haj-Arafa.
 
   ## Running the code
 
