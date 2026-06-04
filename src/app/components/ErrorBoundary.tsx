@@ -25,7 +25,7 @@ export class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        this.fallback ?? (
+        this.props.fallback ?? (
           <div className="p-6 bg-card border border-destructive/25 rounded-2xl text-center space-y-3 my-4">
             <span className="text-3xl">⚠️</span>
             <h3 className="text-foreground font-display text-lg">Something went wrong.</h3>
@@ -43,6 +43,6 @@ export class ErrorBoundary extends Component<Props, State> {
       );
     }
 
-    return this.children;
+    return this.props.children;
   }
 }
