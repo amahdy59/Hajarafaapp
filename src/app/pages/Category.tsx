@@ -28,7 +28,7 @@ export function Category() {
   return (
     <div className="min-h-screen bg-background">
       {/* Category hero */}
-      <div className="relative h-48 sm:h-64 overflow-hidden">
+      <div className="relative h-32 sm:h-44 overflow-hidden">
         <img src={category.image} alt={categoryName} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/20" />
         <div className="absolute inset-0 flex items-center px-6 sm:px-10">
