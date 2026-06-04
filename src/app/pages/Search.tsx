@@ -3,12 +3,17 @@ import { useSearchParams } from "react-router";
 import { Search as SearchIcon, X } from "lucide-react";
 import { products } from "../data/products";
 import { ProductCard } from "../components/ProductCard";
+import { useAppSettings } from "../context/AppSettingsContext";
 
 const recentSearches = ["black seed oil", "turmeric", "chamomile tea", "argan oil"];
 const popularSearches = ["moringa", "sidr honey", "rose water", "ashwagandha", "matcha"];
 
+const recentSearchesAr = ["حبة البركة", "كركم", "بابونج", "زيت أركان"];
+const popularSearchesAr = ["مورينجا", "عسل سدر", "ماء ورد", "اشواغاندا", "ماتشا"];
+
 export function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { t, isRTL } = useAppSettings();
   const [query, setQuery] = useState(searchParams.get("q") || "");
 
   useEffect(() => {
@@ -20,6 +25,7 @@ export function Search() {
     const q = query.toLowerCase();
     return products.filter(p =>
       p.name.toLowerCase().includes(q) ||
+      (p.nameAr && p.nameAr.toLowerCase().includes(q)) ||
       p.category.toLowerCase().includes(q) ||
       p.description.toLowerCase().includes(q) ||
       p.tags.some(t => t.toLowerCase().includes(q))
@@ -39,24 +45,26 @@ export function Search() {
   };
 
   const hasQuery = query.trim().length > 0;
+  const recent = isRTL ? recentSearchesAr : recentSearches;
+  const popular = isRTL ? popularSearchesAr : popularSearches;
 
   return (
-    <div className="min-h-screen bg-[#FBF7F1]">
+    <div className="min-h-screen bg-background">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6">
         {/* Search input */}
         <div className="relative mb-6">
-          <SearchIcon size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+          <SearchIcon size={18} className={`absolute ${isRTL ? "right-4" : "left-4"} top-1/2 -translate-y-1/2 text-muted-foreground`} />
           <input
             type="text"
             value={query}
             onChange={e => handleSearch(e.target.value)}
-            placeholder="Search for herbal products..."
+            placeholder={t.searchPlaceholder}
             autoFocus
-            className="w-full pl-11 pr-11 py-4 bg-white border border-gray-200 rounded-2xl text-gray-800 placeholder-gray-400 outline-none focus:border-[#C4622D] focus:ring-2 focus:ring-[#C4622D]/20 transition-all text-sm shadow-sm"
+            className={`w-full ${isRTL ? "pr-11 pl-11" : "pl-11 pr-11"} py-4 bg-card border border-border rounded-2xl text-foreground placeholder:text-muted-foreground outline-none focus:border-brand-terracotta focus:ring-2 focus:ring-brand-terracotta/20 transition-all text-sm shadow-sm`}
           />
           {hasQuery && (
-            <button onClick={clearSearch} className="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">
-              <X size={12} className="text-gray-500" />
+            <button onClick={clearSearch} className={`absolute ${isRTL ? "left-4" : "right-4"} top-1/2 -translate-y-1/2 w-6 h-6 bg-muted rounded-full flex items-center justify-center hover:bg-border transition-colors`}>
+              <X size={12} className="text-muted-foreground" />
             </button>
           )}
         </div>
@@ -65,15 +73,15 @@ export function Search() {
           <div className="space-y-6">
             {/* Recent searches */}
             <div>
-              <h3 className="text-gray-700 text-sm mb-3">Recent Searches</h3>
+              <h3 className="text-muted-foreground eyebrow mb-3">{t.recentSearches}</h3>
               <div className="flex flex-wrap gap-2">
-                {recentSearches.map(s => (
+                {recent.map(s => (
                   <button
                     key={s}
                     onClick={() => handleSearch(s)}
-                    className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl text-sm text-gray-700 hover:bg-[#F4E7DA] border border-gray-100 transition-colors"
+                    className="flex items-center gap-2 bg-card px-4 py-2 rounded-xl text-sm text-foreground hover:bg-brand-peach border border-border hover:border-brand-terracotta transition-colors font-medium"
                   >
-                    <SearchIcon size={12} className="text-gray-400" /> {s}
+                    <SearchIcon size={12} className="text-muted-foreground" /> {s}
                   </button>
                 ))}
               </div>
@@ -81,13 +89,13 @@ export function Search() {
 
             {/* Popular */}
             <div>
-              <h3 className="text-gray-700 text-sm mb-3">Popular Searches</h3>
+              <h3 className="text-muted-foreground eyebrow mb-3">{t.popularSearches}</h3>
               <div className="flex flex-wrap gap-2">
-                {popularSearches.map((s, i) => (
+                {popular.map((s, i) => (
                   <button
                     key={s}
                     onClick={() => handleSearch(s)}
-                    className="flex items-center gap-1.5 bg-[#F4E7DA] text-[#C4622D] px-4 py-2 rounded-xl text-sm hover:bg-[#C4622D] hover:text-white transition-colors"
+                    className="flex items-center gap-1.5 bg-brand-peach text-brand-terracotta px-4 py-2 rounded-xl text-sm hover:bg-brand-terracotta hover:text-white transition-colors font-medium"
                   >
                     {i === 0 ? "🔥" : i === 1 ? "⭐" : "🌿"} {s}
                   </button>
@@ -97,7 +105,7 @@ export function Search() {
 
             {/* All products preview */}
             <div>
-              <h3 className="text-gray-700 text-sm mb-3">All Products</h3>
+              <h3 className="text-muted-foreground eyebrow mb-3">{t.featuredProducts}</h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {products.slice(0, 6).map(p => (
                   <ProductCard key={p.id} product={p} />
@@ -107,23 +115,27 @@ export function Search() {
           </div>
         ) : (
           <div>
-            <p className="text-gray-500 text-sm mb-4">
+            <p className="text-muted-foreground text-sm mb-4">
               {results.length === 0
-                ? `No results for "${query}"`
-                : `${results.length} results for "${query}"`}
+                ? `${isRTL ? "لا توجد نتائج لـ" : "No results for"} "${query}"`
+                : `${results.length} ${t.productsFound} "${query}"`}
             </p>
 
             {results.length === 0 ? (
-              <div className="text-center py-16 bg-white rounded-2xl">
+              <div className="text-center py-16 bg-card border border-border rounded-2xl shadow-soft">
                 <p className="text-4xl mb-4">🔍</p>
-                <p className="text-gray-500 mb-2">No products found for "{query}"</p>
-                <p className="text-gray-400 text-sm mb-6">Try different keywords or browse categories</p>
+                <p className="text-foreground font-medium mb-2">
+                  {isRTL ? `لا توجد نتائج لـ "${query}"` : `No products found for "${query}"`}
+                </p>
+                <p className="text-muted-foreground text-sm mb-6">
+                  {isRTL ? "جرب كلمات مختلفة أو تصفح الأقسام" : "Try different keywords or browse categories"}
+                </p>
                 <div className="flex flex-wrap gap-2 justify-center">
-                  {popularSearches.map(s => (
+                  {popular.map(s => (
                     <button
                       key={s}
                       onClick={() => handleSearch(s)}
-                      className="bg-[#F4E7DA] text-[#C4622D] px-3 py-1.5 rounded-lg text-sm hover:bg-[#C4622D] hover:text-white transition-colors"
+                      className="bg-brand-peach text-brand-terracotta px-3 py-1.5 rounded-lg text-sm hover:bg-brand-terracotta hover:text-white transition-colors font-medium"
                     >
                       {s}
                     </button>

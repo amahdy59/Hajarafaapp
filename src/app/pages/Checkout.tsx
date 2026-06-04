@@ -34,7 +34,50 @@ export function Checkout() {
   const updatePayment = (field: string, value: string) =>
     setPaymentData(prev => ({ ...prev, [field]: value }));
 
+  const validateShipping = () => {
+    const { firstName, lastName, email, address, city, zip } = shippingData;
+    if (!firstName.trim() || !lastName.trim() || !email.trim() || !address.trim() || !city.trim() || !zip.trim()) {
+      toast.error(isRTL ? "يرجى ملء جميع الحقول المطلوبة (*)" : "Please fill in all required fields (*)");
+      return false;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error(isRTL ? "يرجى إدخال بريد إلكتروني صحيح" : "Please enter a valid email address");
+      return false;
+    }
+    return true;
+  };
+
+  const validatePayment = () => {
+    const { cardNumber, cardName, expiry, cvv } = paymentData;
+    if (!cardNumber.trim() || !cardName.trim() || !expiry.trim() || !cvv.trim()) {
+      toast.error(isRTL ? "يرجى ملء جميع بيانات بطاقة الدفع (*)" : "Please fill in all payment card details (*)");
+      return false;
+    }
+    const cleanCard = cardNumber.replace(/\s/g, "");
+    if (cleanCard.length < 15 || cleanCard.length > 16) {
+      toast.error(isRTL ? "يرجى إدخال رقم بطاقة صحيح" : "Please enter a valid card number");
+      return false;
+    }
+    if (!expiry.includes("/") || expiry.split("/")[0].length !== 2 || expiry.split("/")[1].length !== 2) {
+      toast.error(isRTL ? "يرجى إدخال تاريخ انتهاء صحيح (MM/YY)" : "Please enter a valid expiry date (MM/YY)");
+      return false;
+    }
+    if (cvv.length < 3 || cvv.length > 4) {
+      toast.error(isRTL ? "يرجى إدخال رمز أمان صحيح (CVV)" : "Please enter a valid security code (CVV)");
+      return false;
+    }
+    return true;
+  };
+
+  const handleContinueToPayment = () => {
+    if (validateShipping()) {
+      setStep("payment");
+    }
+  };
+
   const handlePlaceOrder = async () => {
+    if (!validatePayment()) return;
     setIsPlacingOrder(true);
     await new Promise(r => setTimeout(r, 1500));
     clearCart();
@@ -244,7 +287,7 @@ export function Checkout() {
                     </div>
 
                     <button
-                      onClick={() => setStep("payment")}
+                      onClick={handleContinueToPayment}
                       className="w-full bg-brand-terracotta text-white py-3.5 rounded-xl hover:bg-brand-terracotta-dark transition-colors active:scale-[0.98] flex items-center justify-center gap-2"
                     >
                       {t.continueToPay}

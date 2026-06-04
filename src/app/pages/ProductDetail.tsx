@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, Link } from "react-router";
+import { useParams, Link, useNavigate } from "react-router";
 import { Heart, ShoppingCart, Share2, ChevronLeft, Star, Plus, Minus, Leaf, Truck, Shield, RotateCcw, Check } from "lucide-react";
 import { getProductById, products } from "../data/products";
 import { useCart } from "../context/CartContext";
@@ -18,6 +18,7 @@ const mockReviews = [
 
 export function ProductDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const product = getProductById(id || "");
   const { addToCart } = useCart();
   const { isWishlisted, toggleWishlist } = useWishlist();
@@ -47,7 +48,7 @@ export function ProductDetail() {
 
   const handleAddToCart = () => {
     addToCart(product, quantity);
-    toast.success(`${quantity}× ${product.name} ${isRTL ? "أضيف للسلة" : "added to cart"}`);
+    toast.success(`${quantity}× ${isRTL && product.nameAr ? product.nameAr : product.name} ${isRTL ? "أضيف للسلة" : "added to cart"}`);
   };
 
   const handleWishlist = () => {
@@ -58,10 +59,31 @@ export function ProductDetail() {
       { icon: wishlisted ? "💔" : "❤️" });
   };
 
+  const handleBuyNow = () => {
+    addToCart(product, quantity);
+    navigate("/checkout");
+  };
+
+  const handleShare = () => {
+    const title = isRTL && product.nameAr ? product.nameAr : product.name;
+    const shareData = {
+      title,
+      text: product.description,
+      url: window.location.href,
+    };
+    if (navigator.share) {
+      navigator.share(shareData).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(window.location.href)
+        .then(() => toast.success(t.productCopied))
+        .catch(() => toast.error(isRTL ? "فشل نسخ الرابط" : "Failed to copy link"));
+    }
+  };
+
   const tabLabels = {
-    description: isRTL ? "الوصف" : "Description",
-    usage: isRTL ? "طريقة الاستخدام" : "Usage",
-    reviews: isRTL ? `تقييمات (${product.reviewCount})` : `Reviews (${product.reviewCount})`,
+    description: t.description,
+    usage: t.howToUse,
+    reviews: isRTL ? `${t.reviews} (${product.reviewCount})` : `${t.reviews} (${product.reviewCount})`,
   };
 
   return (
@@ -73,9 +95,9 @@ export function ProductDetail() {
           <ChevronLeft size={12} className="text-muted-foreground rtl-flip" />
           <Link to="/products" className="text-muted-foreground hover:text-foreground transition-colors">{t.shopAll}</Link>
           <ChevronLeft size={12} className="text-muted-foreground rtl-flip" />
-          <Link to={`/category/${product.categorySlug}`} className="text-muted-foreground hover:text-foreground transition-colors">{product.category}</Link>
+          <Link to={`/category/${product.categorySlug}`} className="text-muted-foreground hover:text-foreground transition-colors">{isRTL && product.categoryAr ? product.categoryAr : product.category}</Link>
           <ChevronLeft size={12} className="text-muted-foreground rtl-flip" />
-          <span className="text-foreground truncate max-w-40">{product.name}</span>
+          <span className="text-foreground truncate max-w-40">{isRTL && product.nameAr ? product.nameAr : product.name}</span>
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
@@ -129,7 +151,7 @@ export function ProductDetail() {
                   className="text-brand-terracotta bg-brand-peach px-3 py-1 rounded-full"
                   style={{ fontSize: "0.75rem" }}
                 >
-                  {product.category}
+                  {isRTL && product.categoryAr ? product.categoryAr : product.category}
                 </Link>
                 {product.isBestSeller && (
                   <span className="text-brand-forest bg-brand-cream-2 px-3 py-1 rounded-full" style={{ fontSize: "0.75rem" }}>
@@ -142,7 +164,7 @@ export function ProductDetail() {
                   </span>
                 )}
               </div>
-              <h1 className="text-foreground mb-1" style={{ fontSize: "clamp(1.4rem, 4vw, 1.75rem)" }}>{product.name}</h1>
+              <h1 className="text-foreground font-display mb-1" style={{ fontSize: "clamp(1.4rem, 4vw, 1.75rem)" }}>{isRTL && product.nameAr ? product.nameAr : product.name}</h1>
               {product.nameAr && (
                 <p className="text-muted-foreground" dir="rtl" style={{ fontSize: "0.9rem" }}>{product.nameAr}</p>
               )}
@@ -229,8 +251,11 @@ export function ProductDetail() {
               </button>
             </div>
 
-            <button className="w-full border border-brand-terracotta text-brand-terracotta py-3 rounded-xl hover:bg-brand-terracotta hover:text-white transition-all flex items-center justify-center gap-2 active:scale-[0.98]">
-              {isRTL ? "اشترِ الآن" : "Buy Now"}
+            <button
+              onClick={handleBuyNow}
+              className="w-full border border-brand-terracotta text-brand-terracotta py-3 rounded-xl hover:bg-brand-terracotta hover:text-white transition-all flex items-center justify-center gap-2 active:scale-[0.98] font-medium"
+            >
+              {t.buyNow}
             </button>
 
             {/* Guarantees */}
@@ -249,8 +274,12 @@ export function ProductDetail() {
               ))}
             </div>
 
-            <button className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors" style={{ fontSize: "0.875rem" }}>
-              <Share2 size={14} /> {isRTL ? "مشاركة المنتج" : "Share this product"}
+            <button
+              onClick={handleShare}
+              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-medium"
+              style={{ fontSize: "0.875rem" }}
+            >
+              <Share2 size={14} /> {t.shareThisProduct}
             </button>
           </div>
         </div>
@@ -282,7 +311,7 @@ export function ProductDetail() {
                   {[
                     { label: isRTL ? "الوزن" : "Weight", value: product.weight },
                     { label: isRTL ? "المنشأ" : "Origin", value: product.origin },
-                    { label: isRTL ? "الفئة" : "Category", value: product.category },
+                    { label: isRTL ? "الفئة" : "Category", value: isRTL && product.categoryAr ? product.categoryAr : product.category },
                     { label: isRTL ? "عضوي" : "Organic", value: product.isOrganic ? (isRTL ? "نعم ✓" : "Yes ✓") : (isRTL ? "لا" : "No") },
                   ].map(d => (
                     <div key={d.label}>

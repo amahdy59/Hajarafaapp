@@ -14,11 +14,11 @@ interface ProductCardProps {
 
 type BadgeTone = "sage" | "terracotta";
 
-function deriveBadge(p: Product): { label: string; tone: BadgeTone } | null {
+function deriveBadge(p: Product, isRTL: boolean): { label: string; tone: BadgeTone } | null {
   if (p.discount) return { label: `-${p.discount}%`, tone: "terracotta" };
-  if (p.isNew) return { label: "New", tone: "sage" };
-  if (p.isBestSeller) return { label: "Best", tone: "sage" };
-  if (p.isOrganic) return { label: "Organic", tone: "sage" };
+  if (p.isNew) return { label: isRTL ? "جديد" : "New", tone: "sage" };
+  if (p.isBestSeller) return { label: isRTL ? "الأفضل" : "Best", tone: "sage" };
+  if (p.isOrganic) return { label: isRTL ? "عضوي" : "Organic", tone: "sage" };
   return null;
 }
 
@@ -30,9 +30,9 @@ const badgeCls: Record<BadgeTone, string> = {
 export function ProductCard({ product, view = "grid" }: ProductCardProps) {
   const { addToCart } = useCart();
   const { isWishlisted, toggleWishlist } = useWishlist();
-  const { t } = useAppSettings();
+  const { t, isRTL } = useAppSettings();
   const wishlisted = isWishlisted(product.id);
-  const badge = deriveBadge(product);
+  const badge = deriveBadge(product, isRTL);
 
   const onAdd = (e: React.MouseEvent) => {
     e.preventDefault(); e.stopPropagation();
@@ -61,11 +61,11 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
             <div className="flex flex-col gap-0.5">
               {product.isOrganic && (
                 <span className="inline-flex items-center gap-1 text-brand-sage eyebrow" style={{ fontSize: "10px" }}>
-                  <Leaf size={10} /> Organic
+                  <Leaf size={10} /> {isRTL ? "عضوي" : "Organic"}
                 </span>
               )}
               <h3 className="text-foreground line-clamp-2" style={{ fontSize: "0.95rem", lineHeight: 1.3, letterSpacing: "0.3px" }}>
-                {product.name}
+                {isRTL && product.nameAr ? product.nameAr : product.name}
               </h3>
               <span className="text-brand-ink-soft" style={{ fontSize: "0.8rem" }}>{product.weight}</span>
             </div>
@@ -124,7 +124,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
             className="text-foreground line-clamp-1"
             style={{ fontSize: "0.98rem", letterSpacing: "0.4px" }}
           >
-            {product.name}
+            {isRTL && product.nameAr ? product.nameAr : product.name}
           </h3>
           <span className="text-brand-ink-soft" style={{ fontSize: "0.8rem" }}>
             {product.weight || product.category}
