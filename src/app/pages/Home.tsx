@@ -30,7 +30,7 @@ export function Home() {
 
         {/* Hero */}
         <section className="relative rounded-md overflow-hidden shadow-soft" style={{ aspectRatio: "16/10", maxHeight: 420 }}>
-          <img src={HERO_IMG} alt="" className="absolute inset-0 w-full h-full object-cover" />
+          <img src={HERO_IMG} alt={isRTL ? "خلفية صحية طبيعية لعشبة البابونج" : "Chamomile natural wellness background"} className="absolute inset-0 w-full h-full object-cover" />
           <div className={`absolute inset-0 bg-gradient-to-${isRTL ? "l" : "r"} from-brand-ink/70 via-brand-ink/30 to-transparent`} />
           <div className="absolute inset-0 flex items-center p-6 sm:p-10">
             <motion.div
@@ -69,7 +69,7 @@ export function Home() {
                 className="group bg-card rounded-md overflow-hidden border border-border hover:border-brand-sage hover:shadow-soft transition-all duration-300 transform hover:-translate-y-0.5"
               >
                 <div className="aspect-[5/4] bg-brand-cream-2 overflow-hidden">
-                  <img src={d.image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img src={d.image} alt={isRTL && d.nameAr ? d.nameAr : d.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="p-3">
                   <p className="eyebrow text-brand-terracotta" style={{ fontSize: "10px" }}>
@@ -106,7 +106,7 @@ export function Home() {
             </p>
           </div>
           <div className="relative rounded-md overflow-hidden border border-border min-h-[182px]">
-            <img src={HERITAGE_IMG} alt="" className="absolute inset-0 w-full h-full object-cover" />
+            <img src={HERITAGE_IMG} alt={isRTL ? "هاون خشبي تقليدي وأعشاب مجففة" : "Traditional wooden mortar and dried herbs"} className="absolute inset-0 w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-brand-forest/85 via-brand-forest/30 to-transparent" />
             <div className="absolute inset-0 flex flex-col justify-end p-6">
               <h3 className="font-display text-brand-peach mb-2" style={{ fontSize: "1.4rem" }}>

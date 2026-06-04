@@ -160,7 +160,7 @@ export function Account() {
               <div className="space-y-3">
                 {mockOrders.slice(0, 2).map(order => (
                   <div key={order.id} className="flex items-center gap-3 bg-background rounded-xl p-3 border border-border/40">
-                    <img src={order.image} alt="" className="w-10 h-10 rounded-lg object-cover" />
+                    <img src={order.image} alt={locale === "ar" ? "صورة المنتج لطلب " + order.id : "Product thumbnail for order " + order.id} className="w-10 h-10 rounded-lg object-cover" />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className="text-sm text-foreground font-medium whitespace-nowrap">{order.id}</p>
@@ -237,7 +237,7 @@ export function Account() {
                 <div className="flex items-center justify-between gap-3 bg-background/50 p-2.5 rounded-xl border border-border/40">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-[#FAF6F0] p-1 flex items-center justify-center border border-border/40 flex-shrink-0">
-                      <img src={order.image} alt="" className="w-full h-full object-contain mix-blend-multiply" />
+                      <img src={order.image} alt={locale === "ar" ? "صورة المنتج" : "Product thumbnail"} className="w-full h-full object-contain mix-blend-multiply" />
                     </div>
                     <div className="text-xs">
                       <p className="text-foreground font-medium line-clamp-1">{isRTL ? "تفاصيل الشحنة" : "Shipment Details"}</p>
