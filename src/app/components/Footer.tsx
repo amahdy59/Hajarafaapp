@@ -1,14 +1,14 @@
 import { Link } from "react-router";
 import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Award, ShieldCheck, Heart } from "lucide-react";
 import { useAppSettings } from "../context/AppSettingsContext";
-import logoImg from "../../assets/logo.png";
+import logoImg from "../../assets/logo.svg";
 
 export function Footer() {
   const { t, isRTL, locale } = useAppSettings();
 
   const footerTranslations = {
-    aboutTextEn: "HajArafa represents over 70 years of traditional Egyptian herbal wisdom, bringing you the finest natural honey, fresh spices, organic nuts, and botanical cosmetics.",
-    aboutTextAr: "يمثل حاج عارفة أكثر من ٧٠ عاماً من الحكمة العشبية المصرية التقليدية، حيث يقدم لك أجود أنواع العسل الطبيعي، التوابل الطازجة، المكسرات العضوية، ومستحضرات التجميل النباتية.",
+    aboutTextEn: "represents over 70 years of traditional Egyptian herbal wisdom, bringing you the finest natural honey, fresh spices, organic nuts, and botanical cosmetics.",
+    aboutTextAr: "يمثل أكثر من ٧٠ عاماً من الحكمة العشبية المصرية التقليدية، حيث يقدم لك أجود أنواع العسل الطبيعي، التوابل الطازجة، المكسرات العضوية، ومستحضرات التجميل النباتية.",
     quickLinksEn: "Quick Links",
     quickLinksAr: "روابط سريعة",
     supportEn: "Help & Support",
@@ -37,11 +37,12 @@ export function Footer() {
         
         {/* Brand Column */}
         <div className="space-y-4">
-          <Link to="/" className="inline-block h-12">
-            <img src={logoImg} alt="HajArafa" className="h-12 w-auto object-contain" />
+          <Link to="/" className="inline-block h-12 select-none cursor-pointer">
+            <img src={logoImg} alt="HajArafa" className="h-12 w-auto object-contain select-none pointer-events-none" />
           </Link>
-          <p className="text-muted-foreground text-sm leading-relaxed max-w-sm">
-            {locale === "ar" ? footerTranslations.aboutTextAr : footerTranslations.aboutTextEn}
+          <p className="text-muted-foreground text-sm leading-relaxed max-w-sm flex items-center gap-1.5 flex-wrap">
+            <img src={logoImg} alt="HajArafa" className="h-4 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
+            <span>{locale === "ar" ? footerTranslations.aboutTextAr : footerTranslations.aboutTextEn}</span>
           </p>
           <div className="flex items-center gap-3 pt-2">
             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-brand-peach flex items-center justify-center text-brand-terracotta hover:bg-brand-terracotta hover:text-white transition-all">
@@ -66,7 +67,7 @@ export function Footer() {
               <li key={cat.slug}>
                 <Link 
                   to={`/category/${cat.slug}`} 
-                  className="text-muted-foreground hover:text-brand-terracotta transition-colors flex items-center gap-1.5"
+                  className="text-muted-foreground hover:text-brand-terracotta hover:underline transition-colors flex items-center gap-1.5"
                 >
                   <span className="text-[10px] text-brand-terracotta/60">✦</span>
                   {locale === "ar" ? cat.ar : cat.en}
@@ -83,25 +84,26 @@ export function Footer() {
           </h4>
           <ul className="space-y-2.5 text-sm">
             <li>
-              <Link to="/about" className="text-muted-foreground hover:text-brand-terracotta transition-colors flex items-center gap-1.5">
+              <Link to="/about" className="text-muted-foreground hover:text-brand-terracotta hover:underline transition-colors flex items-center gap-1.5">
                 <span className="text-[10px] text-brand-terracotta/60">✦</span>
-                {t.aboutUs}
+                <span>{locale === "ar" ? "عن" : "About"}</span>
+                <img src={logoImg} alt="HajArafa" className="h-3 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
               </Link>
             </li>
             <li>
-              <Link to="/branches" className="text-muted-foreground hover:text-brand-terracotta transition-colors flex items-center gap-1.5">
+              <Link to="/branches" className="text-muted-foreground hover:text-brand-terracotta hover:underline transition-colors flex items-center gap-1.5">
                 <span className="text-[10px] text-brand-terracotta/60">✦</span>
                 {t.branches}
               </Link>
             </li>
             <li>
-              <Link to="/contact" className="text-muted-foreground hover:text-brand-terracotta transition-colors flex items-center gap-1.5">
+              <Link to="/contact" className="text-muted-foreground hover:text-brand-terracotta hover:underline transition-colors flex items-center gap-1.5">
                 <span className="text-[10px] text-brand-terracotta/60">✦</span>
                 {t.contactUs}
               </Link>
             </li>
             <li>
-              <Link to="/help" className="text-muted-foreground hover:text-brand-terracotta transition-colors flex items-center gap-1.5">
+              <Link to="/help" className="text-muted-foreground hover:text-brand-terracotta hover:underline transition-colors flex items-center gap-1.5">
                 <span className="text-[10px] text-brand-terracotta/60">✦</span>
                 {t.customerService}
               </Link>
@@ -123,13 +125,13 @@ export function Footer() {
             </li>
             <li className="flex items-center gap-2.5">
               <Phone size={16} className="text-brand-terracotta flex-shrink-0" />
-              <a href="tel:+201002345678" className="text-muted-foreground hover:text-brand-terracotta transition-colors">
+              <a href="tel:+201002345678" className="text-muted-foreground hover:text-brand-terracotta hover:underline transition-colors">
                 +20 100 2345 678
               </a>
             </li>
             <li className="flex items-center gap-2.5">
               <Mail size={16} className="text-brand-terracotta flex-shrink-0" />
-              <a href="mailto:support@hajarafa.com" className="text-muted-foreground hover:text-brand-terracotta transition-colors">
+              <a href="mailto:support@hajarafa.com" className="text-muted-foreground hover:text-brand-terracotta hover:underline transition-colors">
                 support@hajarafa.com
               </a>
             </li>
@@ -142,9 +144,11 @@ export function Footer() {
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 mt-12 pt-6 border-t border-border/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
         
         {/* Copyright */}
-        <div className="text-muted-foreground text-center sm:text-start">
-          © {new Date().getFullYear()} {t.appName}. {locale === "ar" ? footerTranslations.rightsAr : footerTranslations.rightsEn}
-          <span className="block sm:inline sm:ms-2 mt-1 sm:mt-0 text-[10px] text-muted-foreground/60">
+        <div className="text-muted-foreground text-center sm:text-start flex items-center justify-center sm:justify-start gap-1 flex-wrap select-none">
+          <span>© {new Date().getFullYear()}</span>
+          <img src={logoImg} alt="HajArafa" className="h-4 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
+          <span>. {locale === "ar" ? footerTranslations.rightsAr : footerTranslations.rightsEn}</span>
+          <span className="block sm:inline sm:ms-2 mt-1 sm:mt-0 text-[10px] text-muted-foreground/60 select-none">
             {locale === "ar" ? "صنع بكل حب لعافيتك 🧡" : "Crafted with love for your wellness 🧡"}
           </span>
         </div>

@@ -2,6 +2,7 @@ import { ArrowLeft, Award, Leaf, ShieldCheck, Sparkles } from "lucide-react";
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion } from "motion/react";
+import logoImg from "../../assets/logo.svg";
 
 const ABOUT_IMG = "https://images.unsplash.com/photo-1509156396595-449e10c5cd3e?w=800&auto=format&fit=crop";
 
@@ -16,8 +17,8 @@ export function About() {
     subtitleAr: "منذ ١٩٥٠ · الطبيعة النقية في كل منتج",
     storyTitleEn: "Our Heritage & Story",
     storyTitleAr: "تاريخنا وقصتنا",
-    storyEn: "HajArafa began as a small apothecary dedicated to sourcing the highest quality natural herbs, raw honey, spices, and organic skincare. Over the decades, we have remained committed to providing authentic products that harness the pure healing powers of nature, keeping traditions alive for modern wellness.",
-    storyAr: "بدأت مسيرة حاج عارفة كمتجر صغير للأعشاب والمنتجات الطبيعية ملتزم بأعلى معايير الجودة في توفير الأعشاب الطبيعية، العسل الخام، التوابل، ومستحضرات العناية العضوية. على مدار العقود، حافظنا على التزامنا بتقديم منتجات حقيقية تستغل قوى الطبيعة النقية وتُبقي التقاليد حية للعافية المعاصرة.",
+    storyEn: "began as a small apothecary dedicated to sourcing the highest quality natural herbs, raw honey, spices, and organic skincare. Over the decades, we have remained committed to providing authentic products that harness the pure healing powers of nature, keeping traditions alive for modern wellness.",
+    storyAr: "بدأت المسيرة كمتجر صغير للأعشاب والمنتجات الطبيعية ملتزم بأعلى معايير الجودة في توفير الأعشاب الطبيعية، العسل الخام، التوابل، ومستحضرات العناية العضوية. على مدار العقود، حافظنا على التزامنا بتقديم منتجات حقيقية تستغل قوى الطبيعة النقية وتُبقي التقاليد حية للعافية المعاصرة.",
     valuesTitleEn: "Our Core Principles",
     valuesTitleAr: "مبادئنا الأساسية",
     values: [
@@ -62,12 +63,13 @@ export function About() {
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            className="max-w-xl space-y-2"
+            className="max-w-xl space-y-2 select-none"
           >
-            <h1 className="text-white text-3xl sm:text-4xl font-display">
-              {isRTL ? content.titleAr : content.titleEn}
+            <h1 className="text-white text-3xl sm:text-4xl font-display flex items-center justify-center gap-2 flex-wrap select-none">
+              <span>{isRTL ? "عن" : "About"}</span>
+              <img src={logoImg} alt="HajArafa" className="h-8 sm:h-9 w-auto object-contain select-none pointer-events-none inline-block align-middle" />
             </h1>
-            <p className="text-brand-peach font-medium text-sm sm:text-base">
+            <p className="text-brand-peach font-medium text-sm sm:text-base select-none">
               {isRTL ? content.subtitleAr : content.subtitleEn}
             </p>
           </motion.div>
@@ -89,8 +91,9 @@ export function About() {
             <h2 className="text-foreground font-display text-2xl">
               {isRTL ? content.storyTitleAr : content.storyTitleEn}
             </h2>
-            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
-              {isRTL ? content.storyAr : content.storyEn}
+            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed flex flex-wrap items-center gap-1.5">
+              <img src={logoImg} alt="HajArafa" className="h-4.5 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
+              <span>{isRTL ? content.storyAr : content.storyEn}</span>
             </p>
           </div>
           <div className="rounded-2xl overflow-hidden aspect-[4/3] border border-border bg-[#FAF6F0] p-3 flex items-center justify-center">

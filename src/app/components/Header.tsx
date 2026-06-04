@@ -8,7 +8,7 @@ import { SettingsDrawer } from "./SettingsDrawer";
 import { IconButton } from "./ui/IconButton";
 import { motion, AnimatePresence } from "motion/react";
 import { categories } from "../data/categories";
-import logoImg from "../../assets/logo.png";
+import logoImg from "../../assets/logo.svg";
 
 export function Header() {
   const { totalItems, setCartOpen } = useCart();
@@ -55,23 +55,26 @@ export function Header() {
             <Menu size={20} />
           </IconButton>
 
-          <Link to="/" className="flex items-center justify-center min-w-0 h-10">
-            <img src={logoImg} alt={t.appName} className="h-8 xs:h-9 w-auto object-contain max-w-[140px]" />
-          </Link>
+          <Link to="/" className="justify-self-center flex items-center justify-center min-w-0 h-10 select-none cursor-pointer w-fit no-underline"><img src={logoImg} alt="HajArafa Logo" className="h-8 xs:h-9 w-auto object-contain max-w-[140px] select-none" /></Link>
 
           <div className="flex items-center gap-0.5">
-            <IconButton onClick={() => setSearchOpen(true)} aria-label={t.searchPlaceholder} className="hidden sm:flex">
+            <IconButton onClick={() => navigate("/search")} aria-label={t.searchPlaceholder} className="hidden sm:flex">
               <Search size={19} />
             </IconButton>
             <IconButton
               onClick={() => navigate("/wishlist")}
               aria-label={t.favourites}
               badge={wishlistItems.length}
-              className="hidden sm:flex"
+              className="flex"
             >
               <Heart size={19} />
             </IconButton>
-            <IconButton onClick={() => setCartOpen(true)} aria-label={t.cart} badge={totalItems}>
+            <IconButton 
+              onClick={() => setCartOpen(true)} 
+              aria-label={t.cart} 
+              badge={totalItems}
+              className="hidden sm:flex"
+            >
               <ShoppingBag size={19} />
             </IconButton>
           </div>

@@ -3,6 +3,7 @@ import { ArrowLeft, HelpCircle, Search, ChevronDown, ChevronUp, Phone, MessageSq
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
+import logoImg from "../../assets/logo.svg";
 
 interface FAQItem {
   id: string;
@@ -82,6 +83,28 @@ export function Help() {
 
   const toggleFAQ = (id: string) => {
     setOpenId(openId === id ? null : id);
+  };
+
+  const renderQuestionWithLogo = (text: string) => {
+    const regex = /(HajArafa|Haj\s+Arafa|حاج\s+عارفة|حاج\s+عرفة)/gi;
+    const parts = text.split(regex);
+    return (
+      <span className="inline-flex items-center gap-1.5 flex-wrap select-none">
+        {parts.map((part, index) => {
+          if (regex.test(part)) {
+            return (
+              <img
+                key={index}
+                src={logoImg}
+                alt="HajArafa"
+                className="h-4.5 w-auto object-contain inline-block align-middle select-none pointer-events-none"
+              />
+            );
+          }
+          return <span key={index}>{part}</span>;
+        })}
+      </span>
+    );
   };
 
   return (
@@ -174,7 +197,7 @@ export function Help() {
                     className="w-full px-5 py-4 flex items-center justify-between text-start hover:bg-muted/40 transition-colors"
                   >
                     <span className="text-foreground font-medium text-sm sm:text-base">
-                      {isRTL ? faq.questionAr : faq.questionEn}
+                      {renderQuestionWithLogo(isRTL ? faq.questionAr : faq.questionEn)}
                     </span>
                     {isOpen ? (
                       <ChevronUp className="text-brand-terracotta flex-shrink-0 ml-4 rtl:mr-4 rtl:ml-0" size={18} />

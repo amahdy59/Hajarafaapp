@@ -2,6 +2,7 @@ import { ArrowLeft, Clock, MapPin, Phone, ExternalLink } from "lucide-react";
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion } from "motion/react";
+import logoImg from "../../assets/logo.svg";
 
 interface Branch {
   id: string;
@@ -78,10 +79,19 @@ export function Branches() {
             <MapPin size={24} className="text-brand-terracotta fill-brand-peach/50" />
             <h1 className="text-foreground font-display text-2xl sm:text-3xl">{t.branches}</h1>
           </div>
-          <p className="text-muted-foreground text-sm max-w-xl">
-            {isRTL 
-              ? "تفخر شركة حاج عارفة بتقديم خدماتها من خلال فروعنا الرئيسية في مصر. تفضل بزيارتنا لتجربة منتجاتنا العشبية الطبيعية والتوابل الطازجة والزيوت العضوية." 
-              : "HajArafa is proud to serve you from our flagship store branches across Egypt. Visit us to explore our fresh range of organic herbs, spices, and natural beauty remedies."}
+          <p className="text-muted-foreground text-sm max-w-xl leading-relaxed flex flex-wrap items-center gap-1.5 select-none">
+            {isRTL ? (
+              <>
+                <span>تفخر شركة</span>
+                <img src={logoImg} alt="حاج عرفة" className="h-4.5 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
+                <span>بتقديم خدماتها من خلال فروعنا الرئيسية في مصر. تفضل بزيارتنا لتجربة منتجاتنا العشبية الطبيعية والتوابل الطازجة والزيوت العضوية.</span>
+              </>
+            ) : (
+              <>
+                <img src={logoImg} alt="HajArafa" className="h-4.5 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
+                <span>is proud to serve you from our flagship store branches across Egypt. Visit us to explore our fresh range of organic herbs, spices, and natural beauty remedies.</span>
+              </>
+            )}
           </p>
         </div>
 

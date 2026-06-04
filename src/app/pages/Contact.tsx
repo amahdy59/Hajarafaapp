@@ -3,6 +3,7 @@ import { ArrowLeft, Mail, Phone, MessageSquare, Send, CheckCircle2 } from "lucid
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
+import logoImg from "../../assets/logo.svg";
 
 export function Contact() {
   const { t, isRTL } = useAppSettings();
@@ -61,10 +62,20 @@ export function Contact() {
             <Phone size={24} className="text-brand-terracotta fill-brand-peach/50" />
             <h1 className="text-foreground font-display text-2xl sm:text-3xl">{t.contactUs}</h1>
           </div>
-          <p className="text-muted-foreground text-sm max-w-xl">
-            {isRTL 
-              ? "لديك أي أسئلة أو استفسارات؟ فريق خدمة عملاء حاج عارفة يسعده الرد على اتصالاتكم ورسائلكم في أي وقت." 
-              : "Have questions or feedback? The HajArafa Customer Care team is here to support you with any inquiries."}
+          <p className="text-muted-foreground text-sm max-w-xl leading-relaxed flex flex-wrap items-center gap-1.5 select-none">
+            {isRTL ? (
+              <>
+                <span>لديك أي أسئلة أو استفسارات؟ فريق خدمة عملاء</span>
+                <img src={logoImg} alt="حاج عرفة" className="h-4.5 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
+                <span>يسعده الرد على اتصالاتكم ورسائلكم في أي وقت.</span>
+              </>
+            ) : (
+              <>
+                <span>Have questions or feedback? The</span>
+                <img src={logoImg} alt="HajArafa" className="h-4.5 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
+                <span>Customer Care team is here to support you with any inquiries.</span>
+              </>
+            )}
           </p>
         </div>
 
@@ -79,7 +90,7 @@ export function Contact() {
               {/* Phone support */}
               <div className="space-y-1">
                 <span className="eyebrow text-[10px] block">{isRTL ? "الخط الساخن" : "Hotline"}</span>
-                <a href="tel:+201012345678" className="text-foreground font-semibold hover:text-brand-terracotta flex items-center gap-2 text-sm sm:text-base">
+                <a href="tel:+201012345678" className="text-foreground font-semibold hover:text-brand-terracotta hover:underline flex items-center gap-2 text-sm sm:text-base">
                   <Phone size={14} className="text-brand-terracotta" /> +20 101 234 5678
                 </a>
               </div>
@@ -87,7 +98,7 @@ export function Contact() {
               {/* Email Support */}
               <div className="space-y-1">
                 <span className="eyebrow text-[10px] block">{isRTL ? "البريد الإلكتروني" : "Email Support"}</span>
-                <a href="mailto:support@hajarafa.com" className="text-foreground font-semibold hover:text-brand-terracotta flex items-center gap-2 text-sm sm:text-base break-all">
+                <a href="mailto:support@hajarafa.com" className="text-foreground font-semibold hover:text-brand-terracotta hover:underline flex items-center gap-2 text-sm sm:text-base break-all">
                   <Mail size={14} className="text-brand-terracotta" /> support@hajarafa.com
                 </a>
               </div>

@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { IconButton } from "./ui/IconButton";
+import logoImg from "../../assets/logo.svg";
 
 interface SettingsDrawerProps {
   open: boolean;
@@ -31,7 +32,7 @@ function Segmented<T extends string>({
   );
 }
 
-function Row({ icon: Icon, label, to, onClick }: { icon: typeof User; label: string; to?: string; onClick?: () => void }) {
+function Row({ icon: Icon, label, to, onClick }: { icon: typeof User; label: React.ReactNode; to?: string; onClick?: () => void }) {
   const inner = (
     <>
       <span className="flex items-center gap-3">
@@ -56,7 +57,12 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
   ];
   const help = [
     { icon: HelpCircle, label: t.customerService, to: "/help" },
-    { icon: Info, label: t.aboutUs, to: "/about" },
+    { icon: Info, label: (
+      <span className="flex items-center gap-1">
+        <span>{locale === "ar" ? "عن" : "About"}</span>
+        <img src={logoImg} alt="HajArafa" className="h-3.5 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
+      </span>
+    ), to: "/about" },
     { icon: MapPin, label: t.branches, to: "/branches" },
     { icon: Phone, label: t.contactUs, to: "/contact" },
   ];
@@ -80,14 +86,8 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
             className={`fixed top-0 bottom-0 ${isRTL ? "right-0" : "left-0"} w-full lg:max-w-sm bg-card text-card-foreground z-50 overflow-y-auto shadow-elev`}
           >
             <div className="sticky top-0 z-10 bg-card/95 backdrop-blur-xl border-b border-border px-4 py-3 flex items-center justify-between safe-area-pt">
-              <Link to="/" onClick={onClose} className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-full bg-brand-terracotta flex items-center justify-center">
-                  <span className="font-display text-white" style={{ fontSize: "1.05rem" }}>H</span>
-                </div>
-                <div className="flex flex-col leading-tight">
-                  <span className="font-display text-foreground" style={{ fontSize: "1.05rem" }}>{t.appName}</span>
-                  <span className="eyebrow" style={{ fontSize: "10px" }}>{t.appTagline}</span>
-                </div>
+              <Link to="/" onClick={onClose} className="flex items-center gap-2 select-none cursor-pointer">
+                <img src={logoImg} alt="HajArafa Logo" className="h-8 w-auto object-contain select-none pointer-events-none" />
               </Link>
               <IconButton onClick={onClose} aria-label="Close">
                 <X size={18} />
@@ -105,7 +105,10 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
                     👤
                   </div>
                   <div className="flex flex-col leading-tight">
-                    <span style={{ fontSize: "0.75rem", opacity: 0.85 }}>{t.welcomeTo} {t.appName}</span>
+                    <span className="flex items-center gap-1.5 flex-wrap" style={{ fontSize: "0.75rem", opacity: 0.85 }}>
+                      <span>{t.welcomeTo}</span>
+                      <img src={logoImg} alt="HajArafa" className="h-3 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
+                    </span>
                     <span className="font-semibold" style={{ fontSize: "1rem" }}>Alex Johnson</span>
                   </div>
                 </div>
@@ -154,8 +157,10 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
                 </div>
               </div>
 
-              <p className="text-brand-ink-soft text-center pt-2" style={{ fontSize: "0.75rem" }}>
-                © {new Date().getFullYear()} {t.appName} · {t.appTagline}
+              <p className="text-brand-ink-soft flex items-center justify-center gap-1.5 pt-2 select-none" style={{ fontSize: "0.75rem" }}>
+                <span>© {new Date().getFullYear()}</span>
+                <img src={logoImg} alt="HajArafa" className="h-3 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
+                <span>· {t.appTagline}</span>
               </p>
             </div>
           </motion.aside>

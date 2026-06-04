@@ -56,7 +56,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
       >
         <Link to={`/products/${product.id}`} className="flex gap-3 p-3">
           <div className="relative w-24 h-24 flex-shrink-0 rounded-sm overflow-hidden bg-[#FAF6F0] flex items-center justify-center">
-            <img src={product.image} alt={product.name} className="w-[85%] h-[85%] sm:w-full sm:h-full object-contain mix-blend-multiply p-1 sm:p-2" />
+            <img src={product.image} alt={product.name} className="w-[85%] h-[85%] sm:w-full sm:h-full object-contain mix-blend-multiply p-1 sm:p-2" loading="lazy" />
           </div>
           <div className="flex-1 min-w-0 flex flex-col justify-between gap-1">
             <div className="flex flex-col gap-0.5">
