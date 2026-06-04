@@ -98,11 +98,16 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
               <Link
                 to="/account"
                 onClick={onClose}
-                className="bg-brand-terracotta text-white rounded-md p-4 flex items-center justify-between hover:bg-brand-terracotta-dark transition-colors"
+                className="bg-brand-terracotta text-white rounded-2xl p-4 flex items-center justify-between hover:bg-brand-terracotta-dark transition-colors shadow-soft"
               >
-                <div className="flex flex-col">
-                  <span style={{ fontSize: "0.78rem", opacity: 0.85, letterSpacing: "1px" }}>{t.welcomeTo} {t.appName}</span>
-                  <span style={{ fontSize: "1.05rem", letterSpacing: "0.4px" }}>{t.signIn}</span>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-lg backdrop-blur-sm">
+                    👤
+                  </div>
+                  <div className="flex flex-col leading-tight">
+                    <span style={{ fontSize: "0.75rem", opacity: 0.85 }}>{t.welcomeTo} {t.appName}</span>
+                    <span className="font-semibold" style={{ fontSize: "1rem" }}>Alex Johnson</span>
+                  </div>
                 </div>
                 <ChevronRight size={18} className="rtl-flip" />
               </Link>

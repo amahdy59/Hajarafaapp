@@ -4,6 +4,7 @@ import { Link, useSearchParams } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import { useWishlist } from "../context/WishlistContext";
 import { useAppSettings } from "../context/AppSettingsContext";
+import { toast } from "sonner";
 
 const mockOrders = [
   { id: "HJR-823047", dateEn: "Apr 15, 2025", dateAr: "١٥ أبريل ٢٠٢٥", status: "delivered", total: 67.98, items: 3, image: "https://images.unsplash.com/photo-1537035448858-6d703dbc320f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100" },
@@ -37,12 +38,18 @@ export function Account() {
   useEffect(() => {
     if (tabParam && ["overview", "orders", "settings"].includes(tabParam)) {
       setActiveTab(tabParam);
+    } else {
+      setActiveTab("overview");
     }
   }, [tabParam]);
 
   const handleTabChange = (tab: Tab) => {
     setActiveTab(tab);
-    setSearchParams({ tab });
+    if (tab === "overview") {
+      setSearchParams({});
+    } else {
+      setSearchParams({ tab });
+    }
   };
 
   const [isAddressesOpen, setIsAddressesOpen] = useState(false);
@@ -93,16 +100,31 @@ export function Account() {
 
           <div className="relative z-10 grid grid-cols-3 gap-3 mt-5">
             {[
-              { label: t.myOrders, value: "12", icon: Package },
-              { label: t.yourWishlist, value: wishlistItems.length.toString(), icon: Heart },
-              { label: t.points, value: "240", icon: Star },
-            ].map(stat => (
-              <div key={stat.label} className="bg-white/10 backdrop-blur-sm rounded-xl p-3 text-center">
-                <stat.icon size={16} className="text-white/70 mx-auto mb-1" />
-                <p className="text-white text-lg font-medium">{stat.value}</p>
-                <p className="text-white/60 text-xs">{stat.label}</p>
-              </div>
-            ))}
+              { label: t.myOrders, value: "12", icon: Package, onClick: () => handleTabChange("orders") },
+              { label: t.yourWishlist, value: wishlistItems.length.toString(), icon: Heart, to: "/wishlist" },
+              { label: t.points, value: "240", icon: Star, onClick: () => toast.info(isRTL ? "رصيدك الحالي من نقاط الولاء" : "Your current loyalty points balance") },
+            ].map(stat => {
+              const inner = (
+                <>
+                  <stat.icon size={16} className="text-white/70 mx-auto mb-1" />
+                  <p className="text-white text-lg font-medium">{stat.value}</p>
+                  <p className="text-white/60 text-xs">{stat.label}</p>
+                </>
+              );
+              const cls = "bg-white/10 backdrop-blur-sm rounded-xl p-3 text-center transition-all duration-200 hover:bg-white/20 active:scale-95 block w-full";
+              if (stat.to) {
+                return (
+                  <Link key={stat.label} to={stat.to} className={cls}>
+                    {inner}
+                  </Link>
+                );
+              }
+              return (
+                <button key={stat.label} onClick={stat.onClick} className={cls}>
+                  {inner}
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -133,22 +155,33 @@ export function Account() {
             {/* Quick actions */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
-                { icon: Package, label: t.myOrders, to: "#", color: "bg-blue-500/10 text-blue-500" },
+                { icon: Package, label: t.myOrders, onClick: () => handleTabChange("orders"), color: "bg-blue-500/10 text-blue-500" },
                 { icon: Heart, label: t.yourWishlist, to: "/wishlist", color: "bg-brand-terracotta/10 text-brand-terracotta" },
-                { icon: MapPin, label: t.addresses, to: "#", color: "bg-amber-500/10 text-amber-500" },
-                { icon: Gift, label: t.rewards, to: "#", color: "bg-purple-500/10 text-purple-500" },
-              ].map(action => (
-                <Link
-                  key={action.label}
-                  to={action.to}
-                  className="bg-card rounded-2xl p-4 flex flex-col items-center gap-2 hover:shadow-md transition-shadow border border-border text-center"
-                >
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${action.color}`}>
-                    <action.icon size={18} />
-                  </div>
-                  <span className="text-sm text-foreground/80 font-medium">{action.label}</span>
-                </Link>
-              ))}
+                { icon: MapPin, label: t.addresses, onClick: () => setIsAddressesOpen(true), color: "bg-amber-500/10 text-amber-500" },
+                { icon: Gift, label: t.rewards, onClick: () => toast.success(isRTL ? "مكافآتك نشطة!" : "Your rewards are active!"), color: "bg-purple-500/10 text-purple-500" },
+              ].map(action => {
+                const inner = (
+                  <>
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${action.color}`}>
+                      <action.icon size={18} />
+                    </div>
+                    <span className="text-sm text-foreground/80 font-medium">{action.label}</span>
+                  </>
+                );
+                const cls = "bg-card rounded-2xl p-4 flex flex-col items-center gap-2 hover:shadow-md transition-shadow border border-border text-center w-full active:scale-95 transition-transform duration-100";
+                if (action.to) {
+                  return (
+                    <Link key={action.label} to={action.to} className={cls}>
+                      {inner}
+                    </Link>
+                  );
+                }
+                return (
+                  <button key={action.label} onClick={action.onClick} className={cls}>
+                    {inner}
+                  </button>
+                );
+              })}
             </div>
 
             {/* Recent orders */}
@@ -288,7 +321,10 @@ export function Account() {
                   className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
                 />
               </div>
-              <button className="bg-brand-terracotta text-white px-6 py-2.5 rounded-xl text-sm hover:bg-brand-terracotta-dark transition-all active:scale-[0.98] font-medium shadow-sm">
+              <button 
+                onClick={() => toast.success(isRTL ? "تم حفظ التغييرات بنجاح!" : "Changes saved successfully!")}
+                className="bg-brand-terracotta text-white px-6 py-2.5 rounded-xl text-sm hover:bg-brand-terracotta-dark transition-all active:scale-[0.98] font-medium shadow-sm"
+              >
                 {t.saveChanges}
               </button>
             </div>
@@ -320,7 +356,7 @@ export function Account() {
                 { icon: MapPin, label: t.savedAddresses, color: "text-foreground/80 hover:text-brand-terracotta", onClick: () => setIsAddressesOpen(true) },
                 { icon: Shield, label: t.privacySecurity, color: "text-foreground/80 hover:text-brand-terracotta", to: "/help" },
                 { icon: HelpCircle, label: t.helpSupport, color: "text-foreground/80 hover:text-brand-terracotta", to: "/help" },
-                { icon: LogOut, label: t.signOut, color: "text-destructive hover:text-destructive-dark font-medium", onClick: () => alert(isRTL ? "تم تسجيل الخروج بنجاح!" : "Signed out successfully!") },
+                { icon: LogOut, label: t.signOut, color: "text-destructive hover:text-destructive-dark font-medium", onClick: () => toast.success(isRTL ? "تم تسجيل الخروج بنجاح!" : "Signed out successfully!") },
               ].map((item, i) => {
                 const inner = (
                   <>
@@ -383,7 +419,10 @@ export function Account() {
                       <p className="text-foreground text-sm font-medium">{addr.details}</p>
                     </div>
                     <button 
-                      onClick={() => setAddresses(addresses.filter(a => a.id !== addr.id))}
+                      onClick={() => {
+                        setAddresses(addresses.filter(a => a.id !== addr.id));
+                        toast.success(isRTL ? "تم حذف العنوان بنجاح" : "Address deleted successfully");
+                      }}
                       className="text-destructive hover:text-destructive-dark p-1"
                     >
                       <Trash2 size={16} />
@@ -444,7 +483,10 @@ export function Account() {
                       </div>
                     </div>
                     <button 
-                      onClick={() => setPayments(payments.filter(p => p.id !== pay.id))}
+                      onClick={() => {
+                        setPayments(payments.filter(p => p.id !== pay.id));
+                        toast.success(isRTL ? "تم إزالة بطاقة الدفع بنجاح" : "Payment card removed successfully");
+                      }}
                       className="text-destructive hover:text-destructive-dark p-1"
                     >
                       <Trash2 size={16} />

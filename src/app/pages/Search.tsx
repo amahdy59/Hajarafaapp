@@ -27,8 +27,7 @@ export function Search() {
       p.name.toLowerCase().includes(q) ||
       (p.nameAr && p.nameAr.toLowerCase().includes(q)) ||
       p.category.toLowerCase().includes(q) ||
-      p.description.toLowerCase().includes(q) ||
-      p.tags.some(t => t.toLowerCase().includes(q))
+      p.description.toLowerCase().includes(q)
     );
   }, [query]);
 
@@ -79,9 +78,9 @@ export function Search() {
                   <button
                     key={s}
                     onClick={() => handleSearch(s)}
-                    className="flex items-center gap-2 bg-card px-4 py-2 rounded-xl text-sm text-foreground hover:bg-brand-peach border border-border hover:border-brand-terracotta transition-colors font-medium"
+                    className="bg-card px-4 py-2 rounded-xl text-sm text-foreground hover:bg-brand-peach border border-border hover:border-brand-terracotta transition-colors font-medium shadow-sm"
                   >
-                    <SearchIcon size={12} className="text-muted-foreground" /> {s}
+                    {s}
                   </button>
                 ))}
               </div>
@@ -91,13 +90,13 @@ export function Search() {
             <div>
               <h3 className="text-muted-foreground eyebrow mb-3">{t.popularSearches}</h3>
               <div className="flex flex-wrap gap-2">
-                {popular.map((s, i) => (
+                {popular.map(s => (
                   <button
                     key={s}
                     onClick={() => handleSearch(s)}
-                    className="flex items-center gap-1.5 bg-brand-peach text-brand-terracotta px-4 py-2 rounded-xl text-sm hover:bg-brand-terracotta hover:text-white transition-colors font-medium"
+                    className="bg-brand-peach text-brand-terracotta px-4 py-2 rounded-xl text-sm hover:bg-brand-terracotta hover:text-white transition-colors font-medium shadow-sm"
                   >
-                    {i === 0 ? "🔥" : i === 1 ? "⭐" : "🌿"} {s}
+                    {s}
                   </button>
                 ))}
               </div>

@@ -28,7 +28,6 @@ export interface Product {
   isBestSeller?: boolean;
   isNew?: boolean;
   isOrganic?: boolean;
-  tags: string[];
 }
 
 const HAJ = "https://hajarafa.com/cdn/shop/files/";
@@ -45,7 +44,6 @@ export const products: Product[] = [
     benefits: ["Long-lasting aroma", "Hand-rolled", "Premium ingredients"],
     usage: "Light the tip, let flame catch, then blow out and place in a holder.",
     weight: "Pack of 12", origin: "Egypt", inStock: true, isBestSeller: true,
-    tags: ["incense", "afghano", "wood"],
   },
   {
     id: "p2", name: "Amber Maamoul Incense", nameAr: "بخور معمول العنبر",
@@ -57,7 +55,6 @@ export const products: Product[] = [
     benefits: ["Deep amber aroma", "Long burn", "Authentic recipe"],
     usage: "Light, blow out, and place in a heat-safe holder.",
     weight: "Pack of 12", origin: "Egypt", inStock: true,
-    tags: ["incense", "amber", "oud"],
   },
 
   // Yamish & Dates
@@ -71,7 +68,6 @@ export const products: Product[] = [
     benefits: ["Naturally sweet", "Rich in fiber", "Energy boost"],
     usage: "Enjoy 3–7 dates daily, with milk or on their own.",
     weight: "500 g", origin: "Saudi Arabia", inStock: true, isBestSeller: true, isOrganic: true,
-    tags: ["dates", "ajwa", "madinah"],
   },
 
   // Cosmetics
@@ -85,7 +81,6 @@ export const products: Product[] = [
     benefits: ["Deep hydration", "Antioxidant", "Softens skin"],
     usage: "Apply to clean skin morning and night.",
     weight: "120 ml", origin: "Egypt", inStock: true, isNew: true,
-    tags: ["cream", "almond", "pomegranate"],
   },
   {
     id: "p5", name: "Amal Solid Perfume", nameAr: "مخمرية الأمال",
@@ -97,7 +92,6 @@ export const products: Product[] = [
     benefits: ["Alcohol-free", "Long-lasting", "Travel size"],
     usage: "Dab onto pulse points: wrists, neck, behind ears.",
     weight: "15 g", origin: "Egypt", inStock: true, isBestSeller: true,
-    tags: ["perfume", "amal", "solid"],
   },
   {
     id: "p6", name: "Amber Mist Hair Perfume", nameAr: "عطر الشعر العنبري",
@@ -109,7 +103,6 @@ export const products: Product[] = [
     benefits: ["Hair-safe", "Long fragrance", "Lightweight"],
     usage: "Spray 2–3 times onto dry hair from a distance.",
     weight: "100 ml", origin: "Egypt", inStock: true,
-    tags: ["mist", "amber", "hair"],
   },
   {
     id: "p7", name: "Amber Oil", nameAr: "زيت عنبر",
@@ -121,7 +114,6 @@ export const products: Product[] = [
     benefits: ["Hydrating", "Sensual scent", "Multi-use"],
     usage: "Apply a few drops onto skin or hair after showering.",
     weight: "30 ml", origin: "Egypt", inStock: true, isNew: true,
-    tags: ["oil", "amber", "body"],
   },
 
   // Nuts
@@ -135,7 +127,6 @@ export const products: Product[] = [
     benefits: ["Vitamin E", "Plant protein", "Healthy fats"],
     usage: "Eat raw, soaked, or use in recipes.",
     weight: "250 g", origin: "California", inStock: true, isOrganic: true,
-    tags: ["almond", "raw", "nuts"],
   },
   {
     id: "p9", name: "Roasted Almonds", nameAr: "لوز محمص",
@@ -147,7 +138,6 @@ export const products: Product[] = [
     benefits: ["Crunchy", "Natural", "Roasted dry"],
     usage: "Snack daily, or use in trail mixes.",
     weight: "100 g", origin: "Egypt", inStock: true,
-    tags: ["almond", "roasted", "snack"],
   },
   {
     id: "p10", name: "American Pistachio Salted", nameAr: "فستق أمريكي مملح كبير",
@@ -159,7 +149,6 @@ export const products: Product[] = [
     benefits: ["Heart healthy", "High protein", "Satisfying snack"],
     usage: "Enjoy a handful daily.",
     weight: "250 g", origin: "USA", inStock: true, isBestSeller: true,
-    tags: ["pistachio", "salted", "nuts"],
   },
 
   // Herbal Drinks
@@ -173,7 +162,6 @@ export const products: Product[] = [
     benefits: ["Digestive aid", "Calming", "Sweet aroma"],
     usage: "Steep 1 tsp in hot water for 5 minutes.",
     weight: "100 g", origin: "Egypt", inStock: true,
-    tags: ["anise", "herbal", "tea"],
   },
 
   // Healthy Corner
@@ -187,7 +175,6 @@ export const products: Product[] = [
     benefits: ["Gut health", "Raw & unfiltered", "Versatile"],
     usage: "Take 1–2 tbsp diluted in water before meals.",
     weight: "500 ml", origin: "Egypt", inStock: true, isOrganic: true, isBestSeller: true,
-    tags: ["vinegar", "apple", "healthy"],
   },
 
   // Drinks
@@ -201,7 +188,6 @@ export const products: Product[] = [
     benefits: ["100% fruit", "No added sugar", "Fresh-pressed"],
     usage: "Serve chilled. Refrigerate after opening.",
     weight: "1 L", origin: "Egypt", inStock: true, isNew: true,
-    tags: ["juice", "apple", "drink"],
   },
 
   // Coffee & Drinks
@@ -215,7 +201,6 @@ export const products: Product[] = [
     benefits: ["Hand-blended", "Cardamom & saffron", "Ceremonial grade"],
     usage: "Brew 1 tbsp in 100 ml water, simmer 5 minutes.",
     weight: "200 g", origin: "Egypt", inStock: true, isBestSeller: true,
-    tags: ["coffee", "arabic", "saffron", "cardamom"],
   },
 
   // Spices (curated additions in HajArafa style)
@@ -229,7 +214,6 @@ export const products: Product[] = [
     benefits: ["No additives", "Bold flavor", "Versatile"],
     usage: "Rub generously onto meat or vegetables before grilling.",
     weight: "100 g", origin: "Egypt", inStock: true,
-    tags: ["spices", "bbq", "grill"],
   },
   {
     id: "p16", name: "Bay Leaves", nameAr: "ورق لاورو",
@@ -241,7 +225,6 @@ export const products: Product[] = [
     benefits: ["Aromatic", "Whole leaves", "Long shelf-life"],
     usage: "Add 1–2 leaves to soups, stews and rice.",
     weight: "50 g", origin: "Turkey", inStock: true,
-    tags: ["spices", "bay leaves", "herbs"],
   },
 
   // Honey
@@ -255,7 +238,6 @@ export const products: Product[] = [
     benefits: ["Premium grade", "Naturally raw", "Antioxidant rich"],
     usage: "1 tsp daily on its own or in warm water.",
     weight: "250 g", origin: "Yemen", inStock: true, isBestSeller: true, isOrganic: true,
-    tags: ["honey", "sidr", "premium"],
   },
 
   // Snacks
@@ -269,7 +251,6 @@ export const products: Product[] = [
     benefits: ["Whole grain", "Sweet & salty"],
     usage: "Open and enjoy.",
     weight: "120 g", origin: "Egypt", inStock: true, isNew: true,
-    tags: ["popcorn", "caramel", "snack"],
   },
   {
     id: "p19", name: "Protein Rings Cheese", nameAr: "بروتين رينجز جبنة",
@@ -281,7 +262,6 @@ export const products: Product[] = [
     benefits: ["Protein-rich", "Light snack"],
     usage: "Open and enjoy.",
     weight: "40 g", origin: "Egypt", inStock: true,
-    tags: ["snack", "protein", "cheese"],
   },
 
   // Legumes
@@ -295,7 +275,6 @@ export const products: Product[] = [
     benefits: ["Plant protein", "Quick cooking", "Premium grade"],
     usage: "Rinse and simmer 15 minutes for soup.",
     weight: "500 g", origin: "Egypt", inStock: true,
-    tags: ["lentils", "legumes", "soup"],
   },
 
   // Dried Fruits
@@ -309,7 +288,6 @@ export const products: Product[] = [
     benefits: ["No added sugar", "High fiber", "Natural"],
     usage: "Eat as a snack or add to oatmeal.",
     weight: "200 g", origin: "Turkey", inStock: true,
-    tags: ["apricot", "dried fruits"],
   },
 
   // Sweets & Chocolates
@@ -323,7 +301,6 @@ export const products: Product[] = [
     benefits: ["70% cocoa", "Antioxidant", "Small batch"],
     usage: "Enjoy 2–3 squares daily.",
     weight: "100 g", origin: "Egypt", inStock: true,
-    tags: ["chocolate", "dark", "sweets"],
   },
 
   // Maamoul
@@ -337,7 +314,6 @@ export const products: Product[] = [
     benefits: ["Traditional recipe", "Hand-shaped"],
     usage: "Enjoy with coffee or tea.",
     weight: "300 g", origin: "Egypt", inStock: true, isNew: true,
-    tags: ["maamoul", "dates", "sweets"],
   },
 
   // Dr. Baby
@@ -351,7 +327,6 @@ export const products: Product[] = [
     benefits: ["Hypoallergenic", "Light scent", "Pediatrician-approved formula"],
     usage: "Massage gently onto baby's skin after bath.",
     weight: "100 ml", origin: "Egypt", inStock: true,
-    tags: ["baby", "oil", "soothing"],
   },
 ];
 

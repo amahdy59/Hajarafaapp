@@ -60,7 +60,7 @@ export function Header() {
           </Link>
 
           <div className="flex items-center gap-0.5">
-            <IconButton onClick={() => setSearchOpen(true)} aria-label={t.searchPlaceholder}>
+            <IconButton onClick={() => setSearchOpen(true)} aria-label={t.searchPlaceholder} className="hidden sm:flex">
               <Search size={19} />
             </IconButton>
             <IconButton

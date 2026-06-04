@@ -18,7 +18,7 @@ type BadgeTone = "sage" | "terracotta";
 function deriveBadge(p: Product, isRTL: boolean): { label: string; tone: BadgeTone } | null {
   if (p.discount) return { label: `-${p.discount}%`, tone: "terracotta" };
   if (p.isNew) return { label: isRTL ? "جديد" : "New", tone: "sage" };
-  if (p.isBestSeller) return { label: isRTL ? "الأفضل" : "Best", tone: "sage" };
+  if (p.isBestSeller) return { label: isRTL ? "الأكثر مبيعاً" : "Best Seller", tone: "sage" };
   if (p.isOrganic) return { label: isRTL ? "عضوي" : "Organic", tone: "sage" };
   return null;
 }
