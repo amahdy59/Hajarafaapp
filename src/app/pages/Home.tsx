@@ -59,28 +59,27 @@ export function Home() {
           </div>
         </section>
 
-        {/* Shop by Concern */}
-        <Section title={t.shopByConcern}>
-          <ScrollRail>
-            {concerns.map(c => {
-              const Icon = c.icon;
-              const label = c.key === "immunity" ? t.immunity : c.key === "energy" ? t.energy : c.key === "skin" ? t.skinCare : c.key === "relax" ? t.relaxation : t.digestion;
-              return (
-                <Link
-                  key={c.key}
-                  to={`/category/${c.slug}`}
-                  className="flex-shrink-0 snap-start flex flex-col items-center gap-2.5 w-20"
-                >
-                  <div className="w-20 h-20 rounded-full bg-brand-cream-2 border border-border flex items-center justify-center hover:border-brand-terracotta hover:bg-brand-peach transition-colors">
-                    <Icon size={26} className="text-brand-terracotta" strokeWidth={1.5} />
-                  </div>
-                  <span className="text-muted-foreground text-center eyebrow" style={{ fontSize: "10.5px" }}>
-                    {label}
-                  </span>
-                </Link>
-              );
-            })}
-          </ScrollRail>
+        {/* Browse Departments (Promoted to top) */}
+        <Section title={t.browseDepartments}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            {departments.map(d => (
+              <Link
+                key={d.id}
+                to={d.children.length === 1 ? `/category/${d.children[0]}` : `/products?dept=${d.slug}`}
+                className="group bg-card rounded-md overflow-hidden border border-border hover:border-brand-sage hover:shadow-soft transition-all duration-300 transform hover:-translate-y-0.5"
+              >
+                <div className="aspect-[5/4] bg-brand-cream-2 overflow-hidden">
+                  <img src={d.image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                </div>
+                <div className="p-3">
+                  <p className="eyebrow text-brand-terracotta" style={{ fontSize: "10px" }}>
+                    {d.group === "foods" ? t.foods : t.nonFood}
+                  </p>
+                  <p className="text-foreground mt-1" style={{ fontSize: "0.92rem" }}>{isRTL && d.nameAr ? d.nameAr : d.name}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </Section>
 
         {/* Herbal Essentials grid */}
@@ -88,7 +87,7 @@ export function Home() {
           title={t.herbalEssentials}
           viewAllHref="/products"
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {featured.map(p => (
               <ProductCard key={p.id} product={p} />
             ))}
@@ -119,29 +118,6 @@ export function Home() {
             </div>
           </div>
         </section>
-
-        {/* Departments */}
-        <Section title={t.browseDepartments}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            {departments.map(d => (
-              <Link
-                key={d.id}
-                to={d.children.length === 1 ? `/category/${d.children[0]}` : `/products?dept=${d.slug}`}
-                className="group bg-card rounded-md overflow-hidden border border-border hover:border-brand-sage transition-colors"
-              >
-                <div className="aspect-[5/4] bg-brand-cream-2 overflow-hidden">
-                  <img src={d.image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                </div>
-                <div className="p-3">
-                  <p className="eyebrow text-brand-terracotta" style={{ fontSize: "10px" }}>
-                    {d.group === "foods" ? t.foods : t.nonFood}
-                  </p>
-                  <p className="text-foreground mt-1" style={{ fontSize: "0.92rem" }}>{isRTL && d.nameAr ? d.nameAr : d.name}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </Section>
 
         {/* Trending category rails */}
         {[

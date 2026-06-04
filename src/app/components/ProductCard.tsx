@@ -88,9 +88,10 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
   return (
     <motion.article
       initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -2 }}
+      whileHover={{ y: -3, scale: 1.005 }}
+      whileTap={{ scale: 0.99 }}
       transition={{ type: "tween", duration: 0.18 }}
-      className="bg-card rounded-md border border-border overflow-hidden flex flex-col h-full"
+      className="bg-card rounded-md border border-border overflow-hidden flex flex-col h-full hover:shadow-soft hover:border-brand-sage transition-all duration-300"
     >
       <Link to={`/products/${product.id}`} className="flex flex-col flex-1">
         <div className="relative aspect-square bg-[#FAF6F0] overflow-hidden flex items-center justify-center p-4">
@@ -113,7 +114,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
           <button
             onClick={onWish}
             aria-label="Wishlist"
-            className="absolute top-2 end-2 w-8 h-8 bg-card/90 backdrop-blur rounded-full flex items-center justify-center border border-border hover:scale-110 transition-transform"
+            className="absolute top-2 end-2 w-8 h-8 bg-card/90 backdrop-blur rounded-full flex items-center justify-center border border-border hover:scale-105 active:scale-95 hover:text-brand-terracotta hover:border-brand-terracotta transition-all duration-200"
           >
             <Heart size={14} className={wishlisted ? "fill-brand-terracotta text-brand-terracotta" : "text-brand-ink-soft"} />
           </button>
@@ -136,7 +137,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
             <button
               onClick={onAdd}
               aria-label={t.addToCart}
-              className="w-8 h-8 rounded-md bg-brand-terracotta text-white flex items-center justify-center hover:bg-brand-terracotta-dark transition-colors active:scale-95"
+              className="w-8 h-8 rounded-md bg-brand-terracotta text-white flex items-center justify-center hover:bg-brand-terracotta-dark hover:scale-105 active:scale-95 transition-all duration-200"
             >
               <Plus size={16} />
             </button>
