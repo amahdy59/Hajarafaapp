@@ -1,19 +1,21 @@
+import { lazy } from "react";
 import { createBrowserRouter } from "react-router";
 import { Root } from "./Root";
-import { Home } from "./pages/Home";
-import { Products } from "./pages/Products";
-import { ProductDetail } from "./pages/ProductDetail";
-import { Category } from "./pages/Category";
-import { Search } from "./pages/Search";
-import { Cart } from "./pages/Cart";
-import { Checkout } from "./pages/Checkout";
-import { Account } from "./pages/Account";
-import { Wishlist } from "./pages/Wishlist";
-import { About } from "./pages/About";
-import { Branches } from "./pages/Branches";
-import { Contact } from "./pages/Contact";
-import { Help } from "./pages/Help";
-import { NotFound } from "./pages/NotFound";
+
+const Home = lazy(() => import("./pages/Home").then(m => ({ default: m.Home })));
+const Products = lazy(() => import("./pages/Products").then(m => ({ default: m.Products })));
+const ProductDetail = lazy(() => import("./pages/ProductDetail").then(m => ({ default: m.ProductDetail })));
+const Category = lazy(() => import("./pages/Category").then(m => ({ default: m.Category })));
+const Search = lazy(() => import("./pages/Search").then(m => ({ default: m.Search })));
+const Cart = lazy(() => import("./pages/Cart").then(m => ({ default: m.Cart })));
+const Checkout = lazy(() => import("./pages/Checkout").then(m => ({ default: m.Checkout })));
+const Account = lazy(() => import("./pages/Account").then(m => ({ default: m.Account })));
+const Wishlist = lazy(() => import("./pages/Wishlist").then(m => ({ default: m.Wishlist })));
+const About = lazy(() => import("./pages/About").then(m => ({ default: m.About })));
+const Branches = lazy(() => import("./pages/Branches").then(m => ({ default: m.Branches })));
+const Contact = lazy(() => import("./pages/Contact").then(m => ({ default: m.Contact })));
+const Help = lazy(() => import("./pages/Help").then(m => ({ default: m.Help })));
+const NotFound = lazy(() => import("./pages/NotFound").then(m => ({ default: m.NotFound })));
 
 export const router = createBrowserRouter([
   {

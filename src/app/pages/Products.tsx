@@ -297,26 +297,44 @@ export function Products() {
             {/* Active filter chips */}
             {hasActiveFilters && (
               <div className="flex flex-wrap gap-2 mb-4">
-                {selectedCategories.map(slug => {
-                  const cat = categories.find(c => c.slug === slug);
-                  return cat ? (
-                    <span key={slug} className="inline-flex items-center gap-1.5 bg-brand-terracotta/10 text-brand-terracotta text-xs px-3 py-1.5 rounded-full border border-brand-terracotta/20">
-                      {isRTL && cat.nameAr ? cat.nameAr : cat.name}
-                      <button onClick={() => toggleCategory(slug)}><X size={11} /></button>
-                    </span>
-                  ) : null;
-                })}
-                {showOrganic && (
-                  <span className="inline-flex items-center gap-1.5 bg-brand-terracotta/10 text-brand-terracotta text-xs px-3 py-1.5 rounded-full border border-brand-terracotta/20">
-                    {t.organicOnly} <button onClick={() => setShowOrganic(false)}><X size={11} /></button>
-                  </span>
-                )}
-                <button
-                  onClick={clearFilters}
-                  className="inline-flex items-center gap-1 bg-brand-peach hover:bg-brand-terracotta text-brand-terracotta hover:text-white text-xs px-3 py-1.5 rounded-full border border-brand-terracotta/30 transition-all font-semibold"
-                >
-                  <X size={11} /> {t.clearAll}
-                </button>
+                <AnimatePresence>
+                  {selectedCategories.map(slug => {
+                    const cat = categories.find(c => c.slug === slug);
+                    return cat ? (
+                      <motion.span
+                        key={slug}
+                        layout
+                        initial={{ opacity: 0, scale: 0.85 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.85 }}
+                        className="inline-flex items-center gap-1.5 bg-brand-terracotta/10 text-brand-terracotta text-xs px-3 py-1.5 rounded-full border border-brand-terracotta/20"
+                      >
+                        {isRTL && cat.nameAr ? cat.nameAr : cat.name}
+                        <button onClick={() => toggleCategory(slug)} className="hover:text-brand-terracotta-dark transition-colors"><X size={11} /></button>
+                      </motion.span>
+                    ) : null;
+                  })}
+                  {showOrganic && (
+                    <motion.span
+                      key="organic"
+                      layout
+                      initial={{ opacity: 0, scale: 0.85 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.85 }}
+                      className="inline-flex items-center gap-1.5 bg-brand-terracotta/10 text-brand-terracotta text-xs px-3 py-1.5 rounded-full border border-brand-terracotta/20"
+                    >
+                      {t.organicOnly} <button onClick={() => setShowOrganic(false)} className="hover:text-brand-terracotta-dark transition-colors"><X size={11} /></button>
+                    </motion.span>
+                  )}
+                  <motion.button
+                    key="clear-all"
+                    layout
+                    onClick={clearFilters}
+                    className="inline-flex items-center gap-1 bg-brand-peach hover:bg-brand-terracotta text-brand-terracotta hover:text-white text-xs px-3 py-1.5 rounded-full border border-brand-terracotta/30 transition-all font-semibold active:scale-95"
+                  >
+                    <X size={11} /> {t.clearAll}
+                  </motion.button>
+                </AnimatePresence>
               </div>
             )}
 

@@ -1,8 +1,16 @@
+import { Suspense } from "react";
 import { Outlet, useLocation } from "react-router";
 import { Toaster } from "sonner";
 import { Header } from "./components/Header";
 import { BottomNav } from "./components/BottomNav";
 import { CartDrawer } from "./components/CartDrawer";
+import { ErrorBoundary } from "./components/ErrorBoundary";
+
+const PageLoader = () => (
+  <div className="min-h-[50vh] flex items-center justify-center">
+    <div className="w-8 h-8 rounded-full border-4 border-brand-peach border-t-brand-terracotta animate-spin" />
+  </div>
+);
 
 export function Root() {
   const location = useLocation();
@@ -27,11 +35,19 @@ export function Root() {
               </span>
             </div>
           </div>
-          <Outlet />
+          <ErrorBoundary>
+            <Suspense fallback={<PageLoader />}>
+              <Outlet />
+            </Suspense>
+          </ErrorBoundary>
         </div>
       ) : (
         <main className={`${!["/checkout", "/account"].includes(location.pathname) ? "pt-[108px]" : "pt-16"} pb-24 sm:pb-8 w-full max-w-full overflow-x-hidden`}>
-          <Outlet />
+          <ErrorBoundary>
+            <Suspense fallback={<PageLoader />}>
+              <Outlet />
+            </Suspense>
+          </ErrorBoundary>
         </main>
       )}
 

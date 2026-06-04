@@ -71,9 +71,11 @@ export function CartDrawer() {
                   {items.map(item => (
                     <motion.div
                       key={item.product.id}
+                      layout
                       initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: isRTL ? 20 : -20 }}
+                      transition={{ type: "spring", stiffness: 350, damping: 35 }}
                       className="flex gap-3 bg-card rounded-2xl p-3 border border-border"
                     >
                       <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#FAF6F0] flex-shrink-0 flex items-center justify-center p-1">

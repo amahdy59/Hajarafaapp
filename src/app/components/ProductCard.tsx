@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Heart, Plus, Leaf } from "lucide-react";
 import { Link } from "react-router";
 import { Product } from "../data/products";
@@ -27,7 +28,7 @@ const badgeCls: Record<BadgeTone, string> = {
   terracotta: "bg-brand-peach text-brand-terracotta border-brand-terracotta",
 };
 
-export function ProductCard({ product, view = "grid" }: ProductCardProps) {
+export const ProductCard = memo(function ProductCard({ product, view = "grid" }: ProductCardProps) {
   const { addToCart } = useCart();
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { t, isRTL } = useAppSettings();
@@ -146,4 +147,4 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
       </Link>
     </motion.article>
   );
-}
+});

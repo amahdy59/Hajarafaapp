@@ -1,4 +1,9 @@
 import { categoryMapping } from "./categories";
+import cheeseRingsImg from "../../assets/cheese_rings.png";
+import redLentilsImg from "../../assets/red_lentils.png";
+import driedApricotsImg from "../../assets/dried_apricots.png";
+import darkChocolateImg from "../../assets/dark_chocolate_bar.png";
+import dateMaamoulImg from "../../assets/date_maamoul.png";
 
 export interface Product {
   id: string;
@@ -270,8 +275,8 @@ export const products: Product[] = [
     id: "p19", name: "Protein Rings Cheese", nameAr: "بروتين رينجز جبنة",
     category: "Snacks", categorySlug: "snacks",
     price: 25, rating: 4.5, reviewCount: 64,
-    image: "https://images.unsplash.com/photo-1599490659213-e2b9527bd087?w=600",
-    images: ["https://images.unsplash.com/photo-1599490659213-e2b9527bd087?w=600"],
+    image: cheeseRingsImg,
+    images: [cheeseRingsImg],
     description: "Cheese-flavored crunchy rings with added protein. Light and savory.",
     benefits: ["Protein-rich", "Light snack"],
     usage: "Open and enjoy.",
@@ -284,8 +289,8 @@ export const products: Product[] = [
     id: "p20", name: "Red Lentils", nameAr: "عدس أحمر",
     category: "Legumes", categorySlug: "legumes",
     price: 45, rating: 4.8, reviewCount: 92,
-    image: "https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?w=600",
-    images: ["https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?w=600"],
+    image: redLentilsImg,
+    images: [redLentilsImg],
     description: "Cleaned, premium red lentils — quick-cooking and rich in plant protein.",
     benefits: ["Plant protein", "Quick cooking", "Premium grade"],
     usage: "Rinse and simmer 15 minutes for soup.",
@@ -298,8 +303,8 @@ export const products: Product[] = [
     id: "p21", name: "Dried Apricots", nameAr: "مشمش مجفف",
     category: "Dried Fruits", categorySlug: "dried-fruits",
     price: 75, rating: 4.7, reviewCount: 58,
-    image: "https://images.unsplash.com/photo-1599045118108-bf9954418b76?w=600",
-    images: ["https://images.unsplash.com/photo-1599045118108-bf9954418b76?w=600"],
+    image: driedApricotsImg,
+    images: [driedApricotsImg],
     description: "Sun-dried Turkish apricots — soft, tangy and naturally sweet.",
     benefits: ["No added sugar", "High fiber", "Natural"],
     usage: "Eat as a snack or add to oatmeal.",
@@ -312,8 +317,8 @@ export const products: Product[] = [
     id: "p22", name: "Dark Chocolate Bar 70%", nameAr: "شوكولاتة دارك 70%",
     category: "Sweets & Chocolates", categorySlug: "sweets-chocolates",
     price: 65, rating: 4.8, reviewCount: 142,
-    image: "https://images.unsplash.com/photo-1548907040-4baa42d10919?w=600",
-    images: ["https://images.unsplash.com/photo-1548907040-4baa42d10919?w=600"],
+    image: darkChocolateImg,
+    images: [darkChocolateImg],
     description: "Smooth 70% dark chocolate with deep cocoa notes. Crafted in small batches.",
     benefits: ["70% cocoa", "Antioxidant", "Small batch"],
     usage: "Enjoy 2–3 squares daily.",
@@ -326,8 +331,8 @@ export const products: Product[] = [
     id: "p23", name: "Date Maamoul", nameAr: "معمول تمر",
     category: "Maamoul", categorySlug: "maamoul",
     price: 90, rating: 4.9, reviewCount: 78,
-    image: "https://images.unsplash.com/photo-1590080875823-cdf69eddffeb?w=600",
-    images: ["https://images.unsplash.com/photo-1590080875823-cdf69eddffeb?w=600"],
+    image: dateMaamoulImg,
+    images: [dateMaamoulImg],
     description: "Buttery shortbread cookies stuffed with rich date paste. A traditional festive favorite.",
     benefits: ["Traditional recipe", "Hand-shaped"],
     usage: "Enjoy with coffee or tea.",
