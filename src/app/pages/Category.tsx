@@ -36,11 +36,11 @@ export function Category() {
             <Link to="/products" className="inline-flex items-center gap-1.5 text-white/70 hover:text-white text-sm mb-3 transition-colors">
               <ArrowLeft size={14} className="rtl-flip" /> {t.shopAll}
             </Link>
-            <div className="flex items-center gap-3">
-              <span className="text-4xl">{category.icon}</span>
+            <div className="flex items-center gap-3.5 bg-black/20 backdrop-blur-[2px] p-3.5 sm:p-5 rounded-2xl border border-white/10 shadow-lg max-w-fit select-none">
+              <span className="text-3xl sm:text-4xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">{category.icon}</span>
               <div>
-                <h1 className="text-white text-2xl sm:text-3xl font-display">{categoryName}</h1>
-                <p className="text-white/70 text-sm">{category.count}+ {t.productsFound}</p>
+                <h1 className="text-white text-xl sm:text-3xl font-display drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] leading-tight">{categoryName}</h1>
+                <p className="text-white/85 text-xs sm:text-sm drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)] mt-0.5">{category.count}+ {t.productsFound}</p>
               </div>
             </div>
           </div>

@@ -31,27 +31,27 @@ export function Home() {
         {/* Hero */}
         <section className="relative rounded-md overflow-hidden shadow-soft" style={{ aspectRatio: "16/10", maxHeight: 420 }}>
           <img src={HERO_IMG} alt={isRTL ? "خلفية صحية طبيعية لعشبة البابونج" : "Chamomile natural wellness background"} className="absolute inset-0 w-full h-full object-cover" />
-          <div className={`absolute inset-0 bg-gradient-to-${isRTL ? "l" : "r"} from-brand-ink/70 via-brand-ink/30 to-transparent`} />
-          <div className="absolute inset-0 flex items-center p-6 sm:p-10">
+          <div className={`absolute inset-0 bg-gradient-to-${isRTL ? "l" : "r"} from-brand-ink/80 via-brand-ink/40 to-transparent`} />
+          <div className="absolute inset-0 flex items-center p-4 sm:p-10">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="max-w-md"
+              className="max-w-md bg-black/20 backdrop-blur-[2px] p-5 rounded-2xl border border-white/5 shadow-lg select-none"
             >
-              <span className="eyebrow text-brand-peach">{t.appTagline}</span>
+              <span className="eyebrow text-brand-peach drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">{t.appTagline}</span>
               <h1
-                className="font-display text-white mt-2"
-                style={{ fontSize: "clamp(2rem, 6vw, 3rem)", lineHeight: 1.05, letterSpacing: "-0.5px" }}
+                className="font-display text-white mt-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]"
+                style={{ fontSize: "clamp(1.65rem, 5vw, 2.5rem)", lineHeight: 1.1, letterSpacing: "-0.5px" }}
               >
                 {t.heroHeadline}
               </h1>
-              <p className="text-white/85 mt-3 mb-5" style={{ fontSize: "0.98rem", lineHeight: 1.55, maxWidth: 360 }}>
+              <p className="text-white/85 mt-2.5 mb-4.5 drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)]" style={{ fontSize: "0.92rem", lineHeight: 1.45, maxWidth: 360 }}>
                 {t.heroSubline}
               </p>
               <Link
                 to="/products"
-                className="inline-flex items-center gap-2 bg-brand-terracotta text-white px-6 py-2.5 rounded-xl hover:bg-brand-terracotta-dark transition-colors active:scale-95 eyebrow"
+                className="inline-flex items-center gap-2 bg-brand-terracotta text-white px-5 py-2 rounded-xl hover:bg-brand-terracotta-dark transition-colors active:scale-95 eyebrow text-xs sm:text-sm font-semibold"
               >
                 {t.explore}
               </Link>
@@ -59,23 +59,25 @@ export function Home() {
           </div>
         </section>
 
-        {/* Browse Departments (Promoted to top) */}
+        {/* Browse Departments (Updated to compact horizontal icon-only cards) */}
         <Section title={t.browseDepartments}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {departments.map(d => (
               <Link
                 key={d.id}
                 to={d.children.length === 1 ? `/category/${d.children[0]}` : `/products?dept=${d.slug}`}
-                className="group bg-card rounded-md overflow-hidden border border-border hover:border-brand-sage hover:shadow-soft transition-all duration-300 transform hover:-translate-y-0.5"
+                className="group flex items-center gap-3 p-3 bg-card rounded-xl border border-border hover:border-brand-sage hover:shadow-soft transition-all duration-300 transform hover:-translate-y-0.5"
               >
-                <div className="aspect-[5/4] bg-brand-cream-2 overflow-hidden">
-                  <img src={d.image} alt={isRTL && d.nameAr ? d.nameAr : d.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <div className="w-10 h-10 rounded-full bg-brand-peach flex items-center justify-center text-xl flex-shrink-0 group-hover:scale-110 transition-transform duration-300 select-none">
+                  {d.icon}
                 </div>
-                <div className="p-3">
-                  <p className="eyebrow text-brand-terracotta" style={{ fontSize: "10px" }}>
+                <div className="min-w-0">
+                  <p className="eyebrow text-brand-terracotta uppercase" style={{ fontSize: "8px", letterSpacing: "0.5px" }}>
                     {d.group === "foods" ? t.foods : t.nonFood}
                   </p>
-                  <p className="text-foreground mt-1" style={{ fontSize: "0.92rem" }}>{isRTL && d.nameAr ? d.nameAr : d.name}</p>
+                  <p className="text-foreground font-semibold truncate mt-0.5" style={{ fontSize: "0.85rem" }}>
+                    {isRTL && d.nameAr ? d.nameAr : d.name}
+                  </p>
                 </div>
               </Link>
             ))}

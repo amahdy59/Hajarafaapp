@@ -52,11 +52,11 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
     return (
       <motion.article
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
-        className="bg-card rounded-md border border-border overflow-hidden"
+        className="bg-card rounded-md border border-border dark:border-zinc-600/90 overflow-hidden"
       >
         <Link to={`/products/${product.id}`} className="flex gap-3 p-3">
-          <div className="relative w-24 h-24 flex-shrink-0 rounded-sm overflow-hidden bg-[#FAF6F0]">
-            <img src={product.image} alt={product.name} className="w-full h-full object-contain mix-blend-multiply p-2" />
+          <div className="relative w-24 h-24 flex-shrink-0 rounded-sm overflow-hidden bg-[#FAF6F0] flex items-center justify-center">
+            <img src={product.image} alt={product.name} className="w-[85%] h-[85%] sm:w-full sm:h-full object-contain mix-blend-multiply p-1 sm:p-2" />
           </div>
           <div className="flex-1 min-w-0 flex flex-col justify-between gap-1">
             <div className="flex flex-col gap-0.5">
@@ -92,14 +92,14 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
       whileHover={{ y: -3, scale: 1.005 }}
       whileTap={{ scale: 0.99 }}
       transition={{ type: "tween", duration: 0.18 }}
-      className="bg-card rounded-md border border-border overflow-hidden flex flex-col h-full hover:shadow-soft hover:border-brand-sage transition-all duration-300"
+      className="bg-card rounded-md border border-border dark:border-zinc-600/90 overflow-hidden flex flex-col h-full hover:shadow-soft hover:border-brand-sage transition-all duration-300"
     >
       <Link to={`/products/${product.id}`} className="flex flex-col flex-1">
         <div className="relative aspect-square bg-[#FAF6F0] overflow-hidden flex items-center justify-center p-4">
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-contain mix-blend-multiply transition-transform duration-300 hover:scale-[1.03]"
+            className="w-[85%] h-[85%] sm:w-full sm:h-full object-contain mix-blend-multiply transition-transform duration-300 hover:scale-[1.03]"
             loading="lazy"
           />
 

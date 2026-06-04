@@ -252,26 +252,28 @@ export function Products() {
           {/* Main content */}
           <div className="flex-1 min-w-0">
             {/* Toolbar */}
-            <div className="flex items-center justify-between mb-4 bg-card border border-border rounded-xl px-4 py-3 shadow-soft">
-              <button
-                onClick={() => setIsFilterOpen(true)}
-                className="lg:hidden flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
-              >
-                <SlidersHorizontal size={16} />
-                {t.filters}
-                {hasActiveFilters && (
-                  <span className="bg-brand-terracotta text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                    {selectedCategories.length + (showOrganic ? 1 : 0)}
-                  </span>
-                )}
-              </button>
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-4 bg-card border border-border rounded-xl px-4 py-3 shadow-soft">
+              {/* Row 1 (Mobile) / Left Group (Desktop) */}
+              <div className="flex items-center justify-between gap-3 w-full lg:w-auto">
+                <button
+                  onClick={() => setIsFilterOpen(true)}
+                  className="lg:hidden flex items-center gap-2 text-sm font-semibold text-brand-terracotta bg-brand-peach border border-brand-terracotta/20 rounded-lg px-3.5 py-2 hover:bg-brand-peach/80 transition-all duration-200 active:scale-95 shadow-sm"
+                >
+                  <SlidersHorizontal size={15} />
+                  <span>{t.filters}</span>
+                  {hasActiveFilters && (
+                    <span className="bg-brand-terracotta text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                      {selectedCategories.length + (showOrganic ? 1 : 0)}
+                    </span>
+                  )}
+                </button>
 
-              <div className="flex items-center gap-3 ms-auto">
-                <div className="relative">
+                {/* Sort select dropdown inside Row 1 on mobile, next to filters, but aligns next to Grid/List switcher on desktop */}
+                <div className="relative w-40 sm:w-48 lg:hidden">
                   <select
                     value={sort}
                     onChange={e => setSort(e.target.value as SortOption)}
-                    className="appearance-none bg-brand-peach ps-3 pe-8 py-2 rounded-lg text-sm text-brand-terracotta font-medium outline-none cursor-pointer"
+                    className="appearance-none w-full bg-brand-peach border border-brand-terracotta/10 ps-3 pe-8 py-2 rounded-lg text-sm text-brand-terracotta font-semibold outline-none cursor-pointer focus:border-brand-terracotta"
                   >
                     <option value="featured">{t.trending}</option>
                     <option value="price-asc">{isRTL ? "السعر: من الأقل للأعلى" : "Price: Low to High"}</option>
@@ -279,22 +281,51 @@ export function Products() {
                     <option value="rating">{isRTL ? "الأعلى تقييماً" : "Top Rated"}</option>
                     <option value="new">{t.newArrivals}</option>
                   </select>
-                  <ChevronDown size={13} className="absolute end-2 top-1/2 -translate-y-1/2 text-brand-terracotta pointer-events-none" />
+                  <ChevronDown size={13} className="absolute end-2.5 top-1/2 -translate-y-1/2 text-brand-terracotta pointer-events-none" />
                 </div>
+              </div>
 
-                <div className="flex items-center gap-1 bg-brand-peach rounded-lg p-1">
-                  <button
-                    onClick={() => setView("grid")}
-                    className={`p-1.5 rounded ${view === "grid" ? "bg-card shadow-sm" : ""}`}
-                  >
-                    <Grid3X3 size={16} className={view === "grid" ? "text-brand-terracotta" : "text-brand-ink-soft"} />
-                  </button>
-                  <button
-                    onClick={() => setView("list")}
-                    className={`p-1.5 rounded ${view === "list" ? "bg-card shadow-sm" : ""}`}
-                  >
-                    <List size={16} className={view === "list" ? "text-brand-terracotta" : "text-brand-ink-soft"} />
-                  </button>
+              {/* Row 2 (Mobile) / Right Group (Desktop) */}
+              <div className="flex items-center justify-between lg:justify-end gap-3 w-full lg:w-auto border-t border-border/40 lg:border-t-0 pt-2 lg:pt-0">
+                {/* Product Count on Mobile */}
+                <span className="text-muted-foreground text-xs font-semibold lg:hidden">
+                  {filteredProducts.length} {t.productsFound}
+                </span>
+
+                <div className="flex items-center gap-3 ms-auto lg:ms-0">
+                  {/* Sort select dropdown for desktop only */}
+                  <div className="relative hidden lg:block">
+                    <select
+                      value={sort}
+                      onChange={e => setSort(e.target.value as SortOption)}
+                      className="appearance-none bg-brand-peach ps-3 pe-8 py-2 rounded-lg text-sm text-brand-terracotta font-semibold outline-none cursor-pointer border border-brand-terracotta/10 focus:border-brand-terracotta"
+                    >
+                      <option value="featured">{t.trending}</option>
+                      <option value="price-asc">{isRTL ? "السعر: من الأقل للأعلى" : "Price: Low to High"}</option>
+                      <option value="price-desc">{isRTL ? "السعر: من الأعلى للأقل" : "Price: High to Low"}</option>
+                      <option value="rating">{isRTL ? "الأعلى تقييماً" : "Top Rated"}</option>
+                      <option value="new">{t.newArrivals}</option>
+                    </select>
+                    <ChevronDown size={13} className="absolute end-2.5 top-1/2 -translate-y-1/2 text-brand-terracotta pointer-events-none" />
+                  </div>
+
+                  {/* Grid / List view switch (Always visible, grouped on Row 2 for mobile, and side-by-side with sort dropdown on desktop) */}
+                  <div className="flex items-center gap-1 bg-brand-peach rounded-lg p-1 border border-brand-terracotta/10">
+                    <button
+                      onClick={() => setView("grid")}
+                      className={`p-1.5 rounded transition-all ${view === "grid" ? "bg-card shadow-sm text-brand-terracotta" : "text-brand-ink-soft hover:text-brand-terracotta"}`}
+                      aria-label="Grid view"
+                    >
+                      <Grid3X3 size={15} />
+                    </button>
+                    <button
+                      onClick={() => setView("list")}
+                      className={`p-1.5 rounded transition-all ${view === "list" ? "bg-card shadow-sm text-brand-terracotta" : "text-brand-ink-soft hover:text-brand-terracotta"}`}
+                      aria-label="List view"
+                    >
+                      <List size={15} />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
