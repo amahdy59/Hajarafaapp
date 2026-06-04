@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { X, Sun, Moon, Languages, User, Package, Heart, HelpCircle, Info, MapPin, Phone, ChevronRight, Settings } from "lucide-react";
 import { Link } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
@@ -50,8 +51,17 @@ function Row({ icon: Icon, label, to, onClick }: { icon: typeof User; label: Rea
 export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
   const { theme, setTheme, locale, setLocale, t, isRTL } = useAppSettings();
 
+  // Load profile dynamically when drawer is opened
+  const [profile, setProfile] = useState<any>(null);
+  useEffect(() => {
+    if (open) {
+      const saved = localStorage.getItem("hajarafa.profile");
+      setProfile(saved ? JSON.parse(saved) : null);
+    }
+  }, [open]);
+
   const account = [
-    { icon: User, label: isRTL ? "نظرة عامة" : "Overview", to: "/account?tab=overview" },
+    { icon: User, label: t.yourAccount, to: "/account?tab=overview" },
     { icon: Package, label: t.yourOrders, to: "/account?tab=orders" },
     { icon: Heart, label: t.yourWishlist, to: "/account?tab=wishlist" },
     { icon: Settings, label: t.settings, to: "/account?tab=settings" },
@@ -96,25 +106,44 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
             </div>
 
             <div className="p-4 flex flex-col gap-6">
-              <Link
-                to="/account"
-                onClick={onClose}
-                className="bg-brand-terracotta text-white rounded-2xl p-4 flex items-center justify-between hover:bg-brand-terracotta-dark transition-colors shadow-soft"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-lg backdrop-blur-sm">
-                    👤
+              {profile ? (
+                <Link
+                  to="/account"
+                  onClick={onClose}
+                  className="bg-brand-terracotta text-white rounded-2xl p-4 flex items-center justify-between hover:bg-brand-terracotta-dark transition-colors shadow-soft"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-lg backdrop-blur-sm">
+                      👤
+                    </div>
+                    <div className="flex flex-col leading-tight">
+                      <span className="flex items-center gap-1.5 flex-wrap" style={{ fontSize: "0.75rem", opacity: 0.85 }}>
+                        <span>{t.welcomeTo}</span>
+                        <img src={logoImg} alt="HajArafa" className="h-3 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
+                      </span>
+                      <span className="font-semibold" style={{ fontSize: "1rem" }}>{profile.firstName} {profile.lastName}</span>
+                    </div>
                   </div>
-                  <div className="flex flex-col leading-tight">
-                    <span className="flex items-center gap-1.5 flex-wrap" style={{ fontSize: "0.75rem", opacity: 0.85 }}>
-                      <span>{t.welcomeTo}</span>
-                      <img src={logoImg} alt="HajArafa" className="h-3 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
-                    </span>
-                    <span className="font-semibold" style={{ fontSize: "1rem" }}>Alex Johnson</span>
+                  <ChevronRight size={18} className="rtl-flip" />
+                </Link>
+              ) : (
+                <Link
+                  to="/account"
+                  onClick={onClose}
+                  className="bg-brand-peach border border-brand-terracotta/20 text-brand-terracotta rounded-2xl p-4 flex items-center justify-between hover:bg-brand-peach/85 transition-colors shadow-soft"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-brand-terracotta text-white flex items-center justify-center text-lg font-bold">
+                      🔑
+                    </div>
+                    <div className="flex flex-col leading-tight">
+                      <span style={{ fontSize: "0.75rem" }}>{isRTL ? "مرحباً بك في حاج عرفة" : "Welcome to Haj Arafa"}</span>
+                      <span className="font-bold text-sm">{isRTL ? "تسجيل الدخول / التسجيل" : "Sign In / Register"}</span>
+                    </div>
                   </div>
-                </div>
-                <ChevronRight size={18} className="rtl-flip" />
-              </Link>
+                  <ChevronRight size={18} className="rtl-flip text-brand-terracotta" />
+                </Link>
+              )}
 
               <div className="flex flex-col gap-2">
                 <span className="eyebrow px-1">{t.settings}</span>

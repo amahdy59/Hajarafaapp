@@ -63,6 +63,76 @@ export function Account() {
   const { items: wishlistItems } = useWishlist();
   const { theme, setTheme, locale, setLocale, t, isRTL } = useAppSettings();
 
+  // Authentication State
+  const [profile, setProfile] = useState<{
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+  } | null>(() => {
+    const saved = localStorage.getItem("hajarafa.profile");
+    return saved ? JSON.parse(saved) : null; // Defaults to null (not logged in)
+  });
+
+  // Auth Form State
+  const [authTab, setAuthTab] = useState<"signin" | "signup">("signin");
+  const [authName, setAuthName] = useState("");
+  const [authEmail, setAuthEmail] = useState("");
+  const [authPhone, setAuthPhone] = useState("");
+  const [authPassword, setAuthPassword] = useState("");
+
+  const handleSignIn = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!authEmail || !authPassword) {
+      toast.error(isRTL ? "يرجى ملء جميع الحقول المطلوبة." : "Please fill in all required fields.");
+      return;
+    }
+    const mockUser = {
+      firstName: authEmail.split("@")[0],
+      lastName: "Johnson",
+      email: authEmail,
+      phone: "+1 (555) 123-4567",
+    };
+    setProfile(mockUser);
+    localStorage.setItem("hajarafa.profile", JSON.stringify(mockUser));
+    toast.success(isRTL ? "مرحباً بك مجدداً!" : "Welcome back!");
+  };
+
+  const handleSignUp = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!authName || !authEmail || !authPassword) {
+      toast.error(isRTL ? "يرجى ملء جميع الحقول المطلوبة." : "Please fill in all required fields.");
+      return;
+    }
+    const names = authName.trim().split(" ");
+    const fName = names[0] || "User";
+    const lName = names.slice(1).join(" ") || "Customer";
+    const newUser = {
+      firstName: fName,
+      lastName: lName,
+      email: authEmail,
+      phone: authPhone || "+1 (555) 000-0000",
+    };
+    setProfile(newUser);
+    localStorage.setItem("hajarafa.profile", JSON.stringify(newUser));
+    toast.success(isRTL ? "تم إنشاء الحساب بنجاح!" : "Account created successfully!");
+  };
+
+  const handleSocialLogin = (platform: string) => {
+    const mockUser = {
+      firstName: "Alex",
+      lastName: platform,
+      email: `${platform.toLowerCase()}user@example.com`,
+      phone: "+1 (555) 888-9999",
+    };
+    setProfile(mockUser);
+    localStorage.setItem("hajarafa.profile", JSON.stringify(mockUser));
+    toast.success(isRTL 
+      ? `تم تسجيل الدخول بنجاح عبر ${platform}` 
+      : `Successfully signed in via ${platform}`
+    );
+  };
+
   // Avatar Upload State (Persisted in LocalStorage)
   const [avatarUrl, setAvatarUrl] = useState<string | null>(() => {
     return localStorage.getItem("hajarafa.avatar") || null;
@@ -92,6 +162,13 @@ export function Account() {
     toast.success(isRTL ? "تم إزالة الصورة الشخصية" : "Profile picture removed successfully");
   };
 
+  const handleSignOut = () => {
+    setProfile(null);
+    localStorage.removeItem("hajarafa.profile");
+    localStorage.removeItem("hajarafa.avatar");
+    toast.success(isRTL ? "تم تسجيل الخروج بنجاح!" : "Signed out successfully!");
+  };
+
   useEffect(() => {
     if (tabParam && ["overview", "orders", "wishlist", "settings"].includes(tabParam)) {
       setActiveTab(tabParam);
@@ -112,30 +189,34 @@ export function Account() {
     }
   };
 
+  // Modal Interactive Form States
   const [isAddressesOpen, setIsAddressesOpen] = useState(false);
+  const [isAddingAddress, setIsAddingAddress] = useState(false);
+  const [newAddrType, setNewAddrType] = useState("");
+  const [newAddrDetails, setNewAddrDetails] = useState("");
+
   const [isPaymentsOpen, setIsPaymentsOpen] = useState(false);
+  const [isAddingCard, setIsAddingCard] = useState(false);
+  const [newCardNumber, setNewCardNumber] = useState("");
+  const [newCardName, setNewCardName] = useState("");
+  const [newCardExpiry, setNewCardExpiry] = useState("");
+  const [newCardCvv, setNewCardCvv] = useState("");
+
   const [addresses, setAddresses] = useState([
     { id: "1", type: isRTL ? "المنزل" : "Home", details: isRTL ? "١٢ شارع النيل، العجوزة، الجيزة" : "12 El-Nile St, Agouza, Giza" },
     { id: "2", type: isRTL ? "العمل" : "Work", details: isRTL ? "المبنى ٣، شارع التسعين، التجمع الخامس، القاهرة" : "Building 3, El-Taseen St, Fifth Settlement, Cairo" }
   ]);
+  
   const [payments, setPayments] = useState([
     { id: "1", type: "Visa", number: "**** **** **** 4242", expiry: "12/28" },
     { id: "2", type: "Mastercard", number: "**** **** **** 8821", expiry: "06/27" }
   ]);
 
-  const [profile, setProfile] = useState(() => {
-    const saved = localStorage.getItem("hajarafa.profile");
-    return saved ? JSON.parse(saved) : {
-      firstName: "Alex",
-      lastName: "Johnson",
-      email: "alex@example.com",
-      phone: "+1 (555) 123-4567",
-    };
-  });
-
   const saveProfile = () => {
-    localStorage.setItem("hajarafa.profile", JSON.stringify(profile));
-    toast.success(isRTL ? "تم حفظ التغييرات بنجاح!" : "Changes saved successfully!");
+    if (profile) {
+      localStorage.setItem("hajarafa.profile", JSON.stringify(profile));
+      toast.success(isRTL ? "تم حفظ التغييرات بنجاح!" : "Changes saved successfully!");
+    }
   };
 
   const [notifications, setNotifications] = useState({
@@ -144,70 +225,286 @@ export function Account() {
     newsletter: false,
   });
 
+  const handleSaveAddress = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newAddrType || !newAddrDetails) {
+      toast.error(isRTL ? "يرجى إدخال جميع الحقول" : "Please fill in all fields");
+      return;
+    }
+    setAddresses([...addresses, {
+      id: Date.now().toString(),
+      type: newAddrType,
+      details: newAddrDetails
+    }]);
+    setNewAddrType("");
+    setNewAddrDetails("");
+    setIsAddingAddress(false);
+    toast.success(isRTL ? "تم إضافة العنوان بنجاح" : "Address added successfully");
+  };
+
+  const handleSaveCard = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCardNumber || !newCardName || !newCardExpiry) {
+      toast.error(isRTL ? "يرجى ملء جميع الحقول المطلوبة" : "Please fill in required fields");
+      return;
+    }
+    const cleanNum = newCardNumber.replace(/\s+/g, "");
+    const cardBrand = cleanNum.startsWith("4") ? "Visa" : cleanNum.startsWith("5") ? "Mastercard" : "Card";
+    setPayments([...payments, {
+      id: Date.now().toString(),
+      type: cardBrand,
+      number: `**** **** **** ${cleanNum.slice(-4) || "0000"}`,
+      expiry: newCardExpiry
+    }]);
+    setNewCardNumber("");
+    setNewCardName("");
+    setNewCardExpiry("");
+    setNewCardCvv("");
+    setIsAddingCard(false);
+    toast.success(isRTL ? "تم إضافة بطاقة الدفع بنجاح" : "Payment card added successfully");
+  };
+
+  // Detect card brand dynamically for inline styling
+  const detectedBrand = newCardNumber.replace(/\s+/g, "").startsWith("4") 
+    ? "Visa" 
+    : newCardNumber.replace(/\s+/g, "").startsWith("5") 
+      ? "Mastercard" 
+      : "";
+
+  // Render Login flow if profile is null
+  if (!profile) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center py-10 px-4 sm:px-6">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="w-full max-w-md bg-card border border-border p-6 sm:p-8 rounded-3xl shadow-soft"
+        >
+          {/* Header */}
+          <div className="text-center mb-6">
+            <h2 className="text-brand-forest text-2xl font-display font-bold">
+              {isRTL ? "مرحباً بك في حاج عرفة" : "Welcome to Haj Arafa"}
+            </h2>
+            <p className="text-muted-foreground text-xs mt-1">
+              {isRTL ? "أنشئ حساباً أو سجل دخولك لإتمام عملية الشراء" : "Sign in or register to manage your natural boutique account"}
+            </p>
+          </div>
+
+          {/* Form Tabs */}
+          <div className="flex bg-muted rounded-xl p-1 gap-1 mb-6 border border-border">
+            <button
+              onClick={() => setAuthTab("signin")}
+              className={`flex-1 py-2 rounded-lg text-xs font-semibold uppercase transition-all ${
+                authTab === "signin" ? "bg-brand-terracotta text-white shadow-sm" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {isRTL ? "تسجيل الدخول" : "Sign In"}
+            </button>
+            <button
+              onClick={() => setAuthTab("signup")}
+              className={`flex-1 py-2 rounded-lg text-xs font-semibold uppercase transition-all ${
+                authTab === "signup" ? "bg-brand-terracotta text-white shadow-sm" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {isRTL ? "حساب جديد" : "Sign Up"}
+            </button>
+          </div>
+
+          {/* Email / Password Forms */}
+          <AnimatePresence mode="wait">
+            {authTab === "signin" ? (
+              <motion.form 
+                key="signin"
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -5 }}
+                onSubmit={handleSignIn}
+                className="space-y-4"
+              >
+                <div>
+                  <label className="block text-xs text-muted-foreground mb-1">{t.email}</label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="alex@example.com"
+                    value={authEmail}
+                    onChange={e => setAuthEmail(e.target.value)}
+                    className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-muted-foreground mb-1">{isRTL ? "كلمة المرور" : "Password"}</label>
+                  <input
+                    type="password"
+                    required
+                    placeholder="••••••••"
+                    value={authPassword}
+                    onChange={e => setAuthPassword(e.target.value)}
+                    className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full py-3 bg-brand-terracotta text-white text-xs rounded-xl font-bold uppercase hover:bg-brand-terracotta-dark active:scale-[0.98] transition-all shadow-sm"
+                >
+                  {isRTL ? "تسجيل الدخول" : "Sign In"}
+                </button>
+              </motion.form>
+            ) : (
+              <motion.form 
+                key="signup"
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -5 }}
+                onSubmit={handleSignUp}
+                className="space-y-4"
+              >
+                <div>
+                  <label className="block text-xs text-muted-foreground mb-1">{isRTL ? "الاسم بالكامل" : "Full Name"}</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Alex Johnson"
+                    value={authName}
+                    onChange={e => setAuthName(e.target.value)}
+                    className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-muted-foreground mb-1">{t.email}</label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="alex@example.com"
+                    value={authEmail}
+                    onChange={e => setAuthEmail(e.target.value)}
+                    className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-muted-foreground mb-1">{t.phone} ({isRTL ? "اختياري" : "Optional"})</label>
+                  <input
+                    type="text"
+                    placeholder="+1 (555) 123-4567"
+                    value={authPhone}
+                    onChange={e => setAuthPhone(e.target.value)}
+                    className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-muted-foreground mb-1">{isRTL ? "كلمة المرور" : "Password"}</label>
+                  <input
+                    type="password"
+                    required
+                    placeholder="••••••••"
+                    value={authPassword}
+                    onChange={e => setAuthPassword(e.target.value)}
+                    className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full py-3 bg-brand-terracotta text-white text-xs rounded-xl font-bold uppercase hover:bg-brand-terracotta-dark active:scale-[0.98] transition-all shadow-sm"
+                >
+                  {isRTL ? "إنشاء حساب" : "Create Account"}
+                </button>
+              </motion.form>
+            )}
+          </AnimatePresence>
+
+          {/* Social Logins Divider */}
+          <div className="relative my-6 flex items-center justify-center">
+            <div className="border-t border-border w-full absolute" />
+            <span className="relative z-10 bg-card px-3 text-[10px] uppercase font-semibold text-muted-foreground tracking-wide">
+              {isRTL ? "أو الاستمرار بواسطة" : "Or continue with"}
+            </span>
+          </div>
+
+          {/* Social Sign-In buttons */}
+          <div className="space-y-2.5">
+            {/* Google / Gmail */}
+            <button
+              onClick={() => handleSocialLogin("Google")}
+              className="w-full py-2.5 border border-border bg-background hover:bg-muted text-foreground rounded-xl text-xs font-semibold flex items-center justify-center gap-2.5 transition-colors"
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" className="flex-shrink-0">
+                <path fill="#EA4335" d="M12 5.04c1.66 0 3.2.57 4.38 1.69l3.27-3.27C17.67 1.54 14.98 1 12 1 7.35 1 3.37 3.68 1.48 7.58l3.99 3.1A6.99 6.99 0 0 1 12 5.04z" />
+                <path fill="#4285F4" d="M23.45 12.3c0-.82-.07-1.6-.21-2.3H12v4.35h6.43a5.5 5.5 0 0 1-2.39 3.6l3.7 2.87c2.16-2 3.71-4.94 3.71-8.52z" />
+                <path fill="#FBBC05" d="M5.47 10.68A6.9 6.9 0 0 1 5 12c0 .46.05.9.14 1.32l-3.99 3.1A11.96 11.96 0 0 1 1 12c0-1.63.32-3.18.9-4.62l3.57 3.3z" />
+                <path fill="#34A853" d="M12 23c3.24 0 5.97-1.07 7.96-2.92l-3.7-2.87c-1.03.69-2.34 1.1-4.26 1.1-3.28 0-6.07-2.2-7.07-5.18l-3.99 3.1C3.37 20.32 7.35 23 12 23z" />
+              </svg>
+              <span>{isRTL ? "متابعة باستخدام جوجل" : "Continue with Google"}</span>
+            </button>
+
+            {/* Facebook */}
+            <button
+              onClick={() => handleSocialLogin("Facebook")}
+              className="w-full py-2.5 bg-[#1877F2] hover:bg-[#166FE5] text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2.5 transition-colors shadow-sm"
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="white" className="flex-shrink-0">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+              </svg>
+              <span>{isRTL ? "متابعة باستخدام فيسبوك" : "Continue with Facebook"}</span>
+            </button>
+
+            {/* Apple */}
+            <button
+              onClick={() => handleSocialLogin("Apple")}
+              className="w-full py-2.5 bg-black hover:bg-zinc-900 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2.5 transition-colors shadow-sm dark:bg-white dark:hover:bg-zinc-100 dark:text-black"
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" className="flex-shrink-0">
+                <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C3.8 16.32 3.66 9.88 7.54 9.6c1.17.07 2.03.7 2.76.7.74 0 1.95-.8 3.5-.66 1.63.14 2.87.8 3.6 1.86-3.22 1.9-2.7 6.13.25 7.32-.6 1.54-1.34 3.12-2.6 1.46zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
+              </svg>
+              <span>{isRTL ? "متابعة باستخدام أبل" : "Continue with Apple"}</span>
+            </button>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         
-        {/* Profile header (Always visible dashboard card) */}
-        <div className="bg-gradient-to-br from-brand-terracotta to-brand-sage-dark rounded-3xl p-6 mb-6 relative overflow-hidden shadow-soft">
-          <div className="absolute right-0 top-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/4" />
-          <div className="relative z-10 flex items-center gap-4">
-            
-            {/* Avatar uploader widget with visible Camera badge */}
-            <div className="relative w-20 h-20 group flex-shrink-0 select-none">
-              <input
-                type="file"
-                id="avatar-upload"
-                accept="image/*"
-                onChange={handleAvatarChange}
-                className="hidden"
-              />
-              <label htmlFor="avatar-upload" className="cursor-pointer block w-full h-full relative">
-                {avatarUrl ? (
-                  <img
-                    src={avatarUrl}
-                    alt="User Avatar"
-                    className="w-20 h-20 rounded-2xl object-cover border border-white/20 shadow-md transition-transform group-hover:scale-95"
-                  />
-                ) : (
-                  <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center text-3xl text-white backdrop-blur-sm hover:bg-white/30 transition-all group-hover:scale-95">
-                    👤
-                  </div>
-                )}
-                <div className="absolute -bottom-1 -end-1 bg-brand-terracotta text-white p-1.5 rounded-full border-2 border-white dark:border-background shadow-sm flex items-center justify-center transition-transform hover:scale-110">
-                  <Camera size={12} />
+        {/* Profile header (Minimal borderless transparent layout, no colored card) */}
+        <div className="flex items-center gap-5 mb-8 pb-6 border-b border-border select-none">
+          {/* Avatar uploader widget with visible Camera badge */}
+          <div className="relative w-20 h-20 group flex-shrink-0 select-none">
+            <input
+              type="file"
+              id="avatar-upload"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              className="hidden"
+            />
+            <label htmlFor="avatar-upload" className="cursor-pointer block w-full h-full relative">
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt="User Avatar"
+                  className="w-20 h-20 rounded-2xl object-cover border border-border shadow-soft transition-transform group-hover:scale-95"
+                />
+              ) : (
+                <div className="w-20 h-20 bg-muted rounded-2xl flex items-center justify-center text-3xl text-muted-foreground transition-all group-hover:scale-95">
+                  👤
                 </div>
-              </label>
-            </div>
-
-            <div>
-              <h2 className="text-white text-xl font-display">{profile.firstName} {profile.lastName}</h2>
-              <p className="text-white/70 text-sm">{profile.email}</p>
-              <div className="flex items-center gap-2 mt-2">
-                <span className="bg-amber-400 text-amber-950 text-xs px-2.5 py-0.5 rounded-full flex items-center gap-1 font-semibold">
-                  <Award size={10} /> {t.goldMember}
-                </span>
-                <span className="text-white/60 text-xs">{isRTL ? "٣ طلبات هذا الشهر" : "3 orders this month"}</span>
+              )}
+              <div className="absolute -bottom-1 -end-1 bg-brand-terracotta text-white p-1.5 rounded-full border-2 border-background shadow-sm flex items-center justify-center transition-transform hover:scale-110">
+                <Camera size={12} />
               </div>
-            </div>
+            </label>
           </div>
 
-          <div className="relative z-10 grid grid-cols-3 gap-3 mt-5">
-            {[
-              { label: isRTL ? "طلباتي" : "My Orders", value: mockOrders.length.toString(), icon: Package, onClick: () => handleTabChange("orders") },
-              { label: isRTL ? "المفضلة" : "Wishlist", value: wishlistItems.length.toString(), icon: Heart, onClick: () => handleTabChange("wishlist") },
-              { label: t.points, value: "240", icon: Star, onClick: () => toast.info(isRTL ? "رصيدك الحالي من نقاط الولاء" : "Your current loyalty points balance") },
-            ].map(stat => (
-              <button
-                key={stat.label}
-                onClick={stat.onClick}
-                className="bg-white/10 backdrop-blur-sm rounded-xl p-3 text-center transition-all duration-200 hover:bg-white/20 active:scale-95 block w-full no-underline"
-              >
-                <stat.icon size={16} className="text-white/70 mx-auto mb-1" />
-                <p className="text-white text-lg font-semibold">{stat.value}</p>
-                <p className="text-white/60 text-[10.5px] uppercase tracking-wide">{stat.label}</p>
-              </button>
-            ))}
+          <div>
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <h2 className="text-foreground text-2xl font-display leading-tight">{profile.firstName} {profile.lastName}</h2>
+              <span className="bg-amber-100 text-amber-800 dark:bg-amber-950/30 dark:text-amber-400 text-xs px-2.5 py-0.5 rounded-full flex items-center gap-1 font-semibold border border-amber-200/50">
+                <Award size={10} /> {t.goldMember}
+              </span>
+            </div>
+            <p className="text-muted-foreground text-sm mt-1">{profile.email}</p>
+            <p className="text-muted-foreground/80 text-xs mt-1.5">{isRTL ? "٣ طلبات هذا الشهر" : "3 orders this month"}</p>
           </div>
         </div>
 
@@ -338,7 +635,7 @@ export function Account() {
           </motion.div>
         )}
 
-        {/* Tab 2: Orders history */}
+        {/* Tab 2: My Orders history */}
         {activeTab === "orders" && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
             <h2 className="text-foreground font-display mb-4">{t.myOrders}</h2>
@@ -457,7 +754,7 @@ export function Account() {
                     <input
                       type="text"
                       value={profile.firstName}
-                      onChange={e => setProfile(p => ({ ...p, firstName: e.target.value }))}
+                      onChange={e => setProfile(p => p ? { ...p, firstName: e.target.value } : null)}
                       className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
                     />
                   </div>
@@ -466,7 +763,7 @@ export function Account() {
                     <input
                       type="text"
                       value={profile.lastName}
-                      onChange={e => setProfile(p => ({ ...p, lastName: e.target.value }))}
+                      onChange={e => setProfile(p => p ? { ...p, lastName: e.target.value } : null)}
                       className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
                     />
                   </div>
@@ -477,7 +774,7 @@ export function Account() {
                     <input
                       type="email"
                       value={profile.email}
-                      onChange={e => setProfile(p => ({ ...p, email: e.target.value }))}
+                      onChange={e => setProfile(p => p ? { ...p, email: e.target.value } : null)}
                       className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
                     />
                   </div>
@@ -486,7 +783,7 @@ export function Account() {
                     <input
                       type="text"
                       value={profile.phone}
-                      onChange={e => setProfile(p => ({ ...p, phone: e.target.value }))}
+                      onChange={e => setProfile(p => p ? { ...p, phone: e.target.value } : null)}
                       className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
                     />
                   </div>
@@ -566,7 +863,7 @@ export function Account() {
                   { icon: MapPin, label: t.savedAddresses, color: "text-foreground/80 hover:text-brand-terracotta", onClick: () => setIsAddressesOpen(true) },
                   { icon: Shield, label: t.privacySecurity, color: "text-foreground/80 hover:text-brand-terracotta hover:underline", to: "/help" },
                   { icon: HelpCircle, label: t.helpSupport, color: "text-foreground/80 hover:text-brand-terracotta hover:underline", to: "/help" },
-                  { icon: LogOut, label: t.signOut, color: "text-destructive hover:text-destructive-dark font-medium", onClick: () => toast.success(isRTL ? "تم تسجيل الخروج بنجاح!" : "Signed out successfully!") },
+                  { icon: LogOut, label: t.signOut, color: "text-destructive hover:text-destructive-dark font-medium", onClick: handleSignOut },
                 ].map((item, i) => {
                   const inner = (
                     <>
@@ -600,7 +897,7 @@ export function Account() {
 
       </div>
 
-      {/* Saved Addresses Modal */}
+      {/* Saved Addresses Modal (With clean inline interactive form, no browser prompts) */}
       <AnimatePresence>
         {isAddressesOpen && (
           <>
@@ -608,26 +905,94 @@ export function Account() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setIsAddressesOpen(false)}
+              onClick={() => {
+                setIsAddressesOpen(false);
+                setIsAddingAddress(false);
+              }}
               className="fixed inset-0 bg-brand-ink/45 backdrop-blur-sm z-50"
             />
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="fixed inset-x-4 bottom-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full max-w-md bg-card border border-border rounded-3xl p-6 z-50 shadow-elev"
+              className="fixed inset-x-4 bottom-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full max-w-md bg-card border border-border rounded-3xl p-6 z-50 shadow-elev overflow-y-auto max-h-[85vh]"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-foreground font-display text-base sm:text-lg">{t.savedAddresses}</h3>
-                <button onClick={() => setIsAddressesOpen(false)} className="text-muted-foreground hover:text-foreground">
+                <button 
+                  onClick={() => {
+                    setIsAddressesOpen(false);
+                    setIsAddingAddress(false);
+                  }} 
+                  className="text-muted-foreground hover:text-foreground p-1"
+                >
                   <X size={18} />
                 </button>
               </div>
+
+              <AnimatePresence mode="wait">
+                {isAddingAddress ? (
+                  <motion.form
+                    key="add-address-form"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    onSubmit={handleSaveAddress}
+                    className="space-y-4 border border-border/80 rounded-2xl p-4 bg-background/50 mb-3"
+                  >
+                    <h4 className="text-xs font-semibold uppercase text-brand-terracotta">
+                      {isRTL ? "إضافة عنوان جديد" : "Add New Location"}
+                    </h4>
+                    <div>
+                      <label className="block text-[10px] text-muted-foreground mb-1">
+                        {isRTL ? "نوع العنوان (مثال: المنزل، العمل)" : "Label / Address Type (e.g. Home, Work)"}
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder={isRTL ? "المنزل" : "Home"}
+                        value={newAddrType}
+                        onChange={e => setNewAddrType(e.target.value)}
+                        className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] text-muted-foreground mb-1">
+                        {isRTL ? "تفاصيل العنوان بالكامل" : "Complete Address Details"}
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder={isRTL ? "١٢ شارع النيل، العجوزة، الجيزة" : "12 El-Nile St, Agouza, Giza"}
+                        value={newAddrDetails}
+                        onChange={e => setNewAddrDetails(e.target.value)}
+                        className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        type="submit"
+                        className="flex-1 py-2 bg-brand-terracotta text-white rounded-lg text-xs font-semibold hover:bg-brand-terracotta-dark"
+                      >
+                        {isRTL ? "حفظ" : "Save"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsAddingAddress(false)}
+                        className="px-4 py-2 border border-border text-foreground hover:bg-muted rounded-lg text-xs"
+                      >
+                        {isRTL ? "إلغاء" : "Cancel"}
+                      </button>
+                    </div>
+                  </motion.form>
+                ) : null}
+              </AnimatePresence>
+
               <div className="space-y-3">
                 {addresses.map(addr => (
                   <div key={addr.id} className="bg-background border border-border/60 rounded-xl p-3.5 flex justify-between items-start">
                     <div>
-                      <span className="bg-brand-peach text-brand-terracotta text-xs px-2 py-0.5 rounded-full font-medium mb-1 inline-block">
+                      <span className="bg-brand-peach text-brand-terracotta text-xs px-2.5 py-0.5 rounded-full font-medium mb-1 inline-block">
                         {addr.type}
                       </span>
                       <p className="text-foreground text-sm font-medium">{addr.details}</p>
@@ -643,25 +1008,22 @@ export function Account() {
                     </button>
                   </div>
                 ))}
-                <button 
-                  onClick={() => {
-                    const newType = prompt(isRTL ? "نوع العنوان (مثال: المنزل، العمل):" : "Address type (e.g. Home, Work):");
-                    const newDetails = prompt(isRTL ? "تفاصيل العنوان بالكامل:" : "Complete address details:");
-                    if (newType && newDetails) {
-                      setAddresses([...addresses, { id: Date.now().toString(), type: newType, details: newDetails }]);
-                    }
-                  }}
-                  className="w-full py-2.5 bg-brand-peach text-brand-terracotta hover:bg-brand-terracotta hover:text-white rounded-xl text-xs font-semibold uppercase transition-all flex items-center justify-center gap-2"
-                >
-                  <Plus size={14} /> {isRTL ? "إضافة عنوان جديد" : "Add New Address"}
-                </button>
+
+                {!isAddingAddress && (
+                  <button 
+                    onClick={() => setIsAddingAddress(true)}
+                    className="w-full py-2.5 bg-brand-peach text-brand-terracotta hover:bg-brand-terracotta hover:text-white rounded-xl text-xs font-semibold uppercase transition-all flex items-center justify-center gap-2"
+                  >
+                    <Plus size={14} /> {isRTL ? "إضافة عنوان جديد" : "Add New Location"}
+                  </button>
+                )}
               </div>
             </motion.div>
           </>
         )}
       </AnimatePresence>
 
-      {/* Payment Methods Modal */}
+      {/* Payment Methods Modal (With clean card brand detection form, no browser prompts) */}
       <AnimatePresence>
         {isPaymentsOpen && (
           <>
@@ -669,26 +1031,134 @@ export function Account() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setIsPaymentsOpen(false)}
+              onClick={() => {
+                setIsPaymentsOpen(false);
+                setIsAddingCard(false);
+              }}
               className="fixed inset-0 bg-brand-ink/45 backdrop-blur-sm z-50"
             />
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="fixed inset-x-4 bottom-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full max-w-md bg-card border border-border rounded-3xl p-6 z-50 shadow-elev"
+              className="fixed inset-x-4 bottom-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full max-w-md bg-card border border-border rounded-3xl p-6 z-50 shadow-elev overflow-y-auto max-h-[85vh]"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-foreground font-display text-base sm:text-lg">{t.paymentMethods}</h3>
-                <button onClick={() => setIsPaymentsOpen(false)} className="text-muted-foreground hover:text-foreground">
+                <button 
+                  onClick={() => {
+                    setIsPaymentsOpen(false);
+                    setIsAddingCard(false);
+                  }} 
+                  className="text-muted-foreground hover:text-foreground p-1"
+                >
                   <X size={18} />
                 </button>
               </div>
+
+              <AnimatePresence mode="wait">
+                {isAddingCard ? (
+                  <motion.form
+                    key="add-card-form"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    onSubmit={handleSaveCard}
+                    className="space-y-3.5 border border-border/80 rounded-2xl p-4 bg-background/50 mb-3"
+                  >
+                    <h4 className="text-xs font-semibold uppercase text-brand-terracotta">
+                      {isRTL ? "إضافة بطاقة دفع جديدة" : "Add New Payment Card"}
+                    </h4>
+                    
+                    <div>
+                      <label className="block text-[10px] text-muted-foreground mb-1">{t.cardNumber}</label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          required
+                          maxLength={19}
+                          placeholder="4242 4242 4242 4242"
+                          value={newCardNumber}
+                          onChange={e => {
+                            // Simple auto-spacing formatting for card inputs
+                            const v = e.target.value.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim();
+                            setNewCardNumber(v);
+                          }}
+                          className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta font-mono"
+                        />
+                        <span className="absolute end-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-brand-terracotta uppercase">
+                          {detectedBrand || <CreditCard size={14} className="text-muted-foreground" />}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] text-muted-foreground mb-1">{t.cardName}</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Alex Johnson"
+                        value={newCardName}
+                        onChange={e => setNewCardName(e.target.value)}
+                        className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] text-muted-foreground mb-1">{t.expiry} (MM/YY)</label>
+                        <input
+                          type="text"
+                          required
+                          maxLength={5}
+                          placeholder="12/28"
+                          value={newCardExpiry}
+                          onChange={e => {
+                            let v = e.target.value.replace(/\D/g, "");
+                            if (v.length > 2) v = `${v.slice(0, 2)}/${v.slice(2, 4)}`;
+                            setNewCardExpiry(v);
+                          }}
+                          className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta text-center font-mono"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] text-muted-foreground mb-1">CVV</label>
+                        <input
+                          type="password"
+                          required
+                          maxLength={3}
+                          placeholder="***"
+                          value={newCardCvv}
+                          onChange={e => setNewCardCvv(e.target.value.replace(/\D/g, ""))}
+                          className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta text-center font-mono"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 pt-2">
+                      <button
+                        type="submit"
+                        className="flex-1 py-2 bg-brand-terracotta text-white rounded-lg text-xs font-semibold hover:bg-brand-terracotta-dark"
+                      >
+                        {isRTL ? "إضافة البطاقة" : "Save Card"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsAddingCard(false)}
+                        className="px-4 py-2 border border-border text-foreground hover:bg-muted rounded-lg text-xs"
+                      >
+                        {isRTL ? "إلغاء" : "Cancel"}
+                      </button>
+                    </div>
+                  </motion.form>
+                ) : null}
+              </AnimatePresence>
+
               <div className="space-y-3">
                 {payments.map(pay => (
                   <div key={pay.id} className="bg-background border border-border/60 rounded-xl p-3.5 flex justify-between items-center">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-6 bg-brand-peach/40 rounded flex items-center justify-center font-bold text-xs text-brand-terracotta">
+                      <div className="w-12 h-7 bg-brand-peach/40 rounded flex items-center justify-center font-bold text-[10px] text-brand-terracotta uppercase border border-brand-terracotta/10">
                         {pay.type}
                       </div>
                       <div>
@@ -707,18 +1177,15 @@ export function Account() {
                     </button>
                   </div>
                 ))}
-                <button 
-                  onClick={() => {
-                    const number = prompt(isRTL ? "رقم البطاقة (١٦ رقماً):" : "Card Number (16 digits):");
-                    const expiry = prompt(isRTL ? "تاريخ الانتهاء (شهر/سنة):" : "Expiry (MM/YY):");
-                    if (number && expiry) {
-                      setPayments([...payments, { id: Date.now().toString(), type: number.startsWith("4") ? "Visa" : "MC", number: `**** **** **** ${number.slice(-4)}`, expiry }]);
-                    }
-                  }}
-                  className="w-full py-2.5 bg-brand-peach text-brand-terracotta hover:bg-brand-terracotta hover:text-white rounded-xl text-xs font-semibold uppercase transition-all flex items-center justify-center gap-2"
-                >
-                  <Plus size={14} /> {isRTL ? "إضافة بطاقة جديدة" : "Add New Card"}
-                </button>
+
+                {!isAddingCard && (
+                  <button 
+                    onClick={() => setIsAddingCard(true)}
+                    className="w-full py-2.5 bg-brand-peach text-brand-terracotta hover:bg-brand-terracotta hover:text-white rounded-xl text-xs font-semibold uppercase transition-all flex items-center justify-center gap-2"
+                  >
+                    <Plus size={14} /> {isRTL ? "إضافة بطاقة جديدة" : "Add New Card"}
+                  </button>
+                )}
               </div>
             </motion.div>
           </>
