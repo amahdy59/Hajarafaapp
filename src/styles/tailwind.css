@@ -62,6 +62,11 @@
 
   html { font-size: 16px; }
 
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
   html[dir="rtl"] {
     --font-sans: 'Cairo', system-ui, sans-serif !important;
     --font-display: 'Cairo', system-ui, sans-serif !important;

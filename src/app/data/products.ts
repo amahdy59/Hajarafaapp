@@ -1,3 +1,5 @@
+import { categoryMapping } from "./categories";
+
 export interface Product {
   id: string;
   name: string;
@@ -349,7 +351,13 @@ export const products: Product[] = [
 ];
 
 export const getProductById = (id: string) => products.find(p => p.id === id);
-export const getProductsByCategory = (slug: string) => products.filter(p => p.categorySlug === slug);
+export const getProductsByCategory = (slug: string) => {
+  const subSlugs = Object.entries(categoryMapping)
+    .filter(([_, parent]) => parent === slug)
+    .map(([sub, _]) => sub);
+  const matchSlugs = subSlugs.length > 0 ? subSlugs : [slug];
+  return products.filter(p => matchSlugs.includes(p.categorySlug));
+};
 export const getProductsByCategorySlugs = (slugs: string[]) => products.filter(p => slugs.includes(p.categorySlug));
 export const getBestSellers = () => products.filter(p => p.isBestSeller);
 export const getNewProducts = () => products.filter(p => p.isNew);

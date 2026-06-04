@@ -77,7 +77,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
             animate={{ x: 0 }}
             exit={{ x: isRTL ? "100%" : "-100%" }}
             transition={{ type: "spring", damping: 32, stiffness: 320 }}
-            className={`fixed top-0 bottom-0 ${isRTL ? "right-0" : "left-0"} w-[88%] max-w-sm bg-card text-card-foreground z-50 overflow-y-auto shadow-elev`}
+            className={`fixed top-0 bottom-0 ${isRTL ? "right-0" : "left-0"} w-full md:w-[88%] md:max-w-sm bg-card text-card-foreground z-50 overflow-y-auto shadow-elev`}
           >
             <div className="sticky top-0 z-10 bg-card/95 backdrop-blur-xl border-b border-border px-4 py-3 flex items-center justify-between safe-area-pt">
               <Link to="/" onClick={onClose} className="flex items-center gap-2">

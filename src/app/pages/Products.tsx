@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { SlidersHorizontal, Grid3X3, List, ChevronDown, X } from "lucide-react";
 import { useSearchParams } from "react-router";
 import { products } from "../data/products";
-import { categories } from "../data/categories";
+import { categories, categoryMapping } from "../data/categories";
 import { ProductCard } from "../components/ProductCard";
 import { motion, AnimatePresence } from "motion/react";
 import { useAppSettings } from "../context/AppSettingsContext";
@@ -169,7 +169,10 @@ export function Products() {
     }
 
     if (selectedCategories.length > 0) {
-      result = result.filter(p => selectedCategories.includes(p.categorySlug));
+      result = result.filter(p => {
+        const parentSlug = categoryMapping[p.categorySlug] || p.categorySlug;
+        return selectedCategories.includes(parentSlug);
+      });
     }
 
     result = result.filter(p => p.price >= priceRange[0] && p.price <= priceRange[1]);
