@@ -2,7 +2,7 @@ import { ArrowLeft, Clock, MapPin, Phone, ExternalLink } from "lucide-react";
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion } from "motion/react";
-import logoImg from "../../assets/logo.svg";
+import logoImg from "../../assets/logo.webp";
 
 interface Branch {
   id: string;

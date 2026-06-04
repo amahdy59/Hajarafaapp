@@ -8,7 +8,7 @@ import { SettingsDrawer } from "./SettingsDrawer";
 import { IconButton } from "./ui/IconButton";
 import { motion, AnimatePresence } from "motion/react";
 import { categories } from "../data/categories";
-import logoImg from "../../assets/logo.svg";
+import logoImg from "../../assets/logo.webp";
 
 export function Header() {
   const { totalItems, setCartOpen } = useCart();
@@ -62,7 +62,7 @@ export function Header() {
               <Search size={19} />
             </IconButton>
             <IconButton
-              onClick={() => navigate("/wishlist")}
+              onClick={() => navigate("/account?tab=wishlist")}
               aria-label={t.favourites}
               badge={wishlistItems.length}
               className="flex"

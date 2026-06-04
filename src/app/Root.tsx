@@ -5,7 +5,7 @@ import { Header } from "./components/Header";
 import { BottomNav } from "./components/BottomNav";
 import { CartDrawer } from "./components/CartDrawer";
 import { ErrorBoundary } from "./components/ErrorBoundary";
-import logoImg from "../assets/logo.svg";
+import logoImg from "../assets/logo.webp";
 import { Footer } from "./components/Footer";
 
 const PageLoader = () => (

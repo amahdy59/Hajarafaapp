@@ -4,6 +4,11 @@ import redLentilsImg from "../../assets/red_lentils.png";
 import driedApricotsImg from "../../assets/dried_apricots.png";
 import darkChocolateImg from "../../assets/dark_chocolate_bar.png";
 import dateMaamoulImg from "../../assets/date_maamoul.png";
+import bbqSpicesImg from "../../assets/bbq_spices.png";
+import bayLeavesImg from "../../assets/bay_leaves.png";
+import sidrHoneyImg from "../../assets/sidr_honey.png";
+import saltedCaramelPopcornImg from "../../assets/salted_caramel_popcorn.png";
+import babyOilImg from "../../assets/baby_oil.png";
 
 export interface Product {
   id: string;
@@ -208,8 +213,8 @@ export const products: Product[] = [
     id: "p15", name: "BBQ Spice Mix", nameAr: "بهارات مشاوي",
     category: "Spices", categorySlug: "spices",
     price: 35, rating: 4.7, reviewCount: 201,
-    image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=600",
-    images: ["https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=600"],
+    image: bbqSpicesImg,
+    images: [bbqSpicesImg],
     description: "House BBQ blend — paprika, cumin, garlic and a hint of smoke. Perfect for grilled meats and vegetables.",
     benefits: ["No additives", "Bold flavor", "Versatile"],
     usage: "Rub generously onto meat or vegetables before grilling.",
@@ -219,8 +224,8 @@ export const products: Product[] = [
     id: "p16", name: "Bay Leaves", nameAr: "ورق لاورو",
     category: "Spices", categorySlug: "spices",
     price: 35, rating: 4.6, reviewCount: 76,
-    image: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=600",
-    images: ["https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=600"],
+    image: bayLeavesImg,
+    images: [bayLeavesImg],
     description: "Whole, hand-picked bay leaves with a deep aromatic profile.",
     benefits: ["Aromatic", "Whole leaves", "Long shelf-life"],
     usage: "Add 1–2 leaves to soups, stews and rice.",
@@ -232,8 +237,8 @@ export const products: Product[] = [
     id: "p17", name: "Sidr Honey", nameAr: "عسل سدر",
     category: "Honey", categorySlug: "honey",
     price: 450, rating: 5.0, reviewCount: 134,
-    image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600",
-    images: ["https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600"],
+    image: sidrHoneyImg,
+    images: [sidrHoneyImg],
     description: "Rare Yemeni Sidr honey, harvested from pristine mountain valleys. Robust flavor with caramel and herbal notes.",
     benefits: ["Premium grade", "Naturally raw", "Antioxidant rich"],
     usage: "1 tsp daily on its own or in warm water.",
@@ -245,8 +250,8 @@ export const products: Product[] = [
     id: "p18", name: "Salted Caramel Popcorn", nameAr: "فشار كراميل مملح",
     category: "Snacks", categorySlug: "snacks",
     price: 35, rating: 4.7, reviewCount: 156,
-    image: "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=600",
-    images: ["https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=600"],
+    image: saltedCaramelPopcornImg,
+    images: [saltedCaramelPopcornImg],
     description: "Crunchy popcorn in buttery salted caramel — perfect movie-night snack.",
     benefits: ["Whole grain", "Sweet & salty"],
     usage: "Open and enjoy.",
@@ -321,8 +326,8 @@ export const products: Product[] = [
     id: "p24", name: "Baby Soothing Oil", nameAr: "زيت بيبي مهدئ",
     category: "Dr. Baby", categorySlug: "dr-baby",
     price: 110, rating: 4.9, reviewCount: 112,
-    image: "https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?w=600",
-    images: ["https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?w=600"],
+    image: babyOilImg,
+    images: [babyOilImg],
     description: "Gentle natural oil blend formulated for delicate baby skin. Soothing and lightly fragranced.",
     benefits: ["Hypoallergenic", "Light scent", "Pediatrician-approved formula"],
     usage: "Massage gently onto baby's skin after bath.",

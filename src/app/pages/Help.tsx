@@ -3,7 +3,7 @@ import { ArrowLeft, HelpCircle, Search, ChevronDown, ChevronUp, Phone, MessageSq
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
-import logoImg from "../../assets/logo.svg";
+import logoImg from "../../assets/logo.webp";
 
 interface FAQItem {
   id: string;

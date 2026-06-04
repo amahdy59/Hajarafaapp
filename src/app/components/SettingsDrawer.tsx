@@ -1,9 +1,9 @@
-import { X, Sun, Moon, Languages, User, Package, Heart, HelpCircle, Info, MapPin, Phone, ChevronRight } from "lucide-react";
+import { X, Sun, Moon, Languages, User, Package, Heart, HelpCircle, Info, MapPin, Phone, ChevronRight, Settings } from "lucide-react";
 import { Link } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { IconButton } from "./ui/IconButton";
-import logoImg from "../../assets/logo.svg";
+import logoImg from "../../assets/logo.webp";
 
 interface SettingsDrawerProps {
   open: boolean;
@@ -51,9 +51,10 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
   const { theme, setTheme, locale, setLocale, t, isRTL } = useAppSettings();
 
   const account = [
-    { icon: User, label: t.yourAccount, to: "/account" },
+    { icon: User, label: isRTL ? "نظرة عامة" : "Overview", to: "/account?tab=overview" },
     { icon: Package, label: t.yourOrders, to: "/account?tab=orders" },
-    { icon: Heart, label: t.yourWishlist, to: "/wishlist" },
+    { icon: Heart, label: t.yourWishlist, to: "/account?tab=wishlist" },
+    { icon: Settings, label: t.settings, to: "/account?tab=settings" },
   ];
   const help = [
     { icon: HelpCircle, label: t.customerService, to: "/help" },

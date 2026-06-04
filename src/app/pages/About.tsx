@@ -2,7 +2,7 @@ import { ArrowLeft, Award, Leaf, ShieldCheck, Sparkles } from "lucide-react";
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion } from "motion/react";
-import logoImg from "../../assets/logo.svg";
+import logoImg from "../../assets/logo.webp";
 
 const ABOUT_IMG = "https://images.unsplash.com/photo-1509156396595-449e10c5cd3e?w=800&auto=format&fit=crop";
 

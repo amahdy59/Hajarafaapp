@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Award, ShieldCheck, Heart } from "lucide-react";
 import { useAppSettings } from "../context/AppSettingsContext";
-import logoImg from "../../assets/logo.svg";
+import logoImg from "../../assets/logo.webp";
 
 export function Footer() {
   const { t, isRTL, locale } = useAppSettings();

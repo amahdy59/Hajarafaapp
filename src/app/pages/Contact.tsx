@@ -3,7 +3,7 @@ import { ArrowLeft, Mail, Phone, MessageSquare, Send, CheckCircle2 } from "lucid
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
-import logoImg from "../../assets/logo.svg";
+import logoImg from "../../assets/logo.webp";
 
 export function Contact() {
   const { t, isRTL } = useAppSettings();
