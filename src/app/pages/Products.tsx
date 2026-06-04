@@ -357,7 +357,7 @@ export function Products() {
               animate={{ x: 0 }}
               exit={{ x: isRTL ? "100%" : "-100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className={`fixed ${isRTL ? "right-0" : "left-0"} top-0 bottom-0 w-80 bg-card z-50 overflow-y-auto p-5 shadow-elev border-r border-border`}
+              className={`fixed ${isRTL ? "right-0" : "left-0"} top-0 bottom-0 w-full max-w-[320px] bg-card z-50 overflow-y-auto p-5 shadow-elev border-r border-border`}
             >
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
