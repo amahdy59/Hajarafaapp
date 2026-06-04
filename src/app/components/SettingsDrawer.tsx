@@ -56,9 +56,20 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
   useEffect(() => {
     if (open) {
       const saved = localStorage.getItem("hajarafa.profile");
-      setProfile(saved ? JSON.parse(saved) : null);
+      if (saved) {
+        setProfile(JSON.parse(saved));
+      } else {
+        const defaultUser = {
+          firstName: locale === "ar" ? "أحمد" : "Ahmed",
+          lastName: locale === "ar" ? "مهدي" : "Mahdy",
+          email: "ahmed.mahdy@example.com",
+          phone: "+20 100 123 4567"
+        };
+        localStorage.setItem("hajarafa.profile", JSON.stringify(defaultUser));
+        setProfile(defaultUser);
+      }
     }
-  }, [open]);
+  }, [open, locale]);
 
   const account = [
     { icon: User, label: t.yourAccount, to: "/account?tab=account" },

@@ -12,13 +12,13 @@ export function About() {
   // Localized copy
   const content = {
     titleEn: "About HajArafa",
-    titleAr: "عن حاج عارفة",
-    subtitleEn: "Since 1950 · Pure Nature in Every Product",
-    subtitleAr: "منذ ١٩٥٠ · الطبيعة النقية في كل منتج",
+    titleAr: "عن حاج عرفة",
+    subtitleEn: "Since 1968 · Pure Nature in Every Product",
+    subtitleAr: "منذ ١٩٦٨ · الطبيعة النقية في كل منتج",
     storyTitleEn: "Our Heritage & Story",
     storyTitleAr: "تاريخنا وقصتنا",
-    storyEn: "began as a small apothecary dedicated to sourcing the highest quality natural herbs, raw honey, spices, and organic skincare. Over the decades, we have remained committed to providing authentic products that harness the pure healing powers of nature, keeping traditions alive for modern wellness.",
-    storyAr: "بدأت المسيرة كمتجر صغير للأعشاب والمنتجات الطبيعية ملتزم بأعلى معايير الجودة في توفير الأعشاب الطبيعية، العسل الخام، التوابل، ومستحضرات العناية العضوية. على مدار العقود، حافظنا على التزامنا بتقديم منتجات حقيقية تستغل قوى الطبيعة النقية وتُبقي التقاليد حية للعافية المعاصرة.",
+    storyEn: "began in 1968 in the historic Al-Azhar district of Cairo as Arafa El Attar. Dedicated to sourcing the highest quality natural herbs, raw honey, pure oils, spices, and cosmetics, we have evolved over the decades into Egypt's leading natural food brand while remaining committed to authentic wellness traditions.",
+    storyAr: "بدأت المسيرة في عام ١٩٦٨ بحي الأزهر التاريخي بالقاهرة باسم 'عرفة العطار'. ومنذ ذلك الحين التزمنا بتقديم أجود الأعشاب الطبيعية، العسل الخام، الزيوت النقية، التوابل، ومستحضرات التجميل، لنتطور عبر العقود إلى العلامة الرائدة في مصر للمنتجات الطبيعية مع الحفاظ على أصالة التقاليد والعافية.",
     valuesTitleEn: "Our Core Principles",
     valuesTitleAr: "مبادئنا الأساسية",
     values: [

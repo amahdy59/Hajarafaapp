@@ -52,33 +52,43 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
     return (
       <motion.article
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
-        className="bg-card rounded-md border border-border dark:border-zinc-600/90 overflow-hidden"
+        whileHover={{ y: -3 }}
+        whileTap={{ scale: 0.995 }}
+        transition={{ type: "spring", stiffness: 350, damping: 25 }}
+        className="bg-card rounded-2xl border border-border dark:border-zinc-700/60 overflow-hidden hover:shadow-soft hover:border-brand-terracotta/40 transition-all duration-300 group"
       >
-        <Link to={`/products/${product.id}`} className="flex gap-3 p-3">
-          <div className="relative w-24 h-24 flex-shrink-0 rounded-sm overflow-hidden bg-[#FAF6F0] flex items-center justify-center">
-            <img src={product.image} alt={product.name} className="w-[85%] h-[85%] sm:w-full sm:h-full object-contain mix-blend-multiply p-1 sm:p-2" loading="lazy" />
+        <Link to={`/products/${product.id}`} className="flex gap-4 p-4 items-center">
+          <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 rounded-xl overflow-hidden bg-[#FAF6F0] flex items-center justify-center border border-border/40">
+            <img 
+              src={product.image} 
+              alt={product.name} 
+              className="w-[85%] h-[85%] object-contain mix-blend-multiply transition-transform duration-500 group-hover:-translate-y-1" 
+              loading="lazy" 
+            />
           </div>
-          <div className="flex-1 min-w-0 flex flex-col justify-between gap-1">
-            <div className="flex flex-col gap-0.5">
+          <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch py-1.5 px-2 sm:px-4">
+            <div className="flex flex-col gap-1">
               {product.isOrganic && (
-                <span className="inline-flex items-center gap-1 text-brand-sage eyebrow" style={{ fontSize: "10px" }}>
-                  <Leaf size={10} /> {isRTL ? "عضوي" : "Organic"}
+                <span className="inline-flex items-center gap-1 text-brand-sage eyebrow" style={{ fontSize: "9px" }}>
+                  <Leaf size={9} /> {isRTL ? "عضوي" : "Organic"}
                 </span>
               )}
-              <h3 className="text-foreground line-clamp-2" style={{ fontSize: "0.95rem", lineHeight: 1.3, letterSpacing: "0.3px" }}>
+              <h3 className="text-foreground font-semibold group-hover:text-brand-terracotta transition-colors line-clamp-2" style={{ fontSize: "0.95rem", lineHeight: 1.3 }}>
                 {isRTL && product.nameAr ? product.nameAr : product.name}
               </h3>
-              <span className="text-brand-ink-soft" style={{ fontSize: "0.8rem" }}>{product.weight}</span>
+              <span className="text-brand-ink-soft text-xs font-medium">{product.weight || product.category}</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-brand-forest" style={{ fontSize: "1rem", letterSpacing: "0.4px" }}>{price}</span>
-              <button
+            <div className="flex items-center justify-between mt-2">
+              <span className="text-brand-forest font-bold" style={{ fontSize: "1.05rem" }}>{price}</span>
+              <motion.button
                 onClick={onAdd}
                 aria-label={t.addToCart}
-                className="w-9 h-9 rounded-md bg-brand-terracotta text-white flex items-center justify-center hover:bg-brand-terracotta-dark transition-colors"
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
+                className="w-9 h-9 rounded-xl bg-brand-terracotta text-white flex items-center justify-center hover:bg-brand-terracotta-dark shadow-sm transition-colors"
               >
-                <Plus size={16} />
-              </button>
+                <Plus size={18} />
+              </motion.button>
             </div>
           </div>
         </Link>
@@ -89,59 +99,75 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
   return (
     <motion.article
       initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -3, scale: 1.005 }}
+      whileHover={{ y: -4 }}
       whileTap={{ scale: 0.99 }}
-      transition={{ type: "tween", duration: 0.18 }}
-      className="bg-card rounded-md border border-border dark:border-zinc-600/90 overflow-hidden flex flex-col h-full hover:shadow-soft hover:border-brand-sage transition-all duration-300"
+      transition={{ type: "spring", stiffness: 350, damping: 25 }}
+      className="bg-card rounded-2xl border border-border dark:border-zinc-700/60 overflow-hidden flex flex-col h-full hover:shadow-soft hover:border-brand-terracotta/40 transition-all duration-300 group"
     >
       <Link to={`/products/${product.id}`} className="flex flex-col flex-1">
-        <div className="relative aspect-square bg-[#FAF6F0] overflow-hidden flex items-center justify-center p-4">
+        <div className="relative aspect-square bg-[#FAF6F0] overflow-hidden flex items-center justify-center p-6 border-b border-border/20">
           <img
             src={product.image}
             alt={product.name}
-            className="w-[85%] h-[85%] sm:w-full sm:h-full object-contain mix-blend-multiply transition-transform duration-300 hover:scale-[1.03]"
+            className="w-full h-full max-h-[160px] object-contain mix-blend-multiply transition-transform duration-500 group-hover:-translate-y-1.5"
             loading="lazy"
           />
 
           {badge && (
             <span
-              className={`absolute top-2 start-2 px-2 py-0.5 rounded-sm border ${badgeCls[badge.tone]} eyebrow`}
-              style={{ fontSize: "10px" }}
+              className={`absolute top-3.5 start-3.5 px-2.5 py-0.5 rounded bg-card border ${badgeCls[badge.tone]} eyebrow shadow-sm`}
+              style={{ fontSize: "9px" }}
             >
               {badge.label}
             </span>
           )}
 
-          <button
+          <motion.button
             onClick={onWish}
             aria-label="Wishlist"
-            className="absolute top-2 end-2 w-8 h-8 bg-card/90 backdrop-blur rounded-full flex items-center justify-center border border-border hover:scale-105 active:scale-95 hover:text-brand-terracotta hover:border-brand-terracotta transition-all duration-200"
+            whileHover={{
+              scale: [1, 1.25, 1.12, 1.25, 1],
+              transition: {
+                duration: 0.7,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }
+            }}
+            whileTap={{ scale: 0.85 }}
+            className="absolute top-3.5 end-3.5 w-8.5 h-8.5 bg-card/90 backdrop-blur rounded-full flex items-center justify-center border border-border text-brand-ink-soft hover:text-brand-terracotta hover:border-brand-terracotta shadow-sm transition-colors duration-200 z-10"
           >
-            <Heart size={14} className={wishlisted ? "fill-brand-terracotta text-brand-terracotta" : "text-brand-ink-soft"} />
-          </button>
+            <motion.span
+              animate={wishlisted ? { scale: [1, 1.35, 1] } : { scale: 1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              className="flex items-center justify-center"
+            >
+              <Heart size={15} className={wishlisted ? "fill-brand-terracotta text-brand-terracotta" : ""} />
+            </motion.span>
+          </motion.button>
         </div>
 
-        <div className="p-3 flex flex-col gap-1 flex-1">
+        <div className="px-5 sm:px-6 py-4.5 flex flex-col gap-1 flex-1">
           <h3
-            className="text-foreground line-clamp-1"
-            style={{ fontSize: "0.98rem", letterSpacing: "0.4px" }}
+            className="text-foreground text-sm sm:text-base font-semibold line-clamp-1 leading-snug group-hover:text-brand-terracotta transition-colors"
           >
             {isRTL && product.nameAr ? product.nameAr : product.name}
           </h3>
-          <span className="text-brand-ink-soft" style={{ fontSize: "0.8rem" }}>
+          <span className="text-brand-ink-soft text-xs font-medium">
             {product.weight || product.category}
           </span>
-          <div className="flex items-center justify-between pt-2 mt-auto">
-            <span className="text-brand-forest" style={{ fontSize: "1rem", letterSpacing: "0.4px" }}>
+          <div className="flex items-center justify-between pt-3 mt-auto">
+            <span className="text-brand-forest font-bold text-base">
               {price}
             </span>
-            <button
+            <motion.button
               onClick={onAdd}
               aria-label={t.addToCart}
-              className="w-8 h-8 rounded-md bg-brand-terracotta text-white flex items-center justify-center hover:bg-brand-terracotta-dark hover:scale-105 active:scale-95 transition-all duration-200"
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.92 }}
+              className="w-9 h-9 rounded-xl bg-brand-terracotta text-white flex items-center justify-center hover:bg-brand-terracotta-dark shadow-sm transition-colors"
             >
-              <Plus size={16} />
-            </button>
+              <Plus size={18} />
+            </motion.button>
           </div>
         </div>
       </Link>

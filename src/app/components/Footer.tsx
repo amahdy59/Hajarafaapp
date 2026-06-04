@@ -7,8 +7,8 @@ export function Footer() {
   const { t, isRTL, locale } = useAppSettings();
 
   const footerTranslations = {
-    aboutTextEn: "represents over 70 years of traditional Egyptian herbal wisdom, bringing you the finest natural honey, fresh spices, organic nuts, and botanical cosmetics.",
-    aboutTextAr: "يمثل أكثر من ٧٠ عاماً من الحكمة العشبية المصرية التقليدية، حيث يقدم لك أجود أنواع العسل الطبيعي، التوابل الطازجة، المكسرات العضوية، ومستحضرات التجميل النباتية.",
+    aboutTextEn: "represents over 50 years of traditional Egyptian herbal wisdom, bringing you the finest natural honey, fresh spices, organic nuts, and botanical cosmetics.",
+    aboutTextAr: "يمثل أكثر من ٥٠ عاماً من الحكمة العشبية المصرية التقليدية، حيث يقدم لك أجود أنواع العسل الطبيعي، التوابل الطازجة، المكسرات العضوية، ومستحضرات التجميل النباتية.",
     quickLinksEn: "Quick Links",
     quickLinksAr: "روابط سريعة",
     supportEn: "Help & Support",

@@ -2,7 +2,7 @@ import { Home, Store, Search, ShoppingBag, User } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useCart } from "../context/CartContext";
 import { useAppSettings } from "../context/AppSettingsContext";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 
 export function BottomNav() {
   const location = useLocation();
@@ -50,14 +50,21 @@ export function BottomNav() {
                   className={`relative z-10 ${active ? "text-white" : "text-brand-ink-soft"}`}
                   strokeWidth={active ? 2.2 : 1.8}
                 />
-                {item.badge && item.badge > 0 ? (
-                  <span
-                    className="absolute -top-0.5 end-1 min-w-[16px] h-4 px-1 bg-brand-terracotta text-white rounded-full flex items-center justify-center z-20"
-                    style={{ fontSize: "10px" }}
-                  >
-                    {item.badge > 99 ? "99+" : item.badge}
-                  </span>
-                ) : null}
+                <AnimatePresence mode="wait">
+                  {item.badge && item.badge > 0 ? (
+                    <motion.span
+                      key={item.badge}
+                      initial={{ scale: 0.5, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.5, opacity: 0 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 20 }}
+                      className="absolute -top-0.5 end-1 min-w-[16px] h-4 px-1 bg-brand-terracotta text-white rounded-full flex items-center justify-center z-20 border border-background"
+                      style={{ fontSize: "9px" }}
+                    >
+                      {item.badge > 99 ? "99+" : item.badge}
+                    </motion.span>
+                  ) : null}
+                </AnimatePresence>
               </div>
               <span
                 className={active ? "text-brand-forest" : "text-brand-ink-soft"}
