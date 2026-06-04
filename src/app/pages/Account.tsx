@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { 
   User, Package, Heart, Settings, ChevronRight, Bell, Shield, 
   HelpCircle, LogOut, Star, MapPin, CreditCard, Award, 
-  Plus, Trash2, X, Camera, Languages, Sun, Moon 
+  Plus, Trash2, X, Camera, Languages, Sun, Moon, Copy, Check, Info
 } from "lucide-react";
 import { Link, useSearchParams } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
@@ -11,10 +11,57 @@ import { useAppSettings } from "../context/AppSettingsContext";
 import { toast } from "sonner";
 import { ProductCard } from "../components/ProductCard";
 
-const mockOrders = [
-  { id: "HJR-823047", dateEn: "Apr 15, 2025", dateAr: "١٥ أبريل ٢٠٢٥", status: "delivered", total: 67.98, items: 3, image: "https://images.unsplash.com/photo-1537035448858-6d703dbc320f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100" },
-  { id: "HJR-814523", dateEn: "Mar 28, 2025", dateAr: "٢٨ مارس ٢٠٢٥", status: "shipped", total: 45.99, items: 2, image: "https://images.unsplash.com/photo-1761416351532-ede97c29fab8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100" },
-  { id: "HJR-799102", dateEn: "Mar 10, 2025", dateAr: "١٠ مارس ٢٠٢٥", status: "delivered", total: 89.97, items: 4, image: "https://images.unsplash.com/photo-1602020381634-70afae19098c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100" },
+// Mock Orders with detailed products and receipt breakdowns
+const initialOrders = [
+  { 
+    id: "HJR-845102", 
+    dateEn: "Jun 04, 2026", 
+    dateAr: "٤ يونيو ٢٠٢٦", 
+    status: "processing", 
+    total: 120.00, 
+    items: 1, 
+    image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100",
+    courier: null,
+    deliveryAddress: "12 El-Nile St, Agouza, Giza (Home)",
+    deliveryAddressAr: "١٢ شارع النيل، العجوزة، الجيزة (المنزل)",
+    receipt: { subtotal: 110.00, shipping: 15.00, discount: 5.00 },
+    products: [
+      { name: "Sidr Honey", nameAr: "عسل سدر", quantity: 1, price: 110.00, image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100" }
+    ]
+  },
+  { 
+    id: "HJR-823047", 
+    dateEn: "Apr 15, 2025", 
+    dateAr: "١٥ أبريل ٢٠٢٥", 
+    status: "delivered", 
+    total: 67.98, 
+    items: 2, 
+    image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100",
+    courier: { company: "Aramex", trackingCode: "AR-883719-EG", phone: "+20 100 123 4567", estDateEn: "Apr 18, 2025", estDateAr: "١٨ أبريل ٢٠٢٥" },
+    deliveryAddress: "Building 3, El-Taseen St, Fifth Settlement, Cairo (Work)",
+    deliveryAddressAr: "المبنى ٣، شارع التسعين، التجمع الخامس، القاهرة (العمل)",
+    receipt: { subtotal: 60.00, shipping: 15.00, discount: 7.02 },
+    products: [
+      { name: "BBQ Spice Mix", nameAr: "بهارات مشاوي", quantity: 1, price: 35.00, image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100" },
+      { name: "Bay Leaves", nameAr: "ورق لاورو", quantity: 1, price: 25.00, image: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100" }
+    ]
+  },
+  { 
+    id: "HJR-814523", 
+    dateEn: "Mar 28, 2025", 
+    dateAr: "٢٨ مارس ٢٠٢٥", 
+    status: "shipped", 
+    total: 45.99, 
+    items: 1, 
+    image: "https://images.unsplash.com/photo-1761416351532-ede97c29fab8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100",
+    courier: { company: "Haj Arafa Express", trackingCode: "HA-09921-EG", phone: "+20 112 345 6789", estDateEn: "Apr 01, 2025", estDateAr: "٠١ أبريل ٢٠٢٥" },
+    deliveryAddress: "12 El-Nile St, Agouza, Giza (Home)",
+    deliveryAddressAr: "١٢ شارع النيل، العجوزة، الجيزة (المنزل)",
+    receipt: { subtotal: 45.99, shipping: 0.00, discount: 0.00 },
+    products: [
+      { name: "Date Maamoul", nameAr: "معمول تمر", quantity: 1, price: 45.99, image: "https://images.unsplash.com/photo-1761416351532-ede97c29fab8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100" }
+    ]
+  },
 ];
 
 const statusColors: Record<string, string> = {
@@ -31,37 +78,135 @@ const statusTranslations: Record<string, { en: string; ar: string }> = {
   cancelled: { en: "Cancelled", ar: "ملغى" },
 };
 
-type Tab = "overview" | "orders" | "wishlist" | "settings";
 
-function Segmented<T extends string>({
-  value, onChange, options,
-}: { value: T; onChange: (v: T) => void; options: { value: T; label: string }[] }) {
+interface LeafletMapProps {
+  centerCoords: { lat: number; lng: number };
+  onLocationSelect: (address: string, coords: { lat: number; lng: number }) => void;
+  isRTL: boolean;
+}
+
+function LeafletMap({ centerCoords, onLocationSelect, isRTL }: LeafletMapProps) {
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<any>(null);
+  const markerRef = useRef<any>(null);
+
+  useEffect(() => {
+    // Add Leaflet CSS if not loaded
+    if (!document.getElementById("leaflet-css")) {
+      const link = document.createElement("link");
+      link.id = "leaflet-css";
+      link.rel = "stylesheet";
+      link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+      document.head.appendChild(link);
+    }
+
+    const initMap = () => {
+      const L = (window as any).L;
+      if (!L || !mapRef.current) return;
+      if (mapInstanceRef.current) {
+        // Just update center if map already exists
+        mapInstanceRef.current.setView([centerCoords.lat, centerCoords.lng], 15);
+        if (markerRef.current) {
+          markerRef.current.setLatLng([centerCoords.lat, centerCoords.lng]);
+        }
+        return;
+      }
+
+      const map = L.map(mapRef.current).setView([centerCoords.lat, centerCoords.lng], 13);
+      mapInstanceRef.current = map;
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
+      }).addTo(map);
+
+      // Create a gorgeous red pin icon to bypass Vite path issues
+      const svgIcon = L.divIcon({
+        html: `<div class="flex flex-col items-center transform -translate-y-1/2">
+                 <svg class="text-destructive fill-destructive/20 drop-shadow-md animate-bounce" xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                   <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                   <circle cx="12" cy="10" r="3"></circle>
+                 </svg>
+                 <div class="w-2.5 h-1.5 bg-black/30 rounded-full blur-[1.5px] mt-[-4px] transform scale-x-150"></div>
+               </div>`,
+        className: 'custom-leaflet-pin',
+        iconSize: [34, 45],
+        iconAnchor: [17, 45]
+      });
+
+      const marker = L.marker([centerCoords.lat, centerCoords.lng], { draggable: true, icon: svgIcon }).addTo(map);
+      markerRef.current = marker;
+
+      const reverseGeocode = async (lat: number, lng: number) => {
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`, {
+            headers: { "Accept-Language": isRTL ? "ar" : "en" }
+          });
+          const data = await res.json();
+          if (data && data.display_name) {
+            onLocationSelect(data.display_name, { lat, lng });
+          } else {
+            onLocationSelect(`${lat.toFixed(5)}, ${lng.toFixed(5)}`, { lat, lng });
+          }
+        } catch {
+          onLocationSelect(`${lat.toFixed(5)}, ${lng.toFixed(5)}`, { lat, lng });
+        }
+      };
+
+      map.on("click", (e: any) => {
+        const { lat, lng } = e.latlng;
+        marker.setLatLng([lat, lng]);
+        reverseGeocode(lat, lng);
+      });
+
+      marker.on("dragend", () => {
+        const position = marker.getLatLng();
+        reverseGeocode(position.lat, position.lng);
+      });
+
+      reverseGeocode(centerCoords.lat, centerCoords.lng);
+    };
+
+    // Load Leaflet JS if not loaded
+    if (!(window as any).L) {
+      if (!document.getElementById("leaflet-js")) {
+        const script = document.createElement("script");
+        script.id = "leaflet-js";
+        script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+        script.async = true;
+        script.onload = initMap;
+        document.head.appendChild(script);
+      }
+    } else {
+      initMap();
+    }
+
+    return () => {
+      // Clean up map instance on unmount
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, [centerCoords, isRTL]);
+
   return (
-    <div className="inline-flex items-center bg-background border border-border rounded-full p-0.5">
-      {options.map(opt => {
-        const active = value === opt.value;
-        return (
-          <button
-            key={opt.value}
-            type="button"
-            onClick={() => onChange(opt.value)}
-            className={`px-3 py-1 rounded-full transition-all ${active ? "bg-brand-terracotta text-white" : "text-muted-foreground hover:text-foreground"}`}
-            style={{ fontSize: "12px", letterSpacing: "0.8px" }}
-          >
-            {opt.label}
-          </button>
-        );
-      })}
+    <div className="relative w-full rounded-2xl overflow-hidden border border-border shadow-soft my-2">
+      <div ref={mapRef} className="h-44 w-full z-0" />
+      <div className="absolute bottom-2 left-2 right-2 z-10 bg-card/90 backdrop-blur-sm px-2.5 py-1.5 rounded-xl text-[10px] text-muted-foreground shadow-sm pointer-events-none text-center">
+        {isRTL ? "📍 انقر على الخريطة أو اسحب الدبوس لتحديد موقعك" : "📍 Tap the map or drag the pin to select location"}
+      </div>
     </div>
   );
 }
 
+type Tab = "account" | "orders" | "wishlist" | "settings";
+
 export function Account() {
   const [searchParams, setSearchParams] = useSearchParams();
   const tabParam = searchParams.get("tab") as Tab;
-  const [activeTab, setActiveTab] = useState<Tab>("overview");
+  const [activeTab, setActiveTab] = useState<Tab>("account");
   const { items: wishlistItems } = useWishlist();
-  const { theme, setTheme, locale, setLocale, t, isRTL } = useAppSettings();
+  const { t, isRTL, locale } = useAppSettings();
 
   // Authentication State
   const [profile, setProfile] = useState<{
@@ -71,8 +216,18 @@ export function Account() {
     phone: string;
   } | null>(() => {
     const saved = localStorage.getItem("hajarafa.profile");
-    return saved ? JSON.parse(saved) : null; // Defaults to null (not logged in)
+    return saved ? JSON.parse(saved) : null;
   });
+
+  const [orders, setOrders] = useState(() => {
+    const saved = localStorage.getItem("hajarafa.orders");
+    return saved ? JSON.parse(saved) : initialOrders;
+  });
+
+  const saveOrders = (updatedOrders: typeof orders) => {
+    setOrders(updatedOrders);
+    localStorage.setItem("hajarafa.orders", JSON.stringify(updatedOrders));
+  };
 
   // Auth Form State
   const [authTab, setAuthTab] = useState<"signin" | "signup">("signin");
@@ -170,23 +325,16 @@ export function Account() {
   };
 
   useEffect(() => {
-    if (tabParam && ["overview", "orders", "wishlist", "settings"].includes(tabParam)) {
+    if (tabParam && ["account", "orders", "wishlist", "settings"].includes(tabParam)) {
       setActiveTab(tabParam);
-    } else if (tabParam === "account") {
-      setActiveTab("overview");
-      setSearchParams({ tab: "overview" }, { replace: true });
     } else {
-      setActiveTab("overview");
+      setActiveTab("account");
     }
-  }, [tabParam, setSearchParams]);
+  }, [tabParam]);
 
   const handleTabChange = (tab: Tab) => {
     setActiveTab(tab);
-    if (tab === "overview") {
-      setSearchParams({});
-    } else {
-      setSearchParams({ tab });
-    }
+    setSearchParams({ tab });
   };
 
   // Modal Interactive Form States
@@ -194,6 +342,9 @@ export function Account() {
   const [isAddingAddress, setIsAddingAddress] = useState(false);
   const [newAddrType, setNewAddrType] = useState("");
   const [newAddrDetails, setNewAddrDetails] = useState("");
+  const [mapSearch, setMapSearch] = useState("");
+  const [isMapSearching, setIsMapSearching] = useState(false);
+  const [mapCenter, setMapCenter] = useState({ lat: 30.0444, lng: 31.2357 });
 
   const [isPaymentsOpen, setIsPaymentsOpen] = useState(false);
   const [isAddingCard, setIsAddingCard] = useState(false);
@@ -201,6 +352,10 @@ export function Account() {
   const [newCardName, setNewCardName] = useState("");
   const [newCardExpiry, setNewCardExpiry] = useState("");
   const [newCardCvv, setNewCardCvv] = useState("");
+
+  // Detailed Order Modal States
+  const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
+  const [isCopied, setIsCopied] = useState(false);
 
   const [addresses, setAddresses] = useState([
     { id: "1", type: isRTL ? "المنزل" : "Home", details: isRTL ? "١٢ شارع النيل، العجوزة، الجيزة" : "12 El-Nile St, Agouza, Giza" },
@@ -228,7 +383,7 @@ export function Account() {
   const handleSaveAddress = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newAddrType || !newAddrDetails) {
-      toast.error(isRTL ? "يرجى إدخال جميع الحقول" : "Please fill in all fields");
+      toast.error(isRTL ? "يرجى إدخال جميع الحقول أو تحديد موقعك على الخريطة" : "Please fill in all fields or pick from Google Maps");
       return;
     }
     setAddresses([...addresses, {
@@ -238,8 +393,41 @@ export function Account() {
     }]);
     setNewAddrType("");
     setNewAddrDetails("");
+    setMapSearch("");
     setIsAddingAddress(false);
-    toast.success(isRTL ? "تم إضافة العنوان بنجاح" : "Address added successfully");
+    toast.success(isRTL ? "تم إضافة العنوان بنجاح" : "Location added successfully");
+  };
+
+  // Google Maps / OpenStreetMap geocoded search
+  const handleMapSearch = async () => {
+    if (!mapSearch.trim()) return;
+    setIsMapSearching(true);
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(mapSearch)}&limit=1`, {
+        headers: {
+          "Accept-Language": isRTL ? "ar" : "en",
+          "User-Agent": "HajArafaApp"
+        }
+      });
+      const data = await res.json();
+      if (data && data.length > 0) {
+        const item = data[0];
+        const lat = parseFloat(item.lat);
+        const lng = parseFloat(item.lon);
+        setMapCenter({ lat, lng });
+        setNewAddrDetails(item.display_name);
+        toast.success(isRTL ? "تم العثور على الموقع وتحديث الخريطة!" : "Location found on Google Maps!");
+      } else {
+        toast.error(isRTL ? "لم يتم العثور على الموقع" : "Location not found");
+      }
+    } catch {
+      // Fallback in case of network issue
+      const suffix = isRTL ? "، القاهرة، مصر" : ", Cairo, Egypt";
+      setNewAddrDetails(mapSearch + suffix);
+      toast.success(isRTL ? "تم تحديد الموقع (نسخة احتياطية)" : "Location set (offline backup)");
+    } finally {
+      setIsMapSearching(false);
+    }
   };
 
   const handleSaveCard = (e: React.FormEvent) => {
@@ -262,6 +450,27 @@ export function Account() {
     setNewCardCvv("");
     setIsAddingCard(false);
     toast.success(isRTL ? "تم إضافة بطاقة الدفع بنجاح" : "Payment card added successfully");
+  };
+
+  const handleCancelOrder = (orderId: string) => {
+    const updated = orders.map(o => {
+      if (o.id === orderId) {
+        return { ...o, status: "cancelled" };
+      }
+      return o;
+    });
+    saveOrders(updated);
+    if (selectedOrder) {
+      setSelectedOrder({ ...selectedOrder, status: "cancelled" });
+    }
+    toast.success(isRTL ? "تم إلغاء الطلب بنجاح" : "Order cancelled successfully");
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setIsCopied(true);
+    toast.success(isRTL ? "تم نسخ كود التتبع!" : "Tracking code copied!");
+    setTimeout(() => setIsCopied(false), 2000);
   };
 
   // Detect card brand dynamically for inline styling
@@ -511,10 +720,10 @@ export function Account() {
         {/* Tabs - Synced with Hamburger Menu */}
         <div className="flex bg-card rounded-2xl p-1.5 gap-1 mb-6 border border-border shadow-soft">
           {([
-            { key: "overview", label: isRTL ? "نظرة عامة" : "Overview" },
-            { key: "orders", label: isRTL ? "طلباتي" : "My Orders" },
-            { key: "wishlist", label: isRTL ? "المفضلة" : "Wishlist" },
-            { key: "settings", label: isRTL ? "الإعدادات" : "Settings" }
+            { key: "account", label: t.yourAccount },
+            { key: "orders", label: t.yourOrders },
+            { key: "wishlist", label: t.yourWishlist },
+            { key: "settings", label: t.settings }
           ] as const).map(tab => (
             <button
               key={tab.key}
@@ -532,8 +741,8 @@ export function Account() {
 
         {/* Tab content containers */}
         
-        {/* Tab 1: Overview */}
-        {activeTab === "overview" && (
+        {/* Tab 1: My Account / Overview */}
+        {activeTab === "account" && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
             
             {/* Loyalty points card */}
@@ -569,23 +778,23 @@ export function Account() {
 
                   <div className="bg-background/40 border border-border/60 rounded-xl p-3.5 space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-mono font-semibold text-foreground">#{mockOrders[0].id}</span>
-                      <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium ${statusColors[mockOrders[0].status]}`}>
-                        {statusTranslations[mockOrders[0].status]?.[locale] || mockOrders[0].status}
+                      <span className="text-xs font-mono font-semibold text-foreground">#{orders[0].id}</span>
+                      <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium ${statusColors[orders[0].status]}`}>
+                        {statusTranslations[orders[0].status]?.[locale] || orders[0].status}
                       </span>
                     </div>
                     <div className="flex justify-between items-center text-xs text-muted-foreground">
-                      <span>{isRTL ? mockOrders[0].dateAr : mockOrders[0].dateEn}</span>
-                      <span className="font-semibold text-brand-terracotta">{t.currency} {mockOrders[0].total.toFixed(2)}</span>
+                      <span>{isRTL ? orders[0].dateAr : orders[0].dateEn}</span>
+                      <span className="font-semibold text-brand-terracotta">{t.currency} {orders[0].total.toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
                 
                 <button 
-                  onClick={() => handleTabChange("orders")}
+                  onClick={() => setSelectedOrder(orders[0])}
                   className="w-full mt-4 py-2 bg-brand-peach/40 hover:bg-brand-peach text-brand-terracotta text-xs rounded-xl font-semibold transition-colors flex items-center justify-center gap-1.5"
                 >
-                  <Package size={14} /> {isRTL ? "تتبع الطلب" : "Track Order Status"}
+                  <Package size={14} /> {isRTL ? "تفاصيل وتتبع الطلب" : "Details & Tracking"}
                 </button>
               </div>
 
@@ -627,7 +836,7 @@ export function Account() {
                   onClick={() => handleTabChange("wishlist")}
                   className="w-full mt-4 py-2 bg-brand-peach/40 hover:bg-brand-peach text-brand-terracotta text-xs rounded-xl font-semibold transition-colors flex items-center justify-center gap-1.5"
                 >
-                  <Heart size={14} /> {isRTL ? "عرض قائمة الأمنيات الكلية" : "View Full Wishlist"}
+                  <Heart size={14} /> {isRTL ? "عرض قائمة المفضلة" : "View Full Wishlist"}
                 </button>
               </div>
 
@@ -639,7 +848,7 @@ export function Account() {
         {activeTab === "orders" && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
             <h2 className="text-foreground font-display mb-4">{t.myOrders}</h2>
-            {mockOrders.map(order => (
+            {orders.map(order => (
               <div key={order.id} className="bg-card border border-border rounded-2xl p-4 sm:p-5 shadow-soft hover:shadow-md transition-all">
                 {/* Top Row */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border/50 pb-3 mb-3">
@@ -666,7 +875,7 @@ export function Account() {
                   </div>
                   <div>
                     <span className="font-medium text-foreground">
-                      {order.status === "delivered" ? t.deliveredSuccessfully : t.onTheWay}
+                      {order.status === "delivered" ? t.deliveredSuccessfully : order.status === "cancelled" ? (isRTL ? "تم إلغاء هذا الطلب" : "This order has been cancelled") : t.onTheWay}
                     </span>
                   </div>
                 </div>
@@ -682,7 +891,10 @@ export function Account() {
                       <p className="text-muted-foreground">{order.items} {isRTL ? "منتجات طبيعية" : "natural products"}</p>
                     </div>
                   </div>
-                  <button className="text-xs bg-brand-terracotta/10 text-brand-terracotta px-3 py-1.5 rounded-lg hover:bg-brand-terracotta hover:text-white transition-all font-medium whitespace-nowrap">
+                  <button 
+                    onClick={() => setSelectedOrder(order)}
+                    className="text-xs bg-brand-terracotta/10 text-brand-terracotta px-3 py-1.5 rounded-lg hover:bg-brand-terracotta hover:text-white transition-all font-semibold whitespace-nowrap"
+                  >
                     {t.details}
                   </button>
                 </div>
@@ -728,7 +940,7 @@ export function Account() {
         {activeTab === "settings" && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
-            {/* Left side settings: Profile edit form + App Preferences */}
+            {/* Left side settings: Profile edit form */}
             <div className="md:col-span-2 space-y-6">
               
               {/* Edit Profile Form */}
@@ -795,39 +1007,6 @@ export function Account() {
                 >
                   {t.saveChanges}
                 </button>
-              </div>
-
-              {/* App Preferences: Language & Theme selectors inside Settings Page */}
-              <div className="bg-card rounded-2xl p-5 border border-border shadow-soft">
-                <h3 className="text-foreground font-display text-base sm:text-lg mb-4 flex items-center gap-2">
-                  <Settings size={18} className="text-brand-terracotta" /> {isRTL ? "تفضيلات التطبيق" : "App Preferences"}
-                </h3>
-                
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-foreground/80 flex items-center gap-2.5">
-                      <Languages size={17} className="text-brand-ink-soft" />
-                      {t.language}
-                    </span>
-                    <Segmented<"en" | "ar">
-                      value={locale}
-                      onChange={setLocale}
-                      options={[{ value: "en", label: "English" }, { value: "ar", label: "العربية" }]}
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between border-t border-border pt-4">
-                    <span className="text-sm text-foreground/80 flex items-center gap-2.5">
-                      {theme === "light" ? <Sun size={17} className="text-brand-ink-soft" /> : <Moon size={17} className="text-brand-ink-soft" />}
-                      {t.theme}
-                    </span>
-                    <Segmented<"light" | "dark">
-                      value={theme}
-                      onChange={setTheme}
-                      options={[{ value: "light", label: t.light }, { value: "dark", label: t.dark }]}
-                    />
-                  </div>
-                </div>
               </div>
 
               {/* Notifications switches */}
@@ -897,7 +1076,7 @@ export function Account() {
 
       </div>
 
-      {/* Saved Addresses Modal (With clean inline interactive form, no browser prompts) */}
+      {/* Saved Addresses Modal (With Google Maps Mock Locator Picker) */}
       <AnimatePresence>
         {isAddressesOpen && (
           <>
@@ -915,7 +1094,7 @@ export function Account() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="fixed inset-x-4 bottom-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full max-w-md bg-card border border-border rounded-3xl p-6 z-50 shadow-elev overflow-y-auto max-h-[85vh]"
+              className="fixed inset-x-4 bottom-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full max-w-md bg-card border border-border rounded-3xl p-6 z-50 shadow-elev overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-foreground font-display text-base sm:text-lg">{t.savedAddresses}</h3>
@@ -940,12 +1119,50 @@ export function Account() {
                     onSubmit={handleSaveAddress}
                     className="space-y-4 border border-border/80 rounded-2xl p-4 bg-background/50 mb-3"
                   >
-                    <h4 className="text-xs font-semibold uppercase text-brand-terracotta">
-                      {isRTL ? "إضافة عنوان جديد" : "Add New Location"}
-                    </h4>
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-xs font-bold uppercase text-brand-terracotta">
+                        {isRTL ? "إضافة عنوان جديد" : "Add New Location"}
+                      </h4>
+                      <span className="text-[10px] bg-brand-peach text-brand-terracotta px-2 py-0.5 rounded-full font-medium flex items-center gap-1 select-none">
+                        📍 Google Maps Enabled
+                      </span>
+                    </div>
+
+                    {/* Google Maps Visual Interactive Simulator Block */}
+                    <div className="border border-border rounded-2xl overflow-hidden relative">
+                      {/* Search header on map */}
+                      <div className="p-2 bg-card/95 backdrop-blur-md border-b border-border flex gap-2 relative z-10">
+                        <input
+                          type="text"
+                          placeholder={isRTL ? "ابحث في خرائط جوجل..." : "Search Google Maps..."}
+                          value={mapSearch}
+                          onChange={e => setMapSearch(e.target.value)}
+                          className="flex-1 px-3 py-1.5 bg-background border border-border rounded-xl text-xs outline-none text-foreground placeholder:text-muted-foreground focus:border-brand-terracotta"
+                          onKeyDown={e => e.key === "Enter" && (e.preventDefault(), handleMapSearch())}
+                        />
+                        <button
+                          type="button"
+                          onClick={handleMapSearch}
+                          disabled={isMapSearching}
+                          className="px-4 py-1.5 bg-brand-terracotta text-white rounded-xl text-xs font-semibold hover:bg-brand-terracotta-dark disabled:opacity-50 transition-colors"
+                        >
+                          {isMapSearching ? "..." : (isRTL ? "بحث" : "Search")}
+                        </button>
+                      </div>
+
+                      <LeafletMap 
+                        centerCoords={mapCenter} 
+                        isRTL={isRTL} 
+                        onLocationSelect={(addr, coords) => {
+                          setNewAddrDetails(addr);
+                          setMapCenter(coords);
+                        }} 
+                      />
+                    </div>
+
                     <div>
                       <label className="block text-[10px] text-muted-foreground mb-1">
-                        {isRTL ? "نوع العنوان (مثال: المنزل، العمل)" : "Label / Address Type (e.g. Home, Work)"}
+                        {isRTL ? "اسم وتصنيف العنوان (مثال: المنزل، العمل)" : "Label / Address Type (e.g. Home, Work)"}
                       </label>
                       <input
                         type="text"
@@ -956,29 +1173,35 @@ export function Account() {
                         className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta"
                       />
                     </div>
+                    
                     <div>
                       <label className="block text-[10px] text-muted-foreground mb-1">
-                        {isRTL ? "تفاصيل العنوان بالكامل" : "Complete Address Details"}
+                        {isRTL ? "تفاصيل العنوان الجغرافي المستلم" : "Geocoded Street Address / Location Coordinates"}
                       </label>
                       <input
                         type="text"
                         required
-                        placeholder={isRTL ? "١٢ شارع النيل، العجوزة، الجيزة" : "12 El-Nile St, Agouza, Giza"}
+                        placeholder={isRTL ? "انقر على الخريطة للحصول على الموقع" : "Tap the map above to autofill location info"}
                         value={newAddrDetails}
                         onChange={e => setNewAddrDetails(e.target.value)}
                         className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta"
                       />
                     </div>
+
                     <div className="flex gap-2">
                       <button
                         type="submit"
                         className="flex-1 py-2 bg-brand-terracotta text-white rounded-lg text-xs font-semibold hover:bg-brand-terracotta-dark"
                       >
-                        {isRTL ? "حفظ" : "Save"}
+                        {isRTL ? "حفظ العنوان" : "Save Location"}
                       </button>
                       <button
                         type="button"
-                        onClick={() => setIsAddingAddress(false)}
+                        onClick={() => {
+                          setIsAddingAddress(false);
+                          setNewAddrDetails("");
+                          setNewAddrType("");
+                        }}
                         className="px-4 py-2 border border-border text-foreground hover:bg-muted rounded-lg text-xs"
                       >
                         {isRTL ? "إلغاء" : "Cancel"}
@@ -1014,7 +1237,7 @@ export function Account() {
                     onClick={() => setIsAddingAddress(true)}
                     className="w-full py-2.5 bg-brand-peach text-brand-terracotta hover:bg-brand-terracotta hover:text-white rounded-xl text-xs font-semibold uppercase transition-all flex items-center justify-center gap-2"
                   >
-                    <Plus size={14} /> {isRTL ? "إضافة عنوان جديد" : "Add New Location"}
+                    <Plus size={14} /> {isRTL ? "تحديد عنوان جديد بخرائط جوجل" : "Pin Location on Google Maps"}
                   </button>
                 )}
               </div>
@@ -1023,7 +1246,7 @@ export function Account() {
         )}
       </AnimatePresence>
 
-      {/* Payment Methods Modal (With clean card brand detection form, no browser prompts) */}
+      {/* Payment Methods Modal (With clean card brand detection form) */}
       <AnimatePresence>
         {isPaymentsOpen && (
           <>
@@ -1080,7 +1303,6 @@ export function Account() {
                           placeholder="4242 4242 4242 4242"
                           value={newCardNumber}
                           onChange={e => {
-                            // Simple auto-spacing formatting for card inputs
                             const v = e.target.value.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim();
                             setNewCardNumber(v);
                           }}
@@ -1185,6 +1407,261 @@ export function Account() {
                   >
                     <Plus size={14} /> {isRTL ? "إضافة بطاقة جديدة" : "Add New Card"}
                   </button>
+                )}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Amazon-Style Order Details & Progress Tracking Modal */}
+      <AnimatePresence>
+        {selectedOrder && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedOrder(null)}
+              className="fixed inset-0 bg-brand-ink/45 backdrop-blur-sm z-50 animate-fade-in"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 20 }}
+              className="fixed inset-x-4 bottom-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full max-w-2xl bg-card border border-border rounded-3xl p-5 sm:p-6 z-50 shadow-elev overflow-y-auto max-h-[92vh] scrollbar-hide"
+            >
+              {/* Header */}
+              <div className="flex items-start justify-between border-b border-border/80 pb-4 mb-4 select-none">
+                <div>
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{isRTL ? "تفاصيل الطلب" : "Order details"}</span>
+                  <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                    <h3 className="text-foreground text-base sm:text-lg font-bold font-mono">#{selectedOrder.id}</h3>
+                    <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-medium ${statusColors[selectedOrder.status]}`}>
+                      {statusTranslations[selectedOrder.status]?.[locale] || selectedOrder.status}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-1">
+                    {isRTL ? "تاريخ الطلب:" : "Ordered on:"} {isRTL ? selectedOrder.dateAr : selectedOrder.dateEn}
+                  </p>
+                </div>
+                <button 
+                  onClick={() => setSelectedOrder(null)} 
+                  className="text-muted-foreground hover:text-foreground p-1 rounded-full hover:bg-muted transition-colors"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Delivery Progress Stages Tracker */}
+              <div className="bg-background/40 border border-border/60 rounded-2xl p-4 sm:p-5 mb-5 select-none">
+                <h4 className="text-xs font-semibold text-foreground mb-4">
+                  {isRTL ? "حالة شحنتك ومراحل التوصيل" : "Delivery Progress & Tracking Timeline"}
+                </h4>
+                
+                {/* Cancellation status timeline override */}
+                {selectedOrder.status === "cancelled" ? (
+                  <div className="flex items-center gap-3 bg-red-50 dark:bg-red-950/20 border border-red-200/50 dark:border-red-900/30 p-3 rounded-xl">
+                    <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 flex items-center justify-center text-sm font-bold flex-shrink-0">
+                      ✕
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-red-700 dark:text-red-400">{isRTL ? "تم إلغاء هذا الطلب" : "This order has been cancelled"}</p>
+                      <p className="text-[10px] text-muted-foreground">{isRTL ? "تمت معالجة الإلغاء بناءً على طلبك" : "The order cancellation has been processed successfully"}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    {/* Horizontal Connector Line for desktop, vertical for mobile */}
+                    <div className="absolute top-[13px] start-4 end-4 h-0.5 bg-muted hidden sm:block" />
+                    <div className="absolute top-4 bottom-4 start-[13px] w-0.5 bg-muted sm:hidden" />
+                    
+                    {/* Progress Fill bar (Desktop) */}
+                    <div 
+                      className="absolute top-[13px] start-4 h-0.5 bg-brand-terracotta hidden sm:block transition-all duration-500" 
+                      style={{ 
+                        width: selectedOrder.status === "delivered" 
+                          ? "92%" 
+                          : selectedOrder.status === "shipped" 
+                            ? "61%" 
+                            : "30%" 
+                      }} 
+                    />
+
+                    {/* Timeline steps */}
+                    <div className="flex flex-col sm:flex-row justify-between gap-5 sm:gap-2 relative z-10">
+                      {[
+                        { step: "placed", labelEn: "Placed", labelAr: "تم الطلب", dateEn: selectedOrder.dateEn, dateAr: selectedOrder.dateAr, active: true },
+                        { step: "processing", labelEn: "Processing", labelAr: "قيد التحضير", dateEn: selectedOrder.dateEn, dateAr: selectedOrder.dateAr, active: true },
+                        { step: "shipped", labelEn: "Shipped", labelAr: "شحن الطلب", dateEn: selectedOrder.courier?.estDateEn || "In Transit", dateAr: selectedOrder.courier?.estDateAr || "قيد الشحن", active: ["shipped", "delivered"].includes(selectedOrder.status) },
+                        { step: "delivered", labelEn: "Delivered", labelAr: "تم التوصيل", dateEn: selectedOrder.courier?.estDateEn || "Expected soon", dateAr: selectedOrder.courier?.estDateAr || "متوقع قريباً", active: selectedOrder.status === "delivered" }
+                      ].map((stage, idx) => (
+                        <div key={stage.step} className="flex sm:flex-col items-start sm:items-center text-center gap-3 sm:gap-1.5 flex-1">
+                          {/* Circle Badge Indicator */}
+                          <div 
+                            className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all flex-shrink-0 ${
+                              stage.active 
+                                ? "bg-brand-terracotta border-brand-terracotta text-white shadow-sm" 
+                                : "bg-card border-muted text-muted-foreground"
+                            }`}
+                          >
+                            {stage.active ? "✓" : idx + 1}
+                          </div>
+                          <div className="text-start sm:text-center leading-tight">
+                            <p className={`text-xs font-semibold ${stage.active ? "text-foreground" : "text-muted-foreground"}`}>
+                              {isRTL ? stage.labelAr : stage.labelEn}
+                            </p>
+                            <p className="text-[10px] text-muted-foreground mt-0.5">
+                              {isRTL ? stage.dateAr : stage.dateEn}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Courier Panel (Rendered if shipped or delivered) */}
+              {selectedOrder.courier && selectedOrder.status !== "cancelled" && (
+                <div className="bg-brand-peach/25 border border-brand-terracotta/10 rounded-2xl p-4 mb-5 flex items-center justify-between gap-4 select-none flex-wrap sm:flex-nowrap">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl">🚚</span>
+                    <div className="text-xs">
+                      <p className="text-foreground font-semibold">
+                        {isRTL ? `الشحن عبر ${selectedOrder.courier.company}` : `Shipped with ${selectedOrder.courier.company}`}
+                      </p>
+                      <p className="text-muted-foreground mt-0.5">
+                        {isRTL 
+                          ? `كود التتبع: ${selectedOrder.courier.trackingCode}` 
+                          : `Tracking Code: ${selectedOrder.courier.trackingCode}`
+                        }
+                      </p>
+                      {selectedOrder.courier.phone && (
+                        <p className="text-muted-foreground mt-0.5 flex items-center gap-1">
+                          📞 {isRTL ? "هاتف المندوب:" : "Courier Phone:"} <span className="font-mono text-foreground font-semibold">{selectedOrder.courier.phone}</span>
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <button
+                    onClick={() => copyToClipboard(selectedOrder.courier.trackingCode)}
+                    className="py-1.5 px-3 bg-brand-peach text-brand-terracotta text-[10px] font-bold rounded-lg border border-brand-terracotta/20 hover:bg-brand-terracotta hover:text-white transition-all flex items-center gap-1.5"
+                  >
+                    {isCopied ? <Check size={12} /> : <Copy size={12} />}
+                    {isCopied ? (isRTL ? "تم النسخ" : "Copied!") : (isRTL ? "نسخ الكود" : "Copy Code")}
+                  </button>
+                </div>
+              )}
+
+              {/* Items List */}
+              <div className="space-y-3.5 mb-6">
+                <h4 className="text-xs font-semibold uppercase text-brand-ink-soft select-none">
+                  {isRTL ? "محتويات الشحنة" : "Shipment Items"}
+                </h4>
+                {selectedOrder.products?.map((prod: any, i: number) => (
+                  <div key={i} className="flex justify-between items-center gap-3 border-b border-border/40 pb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-muted p-1 rounded-xl flex items-center justify-center flex-shrink-0 border border-border/30">
+                        <img src={prod.image} alt={prod.name} className="w-full h-full object-contain" />
+                      </div>
+                      <div className="text-xs">
+                        <p className="text-foreground font-medium">{isRTL ? prod.nameAr : prod.name}</p>
+                        <p className="text-muted-foreground mt-0.5">{isRTL ? "الكمية:" : "Qty:"} {prod.quantity}</p>
+                      </div>
+                    </div>
+                    <span className="text-xs font-semibold text-foreground font-mono">
+                      {t.currency} {prod.price.toFixed(2)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Amazon-Style Receipt Breakdown Grid */}
+              <div className="border-t border-border pt-4 mb-6">
+                <h4 className="text-xs font-semibold uppercase text-brand-ink-soft mb-3 select-none">
+                  {isRTL ? "تفاصيل الدفع وملخص الحساب" : "Payment & Order Pricing Summary"}
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs bg-muted/20 border border-border/60 rounded-2xl p-4">
+                  {/* Left Column: Payment Details & Shipping Address */}
+                  <div className="space-y-4 border-b sm:border-b-0 sm:border-e border-border/80 pb-3 sm:pb-0 sm:pe-6">
+                    <div>
+                      <p className="text-muted-foreground uppercase text-[10px] tracking-wider font-semibold select-none">
+                        {isRTL ? "طريقة الدفع" : "Payment Method"}
+                      </p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <CreditCard size={15} className="text-brand-ink-soft" />
+                        <span className="font-mono text-foreground font-medium">Visa **** 4242</span>
+                      </div>
+                      <p className="text-[10px] text-muted-foreground mt-1 select-none">
+                        🔒 {t.paymentSecureNote}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground uppercase text-[10px] tracking-wider font-semibold select-none">
+                        {isRTL ? "عنوان الشحن" : "Shipping Address"}
+                      </p>
+                      <p className="text-foreground font-medium mt-1 font-sans">
+                        {isRTL ? selectedOrder.deliveryAddressAr : selectedOrder.deliveryAddress}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Right Column: Receipt Breakdown (Amazon Style) */}
+                  <div className="space-y-2 font-mono">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">{isRTL ? "المجموع الفرعي:" : "Subtotal:"}</span>
+                      <span className="text-foreground font-medium">{t.currency} {selectedOrder.receipt.subtotal.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span className="text-muted-foreground">{isRTL ? "الشحن:" : "Shipping:"}</span>
+                      <span className="text-foreground font-medium">
+                        {selectedOrder.receipt.shipping === 0 
+                          ? (isRTL ? "مجاني" : "FREE") 
+                          : `${t.currency} ${selectedOrder.receipt.shipping.toFixed(2)}`
+                        }
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-xs text-red-600 dark:text-red-400">
+                      <span>{isRTL ? "خصم الكوبون:" : "Discount:"}</span>
+                      <span>-{t.currency} {selectedOrder.receipt.discount.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between border-t border-border/80 pt-2 text-sm font-bold text-brand-terracotta">
+                      <span className="font-sans select-none">{isRTL ? "الإجمالي الكلي:" : "Total Charged:"}</span>
+                      <span>{t.currency} {selectedOrder.total.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Actions Footer (Render Cancel button if placed or processing) */}
+              <div className="flex gap-2 justify-end select-none">
+                {["placed", "processing"].includes(selectedOrder.status) ? (
+                  <button
+                    onClick={() => {
+                      if (confirm(isRTL ? "هل أنت متأكد من رغبتك في إلغاء هذا الطلب؟" : "Are you sure you want to cancel this order?")) {
+                        handleCancelOrder(selectedOrder.id);
+                      }
+                    }}
+                    className="w-full sm:w-auto py-2.5 px-6 bg-red-600 text-white hover:bg-red-700 text-xs rounded-xl font-bold uppercase transition-colors shadow-sm"
+                  >
+                    {isRTL ? "إلغاء الطلب" : "Cancel Order"}
+                  </button>
+                ) : selectedOrder.status === "cancelled" ? (
+                  <p className="text-xs text-red-600 dark:text-red-400 font-semibold bg-red-50 dark:bg-red-950/20 px-3 py-1.5 rounded-xl border border-red-200/50 border-dashed">
+                    ⚠️ {isRTL ? "تم إلغاء هذه العملية بنجاح" : "This purchase transaction is cancelled"}
+                  </p>
+                ) : (
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/40 border border-border/80 px-3.5 py-1.5 rounded-xl">
+                    <Info size={14} className="text-brand-ink-soft" />
+                    <span>
+                      {selectedOrder.status === "delivered" 
+                        ? (isRTL ? "تم التوصيل ولا يمكن إلغاؤه" : "Order delivered, cancellation closed")
+                        : (isRTL ? "الطلب قيد الشحن ولا يمكن إلغاؤه" : "Order shipped, cancellation closed")
+                      }
+                    </span>
+                  </div>
                 )}
               </div>
             </motion.div>

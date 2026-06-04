@@ -55,7 +55,7 @@ export function Header() {
             <Menu size={20} />
           </IconButton>
 
-          <Link to="/" className="justify-self-center flex items-center justify-center min-w-0 h-10 select-none cursor-pointer w-fit no-underline"><img src={logoImg} alt="HajArafa Logo" className="h-8 xs:h-9 w-auto object-contain max-w-[140px] select-none" /></Link>
+          <Link to="/" className="justify-self-center flex items-center justify-center min-w-0 h-14 select-none cursor-pointer w-fit no-underline"><img src={logoImg} alt="HajArafa Logo" className="h-12 xs:h-13 sm:h-14 w-auto object-contain max-w-[220px] select-none" /></Link>
 
           <div className="flex items-center gap-0.5">
             <IconButton onClick={() => navigate("/search")} aria-label={t.searchPlaceholder} className="hidden sm:flex">

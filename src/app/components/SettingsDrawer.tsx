@@ -61,7 +61,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
   }, [open]);
 
   const account = [
-    { icon: User, label: t.yourAccount, to: "/account?tab=overview" },
+    { icon: User, label: t.yourAccount, to: "/account?tab=account" },
     { icon: Package, label: t.yourOrders, to: "/account?tab=orders" },
     { icon: Heart, label: t.yourWishlist, to: "/account?tab=wishlist" },
     { icon: Settings, label: t.settings, to: "/account?tab=settings" },
