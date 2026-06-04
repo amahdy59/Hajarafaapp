@@ -1,89 +1,88 @@
-import { Home, ShoppingBag, Heart, Menu } from "lucide-react";
-import { Link, useLocation } from "react-router";
-import { useState } from "react";
+import { Home, Store, Search, ShoppingBag, User } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router";
 import { useCart } from "../context/CartContext";
-import { useWishlist } from "../context/WishlistContext";
 import { useAppSettings } from "../context/AppSettingsContext";
-import { SettingsDrawer } from "./SettingsDrawer";
 import { motion } from "motion/react";
 
 export function BottomNav() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { totalItems, setCartOpen } = useCart();
-  const { items: wishlistItems } = useWishlist();
   const { t } = useAppSettings();
-  const [menuOpen, setMenuOpen] = useState(false);
 
-  const isHome = location.pathname === "/";
-  const isFav = location.pathname.startsWith("/wishlist");
-
-  type Item = {
-    key: string;
-    icon: typeof Home;
-    label: string;
-    active: boolean;
-    badge?: number;
-    onClick?: () => void;
-    to?: string;
-  };
-
-  const items: Item[] = [
-    { key: "home", icon: Home, label: t.home, active: isHome, to: "/" },
-    { key: "fav", icon: Heart, label: t.favourites, active: isFav, badge: wishlistItems.length, to: "/wishlist" },
-    { key: "cart", icon: ShoppingBag, label: t.cart, active: false, badge: totalItems, onClick: () => setCartOpen(true) },
-    { key: "menu", icon: Menu, label: t.menu, active: menuOpen, onClick: () => setMenuOpen(true) },
+  const items = [
+    { key: "home", icon: Home, label: t.home, to: "/" },
+    { key: "shop", icon: Store, label: t.shopAll, to: "/products" },
+    { key: "search", icon: Search, label: t.searchPlaceholder.split(" ")[0], onClick: () => navigate("/search") },
+    { key: "cart", icon: ShoppingBag, label: t.cart, onClick: () => setCartOpen(true), badge: totalItems },
+    { key: "profile", icon: User, label: t.account, to: "/account" },
   ];
 
+  const activeKey = (() => {
+    if (location.pathname === "/") return "home";
+    if (location.pathname.startsWith("/products") || location.pathname.startsWith("/category")) return "shop";
+    if (location.pathname.startsWith("/search")) return "search";
+    if (location.pathname.startsWith("/account") || location.pathname.startsWith("/wishlist")) return "profile";
+    return "";
+  })();
+
   return (
-    <>
-      <nav className="fixed bottom-0 left-0 right-0 z-30 sm:hidden bg-card/95 backdrop-blur-xl border-t border-border safe-area-pb">
-        <div className="grid grid-cols-4">
-          {items.map(item => {
-            const Icon = item.icon;
-            const inner = (
-              <div className="flex flex-col items-center justify-center pt-2 pb-1.5 relative">
-                {item.active && (
+    <nav
+      className="fixed bottom-0 inset-x-0 z-30 bg-background/95 backdrop-blur-xl border-t border-border sm:hidden"
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+    >
+      <ul className="flex items-stretch justify-around px-1 pt-1.5">
+        {items.map(item => {
+          const Icon = item.icon;
+          const active = activeKey === item.key;
+          const inner = (
+            <div className="flex flex-col items-center justify-center gap-1 pt-1.5 pb-1 min-w-[56px]">
+              <div className="relative h-7 w-12 flex items-center justify-center">
+                {active && (
                   <motion.div
-                    layoutId="bottomNavBar"
-                    className="absolute top-0 h-0.5 w-10 bg-primary rounded-full"
+                    layoutId="bottomNavPill"
+                    className="absolute inset-0 bg-brand-terracotta rounded-full"
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
                   />
                 )}
-                <div className="relative">
-                  <Icon
-                    size={24}
-                    className={`transition-colors ${item.active ? "text-primary" : "text-muted-foreground"}`}
-                    strokeWidth={item.active ? 2.2 : 1.8}
-                    fill={item.active && item.key === "fav" ? "currentColor" : "none"}
-                  />
-                  {item.badge && item.badge > 0 ? (
-                    <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 px-1 bg-primary text-primary-foreground rounded-full flex items-center justify-center" style={{ fontSize: "10px" }}>
-                      {item.badge}
-                    </span>
-                  ) : null}
-                </div>
-                <span className={`mt-1 transition-colors ${item.active ? "text-primary" : "text-muted-foreground"}`} style={{ fontSize: "10.5px" }}>
-                  {item.label}
-                </span>
+                <Icon
+                  size={18}
+                  className={`relative z-10 ${active ? "text-white" : "text-brand-ink-soft"}`}
+                  strokeWidth={active ? 2.2 : 1.8}
+                />
+                {item.badge && item.badge > 0 ? (
+                  <span
+                    className="absolute -top-0.5 end-1 min-w-[16px] h-4 px-1 bg-brand-terracotta text-white rounded-full flex items-center justify-center z-20"
+                    style={{ fontSize: "10px" }}
+                  >
+                    {item.badge > 99 ? "99+" : item.badge}
+                  </span>
+                ) : null}
               </div>
-            );
+              <span
+                className={active ? "text-brand-forest" : "text-brand-ink-soft"}
+                style={{ fontSize: "10.5px", letterSpacing: "0.6px" }}
+              >
+                {item.label}
+              </span>
+            </div>
+          );
 
-            if (item.to && !item.onClick) {
-              return (
-                <Link key={item.key} to={item.to} className="active:bg-muted/50 transition-colors">
+          return (
+            <li key={item.key} className="flex-1">
+              {item.to && !item.onClick ? (
+                <Link to={item.to} className="flex justify-center w-full active:opacity-60 transition-opacity">
                   {inner}
                 </Link>
-              );
-            }
-            return (
-              <button key={item.key} onClick={item.onClick} className="active:bg-muted/50 transition-colors">
-                {inner}
-              </button>
-            );
-          })}
-        </div>
-      </nav>
-
-      <SettingsDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
-    </>
+              ) : (
+                <button onClick={item.onClick} className="flex justify-center w-full active:opacity-60 transition-opacity">
+                  {inner}
+                </button>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
   );
 }

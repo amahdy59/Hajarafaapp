@@ -40,8 +40,21 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --font-sans: 'DM Sans', 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-display: 'Playfair Display', 'Cairo', Georgia, serif;
+  --font-sans: 'Questrial', 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Libre Caslon Text', 'Amiri', Georgia, serif;
+
+  --color-brand-sage: var(--brand-sage);
+  --color-brand-sage-dark: var(--brand-sage-dark);
+  --color-brand-forest: var(--brand-forest);
+  --color-brand-terracotta: var(--brand-terracotta);
+  --color-brand-terracotta-dark: var(--brand-terracotta-dark);
+  --color-brand-peach: var(--brand-peach);
+  --color-brand-cream: var(--brand-cream);
+  --color-brand-cream-2: var(--brand-cream-2);
+  --color-brand-beige: var(--brand-beige);
+  --color-brand-line: var(--brand-line);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-ink-soft: var(--brand-ink-soft);
 }
 
 @layer base {
@@ -49,7 +62,8 @@
 
   html { font-size: 16px; }
 
-  html[dir="rtl"] { font-family: 'Cairo', 'DM Sans', system-ui, sans-serif; }
+  html[dir="rtl"],
+  html[dir="rtl"] .font-display { font-family: 'Cairo', system-ui, sans-serif; }
 
   body {
     font-family: var(--font-sans);
@@ -61,14 +75,15 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-weight: 600;
-    color: var(--foreground);
-    letter-spacing: -0.015em;
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--brand-forest);
+    letter-spacing: -0.005em;
   }
 
-  h1 { font-size: 2rem; line-height: 1.15; }
-  h2 { font-size: 1.5rem; line-height: 1.25; }
-  h3 { font-size: 1.125rem; line-height: 1.4; }
+  h1 { font-size: 2.25rem; line-height: 1.15; }
+  h2 { font-size: 1.75rem; line-height: 1.25; }
+  h3 { font-size: 1.25rem; line-height: 1.4; }
   h4 { font-size: 1rem; line-height: 1.5; }
 
   ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -80,87 +95,138 @@
   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
   .safe-area-pb { padding-bottom: env(safe-area-inset-bottom); }
+  .safe-area-pt { padding-top: env(safe-area-inset-top); }
 
   .font-display { font-family: var(--font-display); }
+
+  /* Auto-flip directional icons in RTL */
+  [dir="rtl"] .rtl-flip { transform: scaleX(-1); }
+
+  .shadow-soft { box-shadow: var(--shadow-soft); }
+  .shadow-elev { box-shadow: var(--shadow-elev); }
+
+  /* Consistent label treatment used across nav/labels/links */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--brand-ink-soft);
+  }
+
+  /* Focus ring tuned to brand */
+  :where(button, a, input, textarea, select):focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
 }
 
-/* HajArafa brand overrides — applied on top of @make-kits/untitled-ui-pro tokens */
+/* HajArafa brand — terracotta on warm cream */
 :root {
-  /* Saffron / burnt amber primary */
-  --primary: #C4622D;
+  --brand-sage: #8DA392;
+  --brand-sage-dark: #4A5D4E;
+  --brand-forest: #334537;
+  --brand-terracotta: #C4622D;
+  --brand-terracotta-dark: #9A4A20;
+  --brand-peach: #F4E7DA;
+  --brand-cream: #FBF7F1;
+  --brand-cream-2: #F0EAE0;
+  --brand-beige: #EFEEEB;
+  --brand-line: #D8CEC4;
+  --brand-ink: #1B1C1A;
+  --brand-ink-soft: #6B5E56;
+
+  --primary: var(--brand-terracotta);
   --primary-foreground: #FFFFFF;
-  --ring: #C4622D;
-  --accent: #F4E7DA;
-  --accent-foreground: #9A4A20;
-  --chart-1: #C4622D;
-  --chart-2: #5C6F4A;
-  --chart-3: #B8860B;
-  --chart-4: #7B5E3A;
-  --chart-5: #1B1B1B;
+  --ring: var(--brand-terracotta);
+  --accent: var(--brand-peach);
+  --accent-foreground: var(--brand-terracotta);
+  --destructive: #B43A2A;
+  --destructive-foreground: #FFFFFF;
+  --chart-1: var(--brand-sage);
+  --chart-2: var(--brand-forest);
+  --chart-3: var(--brand-terracotta);
+  --chart-4: var(--brand-peach);
+  --chart-5: var(--brand-ink);
 
-  /* Warm, paper-cream base */
-  --background: #FBF7F1;
-  --foreground: #1B1B1B;
-  --card: #FFFFFF;
-  --card-foreground: #1B1B1B;
-  --popover: #FFFFFF;
-  --popover-foreground: #1B1B1B;
-  --secondary: #FFFFFF;
-  --secondary-foreground: #1B1B1B;
-  --muted: #F4EFE6;
-  --muted-foreground: #7A7672;
-  --border: #ECE6DC;
-  --input: #FFFFFF;
-  --input-background: #FFFFFF;
-  --radius: 14px;
-  --radius-button: 12px;
-  --radius-card: 18px;
-  --radius-input: 12px;
+  --background: var(--brand-cream);
+  --foreground: var(--brand-ink);
+  --card: var(--brand-cream);
+  --card-foreground: var(--brand-ink);
+  --popover: var(--brand-cream);
+  --popover-foreground: var(--brand-ink);
+  --secondary: var(--brand-beige);
+  --secondary-foreground: var(--brand-ink);
+  --muted: var(--brand-beige);
+  --muted-foreground: var(--brand-ink-soft);
+  --border: var(--brand-line);
+  --input: var(--brand-cream-2);
+  --input-background: var(--brand-cream-2);
+  --radius: 12px;
+  --radius-button: 4px;
+  --radius-card: 8px;
+  --radius-input: 4px;
 
-  --sidebar: #FFFFFF;
-  --sidebar-foreground: #1B1B1B;
-  --sidebar-primary: #C4622D;
+  --sidebar: var(--brand-cream);
+  --sidebar-foreground: var(--brand-ink);
+  --sidebar-primary: var(--brand-terracotta);
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #F4E7DA;
-  --sidebar-accent-foreground: #9A4A20;
-  --sidebar-border: #ECE6DC;
-  --sidebar-ring: #C4622D;
+  --sidebar-accent: var(--brand-peach);
+  --sidebar-accent-foreground: var(--brand-terracotta);
+  --sidebar-border: var(--brand-line);
+  --sidebar-ring: var(--brand-terracotta);
+
+  --radius-button: 12px;
+  --shadow-soft: 0 1px 2px rgba(27, 28, 26, 0.04), 0 4px 14px rgba(27, 28, 26, 0.04);
+  --shadow-elev: 0 2px 8px rgba(27, 28, 26, 0.06), 0 12px 32px rgba(27, 28, 26, 0.08);
 }
 
 .dark {
-  /* Warm dark — matches saffron brand */
-  --background: #14110E;
-  --foreground: #F5EFE5;
-  --card: #1F1A14;
-  --card-foreground: #F5EFE5;
-  --popover: #1F1A14;
-  --popover-foreground: #F5EFE5;
-  --primary: #E08B57;
-  --primary-foreground: #14110E;
-  --secondary: #2A231C;
-  --secondary-foreground: #F5EFE5;
-  --muted: #251F18;
-  --muted-foreground: #B0A89E;
-  --accent: #3A2A1C;
-  --accent-foreground: #F0C8A4;
+  --brand-sage: #9DB287;
+  --brand-sage-dark: #C0D5C2;
+  --brand-forest: #C0D5C2;
+  --brand-terracotta: #E08B57;
+  --brand-terracotta-dark: #C4622D;
+  --brand-peach: #3D2218;
+  --brand-cream: #15191A;
+  --brand-cream-2: #1F2422;
+  --brand-beige: #232826;
+  --brand-line: #2F3633;
+  --brand-ink: #F1EFE8;
+  --brand-ink-soft: #A09890;
+
+  --primary: var(--brand-terracotta);
+  --primary-foreground: #FFFFFF;
+  --accent: var(--brand-peach);
+  --accent-foreground: #FFCFB3;
   --destructive: #E26B5C;
   --destructive-foreground: #FFFFFF;
-  --border: #2E251D;
-  --input: #1F1A14;
-  --input-background: #1F1A14;
-  --ring: #E08B57;
-  --chart-1: #E08B57;
-  --chart-2: #9DB287;
-  --chart-3: #E5B143;
-  --chart-4: #C9A06B;
-  --chart-5: #F5EFE5;
 
-  --sidebar: #1F1A14;
-  --sidebar-foreground: #F5EFE5;
-  --sidebar-primary: #E08B57;
-  --sidebar-primary-foreground: #14110E;
-  --sidebar-accent: #3A2A1C;
-  --sidebar-accent-foreground: #F0C8A4;
-  --sidebar-border: #2E251D;
-  --sidebar-ring: #E08B57;
+  --background: var(--brand-cream);
+  --foreground: var(--brand-ink);
+  --card: var(--brand-cream-2);
+  --card-foreground: var(--brand-ink);
+  --popover: var(--brand-cream-2);
+  --popover-foreground: var(--brand-ink);
+  --secondary: var(--brand-beige);
+  --secondary-foreground: var(--brand-ink);
+  --muted: var(--brand-beige);
+  --muted-foreground: var(--brand-ink-soft);
+  --border: var(--brand-line);
+  --input: var(--brand-cream-2);
+  --input-background: var(--brand-cream-2);
+  --ring: var(--brand-sage);
+
+  --sidebar: var(--brand-cream-2);
+  --sidebar-foreground: var(--brand-ink);
+  --sidebar-primary: var(--brand-terracotta);
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: var(--brand-peach);
+  --sidebar-accent-foreground: var(--brand-terracotta);
+  --sidebar-border: var(--brand-line);
+  --sidebar-ring: var(--brand-terracotta);
+
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 14px rgba(0, 0, 0, 0.2);
+  --shadow-elev: 0 2px 8px rgba(0, 0, 0, 0.4), 0 12px 32px rgba(0, 0, 0, 0.35);
 }

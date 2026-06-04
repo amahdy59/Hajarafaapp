@@ -14,18 +14,23 @@ export function Root() {
 
       {isCheckout ? (
         <div className="pt-0">
-          <div className="bg-card border-b border-border px-4 py-4">
-            <div className="max-w-5xl mx-auto flex items-center gap-2">
-              <div className="w-7 h-7 bg-primary rounded-full flex items-center justify-center">
-                <span className="text-primary-foreground" style={{ fontSize: "0.75rem" }}>🌿</span>
+          <div className="bg-card border-b border-border px-4 py-3.5 safe-area-pt">
+            <div className="max-w-5xl mx-auto flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-brand-terracotta rounded-full flex items-center justify-center">
+                  <span className="text-white font-display" style={{ fontSize: "0.95rem" }}>H</span>
+                </div>
+                <span className="text-foreground font-display" style={{ fontSize: "1rem" }}>HajArafa</span>
               </div>
-              <span className="text-primary">Secure Checkout</span>
+              <span className="text-muted-foreground flex items-center gap-1" style={{ fontSize: "0.8rem" }}>
+                🔒 Secure Checkout
+              </span>
             </div>
           </div>
           <Outlet />
         </div>
       ) : (
-        <main className="pt-[164px] sm:pt-[168px] pb-20 sm:pb-0">
+        <main className="pt-16 pb-24 sm:pb-8">
           <Outlet />
         </main>
       )}

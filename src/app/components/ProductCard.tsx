@@ -1,9 +1,9 @@
-import { Heart, ShoppingCart, Leaf } from "lucide-react";
+import { Heart, Plus, Leaf } from "lucide-react";
 import { Link } from "react-router";
 import { Product } from "../data/products";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
-import { StarRating } from "./StarRating";
+import { useAppSettings } from "../context/AppSettingsContext";
 import { toast } from "sonner";
 import { motion } from "motion/react";
 
@@ -12,151 +12,137 @@ interface ProductCardProps {
   view?: "grid" | "list";
 }
 
+type BadgeTone = "sage" | "terracotta";
+
+function deriveBadge(p: Product): { label: string; tone: BadgeTone } | null {
+  if (p.discount) return { label: `-${p.discount}%`, tone: "terracotta" };
+  if (p.isNew) return { label: "New", tone: "sage" };
+  if (p.isBestSeller) return { label: "Best", tone: "sage" };
+  if (p.isOrganic) return { label: "Organic", tone: "sage" };
+  return null;
+}
+
+const badgeCls: Record<BadgeTone, string> = {
+  sage: "bg-brand-cream-2 text-brand-sage border-brand-sage",
+  terracotta: "bg-brand-peach text-brand-terracotta border-brand-terracotta",
+};
+
 export function ProductCard({ product, view = "grid" }: ProductCardProps) {
   const { addToCart } = useCart();
   const { isWishlisted, toggleWishlist } = useWishlist();
+  const { t } = useAppSettings();
   const wishlisted = isWishlisted(product.id);
+  const badge = deriveBadge(product);
 
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const onAdd = (e: React.MouseEvent) => {
+    e.preventDefault(); e.stopPropagation();
     addToCart(product);
-    toast.success(`${product.name} added to cart`, {
-      description: `LE ${product.price.toFixed(2)}`,
-    });
+    toast.success(`${product.name} • ${t.currency} ${product.price.toFixed(2)}`);
   };
 
-  const handleWishlist = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const onWish = (e: React.MouseEvent) => {
+    e.preventDefault(); e.stopPropagation();
     toggleWishlist(product);
-    toast(wishlisted ? "Removed from wishlist" : "Added to wishlist", {
-      icon: wishlisted ? "💔" : "❤️",
-    });
   };
+
+  const price = `${product.priceFrom ? `${t.from} ` : ""}${t.currency} ${product.price.toFixed(2)}`;
 
   if (view === "list") {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow duration-300"
+      <motion.article
+        initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
+        className="bg-card rounded-md border border-border overflow-hidden"
       >
-        <Link to={`/products/${product.id}`} className="flex gap-4 p-4">
-          <div className="relative w-28 h-28 flex-shrink-0 rounded-xl overflow-hidden bg-[#F4E7DA]">
-            <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
-            {product.discount && (
-              <span className="absolute top-1.5 left-1.5 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-                -{product.discount}%
-              </span>
-            )}
+        <Link to={`/products/${product.id}`} className="flex gap-3 p-3">
+          <div className="relative w-24 h-24 flex-shrink-0 rounded-sm overflow-hidden bg-brand-cream-2">
+            <img src={product.image} alt={product.name} className="w-full h-full object-contain mix-blend-multiply p-2" />
           </div>
-          <div className="flex-1 min-w-0 flex flex-col justify-between py-1">
-            <div>
+          <div className="flex-1 min-w-0 flex flex-col justify-between gap-1">
+            <div className="flex flex-col gap-0.5">
               {product.isOrganic && (
-                <span className="inline-flex items-center gap-1 text-xs text-green-700 bg-green-50 px-2 py-0.5 rounded-full mb-1">
+                <span className="inline-flex items-center gap-1 text-brand-sage eyebrow" style={{ fontSize: "10px" }}>
                   <Leaf size={10} /> Organic
                 </span>
               )}
-              <h3 className="text-gray-900 line-clamp-2 mb-1">{product.name}</h3>
-              <StarRating rating={product.rating} reviewCount={product.reviewCount} />
+              <h3 className="text-foreground line-clamp-2" style={{ fontSize: "0.95rem", lineHeight: 1.3, letterSpacing: "0.3px" }}>
+                {product.name}
+              </h3>
+              <span className="text-brand-ink-soft" style={{ fontSize: "0.8rem" }}>{product.weight}</span>
             </div>
-            <div className="flex items-center justify-between mt-2">
-              <div>
-                <span className="text-[#C4622D]">{product.priceFrom ? "From " : ""}LE {product.price.toFixed(2)}</span>
-                {product.originalPrice && (
-                  <span className="text-gray-400 line-through text-sm ml-2">LE {product.originalPrice.toFixed(2)}</span>
-                )}
-              </div>
-              <div className="flex items-center gap-2">
-                <button onClick={handleWishlist} className="p-2 rounded-full hover:bg-gray-100 transition-colors">
-                  <Heart size={16} className={wishlisted ? "fill-red-500 text-red-500" : "text-gray-400"} />
-                </button>
-                <button
-                  onClick={handleAddToCart}
-                  className="bg-[#C4622D] text-white px-3 py-1.5 rounded-lg text-sm hover:bg-[#9A4A20] transition-colors"
-                >
-                  Add to Cart
-                </button>
-              </div>
+            <div className="flex items-center justify-between">
+              <span className="text-brand-forest" style={{ fontSize: "1rem", letterSpacing: "0.4px" }}>{price}</span>
+              <button
+                onClick={onAdd}
+                aria-label={t.addToCart}
+                className="w-9 h-9 rounded-md bg-brand-terracotta text-white flex items-center justify-center hover:bg-brand-terracotta-dark transition-colors"
+              >
+                <Plus size={16} />
+              </button>
             </div>
           </div>
         </Link>
-      </motion.div>
+      </motion.article>
     );
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
+    <motion.article
+      initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -2 }}
-      className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 group"
+      transition={{ type: "tween", duration: 0.18 }}
+      className="bg-card rounded-md border border-border overflow-hidden flex flex-col h-full"
     >
-      <Link to={`/products/${product.id}`}>
-        <div className="relative aspect-square bg-[#F4E7DA] overflow-hidden">
+      <Link to={`/products/${product.id}`} className="flex flex-col flex-1">
+        <div className="relative aspect-square bg-brand-cream-2 overflow-hidden flex items-center justify-center p-4">
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-contain mix-blend-multiply transition-transform duration-300 hover:scale-[1.03]"
+            loading="lazy"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
-          {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-            {product.discount && (
-              <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
-                -{product.discount}%
-              </span>
-            )}
-            {product.isNew && (
-              <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
-                New
-              </span>
-            )}
-            {product.isBestSeller && (
-              <span className="bg-amber-500 text-white text-xs px-2 py-0.5 rounded-full">
-                Best Seller
-              </span>
-            )}
-          </div>
-
-          {/* Wishlist */}
-          <button
-            onClick={handleWishlist}
-            className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:scale-110 transition-transform"
-          >
-            <Heart size={15} className={wishlisted ? "fill-red-500 text-red-500" : "text-gray-500"} />
-          </button>
-
-          {/* Quick add */}
-          <button
-            onClick={handleAddToCart}
-            className="absolute bottom-3 left-3 right-3 bg-[#C4622D]/90 backdrop-blur-sm text-white text-sm py-2 rounded-xl flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300"
-          >
-            <ShoppingCart size={15} />
-            Add to Cart
-          </button>
-        </div>
-
-        <div className="p-4">
-          {product.isOrganic && (
-            <span className="inline-flex items-center gap-1 text-xs text-green-700 bg-green-50 px-2 py-0.5 rounded-full mb-2">
-              <Leaf size={9} /> Organic
+          {badge && (
+            <span
+              className={`absolute top-2 start-2 px-2 py-0.5 rounded-sm border ${badgeCls[badge.tone]} eyebrow`}
+              style={{ fontSize: "10px" }}
+            >
+              {badge.label}
             </span>
           )}
-          <p className="text-xs text-gray-400 mb-0.5">{product.category}</p>
-          <h3 className="text-gray-900 line-clamp-2 mb-2">{product.name}</h3>
-          <StarRating rating={product.rating} reviewCount={product.reviewCount} />
-          <div className="flex items-center gap-2 mt-2">
-            <span className="text-[#C4622D]">{product.priceFrom ? "From " : ""}LE {product.price.toFixed(2)}</span>
-            {product.originalPrice && (
-              <span className="text-gray-400 line-through text-sm">LE {product.originalPrice.toFixed(2)}</span>
-            )}
+
+          <button
+            onClick={onWish}
+            aria-label="Wishlist"
+            className="absolute top-2 end-2 w-8 h-8 bg-card/90 backdrop-blur rounded-full flex items-center justify-center border border-border hover:scale-110 transition-transform"
+          >
+            <Heart size={14} className={wishlisted ? "fill-brand-terracotta text-brand-terracotta" : "text-brand-ink-soft"} />
+          </button>
+        </div>
+
+        <div className="p-3 flex flex-col gap-1 flex-1">
+          <h3
+            className="text-foreground line-clamp-1"
+            style={{ fontSize: "0.98rem", letterSpacing: "0.4px" }}
+          >
+            {product.name}
+          </h3>
+          <span className="text-brand-ink-soft" style={{ fontSize: "0.8rem" }}>
+            {product.weight || product.category}
+          </span>
+          <div className="flex items-center justify-between pt-2 mt-auto">
+            <span className="text-brand-forest" style={{ fontSize: "1rem", letterSpacing: "0.4px" }}>
+              {price}
+            </span>
+            <button
+              onClick={onAdd}
+              aria-label={t.addToCart}
+              className="w-8 h-8 rounded-md bg-brand-terracotta text-white flex items-center justify-center hover:bg-brand-terracotta-dark transition-colors active:scale-95"
+            >
+              <Plus size={16} />
+            </button>
           </div>
-          <p className="text-xs text-gray-400 mt-1">{product.weight} · {product.origin}</p>
         </div>
       </Link>
-    </motion.div>
+    </motion.article>
   );
 }
