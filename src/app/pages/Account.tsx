@@ -106,10 +106,14 @@ function LeafletMap({ centerCoords, onLocationSelect, isRTL }: LeafletMapProps) 
       const L = (window as any).L;
       if (!L || !mapRef.current) return;
       if (mapInstanceRef.current) {
-        // Just update center if map already exists
-        mapInstanceRef.current.setView([centerCoords.lat, centerCoords.lng], 15);
         if (markerRef.current) {
-          markerRef.current.setLatLng([centerCoords.lat, centerCoords.lng]);
+          const currentLatLng = markerRef.current.getLatLng();
+          const dist = L.latLng(currentLatLng).distanceTo(L.latLng([centerCoords.lat, centerCoords.lng]));
+          // Only re-center if the coordinates updated from outside (e.g. searching address) by > 10m
+          if (dist > 10) {
+            mapInstanceRef.current.setView([centerCoords.lat, centerCoords.lng], 15);
+            markerRef.current.setLatLng([centerCoords.lat, centerCoords.lng]);
+          }
         }
         return;
       }
@@ -117,8 +121,9 @@ function LeafletMap({ centerCoords, onLocationSelect, isRTL }: LeafletMapProps) 
       const map = L.map(mapRef.current).setView([centerCoords.lat, centerCoords.lng], 13);
       mapInstanceRef.current = map;
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
+      // Connected to Google Maps vector roadmap tile server
+      L.tileLayer("https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
+        attribution: '&copy; <a href="https://www.google.com/maps">Google Maps</a>'
       }).addTo(map);
 
       // Create a gorgeous red pin icon to bypass Vite path issues
@@ -218,7 +223,21 @@ export function Account() {
     phone: string;
   } | null>(() => {
     const saved = localStorage.getItem("hajarafa.profile");
-    if (saved) return JSON.parse(saved);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Reset if it's the old mock user from early versions
+      if (parsed.email === "alex@example.com" || parsed.firstName === "Alex" || parsed.firstName === "alex") {
+        const defaultUser = {
+          firstName: locale === "ar" ? "أحمد" : "Ahmed",
+          lastName: locale === "ar" ? "مهدي" : "Mahdy",
+          email: "ahmed.mahdy@example.com",
+          phone: "+20 100 123 4567"
+        };
+        localStorage.setItem("hajarafa.profile", JSON.stringify(defaultUser));
+        return defaultUser;
+      }
+      return parsed;
+    }
     const defaultUser = {
       firstName: locale === "ar" ? "أحمد" : "Ahmed",
       lastName: locale === "ar" ? "مهدي" : "Mahdy",
