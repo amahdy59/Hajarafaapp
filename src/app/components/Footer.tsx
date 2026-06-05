@@ -5,23 +5,43 @@ import { useAppSettings } from "../context/AppSettingsContext";
 export function Footer() {
   const { t, isRTL, locale } = useAppSettings();
 
-  const categoriesLinks = [
-    { slug: "coffee-drinks", en: "Coffee & Drinks", ar: "قهوة ومشروبات" },
-    { slug: "honey", en: "Honey & Dates", ar: "عسل وتمور" },
-    { slug: "spices", en: "Spices & Grains", ar: "بهارات وحبوب" },
-    { slug: "nuts", en: "Nuts & Snacks", ar: "مكسرات وتسالي" },
-    { slug: "wellness", en: "Targeted Wellness", ar: "حلول صحية مخصصة" },
-    { slug: "cosmetics", en: "Natural Cosmetics", ar: "تجميل طبيعي" },
-    { slug: "incense", en: "Incense & Fragrance", ar: "بخور وعطور" },
-  ];
-
   return (
     <footer className="hidden sm:block bg-[#14201A] dark:bg-[#070b09] text-[#FAF6F0] dark:text-[#EFECE6] border-t border-white/5 dark:border-white/10 pt-12 pb-24 sm:pb-12 mt-16 select-none relative overflow-hidden">
       {/* Subtle organic background accent */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-brand-sage/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-brand-terracotta/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
+      {/* Artistic green paint brush stroke and leaves background (Left side) */}
+      <svg 
+        className="absolute left-0 bottom-0 w-[420px] h-[240px] text-brand-sage/10 dark:text-brand-sage/5 pointer-events-none z-0 transform -translate-x-12 translate-y-12 select-none" 
+        viewBox="0 0 500 300" 
+        fill="currentColor" 
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M -50,180 C 100,100 220,280 380,140 C 420,105 480,120 520,150 C 440,240 280,310 -50,260 Z" opacity="0.5" />
+        <path d="M -50,220 C 80,140 180,290 320,180 C 350,155 420,160 480,210 C 380,290 220,320 -50,290 Z" opacity="0.3" />
+        <path d="M 120,80 Q 150,110 120,140 Q 90,110 120,80" transform="rotate(15 120 110)" opacity="0.6" />
+        <path d="M 220,110 Q 255,135 228,170 Q 200,145 220,110" transform="rotate(-25 220 140)" opacity="0.5" />
+        <path d="M 320,70 Q 345,95 325,120 Q 305,95 320,70" transform="rotate(40 320 95)" opacity="0.5" />
+      </svg>
+
+      {/* Organic leaf branch background (Right side) */}
+      <svg 
+        className="absolute right-0 top-0 w-[350px] h-[350px] text-brand-sage/12 dark:text-brand-sage/6 pointer-events-none z-0 transform translate-x-16 -translate-y-16 select-none rtl:left-0 rtl:right-auto rtl:-translate-x-16 rtl:translate-x-0" 
+        viewBox="0 0 200 200" 
+        fill="currentColor" 
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M 180,20 Q 110,60 50,150" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.5" />
+        <path d="M 140,42 Q 155,25 170,30 Q 158,48 140,42" opacity="0.7" />
+        <path d="M 115,63 Q 100,45 110,35 Q 128,48 115,63" opacity="0.7" />
+        <path d="M 100,78 Q 120,65 135,70 Q 122,88 100,78" opacity="0.7" />
+        <path d="M 82,98 Q 65,85 75,72 Q 92,90 82,98" opacity="0.7" />
+        <path d="M 70,116 Q 90,105 105,110 Q 92,128 70,116" opacity="0.7" />
+        <path d="M 58,135 Q 40,125 48,112 Q 68,128 58,135" opacity="0.7" />
+      </svg>
+
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12 relative z-10">
         
         {/* Column 1: Brand & Heritage */}
         <div className="space-y-3.5">
@@ -48,27 +68,7 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Column 2: Quick Links (IA Navigation) */}
-        <div className="space-y-3.5">
-          <h4 className="text-brand-peach font-display text-sm font-semibold tracking-wider uppercase border-b border-white/10 pb-2 w-fit">
-            {locale === "ar" ? "تسوق الفئات" : "Shop Categories"}
-          </h4>
-          <ul className="grid grid-cols-1 gap-2 text-xs sm:text-sm">
-            {categoriesLinks.map(cat => (
-              <li key={cat.slug}>
-                <Link 
-                  to={`/category/${cat.slug}`} 
-                  className="text-[#FAF6F0]/85 dark:text-[#EFECE6]/80 hover:text-white transition-colors flex items-center gap-1.5"
-                >
-                  <span className="text-[10px] text-brand-peach/40">✦</span>
-                  {locale === "ar" ? cat.ar : cat.en}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Column 3: Customer Care */}
+        {/* Column 2: Customer Care (Useful Links) */}
         <div className="space-y-3.5">
           <h4 className="text-brand-peach font-display text-sm font-semibold tracking-wider uppercase border-b border-white/10 pb-2 w-fit">
             {locale === "ar" ? "الدعم والخدمات" : "Customer Care"}
@@ -101,23 +101,23 @@ export function Footer() {
           </ul>
         </div>
 
-        {/* Column 4: WhatsApp Direct & Support */}
+        {/* Column 3: WhatsApp Direct & Support */}
         <div className="space-y-3.5">
           <h4 className="text-brand-peach font-display text-sm font-semibold tracking-wider uppercase border-b border-white/10 pb-2 w-fit">
             {locale === "ar" ? "الدعم المباشر" : "Direct Support"}
           </h4>
-          <div className="space-y-3">
+          <div className="space-y-4 flex flex-col items-start">
             <a
               href="https://wa.me/201020401400"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white hover:bg-[#1EBE57] px-4 py-2.5 rounded-xl transition-all text-xs font-bold w-full shadow-sm select-none"
+              className="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white hover:bg-[#1EBE57] px-4.5 py-2.5 rounded-xl transition-all text-xs font-bold w-fit shadow-sm select-none"
             >
               <MessageCircle size={16} />
               <span>{locale === "ar" ? "تواصل عبر واتساب" : "Chat on WhatsApp"}</span>
             </a>
             
-            <div className="text-xs text-[#FAF6F0]/85 dark:text-[#EFECE6]/85 space-y-2 pt-1">
+            <div className="text-xs text-[#FAF6F0]/85 dark:text-[#EFECE6]/85 space-y-2.5 w-full">
               <div className="flex items-center gap-2">
                 <Phone size={13} className="text-brand-peach flex-shrink-0" />
                 <span>{locale === "ar" ? "الخط الساخن: ١٧٣٠٩" : "Hotline: 17309"}</span>

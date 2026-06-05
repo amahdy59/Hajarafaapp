@@ -6,6 +6,7 @@ import { categories, categoryMapping } from "../data/categories";
 import { ProductCard } from "../components/ProductCard";
 import { motion, AnimatePresence } from "motion/react";
 import { useAppSettings } from "../context/AppSettingsContext";
+import { CustomDropdown } from "../components/ui/CustomDropdown";
 
 type SortOption = "featured" | "price-asc" | "price-desc" | "rating" | "new";
 
@@ -158,6 +159,14 @@ export function Products() {
   const filter = searchParams.get("filter");
   const { t, isRTL } = useAppSettings();
 
+  const sortOptions = [
+    { value: "featured", label: t.trending },
+    { value: "price-asc", label: isRTL ? "السعر: من الأقل للأعلى" : "Price: Low to High" },
+    { value: "price-desc", label: isRTL ? "السعر: من الأعلى للأقل" : "Price: High to Low" },
+    { value: "rating", label: isRTL ? "الأعلى تقييماً" : "Top Rated" },
+    { value: "new", label: t.newArrivals },
+  ];
+
   const [view, setView] = useState<"grid" | "list">("grid");
   const [sort, setSort] = useState<SortOption>("featured");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -268,21 +277,13 @@ export function Products() {
                   )}
                 </button>
 
-                {/* Sort select dropdown inside Row 1 on mobile, next to filters, but aligns next to Grid/List switcher on desktop */}
-                <div className="relative w-40 sm:w-48 lg:hidden">
-                  <select
-                    value={sort}
-                    onChange={e => setSort(e.target.value as SortOption)}
-                    className="appearance-none w-full bg-brand-peach border border-brand-terracotta/10 ps-3 pe-8 py-2 rounded-lg text-sm text-brand-terracotta font-semibold outline-none cursor-pointer focus:border-brand-terracotta"
-                  >
-                    <option value="featured">{t.trending}</option>
-                    <option value="price-asc">{isRTL ? "السعر: من الأقل للأعلى" : "Price: Low to High"}</option>
-                    <option value="price-desc">{isRTL ? "السعر: من الأعلى للأقل" : "Price: High to Low"}</option>
-                    <option value="rating">{isRTL ? "الأعلى تقييماً" : "Top Rated"}</option>
-                    <option value="new">{t.newArrivals}</option>
-                  </select>
-                  <ChevronDown size={13} className="absolute end-2.5 top-1/2 -translate-y-1/2 text-brand-terracotta pointer-events-none" />
-                </div>
+                {/* Custom sort select dropdown inside Row 1 on mobile */}
+                <CustomDropdown
+                  value={sort}
+                  onChange={val => setSort(val as SortOption)}
+                  options={sortOptions}
+                  className="w-40 sm:w-48 lg:hidden"
+                />
               </div>
 
               {/* Row 2 (Mobile) / Right Group (Desktop) */}
@@ -293,21 +294,13 @@ export function Products() {
                 </span>
 
                 <div className="flex items-center gap-3 ms-auto lg:ms-0">
-                  {/* Sort select dropdown for desktop only */}
-                  <div className="relative hidden lg:block">
-                    <select
-                      value={sort}
-                      onChange={e => setSort(e.target.value as SortOption)}
-                      className="appearance-none bg-brand-peach ps-3 pe-8 py-2 rounded-lg text-sm text-brand-terracotta font-semibold outline-none cursor-pointer border border-brand-terracotta/10 focus:border-brand-terracotta"
-                    >
-                      <option value="featured">{t.trending}</option>
-                      <option value="price-asc">{isRTL ? "السعر: من الأقل للأعلى" : "Price: Low to High"}</option>
-                      <option value="price-desc">{isRTL ? "السعر: من الأعلى للأقل" : "Price: High to Low"}</option>
-                      <option value="rating">{isRTL ? "الأعلى تقييماً" : "Top Rated"}</option>
-                      <option value="new">{t.newArrivals}</option>
-                    </select>
-                    <ChevronDown size={13} className="absolute end-2.5 top-1/2 -translate-y-1/2 text-brand-terracotta pointer-events-none" />
-                  </div>
+                  {/* Custom sort select dropdown for desktop only */}
+                  <CustomDropdown
+                    value={sort}
+                    onChange={val => setSort(val as SortOption)}
+                    options={sortOptions}
+                    className="hidden lg:block w-48"
+                  />
 
                   {/* Grid / List view switch (Always visible, grouped on Row 2 for mobile, and side-by-side with sort dropdown on desktop) */}
                   <div className="flex items-center gap-1 bg-brand-peach rounded-lg p-1 border border-brand-terracotta/10">

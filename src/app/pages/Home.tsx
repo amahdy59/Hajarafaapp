@@ -64,10 +64,13 @@ export function Home() {
 
           return (
             <div key={cat.slug} className="flex flex-col gap-4">
-              {/* Premium curved card shelf container with organic HSL accent bg */}
+              {/* Premium curved card shelf container with organic soft pastel tint & matching border */}
               <div 
-                className="bg-card dark:bg-zinc-900/40 rounded-3xl p-5 sm:p-6 border border-border/50 shadow-[0_8px_30px_rgb(0,0,0,0.01)] relative overflow-hidden"
-                style={{ backgroundImage: `linear-gradient(135deg, ${cat.bgColor}12, transparent 50%)` }}
+                className="bg-card dark:bg-zinc-900/40 rounded-3xl p-5 sm:p-6 border shadow-[0_8px_30px_rgb(0,0,0,0.01)] relative overflow-hidden transition-all duration-300 hover:shadow-md"
+                style={{ 
+                  backgroundImage: `linear-gradient(135deg, ${cat.bgColor}15, ${cat.bgColor}0a)`,
+                  borderColor: `${cat.bgColor}30`
+                }}
               >
                 {/* Category Header Card */}
                 <div className="flex items-center justify-between mb-4.5 select-none">
