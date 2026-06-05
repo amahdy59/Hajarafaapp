@@ -1,5 +1,4 @@
 import { useParams, Link } from "react-router";
-import { ArrowLeft } from "lucide-react";
 import { getProductsByCategory } from "../data/products";
 import { categories } from "../data/categories";
 import { ProductCard } from "../components/ProductCard";
@@ -27,16 +26,15 @@ export function Category() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pt-6">
-        <Link to="/products" className="inline-flex items-center gap-1 text-muted-foreground hover:text-brand-terracotta text-xs mb-4 transition-colors font-medium">
-          <ArrowLeft size={14} className="rtl-flip" /> {t.shopAll}
-        </Link>
-        <div className="mb-6">
-          <h1 className="text-foreground font-display mb-1 flex items-center gap-2">
-            <span className="text-2xl sm:text-3xl">{category.icon}</span> 
-            <span>{categoryName}</span>
-          </h1>
-          <p className="text-muted-foreground text-sm">{categoryProducts.length} {t.productsFound}</p>
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pt-[28px]">
+        <div className="mb-6 flex items-start gap-2.5">
+          <span className="text-2xl sm:text-3xl pt-0.5 select-none">{category.icon}</span>
+          <div>
+            <h1 className="text-foreground font-display text-2xl mb-1 leading-tight">
+              {categoryName}
+            </h1>
+            <p className="text-muted-foreground text-sm">{categoryProducts.length} {t.productsFound}</p>
+          </div>
         </div>
       </div>
 

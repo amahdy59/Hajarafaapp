@@ -279,10 +279,10 @@ export function Products() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-6">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pt-[28px] pb-6">
         {/* Page header */}
         <div className="mb-6">
-          <h1 className="text-foreground font-display mb-1">
+          <h1 className="text-foreground font-display text-2xl mb-1">
             {filter === "deals" ? `🔥 ${t.todaysDeals}` : t.shopAll}
           </h1>
           <p className="text-muted-foreground text-sm">{filteredProducts.length} {t.productsFound}</p>
