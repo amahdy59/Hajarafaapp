@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Mail, Phone, Facebook, Instagram, MessageCircle, ShieldCheck } from "lucide-react";
+import { Mail, Phone, Facebook, Instagram, MessageCircle, ShieldCheck, Truck } from "lucide-react";
 import { useAppSettings } from "../context/AppSettingsContext";
 
 export function Footer() {
@@ -126,9 +126,9 @@ export function Footer() {
                 <Mail size={13} className="text-[#F4E7DA] flex-shrink-0" />
                 <a href="mailto:Marketing@hajarafa.com" className="hover:underline">Marketing@hajarafa.com</a>
               </div>
-              <div className="flex items-center gap-2 pt-1 text-[11px] text-white bg-white/10 border border-white/15 px-3 py-1.5 rounded-lg w-fit font-semibold shadow-sm">
-                <span>🚚</span>
-                <span>
+              <div className="flex items-center justify-center gap-2.5 bg-white/10 border border-white/15 px-3.5 py-2 rounded-xl w-fit text-[11px] font-semibold text-white select-none shadow-sm leading-none">
+                <Truck size={14} className="text-[#F4E7DA] flex-shrink-0" />
+                <span className="pt-[0.5px]">
                   {locale === "ar" 
                     ? "التوصيل خلال ٥ إلى ٧ أيام" 
                     : "Delivery: 5 to 7 working days"}

@@ -255,3 +255,21 @@
   --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 14px rgba(0, 0, 0, 0.2);
   --shadow-elev: 0 2px 8px rgba(0, 0, 0, 0.4), 0 12px 32px rgba(0, 0, 0, 0.35);
 }
+
+/* Accessibility overrides for dark mode button/badge text contrast */
+.dark .bg-brand-terracotta,
+.dark .bg-primary {
+  color: #121617 !important;
+}
+.dark .bg-brand-terracotta *,
+.dark .bg-primary * {
+  color: inherit !important;
+}
+.dark .bg-brand-terracotta:hover,
+.dark .bg-primary:hover {
+  color: #FFFFFF !important;
+}
+.dark .bg-brand-terracotta:hover *,
+.dark .bg-primary:hover * {
+  color: inherit !important;
+}

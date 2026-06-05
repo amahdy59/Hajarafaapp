@@ -67,7 +67,7 @@ export function CustomDropdown({ value, onChange, options, className = "" }: Cus
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full inline-flex items-center justify-between bg-brand-peach dark:bg-zinc-800/80 border border-brand-terracotta/20 hover:border-brand-terracotta/40 px-3.5 py-2.5 rounded-xl text-sm text-brand-terracotta dark:text-brand-peach font-semibold outline-none cursor-pointer active:scale-[0.98] transition-all duration-200 shadow-sm"
+        className="w-full inline-flex items-center justify-between bg-brand-peach dark:bg-zinc-800/80 border border-brand-terracotta/20 hover:border-brand-terracotta/40 px-3.5 py-2.5 rounded-xl text-sm text-brand-terracotta font-semibold outline-none cursor-pointer active:scale-[0.98] transition-all duration-200 shadow-sm"
       >
         <span className="truncate">{selectedOption?.label}</span>
         <ChevronDown 
@@ -107,8 +107,8 @@ export function CustomDropdown({ value, onChange, options, className = "" }: Cus
                   }}
                   className={`flex items-center justify-between px-3 py-2 text-xs sm:text-sm rounded-xl cursor-pointer transition-all duration-150 ${
                     isSelected 
-                      ? "bg-brand-terracotta text-white font-semibold shadow-sm" 
-                      : "text-brand-ink-soft dark:text-zinc-350 hover:bg-brand-peach dark:hover:bg-white/5"
+                      ? "bg-brand-terracotta text-white dark:text-zinc-950 font-semibold shadow-sm" 
+                      : "text-brand-ink-soft dark:text-zinc-300 hover:bg-brand-peach dark:hover:bg-white/5"
                   }`}
                 >
                   <span className="truncate">{option.label}</span>

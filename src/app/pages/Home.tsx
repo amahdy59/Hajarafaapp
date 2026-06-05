@@ -48,7 +48,7 @@ export function Home() {
               </p>
               <Link
                 to="/products"
-                className="inline-flex items-center justify-center gap-2 bg-brand-terracotta text-white px-7 py-3 sm:px-9 sm:py-3.5 rounded-xl hover:bg-brand-terracotta-dark transition-all duration-300 hover:scale-[1.02] hover:shadow-lg active:scale-[0.97] text-xs sm:text-sm font-bold uppercase tracking-wider select-none mt-2 shadow-[0_4px_12px_rgba(196,98,45,0.3)] dark:shadow-[0_4px_12px_rgba(224,139,87,0.2)]"
+                className="inline-flex items-center justify-center gap-2 bg-brand-terracotta text-white dark:text-zinc-950 hover:text-white dark:hover:text-white px-7 py-3 sm:px-9 sm:py-3.5 rounded-xl hover:bg-brand-terracotta-dark transition-all duration-300 hover:scale-[1.02] hover:shadow-lg active:scale-[0.97] text-xs sm:text-sm font-bold uppercase tracking-wider select-none mt-2 shadow-[0_4px_12px_rgba(196,98,45,0.3)] dark:shadow-[0_4px_12px_rgba(224,139,87,0.2)]"
               >
                 {t.explore}
               </Link>

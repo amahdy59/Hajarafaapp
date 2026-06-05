@@ -1,4 +1,4 @@
-import { ShoppingBag, Plus, Minus, Trash2, ArrowRight, Tag } from "lucide-react";
+import { ShoppingBag, Plus, Minus, Trash2, ArrowRight, Tag, Truck } from "lucide-react";
 import { Link } from "react-router";
 import { useCart } from "../context/CartContext";
 import { useAppSettings } from "../context/AppSettingsContext";
@@ -211,9 +211,9 @@ export function Cart() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-center gap-1.5 text-[11px] text-brand-terracotta/90 bg-brand-peach/40 border border-brand-peach/30 py-2 rounded-xl">
-                  <span>🚚</span>
-                  <span>
+                <div className="flex items-center justify-center gap-2.5 text-[11px] text-brand-terracotta bg-brand-peach/40 dark:bg-zinc-800/60 border border-brand-terracotta/10 dark:border-white/5 py-2 px-3.5 rounded-xl font-medium select-none shadow-sm leading-none">
+                  <Truck size={14} className="text-brand-terracotta flex-shrink-0" />
+                  <span className="pt-[0.5px]">
                     {locale === "ar"
                       ? "التوصيل المتوقع: ٥ إلى ٧ أيام عمل"
                       : "Estimated delivery: 5 to 7 working days"}
