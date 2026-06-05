@@ -52,7 +52,6 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
     return (
       <motion.article
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
-        whileHover={{ y: -3 }}
         whileTap={{ scale: 0.995 }}
         transition={{ type: "spring", stiffness: 350, damping: 25 }}
         className="bg-card rounded-2xl border border-border dark:border-zinc-700/60 overflow-hidden hover:shadow-soft hover:border-brand-terracotta/40 transition-all duration-300 group"
@@ -99,7 +98,6 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
   return (
     <motion.article
       initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4 }}
       whileTap={{ scale: 0.99 }}
       transition={{ type: "spring", stiffness: 350, damping: 25 }}
       className="bg-card rounded-2xl border border-border dark:border-zinc-700/60 overflow-hidden flex flex-col h-full hover:shadow-soft hover:border-brand-terracotta/40 transition-all duration-300 group"

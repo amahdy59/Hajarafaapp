@@ -224,19 +224,25 @@ export function Account() {
   } | null>(() => {
     const saved = localStorage.getItem("hajarafa.profile");
     if (saved) {
-      const parsed = JSON.parse(saved);
-      // Reset if it's the old mock user from early versions
-      if (parsed.email === "alex@example.com" || parsed.firstName === "Alex" || parsed.firstName === "alex") {
-        const defaultUser = {
-          firstName: locale === "ar" ? "أحمد" : "Ahmed",
-          lastName: locale === "ar" ? "مهدي" : "Mahdy",
-          email: "ahmed.mahdy@example.com",
-          phone: "+20 100 123 4567"
-        };
-        localStorage.setItem("hajarafa.profile", JSON.stringify(defaultUser));
-        return defaultUser;
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === "object") {
+          // Reset if it's the old mock user from early versions
+          if (parsed.email === "alex@example.com" || parsed.firstName === "Alex" || parsed.firstName === "alex") {
+            const defaultUser = {
+              firstName: locale === "ar" ? "أحمد" : "Ahmed",
+              lastName: locale === "ar" ? "مهدي" : "Mahdy",
+              email: "ahmed.mahdy@example.com",
+              phone: "+20 100 123 4567"
+            };
+            localStorage.setItem("hajarafa.profile", JSON.stringify(defaultUser));
+            return defaultUser;
+          }
+          return parsed;
+        }
+      } catch (e) {
+        console.error("Failed to parse profile JSON from localStorage:", e);
       }
-      return parsed;
     }
     const defaultUser = {
       firstName: locale === "ar" ? "أحمد" : "Ahmed",
@@ -880,12 +886,12 @@ export function Account() {
 
           <div>
             <div className="flex items-center gap-2.5 flex-wrap">
-              <h2 className="text-foreground text-2xl font-display leading-tight">{profile.firstName} {profile.lastName}</h2>
+              <h2 className="text-foreground text-2xl font-display leading-tight">{profile?.firstName || ""} {profile?.lastName || ""}</h2>
               <span className="bg-brand-cream-2 text-brand-forest dark:bg-brand-sage/15 dark:text-brand-sage text-xs px-2.5 py-0.5 rounded-full flex items-center gap-1 font-semibold border border-brand-sage/30">
                 <Award size={10} /> {t.goldMember}
               </span>
             </div>
-            <p className="text-muted-foreground text-sm mt-1">{profile.email}</p>
+            <p className="text-muted-foreground text-sm mt-1">{profile?.email || ""}</p>
             <p className="text-muted-foreground/80 text-xs mt-1.5">{isRTL ? "٣ طلبات هذا الشهر" : "3 orders this month"}</p>
           </div>
         </div>

@@ -82,17 +82,22 @@ export function Header() {
 
         {/* Category Navigation Rail */}
         {!["/checkout", "/account"].includes(location.pathname) && (
-          <div className="border-t border-border overflow-x-auto scrollbar-hide py-2 px-3 sm:px-4 w-full max-w-full">
+          <div className="border-t border-border overflow-x-auto scrollbar-hide py-2.5 px-3 sm:px-4 w-full max-w-full">
             <div className="max-w-[1280px] mx-auto flex gap-2 w-max">
               <Link
                 to="/products"
-                className={`px-3.5 py-1.5 rounded-full text-xs whitespace-nowrap transition-all border flex-shrink-0 font-medium ${
+                className={`group flex items-center gap-2 px-3.5 py-1.5 bg-card rounded-xl border transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-soft flex-shrink-0 select-none ${
                   location.pathname === "/products" && !searchParams.get("category")
-                    ? "bg-brand-terracotta text-white border-brand-terracotta"
-                    : "bg-card text-foreground border-border hover:bg-brand-peach"
+                    ? "border-brand-terracotta bg-brand-peach/30"
+                    : "border-border hover:border-brand-sage"
                 }`}
               >
-                {isRTL ? "الكل" : "All Products"}
+                <div className="w-5.5 h-5.5 rounded-full bg-brand-peach flex items-center justify-center text-[10px] flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                  📦
+                </div>
+                <span className={`text-[10px] sm:text-xs font-semibold ${location.pathname === "/products" && !searchParams.get("category") ? "text-brand-terracotta font-bold" : "text-foreground"}`}>
+                  {isRTL ? "الكل" : "All Products"}
+                </span>
               </Link>
               {categories.map(cat => {
                 const catName = isRTL && cat.nameAr ? cat.nameAr : cat.name;
@@ -102,13 +107,18 @@ export function Header() {
                   <Link
                     key={cat.id}
                     to={`/category/${cat.slug}`}
-                    className={`px-3.5 py-1.5 rounded-full text-xs whitespace-nowrap transition-all border flex-shrink-0 font-medium ${
+                    className={`group flex items-center gap-2 px-3.5 py-1.5 bg-card rounded-xl border transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-soft flex-shrink-0 select-none ${
                       active
-                        ? "bg-brand-terracotta text-white border-brand-terracotta"
-                        : "bg-card text-foreground border-border hover:bg-brand-peach"
+                        ? "border-brand-terracotta bg-brand-peach/30"
+                        : "border-border hover:border-brand-sage"
                     }`}
                   >
-                    <span className="me-1">{cat.icon}</span> {catName}
+                    <div className="w-5.5 h-5.5 rounded-full bg-brand-peach flex items-center justify-center text-[10px] flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                      {cat.icon}
+                    </div>
+                    <span className={`text-[10px] sm:text-xs font-semibold ${active ? "text-brand-terracotta font-bold" : "text-foreground"}`}>
+                      {catName}
+                    </span>
                   </Link>
                 );
               })}
