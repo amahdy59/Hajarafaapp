@@ -235,7 +235,7 @@ export function Account() {
   const tabParam = searchParams.get("tab") as Tab;
   const [activeTab, setActiveTab] = useState<Tab>("profile");
   const { items: wishlistItems } = useWishlist();
-  const { t, isRTL, locale, theme, setTheme } = useAppSettings();
+  const { t, isRTL, locale, theme, setTheme, setLocale } = useAppSettings();
 
   // Authentication State
   const [profile, setProfile] = useState<{
