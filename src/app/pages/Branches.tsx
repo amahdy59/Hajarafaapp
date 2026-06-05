@@ -1,8 +1,6 @@
 import { ArrowLeft, Clock, MapPin, ExternalLink } from "lucide-react";
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
-import { motion } from "motion/react";
-import logoImg from "../../assets/logo.webp";
 import { useState } from "react";
 
 /* ─── Types ─── */
@@ -241,11 +239,16 @@ function RegionSection({
           {region.branches.map((branch) => (
             <li
               key={branch.nameEn}
-              className="flex items-center justify-between gap-3 px-5 py-3 hover:bg-brand-peach/10 transition-colors"
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-3.5 hover:bg-brand-peach/10 transition-colors"
             >
-              <span className="text-brand-ink-soft text-sm sm:text-[0.9375rem] leading-relaxed">
-                {isRTL ? branch.nameAr : branch.nameEn}
-              </span>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+                <span className="text-foreground text-sm sm:text-[0.9375rem] font-medium leading-relaxed">
+                  {isRTL ? branch.nameAr : branch.nameEn}
+                </span>
+                <span className="text-[10px] text-muted-foreground bg-muted border border-border/40 px-2 py-0.5 rounded-md w-fit font-mono select-all">
+                  📞 01020401400 | ☎️ 17309
+                </span>
+              </div>
               <a
                 href={mapsLink(region.nameEn, branch)}
                 target="_blank"
@@ -292,32 +295,11 @@ export function Branches() {
               {totalBranches} {isRTL ? "فرع" : "branches"}
             </span>
           </div>
-          <p className="text-muted-foreground text-sm max-w-xl leading-relaxed flex flex-wrap items-center gap-1.5 select-none">
+          <p className="text-muted-foreground text-sm max-w-xl leading-relaxed select-none">
             {isRTL ? (
-              <>
-                <span>تفخر شركة</span>
-                <img
-                  src={logoImg}
-                  alt="حاج عرفة"
-                  className="h-4.5 w-auto object-contain inline-block align-middle select-none pointer-events-none"
-                />
-                <span>
-                  بتقديم خدماتها من خلال فروعنا الرئيسية في مصر. تفضل بزيارتنا لتجربة منتجاتنا
-                  العشبية الطبيعية والتوابل الطازجة والزيوت العضوية.
-                </span>
-              </>
+              "تفخر شركة حاج عرفة بتقديم خدماتها من خلال فروعنا الرئيسية في مصر. تفضل بزيارتنا لتجربة منتجاتنا العشبية الطبيعية والتوابل الطازجة والزيوت العضوية."
             ) : (
-              <>
-                <img
-                  src={logoImg}
-                  alt="HajArafa"
-                  className="h-4.5 w-auto object-contain inline-block align-middle select-none pointer-events-none"
-                />
-                <span>
-                  is proud to serve you from our flagship store branches across Egypt. Visit us to
-                  explore our fresh range of organic herbs, spices, and natural beauty remedies.
-                </span>
-              </>
+              "Haj Arafa is proud to serve you from our flagship store branches across Egypt. Visit us to explore our fresh range of organic herbs, spices, and natural beauty remedies."
             )}
           </p>
         </div>

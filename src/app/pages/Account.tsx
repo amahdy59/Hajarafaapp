@@ -208,12 +208,34 @@ function LeafletMap({ centerCoords, onLocationSelect, isRTL }: LeafletMapProps) 
 
 type Tab = "profile" | "orders" | "wishlist";
 
+function Segmented<T extends string>({
+  value, onChange, options,
+}: { value: T; onChange: (v: T) => void; options: { value: T; label: string }[] }) {
+  return (
+    <div className="inline-flex items-center bg-background border border-border rounded-full p-0.5">
+      {options.map(opt => {
+        const active = value === opt.value;
+        return (
+          <button
+            key={opt.value}
+            onClick={() => onChange(opt.value)}
+            className={`px-3 py-1 rounded-full transition-all ${active ? "bg-brand-terracotta text-white" : "text-muted-foreground hover:text-foreground"}`}
+            style={{ fontSize: "12px", letterSpacing: "0.8px" }}
+          >
+            {opt.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 export function Account() {
   const [searchParams, setSearchParams] = useSearchParams();
   const tabParam = searchParams.get("tab") as Tab;
   const [activeTab, setActiveTab] = useState<Tab>("profile");
   const { items: wishlistItems } = useWishlist();
-  const { t, isRTL, locale } = useAppSettings();
+  const { t, isRTL, locale, theme, setTheme } = useAppSettings();
 
   // Authentication State
   const [profile, setProfile] = useState<{
