@@ -101,7 +101,6 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
     { icon: User, label: t.yourAccount, to: "/account?tab=profile" },
     { icon: Package, label: t.yourOrders, to: "/account?tab=orders" },
     { icon: Heart, label: t.yourWishlist, to: "/account?tab=wishlist" },
-    { icon: Settings, label: t.settings, to: "/account?tab=profile" },
   ];
   const help = [
     { icon: CircleHelp, label: t.customerService, to: "/help" },

@@ -1187,7 +1187,7 @@ export function Account() {
         {/* Tabs Bar */}
         {(() => {
           const allTabs = [
-            { key: "profile" as Tab, label: isRTL ? "الحساب والإعدادات" : "Profile & Settings" },
+            { key: "profile" as Tab, label: t.yourAccount },
             { key: "orders" as Tab, label: t.yourOrders },
             { key: "wishlist" as Tab, label: t.yourWishlist }
           ];
@@ -1213,7 +1213,7 @@ export function Account() {
 
         {/* Tab content containers */}
         
-        {/* Tab 1: Profile & Settings */}
+        {/* Tab 1: My Account */}
         {activeTab === "profile" && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left/Main column: Forms (Profile, Password) */}
@@ -1366,11 +1366,10 @@ export function Account() {
               {/* App settings pane */}
               <div className="bg-card rounded-xl p-5 border border-border shadow-soft">
                 <h3 className="text-brand-forest font-display text-lg sm:text-xl font-bold flex items-center gap-2 mb-4">
-                  <Settings size={20} className="text-brand-terracotta" />
-                  {t.settings}
+                  <Bell size={20} className="text-brand-terracotta" />
+                  {isRTL ? "تفضيلات الإشعارات" : "Notification preferences"}
                 </h3>
                   <div className="space-y-3">
-                    <label className="text-xs text-muted-foreground block font-bold uppercase tracking-wider">{isRTL ? "تفضيلات الإشعارات" : "Notifications"}</label>
                     {Object.entries(notifications).map(([key, val]) => (
                       <div key={key} className="flex items-center justify-between text-sm">
                         <span className="text-foreground/80">
