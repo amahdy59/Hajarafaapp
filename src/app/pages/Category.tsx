@@ -27,7 +27,7 @@ export function Category() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pt-6">
         <Link to="/products" className="inline-flex items-center gap-1 text-muted-foreground hover:text-brand-terracotta text-xs mb-4 transition-colors font-medium">
           <ArrowLeft size={14} className="rtl-flip" /> {t.shopAll}
         </Link>
@@ -40,7 +40,7 @@ export function Category() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-8">
 
         {categoryProducts.length === 0 ? (
           <div className="text-center py-20 bg-card border border-border rounded-2xl shadow-soft">
@@ -53,7 +53,7 @@ export function Category() {
             <div className="flex items-center justify-between mb-4">
               <p className="text-muted-foreground text-sm">{categoryProducts.length} {t.productsFound}</p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
               {categoryProducts.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}

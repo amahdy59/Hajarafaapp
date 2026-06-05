@@ -88,7 +88,7 @@ export function ProductDetail() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-6">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1.5 mb-6" style={{ fontSize: "0.8rem" }}>
           <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">{t.home}</Link>
@@ -391,7 +391,7 @@ export function ProductDetail() {
         {relatedProducts.length > 0 && (
           <section className="mb-10">
             <h2 className="text-foreground mb-5" style={{ fontSize: "1.1rem" }}>{t.youMightAlsoLike}</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
               {relatedProducts.map(p => (
                 <ProductCard key={p.id} product={p} />
               ))}

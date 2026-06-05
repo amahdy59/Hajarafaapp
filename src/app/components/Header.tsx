@@ -50,7 +50,7 @@ export function Header() {
           scrolled ? "shadow-soft border-b border-border" : "border-b border-transparent"
         }`}
       >
-        <div className="h-16 px-3 sm:px-4 max-w-[1280px] mx-auto grid grid-cols-[auto_1fr_auto] items-center gap-2">
+        <div className="h-16 px-4 sm:px-6 max-w-[1280px] mx-auto grid grid-cols-[auto_1fr_auto] items-center gap-2">
           <IconButton onClick={() => setMenuOpen(true)} aria-label={t.menu}>
             <Menu size={20} />
           </IconButton>
@@ -82,7 +82,7 @@ export function Header() {
 
         {/* Category Navigation Rail */}
         {!["/checkout", "/account"].includes(location.pathname) && (
-          <div className="border-t border-border overflow-x-auto scrollbar-hide py-2.5 px-3 sm:px-4 w-full max-w-full">
+          <div className="border-t border-border overflow-x-auto scrollbar-hide py-2.5 px-4 sm:px-6 w-full max-w-full">
             <div className="max-w-[1280px] mx-auto flex gap-2 w-max">
               <Link
                 to="/products"
@@ -144,7 +144,7 @@ export function Header() {
               transition={{ duration: 0.18 }}
               className="fixed top-0 inset-x-0 z-50 bg-background safe-area-pt shadow-soft"
             >
-              <form onSubmit={submit} className="px-3 sm:px-4 py-3 flex items-center gap-2 max-w-[1280px] mx-auto">
+              <form onSubmit={submit} className="px-4 sm:px-6 py-3 flex items-center gap-2 max-w-[1280px] mx-auto">
                 <div className="relative flex-1 flex items-center bg-input rounded-full border border-border focus-within:border-brand-sage transition-colors">
                   <Search size={17} className="absolute start-4 text-brand-ink-soft pointer-events-none" />
                   <input

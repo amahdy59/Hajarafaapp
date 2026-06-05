@@ -23,6 +23,7 @@ a:hover {
 
 /* Exclude layout container links where underline would look bad */
 a.flex:hover,
+a.inline-flex:hover,
 a.grid:hover,
 a.block:hover,
 a:has(img):hover,

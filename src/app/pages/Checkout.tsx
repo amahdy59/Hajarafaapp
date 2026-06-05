@@ -118,7 +118,7 @@ export function Checkout() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-[1024px] mx-auto px-4 sm:px-6 py-6">
 
         {/* Back to cart / home nav */}
         {step !== "confirmation" && (

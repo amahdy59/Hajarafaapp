@@ -57,11 +57,11 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
         className="bg-card rounded-2xl border border-border dark:border-zinc-700/60 overflow-hidden hover:shadow-soft hover:border-brand-terracotta/40 transition-all duration-300 group"
       >
         <Link to={`/products/${product.id}`} className="flex gap-4 p-4 items-center">
-          <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 rounded-xl overflow-hidden bg-[#FAF6F0] flex items-center justify-center border border-border/40">
+          <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 rounded-xl overflow-hidden bg-[#FAF6F0] flex items-center justify-center border border-border/40 p-1 sm:p-1.5">
             <img 
               src={product.image} 
               alt={product.name} 
-              className="w-[85%] h-[85%] object-contain mix-blend-multiply transition-transform duration-500 group-hover:-translate-y-1" 
+              className="w-[93%] h-[93%] object-contain mix-blend-multiply transition-transform duration-500 group-hover:-translate-y-1" 
               loading="lazy" 
             />
           </div>
@@ -103,11 +103,11 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
       className="bg-card rounded-2xl border border-border dark:border-zinc-700/60 overflow-hidden flex flex-col h-full hover:shadow-soft hover:border-brand-terracotta/40 transition-all duration-300 group"
     >
       <Link to={`/products/${product.id}`} className="flex flex-col flex-1">
-        <div className="relative aspect-square bg-[#FAF6F0] overflow-hidden flex items-center justify-center p-4 sm:p-6 border-b border-border/20">
+        <div className="relative aspect-square bg-[#FAF6F0] overflow-hidden flex items-center justify-center p-1 sm:p-1.5 border-b border-border/20">
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full max-h-[120px] sm:max-h-[160px] object-contain mix-blend-multiply transition-transform duration-500 group-hover:-translate-y-1.5"
+            className="w-[93%] h-[93%] object-contain mix-blend-multiply transition-transform duration-500 group-hover:-translate-y-1.5"
             loading="lazy"
           />
 

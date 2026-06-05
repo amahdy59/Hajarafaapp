@@ -96,6 +96,19 @@ function LeafletMap({ centerCoords, onLocationSelect, isRTL }: LeafletMapProps) 
   const mapInstanceRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
 
+  // Use refs for callbacks and dynamic parameters to avoid recreation on change
+  const onLocationSelectRef = useRef(onLocationSelect);
+  const isRTLRef = useRef(isRTL);
+
+  useEffect(() => {
+    onLocationSelectRef.current = onLocationSelect;
+  }, [onLocationSelect]);
+
+  useEffect(() => {
+    isRTLRef.current = isRTL;
+  }, [isRTL]);
+
+  // Map Initialization Effect (Runs once on mount)
   useEffect(() => {
     // Add Leaflet CSS if not loaded
     if (!document.getElementById("leaflet-css")) {
@@ -108,24 +121,13 @@ function LeafletMap({ centerCoords, onLocationSelect, isRTL }: LeafletMapProps) 
 
     const initMap = () => {
       const L = (window as any).L;
-      if (!L || !mapRef.current) return;
-      if (mapInstanceRef.current) {
-        if (markerRef.current) {
-          const currentLatLng = markerRef.current.getLatLng();
-          const dist = L.latLng(currentLatLng).distanceTo(L.latLng([centerCoords.lat, centerCoords.lng]));
-          // Only re-center if the coordinates updated from outside (e.g. searching address) by > 10m
-          if (dist > 10) {
-            mapInstanceRef.current.setView([centerCoords.lat, centerCoords.lng], 15);
-            markerRef.current.setLatLng([centerCoords.lat, centerCoords.lng]);
-          }
-        }
-        return;
-      }
+      if (!L || !mapRef.current || mapInstanceRef.current) return;
 
+      // Start with the initial coordinates
       const map = L.map(mapRef.current).setView([centerCoords.lat, centerCoords.lng], 13);
       mapInstanceRef.current = map;
 
-      // Connected to Google Maps vector roadmap tile server
+      // Connected to Google Maps tile server
       L.tileLayer("https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
         attribution: '&copy; <a href="https://www.google.com/maps">Google Maps</a>'
       }).addTo(map);
@@ -150,16 +152,16 @@ function LeafletMap({ centerCoords, onLocationSelect, isRTL }: LeafletMapProps) 
       const reverseGeocode = async (lat: number, lng: number) => {
         try {
           const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`, {
-            headers: { "Accept-Language": isRTL ? "ar" : "en" }
+            headers: { "Accept-Language": isRTLRef.current ? "ar" : "en" }
           });
           const data = await res.json();
           if (data && data.display_name) {
-            onLocationSelect(data.display_name, { lat, lng });
+            onLocationSelectRef.current(data.display_name, { lat, lng });
           } else {
-            onLocationSelect(`${lat.toFixed(5)}, ${lng.toFixed(5)}`, { lat, lng });
+            onLocationSelectRef.current(`${lat.toFixed(5)}, ${lng.toFixed(5)}`, { lat, lng });
           }
         } catch {
-          onLocationSelect(`${lat.toFixed(5)}, ${lng.toFixed(5)}`, { lat, lng });
+          onLocationSelectRef.current(`${lat.toFixed(5)}, ${lng.toFixed(5)}`, { lat, lng });
         }
       };
 
@@ -196,9 +198,25 @@ function LeafletMap({ centerCoords, onLocationSelect, isRTL }: LeafletMapProps) 
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
+        markerRef.current = null;
       }
     };
-  }, [centerCoords, isRTL]);
+  }, []); // Mount once!
+
+  // Map Update Effect (Synchronizes coordinate changes from parent)
+  useEffect(() => {
+    const L = (window as any).L;
+    if (!L || !mapInstanceRef.current || !markerRef.current) return;
+
+    const currentLatLng = markerRef.current.getLatLng();
+    const dist = L.latLng(currentLatLng).distanceTo(L.latLng([centerCoords.lat, centerCoords.lng]));
+
+    // Only update view/marker if the parent coordinate changes significantly (e.g. > 5 meters)
+    if (dist > 5) {
+      mapInstanceRef.current.setView([centerCoords.lat, centerCoords.lng], 15);
+      markerRef.current.setLatLng([centerCoords.lat, centerCoords.lng]);
+    }
+  }, [centerCoords.lat, centerCoords.lng]);
 
   return (
     <div className="relative w-full rounded-xl overflow-hidden border border-border shadow-soft my-2">
@@ -1140,7 +1158,7 @@ export function Account() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-[1024px] mx-auto px-4 sm:px-6 py-6">
         
         {/* Profile header (Minimal borderless transparent layout, no colored card) */}
         <div className="flex items-center gap-5 mb-8 pb-6 border-b border-border select-none">
@@ -1509,7 +1527,7 @@ export function Account() {
                 </Link>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                 {wishlistItems.map(product => (
                   <ProductCard key={product.id} product={product} />
                 ))}
@@ -1539,9 +1557,9 @@ export function Account() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              className="fixed inset-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full sm:max-w-md h-full sm:h-auto bg-card border-0 sm:border border-border rounded-none sm:rounded-3xl p-5 sm:p-6 z-50 shadow-elev overflow-y-auto max-h-screen sm:max-h-[90vh]"
+              className="fixed inset-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full sm:max-w-md h-full sm:h-auto bg-card border-0 sm:border border-border rounded-none sm:rounded-3xl p-5 sm:p-6 z-50 shadow-elev overflow-hidden flex flex-col max-h-screen sm:max-h-[90vh]"
             >
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4 flex-shrink-0">
                 <h3 className="text-foreground font-display text-base sm:text-lg">{t.savedAddresses}</h3>
                 <button 
                   onClick={() => {
@@ -1554,137 +1572,139 @@ export function Account() {
                 </button>
               </div>
 
-              <AnimatePresence mode="wait">
-                {isAddingAddress ? (
-                  <motion.form
-                    key="add-address-form"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    onSubmit={handleSaveAddress}
-                    className="space-y-4 border border-border/80 rounded-2xl p-4 bg-background/50 mb-3"
-                  >
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold uppercase text-brand-terracotta">
-                        {isRTL ? "إضافة عنوان جديد" : "Add New Location"}
-                      </h4>
-                      <span className="text-[10px] bg-brand-peach text-brand-terracotta px-2 py-0.5 rounded-full font-medium flex items-center gap-1 select-none">
-                        📍 Google Maps Enabled
-                      </span>
-                    </div>
-
-                    {/* Google Maps Visual Interactive Simulator Block */}
-                    <div className="border border-border rounded-2xl overflow-hidden relative">
-                      {/* Search header on map */}
-                      <div className="p-2 bg-card/95 backdrop-blur-md border-b border-border flex gap-2 relative z-10">
-                        <input
-                          type="text"
-                          placeholder={isRTL ? "ابحث في خرائط جوجل..." : "Search Google Maps..."}
-                          value={mapSearch}
-                          onChange={e => setMapSearch(e.target.value)}
-                          className="flex-1 px-3 py-1.5 bg-background border border-border rounded-xl text-xs outline-none text-foreground placeholder:text-muted-foreground focus:border-brand-terracotta"
-                          onKeyDown={e => e.key === "Enter" && (e.preventDefault(), handleMapSearch())}
-                        />
-                        <button
-                          type="button"
-                          onClick={handleMapSearch}
-                          disabled={isMapSearching}
-                          className="px-4 py-1.5 bg-brand-terracotta text-white rounded-xl text-xs font-semibold hover:bg-brand-terracotta-dark disabled:opacity-50 transition-colors"
-                        >
-                          {isMapSearching ? "..." : (isRTL ? "بحث" : "Search")}
-                        </button>
+              <div className="flex-1 overflow-y-auto pe-1.5 -me-1.5 ps-1.5 -ms-1.5 space-y-4">
+                <AnimatePresence mode="wait">
+                  {isAddingAddress ? (
+                    <motion.form
+                      key="add-address-form"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      onSubmit={handleSaveAddress}
+                      className="space-y-4 border border-border/80 rounded-2xl p-4 bg-background/50 mb-3"
+                    >
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-xs font-bold uppercase text-brand-terracotta">
+                          {isRTL ? "إضافة عنوان جديد" : "Add New Location"}
+                        </h4>
+                        <span className="text-[10px] bg-brand-peach text-brand-terracotta px-2 py-0.5 rounded-full font-medium flex items-center gap-1 select-none">
+                          📍 Google Maps Enabled
+                        </span>
                       </div>
 
-                      <LeafletMap 
-                        centerCoords={mapCenter} 
-                        isRTL={isRTL} 
-                        onLocationSelect={(addr, coords) => {
-                          setNewAddrDetails(addr);
-                          setMapCenter(coords);
-                        }} 
-                      />
-                    </div>
+                      {/* Google Maps Visual Interactive Simulator Block */}
+                      <div className="border border-border rounded-2xl overflow-hidden relative">
+                        {/* Search header on map */}
+                        <div className="p-2 bg-card/95 backdrop-blur-md border-b border-border flex gap-2 relative z-10">
+                          <input
+                            type="text"
+                            placeholder={isRTL ? "ابحث في خرائط جوجل..." : "Search Google Maps..."}
+                            value={mapSearch}
+                            onChange={e => setMapSearch(e.target.value)}
+                            className="flex-1 px-3 py-1.5 bg-background border border-border rounded-xl text-xs outline-none text-foreground placeholder:text-muted-foreground focus:border-brand-terracotta"
+                            onKeyDown={e => e.key === "Enter" && (e.preventDefault(), handleMapSearch())}
+                          />
+                          <button
+                            type="button"
+                            onClick={handleMapSearch}
+                            disabled={isMapSearching}
+                            className="px-4 py-1.5 bg-brand-terracotta text-white rounded-xl text-xs font-semibold hover:bg-brand-terracotta-dark disabled:opacity-50 transition-colors"
+                          >
+                            {isMapSearching ? "..." : (isRTL ? "بحث" : "Search")}
+                          </button>
+                        </div>
 
-                    <div>
-                      <label className="block text-[10px] text-muted-foreground mb-1">
-                        {isRTL ? "اسم وتصنيف العنوان (مثال: المنزل، العمل)" : "Label / Address Type (e.g. Home, Work)"}
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        placeholder={isRTL ? "المنزل" : "Home"}
-                        value={newAddrType}
-                        onChange={e => setNewAddrType(e.target.value)}
-                        className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-[10px] text-muted-foreground mb-1">
-                        {isRTL ? "تفاصيل العنوان الجغرافي المستلم" : "Geocoded Street Address / Location Coordinates"}
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        placeholder={isRTL ? "انقر على الخريطة للحصول على الموقع" : "Tap the map above to autofill location info"}
-                        value={newAddrDetails}
-                        onChange={e => setNewAddrDetails(e.target.value)}
-                        className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta"
-                      />
-                    </div>
+                        <LeafletMap 
+                          centerCoords={mapCenter} 
+                          isRTL={isRTL} 
+                          onLocationSelect={(addr, coords) => {
+                            setNewAddrDetails(addr);
+                            setMapCenter(coords);
+                          }} 
+                        />
+                      </div>
 
-                    <div className="flex gap-2">
-                      <button
-                        type="submit"
-                        className="flex-1 py-2 bg-brand-terracotta text-white rounded-lg text-xs font-semibold hover:bg-brand-terracotta-dark"
-                      >
-                        {isRTL ? "حفظ العنوان" : "Save Location"}
-                      </button>
-                      <button
-                        type="button"
+                      <div>
+                        <label className="block text-[10px] text-muted-foreground mb-1">
+                          {isRTL ? "اسم وتصنيف العنوان (مثال: المنزل، العمل)" : "Label / Address Type (e.g. Home, Work)"}
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          placeholder={isRTL ? "المنزل" : "Home"}
+                          value={newAddrType}
+                          onChange={e => setNewAddrType(e.target.value)}
+                          className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-[10px] text-muted-foreground mb-1">
+                          {isRTL ? "تفاصيل العنوان الجغرافي المستلم" : "Geocoded Street Address / Location Coordinates"}
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          placeholder={isRTL ? "انقر على الخريطة للحصول على الموقع" : "Tap the map above to autofill location info"}
+                          value={newAddrDetails}
+                          onChange={e => setNewAddrDetails(e.target.value)}
+                          className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta"
+                        />
+                      </div>
+
+                      <div className="flex gap-2">
+                        <button
+                          type="submit"
+                          className="flex-1 py-2 bg-brand-terracotta text-white rounded-lg text-xs font-semibold hover:bg-brand-terracotta-dark"
+                        >
+                          {isRTL ? "حفظ العنوان" : "Save Location"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsAddingAddress(false);
+                            setNewAddrDetails("");
+                            setNewAddrType("");
+                          }}
+                          className="px-4 py-2 border border-border text-foreground hover:bg-muted rounded-lg text-xs"
+                        >
+                          {isRTL ? "إلغاء" : "Cancel"}
+                        </button>
+                      </div>
+                    </motion.form>
+                  ) : null}
+                </AnimatePresence>
+
+                <div className="space-y-3">
+                  {addresses.map(addr => (
+                    <div key={addr.id} className="bg-background border border-border/60 rounded-xl p-3.5 flex justify-between items-start">
+                      <div>
+                        <span className="bg-brand-peach text-brand-terracotta text-xs px-2.5 py-0.5 rounded-full font-medium mb-1 inline-block">
+                          {addr.type}
+                        </span>
+                        <p className="text-foreground text-sm font-medium">{addr.details}</p>
+                      </div>
+                      <button 
                         onClick={() => {
-                          setIsAddingAddress(false);
-                          setNewAddrDetails("");
-                          setNewAddrType("");
+                          setAddresses(addresses.filter(a => a.id !== addr.id));
+                          toast.success(isRTL ? "تم حذف العنوان بنجاح" : "Address deleted successfully");
                         }}
-                        className="px-4 py-2 border border-border text-foreground hover:bg-muted rounded-lg text-xs"
+                        className="text-destructive hover:text-destructive-dark p-1"
                       >
-                        {isRTL ? "إلغاء" : "Cancel"}
+                        <Trash2 size={16} />
                       </button>
                     </div>
-                  </motion.form>
-                ) : null}
-              </AnimatePresence>
+                  ))}
 
-              <div className="space-y-3">
-                {addresses.map(addr => (
-                  <div key={addr.id} className="bg-background border border-border/60 rounded-xl p-3.5 flex justify-between items-start">
-                    <div>
-                      <span className="bg-brand-peach text-brand-terracotta text-xs px-2.5 py-0.5 rounded-full font-medium mb-1 inline-block">
-                        {addr.type}
-                      </span>
-                      <p className="text-foreground text-sm font-medium">{addr.details}</p>
-                    </div>
+                  {!isAddingAddress && (
                     <button 
-                      onClick={() => {
-                        setAddresses(addresses.filter(a => a.id !== addr.id));
-                        toast.success(isRTL ? "تم حذف العنوان بنجاح" : "Address deleted successfully");
-                      }}
-                      className="text-destructive hover:text-destructive-dark p-1"
+                      onClick={() => setIsAddingAddress(true)}
+                      className="w-full py-2.5 bg-brand-peach text-brand-terracotta hover:bg-brand-terracotta hover:text-white rounded-xl text-xs font-semibold uppercase transition-all flex items-center justify-center gap-2"
                     >
-                      <Trash2 size={16} />
+                      <Plus size={14} /> {isRTL ? "تحديد عنوان جديد بخرائط جوجل" : "Pin Location on Google Maps"}
                     </button>
-                  </div>
-                ))}
-
-                {!isAddingAddress && (
-                  <button 
-                    onClick={() => setIsAddingAddress(true)}
-                    className="w-full py-2.5 bg-brand-peach text-brand-terracotta hover:bg-brand-terracotta hover:text-white rounded-xl text-xs font-semibold uppercase transition-all flex items-center justify-center gap-2"
-                  >
-                    <Plus size={14} /> {isRTL ? "تحديد عنوان جديد بخرائط جوجل" : "Pin Location on Google Maps"}
-                  </button>
-                )}
+                  )}
+                </div>
               </div>
             </motion.div>
           </>
@@ -1709,9 +1729,9 @@ export function Account() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              className="fixed inset-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full sm:max-w-md h-full sm:h-auto bg-card border-0 sm:border border-border rounded-none sm:rounded-3xl p-5 sm:p-6 z-50 shadow-elev overflow-y-auto max-h-screen sm:max-h-[85vh]"
+              className="fixed inset-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full sm:max-w-md h-full sm:h-auto bg-card border-0 sm:border border-border rounded-none sm:rounded-3xl p-5 sm:p-6 z-50 shadow-elev overflow-hidden flex flex-col max-h-screen sm:max-h-[85vh]"
             >
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4 flex-shrink-0">
                 <h3 className="text-foreground font-display text-base sm:text-lg">{t.paymentMethods}</h3>
                 <button 
                   onClick={() => {
@@ -1724,135 +1744,137 @@ export function Account() {
                 </button>
               </div>
 
-              <AnimatePresence mode="wait">
-                {isAddingCard ? (
-                  <motion.form
-                    key="add-card-form"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    onSubmit={handleSaveCard}
-                    className="space-y-3.5 border border-border/80 rounded-2xl p-4 bg-background/50 mb-3"
-                  >
-                    <h4 className="text-xs font-semibold uppercase text-brand-terracotta">
-                      {isRTL ? "إضافة بطاقة دفع جديدة" : "Add New Payment Card"}
-                    </h4>
-                    
-                    <div>
-                      <label className="block text-[10px] text-muted-foreground mb-1">{t.cardNumber}</label>
-                      <div className="relative">
-                        <input
-                          type="text"
-                          required
-                          maxLength={19}
-                          placeholder="4242 4242 4242 4242"
-                          value={newCardNumber}
-                          onChange={e => {
-                            const v = e.target.value.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim();
-                            setNewCardNumber(v);
-                          }}
-                          className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta font-mono"
-                        />
-                        <span className="absolute end-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-brand-terracotta uppercase">
-                          {detectedBrand || <CreditCard size={14} className="text-muted-foreground" />}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-[10px] text-muted-foreground mb-1">{t.cardName}</label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="Alex Johnson"
-                        value={newCardName}
-                        onChange={e => setNewCardName(e.target.value)}
-                        className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-[10px] text-muted-foreground mb-1">{t.expiry} (MM/YY)</label>
-                        <input
-                          type="text"
-                          required
-                          maxLength={5}
-                          placeholder="12/28"
-                          value={newCardExpiry}
-                          onChange={e => {
-                            let v = e.target.value.replace(/\D/g, "");
-                            if (v.length > 2) v = `${v.slice(0, 2)}/${v.slice(2, 4)}`;
-                            setNewCardExpiry(v);
-                          }}
-                          className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta text-center font-mono"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] text-muted-foreground mb-1">CVV</label>
-                        <input
-                          type="password"
-                          required
-                          maxLength={3}
-                          placeholder="***"
-                          value={newCardCvv}
-                          onChange={e => setNewCardCvv(e.target.value.replace(/\D/g, ""))}
-                          className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta text-center font-mono"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex gap-2 pt-2">
-                      <button
-                        type="submit"
-                        className="flex-1 py-2 bg-brand-terracotta text-white rounded-lg text-xs font-semibold hover:bg-brand-terracotta-dark"
-                      >
-                        {isRTL ? "إضافة البطاقة" : "Save Card"}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setIsAddingCard(false)}
-                        className="px-4 py-2 border border-border text-foreground hover:bg-muted rounded-lg text-xs"
-                      >
-                        {isRTL ? "إلغاء" : "Cancel"}
-                      </button>
-                    </div>
-                  </motion.form>
-                ) : null}
-              </AnimatePresence>
-
-              <div className="space-y-3">
-                {payments.map(pay => (
-                  <div key={pay.id} className="bg-background border border-border/60 rounded-xl p-3.5 flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-7 bg-brand-peach/40 rounded flex items-center justify-center font-bold text-[10px] text-brand-terracotta uppercase border border-brand-terracotta/10">
-                        {pay.type}
-                      </div>
-                      <div>
-                        <p className="text-foreground text-sm font-mono font-medium">{pay.number}</p>
-                        <p className="text-muted-foreground text-[10px]">{isRTL ? "تنتهي في" : "Expires"} {pay.expiry}</p>
-                      </div>
-                    </div>
-                    <button 
-                      onClick={() => {
-                        setPayments(payments.filter(p => p.id !== pay.id));
-                        toast.success(isRTL ? "تم إزالة بطاقة الدفع بنجاح" : "Payment card removed successfully");
-                      }}
-                      className="text-destructive hover:text-destructive-dark p-1"
+              <div className="flex-1 overflow-y-auto pe-1.5 -me-1.5 ps-1.5 -ms-1.5 space-y-4">
+                <AnimatePresence mode="wait">
+                  {isAddingCard ? (
+                    <motion.form
+                      key="add-card-form"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      onSubmit={handleSaveCard}
+                      className="space-y-3.5 border border-border/80 rounded-2xl p-4 bg-background/50 mb-3"
                     >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                ))}
+                      <h4 className="text-xs font-semibold uppercase text-brand-terracotta">
+                        {isRTL ? "إضافة بطاقة دفع جديدة" : "Add New Payment Card"}
+                      </h4>
+                      
+                      <div>
+                        <label className="block text-[10px] text-muted-foreground mb-1">{t.cardNumber}</label>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            required
+                            maxLength={19}
+                            placeholder="4242 4242 4242 4242"
+                            value={newCardNumber}
+                            onChange={e => {
+                              const v = e.target.value.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim();
+                              setNewCardNumber(v);
+                            }}
+                            className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta font-mono"
+                          />
+                          <span className="absolute end-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-brand-terracotta uppercase">
+                            {detectedBrand || <CreditCard size={14} className="text-muted-foreground" />}
+                          </span>
+                        </div>
+                      </div>
 
-                {!isAddingCard && (
-                  <button 
-                    onClick={() => setIsAddingCard(true)}
-                    className="w-full py-2.5 bg-brand-peach text-brand-terracotta hover:bg-brand-terracotta hover:text-white rounded-xl text-xs font-semibold uppercase transition-all flex items-center justify-center gap-2"
-                  >
-                    <Plus size={14} /> {isRTL ? "إضافة بطاقة جديدة" : "Add New Card"}
-                  </button>
-                )}
+                      <div>
+                        <label className="block text-[10px] text-muted-foreground mb-1">{t.cardName}</label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Alex Johnson"
+                          value={newCardName}
+                          onChange={e => setNewCardName(e.target.value)}
+                          className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-[10px] text-muted-foreground mb-1">{t.expiry} (MM/YY)</label>
+                          <input
+                            type="text"
+                            required
+                            maxLength={5}
+                            placeholder="12/28"
+                            value={newCardExpiry}
+                            onChange={e => {
+                              let v = e.target.value.replace(/\D/g, "");
+                              if (v.length > 2) v = `${v.slice(0, 2)}/${v.slice(2, 4)}`;
+                              setNewCardExpiry(v);
+                            }}
+                            className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta text-center font-mono"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] text-muted-foreground mb-1">CVV</label>
+                          <input
+                            type="password"
+                            required
+                            maxLength={3}
+                            placeholder="***"
+                            value={newCardCvv}
+                            onChange={e => setNewCardCvv(e.target.value.replace(/\D/g, ""))}
+                            className="w-full px-3 py-2 border border-border bg-card text-foreground rounded-lg text-xs outline-none focus:border-brand-terracotta text-center font-mono"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2 pt-2">
+                        <button
+                          type="submit"
+                          className="flex-1 py-2 bg-brand-terracotta text-white rounded-lg text-xs font-semibold hover:bg-brand-terracotta-dark"
+                        >
+                          {isRTL ? "إضافة البطاقة" : "Save Card"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsAddingCard(false)}
+                          className="px-4 py-2 border border-border text-foreground hover:bg-muted rounded-lg text-xs"
+                        >
+                          {isRTL ? "إلغاء" : "Cancel"}
+                        </button>
+                      </div>
+                    </motion.form>
+                  ) : null}
+                </AnimatePresence>
+
+                <div className="space-y-3">
+                  {payments.map(pay => (
+                    <div key={pay.id} className="bg-background border border-border/60 rounded-xl p-3.5 flex justify-between items-center">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-7 bg-brand-peach/40 rounded flex items-center justify-center font-bold text-[10px] text-brand-terracotta uppercase border border-brand-terracotta/10">
+                          {pay.type}
+                        </div>
+                        <div>
+                          <p className="text-foreground text-sm font-mono font-medium">{pay.number}</p>
+                          <p className="text-muted-foreground text-[10px]">{isRTL ? "تنتهي في" : "Expires"} {pay.expiry}</p>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => {
+                          setPayments(payments.filter(p => p.id !== pay.id));
+                          toast.success(isRTL ? "تم إزالة بطاقة الدفع بنجاح" : "Payment card removed successfully");
+                        }}
+                        className="text-destructive hover:text-destructive-dark p-1"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  ))}
+
+                  {!isAddingCard && (
+                    <button 
+                      onClick={() => setIsAddingCard(true)}
+                      className="w-full py-2.5 bg-brand-peach text-brand-terracotta hover:bg-brand-terracotta hover:text-white rounded-xl text-xs font-semibold uppercase transition-all flex items-center justify-center gap-2"
+                    >
+                      <Plus size={14} /> {isRTL ? "إضافة بطاقة جديدة" : "Add New Card"}
+                    </button>
+                  )}
+                </div>
               </div>
             </motion.div>
           </>
@@ -1874,10 +1896,10 @@ export function Account() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              className="fixed inset-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full sm:max-w-2xl h-full sm:h-auto bg-card border-0 sm:border border-border rounded-none sm:rounded-3xl p-4 sm:p-6 z-50 shadow-elev overflow-y-auto max-h-screen sm:max-h-[92vh] scrollbar-hide"
+              className="fixed inset-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full sm:max-w-2xl h-full sm:h-auto bg-card border-0 sm:border border-border rounded-none sm:rounded-3xl p-4 sm:p-6 z-50 shadow-elev overflow-hidden flex flex-col max-h-screen sm:max-h-[92vh]"
             >
               {/* Header */}
-              <div className="flex items-start justify-between border-b border-border/80 pb-4 mb-4 select-none">
+              <div className="flex items-start justify-between border-b border-border/80 pb-4 mb-4 select-none flex-shrink-0">
                 <div>
                   <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{isRTL ? "تفاصيل الطلب" : "Order details"}</span>
                   <div className="flex items-center gap-2 mt-0.5 flex-wrap">
@@ -1898,190 +1920,193 @@ export function Account() {
                 </button>
               </div>
 
-              {/* Delivery Progress Stages Tracker */}
-              <div className="bg-background/40 border border-border/60 rounded-2xl p-4 sm:p-5 mb-5 select-none">
-                <h4 className="text-xs font-semibold text-foreground mb-4">
-                  {isRTL ? "حالة شحنتك ومراحل التوصيل" : "Delivery Progress & Tracking Timeline"}
-                </h4>
-                
-                {/* Cancellation status timeline override */}
-                {selectedOrder.status === "cancelled" ? (
-                  <div className="flex items-center gap-3 bg-red-50 dark:bg-red-950/20 border border-red-200/50 dark:border-red-900/30 p-3 rounded-xl">
-                    <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 flex items-center justify-center text-sm font-bold flex-shrink-0">
-                      ✕
+              {/* Scrollable Body */}
+              <div className="flex-1 overflow-y-auto pe-1.5 -me-1.5 ps-1.5 -ms-1.5 space-y-5">
+                {/* Delivery Progress Stages Tracker */}
+                <div className="bg-background/40 border border-border/60 rounded-2xl p-4 sm:p-5 mb-5 select-none">
+                  <h4 className="text-xs font-semibold text-foreground mb-4">
+                    {isRTL ? "حالة شحنتك ومراحل التوصيل" : "Delivery Progress & Tracking Timeline"}
+                  </h4>
+                  
+                  {/* Cancellation status timeline override */}
+                  {selectedOrder.status === "cancelled" ? (
+                    <div className="flex items-center gap-3 bg-red-50 dark:bg-red-950/20 border border-red-200/50 dark:border-red-900/30 p-3 rounded-xl">
+                      <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 flex items-center justify-center text-sm font-bold flex-shrink-0">
+                        ✕
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-red-700 dark:text-red-400">{isRTL ? "تم إلغاء هذا الطلب" : "This order has been cancelled"}</p>
+                        <p className="text-[10px] text-muted-foreground">{isRTL ? "تمت معالجة الإلغاء بناءً على طلبك" : "The order cancellation has been processed successfully"}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-xs font-bold text-red-700 dark:text-red-400">{isRTL ? "تم إلغاء هذا الطلب" : "This order has been cancelled"}</p>
-                      <p className="text-[10px] text-muted-foreground">{isRTL ? "تمت معالجة الإلغاء بناءً على طلبك" : "The order cancellation has been processed successfully"}</p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="relative">
-                    {/* Horizontal Connector Line for desktop, vertical for mobile */}
-                    <div className="absolute top-[13px] start-4 end-4 h-0.5 bg-muted hidden sm:block" />
-                    <div className="absolute top-4 bottom-4 start-[13px] w-0.5 bg-muted sm:hidden" />
-                    
-                    {/* Progress Fill bar (Desktop) */}
-                    <div 
-                      className="absolute top-[13px] start-4 h-0.5 bg-brand-terracotta hidden sm:block transition-all duration-500" 
-                      style={{ 
-                        width: selectedOrder.status === "delivered" 
-                          ? "92%" 
-                          : selectedOrder.status === "shipped" 
-                            ? "61%" 
-                            : "30%" 
-                      }} 
-                    />
+                  ) : (
+                    <div className="relative">
+                      {/* Horizontal Connector Line for desktop, vertical for mobile */}
+                      <div className="absolute top-[13px] start-4 end-4 h-0.5 bg-muted hidden sm:block" />
+                      <div className="absolute top-4 bottom-4 start-[13px] w-0.5 bg-muted sm:hidden" />
+                      
+                      {/* Progress Fill bar (Desktop) */}
+                      <div 
+                        className="absolute top-[13px] start-4 h-0.5 bg-brand-terracotta hidden sm:block transition-all duration-500" 
+                        style={{ 
+                          width: selectedOrder.status === "delivered" 
+                            ? "92%" 
+                            : selectedOrder.status === "shipped" 
+                              ? "61%" 
+                              : "30%" 
+                        }} 
+                      />
 
-                    {/* Timeline steps */}
-                    <div className="flex flex-col sm:flex-row justify-between gap-5 sm:gap-2 relative z-10">
-                      {[
-                        { step: "placed", labelEn: "Placed", labelAr: "تم الطلب", dateEn: selectedOrder.dateEn, dateAr: selectedOrder.dateAr, active: true },
-                        { step: "processing", labelEn: "Processing", labelAr: "قيد التحضير", dateEn: selectedOrder.dateEn, dateAr: selectedOrder.dateAr, active: true },
-                        { step: "shipped", labelEn: "Shipped", labelAr: "شحن الطلب", dateEn: selectedOrder.courier?.estDateEn || "In Transit", dateAr: selectedOrder.courier?.estDateAr || "قيد الشحن", active: ["shipped", "delivered"].includes(selectedOrder.status) },
-                        { step: "delivered", labelEn: "Delivered", labelAr: "تم التوصيل", dateEn: selectedOrder.courier?.estDateEn || "Expected soon", dateAr: selectedOrder.courier?.estDateAr || "متوقع قريباً", active: selectedOrder.status === "delivered" }
-                      ].map((stage, idx) => (
-                        <div key={stage.step} className="flex sm:flex-col items-start sm:items-center text-center gap-3 sm:gap-1.5 flex-1">
-                          {/* Circle Badge Indicator */}
-                          <div 
-                            className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all flex-shrink-0 ${
-                              stage.active 
-                                ? "bg-brand-terracotta border-brand-terracotta text-white shadow-sm" 
-                                : "bg-card border-muted text-muted-foreground"
-                            }`}
-                          >
-                            {stage.active ? "✓" : idx + 1}
+                      {/* Timeline steps */}
+                      <div className="flex flex-col sm:flex-row justify-between gap-5 sm:gap-2 relative z-10">
+                        {[
+                          { step: "placed", labelEn: "Placed", labelAr: "تم الطلب", dateEn: selectedOrder.dateEn, dateAr: selectedOrder.dateAr, active: true },
+                          { step: "processing", labelEn: "Processing", labelAr: "قيد التحضير", dateEn: selectedOrder.dateEn, dateAr: selectedOrder.dateAr, active: true },
+                          { step: "shipped", labelEn: "Shipped", labelAr: "شحن الطلب", dateEn: selectedOrder.courier?.estDateEn || "In Transit", dateAr: selectedOrder.courier?.estDateAr || "قيد الشحن", active: ["shipped", "delivered"].includes(selectedOrder.status) },
+                          { step: "delivered", labelEn: "Delivered", labelAr: "تم التوصيل", dateEn: selectedOrder.courier?.estDateEn || "Expected soon", dateAr: selectedOrder.courier?.estDateAr || "متوقع قريباً", active: selectedOrder.status === "delivered" }
+                        ].map((stage, idx) => (
+                          <div key={stage.step} className="flex sm:flex-col items-start sm:items-center text-center gap-3 sm:gap-1.5 flex-1">
+                            {/* Circle Badge Indicator */}
+                            <div 
+                              className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all flex-shrink-0 ${
+                                stage.active 
+                                  ? "bg-brand-terracotta border-brand-terracotta text-white shadow-sm" 
+                                  : "bg-card border-muted text-muted-foreground"
+                              }`}
+                            >
+                              {stage.active ? "✓" : idx + 1}
+                            </div>
+                            <div className="text-start sm:text-center leading-tight">
+                              <p className={`text-xs font-semibold ${stage.active ? "text-foreground" : "text-muted-foreground"}`}>
+                                {isRTL ? stage.labelAr : stage.labelEn}
+                              </p>
+                              <p className="text-[10px] text-muted-foreground mt-0.5">
+                                {isRTL ? stage.dateAr : stage.dateEn}
+                              </p>
+                            </div>
                           </div>
-                          <div className="text-start sm:text-center leading-tight">
-                            <p className={`text-xs font-semibold ${stage.active ? "text-foreground" : "text-muted-foreground"}`}>
-                              {isRTL ? stage.labelAr : stage.labelEn}
-                            </p>
-                            <p className="text-[10px] text-muted-foreground mt-0.5">
-                              {isRTL ? stage.dateAr : stage.dateEn}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
+                  )}
+                </div>
+
+                {/* Courier Panel (Rendered if shipped or delivered) */}
+                {selectedOrder.courier && selectedOrder.status !== "cancelled" && (
+                  <div className="bg-brand-peach/25 border border-brand-terracotta/10 rounded-2xl p-4 mb-5 flex items-center justify-between gap-4 select-none flex-wrap sm:flex-nowrap">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xl">🚚</span>
+                      <div className="text-xs">
+                        <p className="text-foreground font-semibold">
+                          {isRTL ? `الشحن عبر ${selectedOrder.courier.company}` : `Shipped with ${selectedOrder.courier.company}`}
+                        </p>
+                        <p className="text-muted-foreground mt-0.5">
+                          {isRTL 
+                            ? `كود التتبع: ${selectedOrder.courier.trackingCode}` 
+                            : `Tracking Code: ${selectedOrder.courier.trackingCode}`
+                          }
+                        </p>
+                        {selectedOrder.courier.phone && (
+                          <p className="text-muted-foreground mt-0.5 flex items-center gap-1">
+                            📞 {isRTL ? "هاتف المندوب:" : "Courier Phone:"} <span className="font-mono text-foreground font-semibold">{selectedOrder.courier.phone}</span>
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <button
+                      onClick={() => copyToClipboard(selectedOrder.courier.trackingCode)}
+                      className="py-1.5 px-3 bg-brand-peach text-brand-terracotta text-[10px] font-bold rounded-lg border border-brand-terracotta/20 hover:bg-brand-terracotta hover:text-white transition-all flex items-center gap-1.5"
+                    >
+                      {isCopied ? <Check size={12} /> : <Copy size={12} />}
+                      {isCopied ? (isRTL ? "تم النسخ" : "Copied!") : (isRTL ? "نسخ الكود" : "Copy Code")}
+                    </button>
                   </div>
                 )}
-              </div>
 
-              {/* Courier Panel (Rendered if shipped or delivered) */}
-              {selectedOrder.courier && selectedOrder.status !== "cancelled" && (
-                <div className="bg-brand-peach/25 border border-brand-terracotta/10 rounded-2xl p-4 mb-5 flex items-center justify-between gap-4 select-none flex-wrap sm:flex-nowrap">
-                  <div className="flex items-center gap-3">
-                    <span className="text-xl">🚚</span>
-                    <div className="text-xs">
-                      <p className="text-foreground font-semibold">
-                        {isRTL ? `الشحن عبر ${selectedOrder.courier.company}` : `Shipped with ${selectedOrder.courier.company}`}
-                      </p>
-                      <p className="text-muted-foreground mt-0.5">
-                        {isRTL 
-                          ? `كود التتبع: ${selectedOrder.courier.trackingCode}` 
-                          : `Tracking Code: ${selectedOrder.courier.trackingCode}`
-                        }
-                      </p>
-                      {selectedOrder.courier.phone && (
-                        <p className="text-muted-foreground mt-0.5 flex items-center gap-1">
-                          📞 {isRTL ? "هاتف المندوب:" : "Courier Phone:"} <span className="font-mono text-foreground font-semibold">{selectedOrder.courier.phone}</span>
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <button
-                    onClick={() => copyToClipboard(selectedOrder.courier.trackingCode)}
-                    className="py-1.5 px-3 bg-brand-peach text-brand-terracotta text-[10px] font-bold rounded-lg border border-brand-terracotta/20 hover:bg-brand-terracotta hover:text-white transition-all flex items-center gap-1.5"
-                  >
-                    {isCopied ? <Check size={12} /> : <Copy size={12} />}
-                    {isCopied ? (isRTL ? "تم النسخ" : "Copied!") : (isRTL ? "نسخ الكود" : "Copy Code")}
-                  </button>
-                </div>
-              )}
-
-              {/* Items List */}
-              <div className="space-y-3.5 mb-6">
-                <h4 className="text-xs font-semibold uppercase text-brand-ink-soft select-none">
-                  {isRTL ? "محتويات الشحنة" : "Shipment Items"}
-                </h4>
-                {selectedOrder.products?.map((prod: any, i: number) => (
-                  <div key={i} className="flex justify-between items-center gap-3 border-b border-border/40 pb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-muted p-1 rounded-xl flex items-center justify-center flex-shrink-0 border border-border/30">
-                        <img src={prod.image} alt={prod.name} className="w-full h-full object-contain" />
+                {/* Items List */}
+                <div className="space-y-3.5 mb-6">
+                  <h4 className="text-xs font-semibold uppercase text-brand-ink-soft select-none">
+                    {isRTL ? "محتويات الشحنة" : "Shipment Items"}
+                  </h4>
+                  {selectedOrder.products?.map((prod: any, i: number) => (
+                    <div key={i} className="flex justify-between items-center gap-3 border-b border-border/40 pb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-muted p-1 rounded-xl flex items-center justify-center flex-shrink-0 border border-border/30">
+                          <img src={prod.image} alt={prod.name} className="w-full h-full object-contain" />
+                        </div>
+                        <div className="text-xs">
+                          <p className="text-foreground font-medium">{isRTL ? prod.nameAr : prod.name}</p>
+                          <p className="text-muted-foreground mt-0.5">{isRTL ? "الكمية:" : "Qty:"} {prod.quantity}</p>
+                        </div>
                       </div>
-                      <div className="text-xs">
-                        <p className="text-foreground font-medium">{isRTL ? prod.nameAr : prod.name}</p>
-                        <p className="text-muted-foreground mt-0.5">{isRTL ? "الكمية:" : "Qty:"} {prod.quantity}</p>
-                      </div>
-                    </div>
-                    <span className="text-xs font-semibold text-foreground font-mono">
-                      {t.currency} {prod.price.toFixed(2)}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Amazon-Style Receipt Breakdown Grid */}
-              <div className="border-t border-border pt-4 mb-6">
-                <h4 className="text-xs font-semibold uppercase text-brand-ink-soft mb-3 select-none">
-                  {isRTL ? "تفاصيل الدفع وملخص الحساب" : "Payment & Order Pricing Summary"}
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs bg-muted/20 border border-border/60 rounded-2xl p-4">
-                  {/* Left Column: Payment Details & Shipping Address */}
-                  <div className="space-y-4 border-b sm:border-b-0 sm:border-e border-border/80 pb-3 sm:pb-0 sm:pe-6">
-                    <div>
-                      <p className="text-muted-foreground uppercase text-[10px] tracking-wider font-semibold select-none">
-                        {isRTL ? "طريقة الدفع" : "Payment Method"}
-                      </p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <CreditCard size={15} className="text-brand-ink-soft" />
-                        <span className="font-mono text-foreground font-medium">Visa **** 4242</span>
-                      </div>
-                      <p className="text-[10px] text-muted-foreground mt-1 select-none">
-                        🔒 {t.paymentSecureNote}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground uppercase text-[10px] tracking-wider font-semibold select-none">
-                        {isRTL ? "عنوان الشحن" : "Shipping Address"}
-                      </p>
-                      <p className="text-foreground font-medium mt-1 font-sans">
-                        {isRTL ? selectedOrder.deliveryAddressAr : selectedOrder.deliveryAddress}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Right Column: Receipt Breakdown (Amazon Style) */}
-                  <div className="space-y-2 font-mono">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">{isRTL ? "المجموع الفرعي:" : "Subtotal:"}</span>
-                      <span className="text-foreground font-medium">{t.currency} {selectedOrder.receipt.subtotal.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between text-xs">
-                      <span className="text-muted-foreground">{isRTL ? "الشحن:" : "Shipping:"}</span>
-                      <span className="text-foreground font-medium">
-                        {selectedOrder.receipt.shipping === 0 
-                          ? (isRTL ? "مجاني" : "FREE") 
-                          : `${t.currency} ${selectedOrder.receipt.shipping.toFixed(2)}`
-                        }
+                      <span className="text-xs font-semibold text-foreground font-mono">
+                        {t.currency} {prod.price.toFixed(2)}
                       </span>
                     </div>
-                    <div className="flex justify-between text-xs text-red-600 dark:text-red-400">
-                      <span>{isRTL ? "خصم الكوبون:" : "Discount:"}</span>
-                      <span>-{t.currency} {selectedOrder.receipt.discount.toFixed(2)}</span>
+                  ))}
+                </div>
+
+                {/* Amazon-Style Receipt Breakdown Grid */}
+                <div className="border-t border-border pt-4 mb-6">
+                  <h4 className="text-xs font-semibold uppercase text-brand-ink-soft mb-3 select-none">
+                    {isRTL ? "تفاصيل الدفع وملخص الحساب" : "Payment & Order Pricing Summary"}
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs bg-muted/20 border border-border/60 rounded-2xl p-4">
+                    {/* Left Column: Payment Details & Shipping Address */}
+                    <div className="space-y-4 border-b sm:border-b-0 sm:border-e border-border/80 pb-3 sm:pb-0 sm:pe-6">
+                      <div>
+                        <p className="text-muted-foreground uppercase text-[10px] tracking-wider font-semibold select-none">
+                          {isRTL ? "طريقة الدفع" : "Payment Method"}
+                        </p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <CreditCard size={15} className="text-brand-ink-soft" />
+                          <span className="font-mono text-foreground font-medium">Visa **** 4242</span>
+                        </div>
+                        <p className="text-[10px] text-muted-foreground mt-1 select-none">
+                          🔒 {t.paymentSecureNote}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground uppercase text-[10px] tracking-wider font-semibold select-none">
+                          {isRTL ? "عنوان الشحن" : "Shipping Address"}
+                        </p>
+                        <p className="text-foreground font-medium mt-1 font-sans">
+                          {isRTL ? selectedOrder.deliveryAddressAr : selectedOrder.deliveryAddress}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex justify-between border-t border-border/80 pt-2 text-sm font-bold text-brand-terracotta">
-                      <span className="font-sans select-none">{isRTL ? "الإجمالي الكلي:" : "Total Charged:"}</span>
-                      <span>{t.currency} {selectedOrder.total.toFixed(2)}</span>
+
+                    {/* Right Column: Receipt Breakdown (Amazon Style) */}
+                    <div className="space-y-2 font-mono">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">{isRTL ? "المجموع الفرعي:" : "Subtotal:"}</span>
+                        <span className="text-foreground font-medium">{t.currency} {selectedOrder.receipt.subtotal.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between text-xs">
+                        <span className="text-muted-foreground">{isRTL ? "الشحن:" : "Shipping:"}</span>
+                        <span className="text-foreground font-medium">
+                          {selectedOrder.receipt.shipping === 0 
+                            ? (isRTL ? "مجاني" : "FREE") 
+                            : `${t.currency} ${selectedOrder.receipt.shipping.toFixed(2)}`
+                          }
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-xs text-red-600 dark:text-red-400">
+                        <span>{isRTL ? "خصم الكوبون:" : "Discount:"}</span>
+                        <span>-{t.currency} {selectedOrder.receipt.discount.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between border-t border-border/80 pt-2 text-sm font-bold text-brand-terracotta">
+                        <span className="font-sans select-none">{isRTL ? "الإجمالي الكلي:" : "Total Charged:"}</span>
+                        <span>{t.currency} {selectedOrder.total.toFixed(2)}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Actions Footer (Render Cancel button if placed or processing) */}
-              <div className="flex flex-col sm:flex-row gap-2 justify-end items-stretch sm:items-center select-none w-full sm:w-auto">
+              <div className="flex-shrink-0 mt-4 pt-4 border-t border-border/80 flex flex-col sm:flex-row gap-2 justify-end items-stretch sm:items-center select-none w-full sm:w-auto">
                 {selectedOrder.status === "delivered" && (
                   <button
                     onClick={() => handlePrintReceipt(selectedOrder)}

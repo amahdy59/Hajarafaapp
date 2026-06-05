@@ -27,7 +27,7 @@ export function Cart() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-6">
         <div className="flex items-center gap-3 mb-6">
           <ShoppingBag size={22} className="text-brand-terracotta" />
           <h1 className="text-foreground" style={{ fontSize: "1.4rem" }}>{t.shoppingCart}</h1>
@@ -242,7 +242,7 @@ export function Cart() {
         {suggestedProducts.length > 0 && (
           <section className="mt-10">
             <h2 className="text-foreground mb-5" style={{ fontSize: "1.1rem" }}>{t.youMightAlsoLike}</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
               {suggestedProducts.map(p => (
                 <ProductCard key={p.id} product={p} />
               ))}

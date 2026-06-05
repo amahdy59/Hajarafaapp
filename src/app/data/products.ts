@@ -7,8 +7,28 @@ import dateMaamoulImg from "../../assets/date_maamoul.webp";
 import bbqSpicesImg from "../../assets/bbq_spices.webp";
 import bayLeavesImg from "../../assets/bay_leaves.webp";
 import sidrHoneyImg from "../../assets/sidr_honey.webp";
+import cloverHoneyImg from "../../assets/clover_honey.webp";
+import blackSeedHoneyImg from "../../assets/black_seed_honey.webp";
+import mountainHoneyNutsImg from "../../assets/mountain_honey_nuts.webp";
 import saltedCaramelPopcornImg from "../../assets/salted_caramel_popcorn.webp";
 import babyOilImg from "../../assets/baby_oil.webp";
+
+// Remote CDN optimized local replacements
+import afghanoIncenseImg from "../../assets/afghano_incense.webp";
+import amberMaamoulIncenseImg from "../../assets/amber_maamoul_incense.webp";
+import ajwaDatesImg from "../../assets/ajwa_dates.webp";
+import almondPomegranateCreamImg from "../../assets/almond_pomegranate_cream.webp";
+import amalSolidPerfumeImg from "../../assets/amal_solid_perfume.webp";
+import amberMistHairImg from "../../assets/amber_mist_hair.webp";
+import amberOilImg from "../../assets/amber_oil.webp";
+import rawAlmondsImg from "../../assets/raw_almonds.webp";
+import rawCashewsImg from "../../assets/raw_cashews.webp";
+import rawHazelnutsImg from "../../assets/raw_hazelnuts.webp";
+import rawWalnutsImg from "../../assets/raw_walnuts.webp";
+import appleCiderVinegarImg from "../../assets/apple_cider_vinegar.webp";
+import greenAppleJuiceImg from "../../assets/green_apple_juice.webp";
+import arabicCoffeeImg from "../../assets/arabic_coffee.webp";
+
 
 export interface Product {
   id: string;
@@ -43,8 +63,8 @@ export const products: Product[] = [
     id: "p1", name: "Afghano Incense", nameAr: "بخور أفغانو",
     category: "Incense", categorySlug: "incense",
     price: 80, rating: 4.8, reviewCount: 142,
-    image: `${HAJ}Sticks-Afghano.webp?v=1768478647&width=533`,
-    images: [`${HAJ}Sticks-Afghano.webp?v=1768478647&width=533`],
+    image: afghanoIncenseImg,
+    images: [afghanoIncenseImg],
     description: "Smooth, woody Afghano incense sticks crafted in the traditional Egyptian way. Long-lasting fragrance perfect for relaxing evenings and gatherings.",
     benefits: ["Long-lasting aroma", "Hand-rolled", "Premium ingredients"],
     usage: "Light the tip, let flame catch, then blow out and place in a holder.",
@@ -54,8 +74,8 @@ export const products: Product[] = [
     id: "p2", name: "Amber Maamoul Incense", nameAr: "بخور معمول العنبر",
     category: "Incense", categorySlug: "incense",
     price: 80, rating: 4.7, reviewCount: 88,
-    image: `${HAJ}Sticks-Ambermaamoul.webp?v=1768475616&width=533`,
-    images: [`${HAJ}Sticks-Ambermaamoul.webp?v=1768475616&width=533`],
+    image: amberMaamoulIncenseImg,
+    images: [amberMaamoulIncenseImg],
     description: "Warm amber maamoul incense — a deep oriental fragrance built around amber resin and oud notes.",
     benefits: ["Deep amber aroma", "Long burn", "Authentic recipe"],
     usage: "Light, blow out, and place in a heat-safe holder.",
@@ -67,8 +87,8 @@ export const products: Product[] = [
     id: "p3", name: "Agwa Almadia Dates", nameAr: "تمر عجوة المدينة",
     category: "Yamish & Dates", categorySlug: "yamish-dates",
     price: 85, rating: 4.9, reviewCount: 312,
-    image: `${HAJ}1e6764dd8ccfd87cac88fe384d062a8c.png?v=1709654915&width=533`,
-    images: [`${HAJ}1e6764dd8ccfd87cac88fe384d062a8c.png?v=1709654915&width=533`],
+    image: ajwaDatesImg,
+    images: [ajwaDatesImg],
     description: "Authentic Ajwa dates from Madinah — soft, dark and naturally sweet. A revered variety with a rich, caramel-like finish.",
     benefits: ["Naturally sweet", "Rich in fiber", "Energy boost"],
     usage: "Enjoy 3–7 dates daily, with milk or on their own.",
@@ -80,8 +100,8 @@ export const products: Product[] = [
     id: "p4", name: "Almond Oil & Pomegranate Cream", nameAr: "كريم زيت اللوز والرمان",
     category: "Cosmetics", categorySlug: "cosmetics",
     price: 49, priceFrom: true, rating: 4.8, reviewCount: 204,
-    image: `${HAJ}132.png?v=1768576687&width=533`,
-    images: [`${HAJ}132.png?v=1768576687&width=533`],
+    image: almondPomegranateCreamImg,
+    images: [almondPomegranateCreamImg],
     description: "Nourishing body cream blending sweet almond oil with pomegranate extract. Lightweight, deeply hydrating, antioxidant-rich.",
     benefits: ["Deep hydration", "Antioxidant", "Softens skin"],
     usage: "Apply to clean skin morning and night.",
@@ -91,8 +111,8 @@ export const products: Product[] = [
     id: "p5", name: "Amal Solid Perfume", nameAr: "مخمرية الأمال",
     category: "Cosmetics", categorySlug: "cosmetics",
     price: 205, rating: 4.9, reviewCount: 167,
-    image: `${HAJ}11_84861da1-be69-444f-ba38-05bf3bf21d29.png?v=1766606202&width=533`,
-    images: [`${HAJ}11_84861da1-be69-444f-ba38-05bf3bf21d29.png?v=1766606202&width=533`],
+    image: amalSolidPerfumeImg,
+    images: [amalSolidPerfumeImg],
     description: "A luxurious solid perfume balm. Travel-friendly format with a long-lasting oriental scent.",
     benefits: ["Alcohol-free", "Long-lasting", "Travel size"],
     usage: "Dab onto pulse points: wrists, neck, behind ears.",
@@ -102,8 +122,8 @@ export const products: Product[] = [
     id: "p6", name: "Amber Mist Hair Perfume", nameAr: "عطر الشعر العنبري",
     category: "Cosmetics", categorySlug: "cosmetics",
     price: 105, rating: 4.7, reviewCount: 98,
-    image: `${HAJ}IMG_5325.png?v=1766265526&width=533`,
-    images: [`${HAJ}IMG_5325.png?v=1766265526&width=533`],
+    image: amberMistHairImg,
+    images: [amberMistHairImg],
     description: "Lightweight amber-scented mist designed specifically for hair. Leaves a soft, lingering fragrance without buildup.",
     benefits: ["Hair-safe", "Long fragrance", "Lightweight"],
     usage: "Spray 2–3 times onto dry hair from a distance.",
@@ -113,8 +133,8 @@ export const products: Product[] = [
     id: "p7", name: "Amber Oil", nameAr: "زيت عنبر",
     category: "Cosmetics", categorySlug: "cosmetics",
     price: 160, rating: 4.8, reviewCount: 121,
-    image: `${HAJ}AW2-Recovered0.png?v=1763548738&width=533`,
-    images: [`${HAJ}AW2-Recovered0.png?v=1763548738&width=533`],
+    image: amberOilImg,
+    images: [amberOilImg],
     description: "Rich amber body oil — warm, sensual, and deeply moisturizing. Crafted with traditional amber notes.",
     benefits: ["Hydrating", "Sensual scent", "Multi-use"],
     usage: "Apply a few drops onto skin or hair after showering.",
@@ -126,8 +146,8 @@ export const products: Product[] = [
     id: "p8", name: "Raw Almonds", nameAr: "لوز ني",
     category: "Nuts", categorySlug: "nuts",
     price: 100, rating: 4.7, reviewCount: 245,
-    image: `${HAJ}cd6b5a3b25138f70003ededaa702162a.png?v=1708794682&width=533`,
-    images: [`${HAJ}cd6b5a3b25138f70003ededaa702162a.png?v=1708794682&width=533`],
+    image: rawAlmondsImg,
+    images: [rawAlmondsImg],
     description: "Whole raw almonds — natural, unsalted, unroasted. Perfect for snacking, soaking, or fresh almond milk.",
     benefits: ["Vitamin E", "Plant protein", "Healthy fats"],
     usage: "Eat raw, soaked, or use in recipes.",
@@ -137,8 +157,8 @@ export const products: Product[] = [
     id: "p9", name: "Roasted Almonds", nameAr: "لوز محمص",
     category: "Nuts", categorySlug: "nuts",
     price: 35, rating: 4.6, reviewCount: 188,
-    image: `${HAJ}307.png?v=1772041115&width=533`,
-    images: [`${HAJ}307.png?v=1772041115&width=533`],
+    image: rawCashewsImg,
+    images: [rawCashewsImg],
     description: "Lightly roasted almonds with a satisfying crunch and natural sweetness — no oil added.",
     benefits: ["Crunchy", "Natural", "Roasted dry"],
     usage: "Snack daily, or use in trail mixes.",
@@ -148,8 +168,8 @@ export const products: Product[] = [
     id: "p10", name: "American Pistachio Salted", nameAr: "فستق أمريكي مملح كبير",
     category: "Nuts", categorySlug: "nuts",
     price: 120, originalPrice: 140, discount: 14, rating: 4.9, reviewCount: 312,
-    image: `${HAJ}70a13da22e282ebd3cad12033bb5866b.png?v=1708688599&width=533`,
-    images: [`${HAJ}70a13da22e282ebd3cad12033bb5866b.png?v=1708688599&width=533`],
+    image: rawHazelnutsImg,
+    images: [rawHazelnutsImg],
     description: "Premium salted American pistachios. Big, fresh kernels with a perfectly roasted finish.",
     benefits: ["Heart healthy", "High protein", "Satisfying snack"],
     usage: "Enjoy a handful daily.",
@@ -161,8 +181,8 @@ export const products: Product[] = [
     id: "p11", name: "Anise", nameAr: "ينسون",
     category: "Herbal Drinks", categorySlug: "herbal-drinks",
     price: 39.9, rating: 4.7, reviewCount: 156,
-    image: `${HAJ}2cfe5fee7d264dac71c46c59a0c3811d.png?v=1709123951&width=533`,
-    images: [`${HAJ}2cfe5fee7d264dac71c46c59a0c3811d.png?v=1709123951&width=533`],
+    image: rawWalnutsImg,
+    images: [rawWalnutsImg],
     description: "Whole aniseed for brewing — sweet, warm and digestive-friendly. A timeless evening drink.",
     benefits: ["Digestive aid", "Calming", "Sweet aroma"],
     usage: "Steep 1 tsp in hot water for 5 minutes.",
@@ -174,8 +194,8 @@ export const products: Product[] = [
     id: "p12", name: "Apple Cider Vinegar", nameAr: "خل تفاح طبيعي",
     category: "Healthy Corner", categorySlug: "healthy-corner",
     price: 99, rating: 4.8, reviewCount: 273,
-    image: `${HAJ}AppleCiderVinegar.webp?v=1770232195&width=533`,
-    images: [`${HAJ}AppleCiderVinegar.webp?v=1770232195&width=533`],
+    image: appleCiderVinegarImg,
+    images: [appleCiderVinegarImg],
     description: "Raw, unfiltered apple cider vinegar with the mother. Naturally fermented, no additives.",
     benefits: ["Gut health", "Raw & unfiltered", "Versatile"],
     usage: "Take 1–2 tbsp diluted in water before meals.",
@@ -187,8 +207,8 @@ export const products: Product[] = [
     id: "p13", name: "Apple Juice", nameAr: "عصير تفاح",
     category: "Drinks", categorySlug: "drinks",
     price: 60, rating: 4.6, reviewCount: 84,
-    image: `${HAJ}153.png?v=1768746082&width=533`,
-    images: [`${HAJ}153.png?v=1768746082&width=533`],
+    image: greenAppleJuiceImg,
+    images: [greenAppleJuiceImg],
     description: "Cold-pressed pure apple juice — no added sugar, no preservatives. Bright, fresh, and naturally sweet.",
     benefits: ["100% fruit", "No added sugar", "Fresh-pressed"],
     usage: "Serve chilled. Refrigerate after opening.",
@@ -200,8 +220,8 @@ export const products: Product[] = [
     id: "p14", name: "Arabic Coffee with Cardamom & Saffron", nameAr: "قهوة عربي بالهيل والزعفران",
     category: "Coffee & Drinks", categorySlug: "coffee-drinks",
     price: 120, rating: 4.9, reviewCount: 421,
-    image: `${HAJ}167.png?v=1768755537&width=533`,
-    images: [`${HAJ}167.png?v=1768755537&width=533`],
+    image: arabicCoffeeImg,
+    images: [arabicCoffeeImg],
     description: "Hand-blended Arabic coffee infused with green cardamom and authentic saffron threads. A ceremonial cup, freshly ground.",
     benefits: ["Hand-blended", "Cardamom & saffron", "Ceremonial grade"],
     usage: "Brew 1 tbsp in 100 ml water, simmer 5 minutes.",
@@ -248,8 +268,8 @@ export const products: Product[] = [
     id: "p17a", name: "Clover Honey", nameAr: "عسل برسيم",
     category: "Honey", categorySlug: "honey",
     price: 120, rating: 4.8, reviewCount: 92,
-    image: sidrHoneyImg,
-    images: [sidrHoneyImg],
+    image: cloverHoneyImg,
+    images: [cloverHoneyImg],
     description: "100% pure Egyptian clover flower honey. Delicate floral aroma and light, sweet flavor.",
     benefits: ["Natural energy boost", "Daily sweetener", "Rich in minerals"],
     usage: "Use in tea, on toast, or daily.",
@@ -259,8 +279,8 @@ export const products: Product[] = [
     id: "p17b", name: "Black Seed Honey", nameAr: "عسل حبة البركة",
     category: "Honey", categorySlug: "honey",
     price: 180, rating: 4.9, reviewCount: 104,
-    image: sidrHoneyImg,
-    images: [sidrHoneyImg],
+    image: blackSeedHoneyImg,
+    images: [blackSeedHoneyImg],
     description: "Unique dark honey from bees feeding on Nigella Sativa (black seed) flowers. Renowned for its immunity-boosting benefits.",
     benefits: ["Immune support", "Anti-inflammatory", "Rich bold taste"],
     usage: "1 tsp in morning on empty stomach.",
@@ -270,8 +290,8 @@ export const products: Product[] = [
     id: "p17c", name: "Mountain Honey with Nuts", nameAr: "عسل جبلي بالمكسرات",
     category: "Honey", categorySlug: "honey",
     price: 290, rating: 4.9, reviewCount: 78,
-    image: sidrHoneyImg,
-    images: [sidrHoneyImg],
+    image: mountainHoneyNutsImg,
+    images: [mountainHoneyNutsImg],
     description: "Wild mountain honey loaded with premium toasted almonds, cashews, hazelnuts, and walnuts.",
     benefits: ["High protein snack", "Rich in nutrients", "Delicious flavor"],
     usage: "Great on desserts or as a healthy snack.",

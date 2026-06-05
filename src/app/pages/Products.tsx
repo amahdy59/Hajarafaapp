@@ -241,7 +241,7 @@ export function Products() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-6">
         {/* Page header */}
         <div className="mb-6">
           <h1 className="text-foreground font-display mb-1">
@@ -376,7 +376,7 @@ export function Products() {
               </div>
             ) : (
               <div className={view === "grid"
-                ? "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"
+                ? "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4"
                 : "flex flex-col gap-3"
               }>
                 {filteredProducts.map(product => (
