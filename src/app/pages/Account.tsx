@@ -3,7 +3,7 @@ import {
   User, Package, Heart, Settings, ChevronRight, Bell, Shield, 
   CircleHelp, LogOut, Star, MapPin, CreditCard, Award, 
   Plus, Trash2, X, Camera, Languages, Sun, Moon, Copy, Check, Info,
-  Mail, Lock, Eye, EyeOff, Phone
+  Mail, Lock, Eye, EyeOff, Phone, Printer
 } from "lucide-react";
 import { Link, useSearchParams } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
@@ -12,6 +12,10 @@ import { useAppSettings } from "../context/AppSettingsContext";
 import { toast } from "sonner";
 import { ProductCard } from "../components/ProductCard";
 import logoImg from "../../assets/logo.webp";
+import sidrHoneyImg from "../../assets/sidr_honey.png";
+import bbqSpicesImg from "../../assets/bbq_spices.png";
+import bayLeavesImg from "../../assets/bay_leaves.png";
+import dateMaamoulImg from "../../assets/date_maamoul.png";
 
 // Mock Orders with detailed products and receipt breakdowns
 const initialOrders = [
@@ -22,13 +26,13 @@ const initialOrders = [
     status: "processing", 
     total: 120.00, 
     items: 1, 
-    image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100",
+    image: sidrHoneyImg,
     courier: null,
     deliveryAddress: "12 El-Nile St, Agouza, Giza (Home)",
     deliveryAddressAr: "١٢ شارع النيل، العجوزة، الجيزة (المنزل)",
     receipt: { subtotal: 110.00, shipping: 15.00, discount: 5.00 },
     products: [
-      { name: "Sidr Honey", nameAr: "عسل سدر", quantity: 1, price: 110.00, image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100" }
+      { name: "Sidr Honey", nameAr: "عسل سدر", quantity: 1, price: 110.00, image: sidrHoneyImg }
     ]
   },
   { 
@@ -38,14 +42,14 @@ const initialOrders = [
     status: "delivered", 
     total: 67.98, 
     items: 2, 
-    image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100",
+    image: bbqSpicesImg,
     courier: { company: "Aramex", trackingCode: "AR-883719-EG", phone: "+20 100 123 4567", estDateEn: "Apr 18, 2025", estDateAr: "١٨ أبريل ٢٠٢٥" },
     deliveryAddress: "Building 3, El-Taseen St, Fifth Settlement, Cairo (Work)",
     deliveryAddressAr: "المبنى ٣، شارع التسعين، التجمع الخامس، القاهرة (العمل)",
     receipt: { subtotal: 60.00, shipping: 15.00, discount: 7.02 },
     products: [
-      { name: "BBQ Spice Mix", nameAr: "بهارات مشاوي", quantity: 1, price: 35.00, image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100" },
-      { name: "Bay Leaves", nameAr: "ورق لاورو", quantity: 1, price: 25.00, image: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100" }
+      { name: "BBQ Spice Mix", nameAr: "بهارات مشاوي", quantity: 1, price: 35.00, image: bbqSpicesImg },
+      { name: "Bay Leaves", nameAr: "ورق لاورو", quantity: 1, price: 25.00, image: bayLeavesImg }
     ]
   },
   { 
@@ -55,13 +59,13 @@ const initialOrders = [
     status: "shipped", 
     total: 45.99, 
     items: 1, 
-    image: "https://images.unsplash.com/photo-1761416351532-ede97c29fab8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100",
+    image: dateMaamoulImg,
     courier: { company: "Haj Arafa Express", trackingCode: "HA-09921-EG", phone: "+20 112 345 6789", estDateEn: "Apr 01, 2025", estDateAr: "٠١ أبريل ٢٠٢٥" },
     deliveryAddress: "12 El-Nile St, Agouza, Giza (Home)",
     deliveryAddressAr: "١٢ شارع النيل، العجوزة، الجيزة (المنزل)",
     receipt: { subtotal: 45.99, shipping: 0.00, discount: 0.00 },
     products: [
-      { name: "Date Maamoul", nameAr: "معمول تمر", quantity: 1, price: 45.99, image: "https://images.unsplash.com/photo-1761416351532-ede97c29fab8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=100" }
+      { name: "Date Maamoul", nameAr: "معمول تمر", quantity: 1, price: 45.99, image: dateMaamoulImg }
     ]
   },
 ];
@@ -555,6 +559,235 @@ export function Account() {
       setSelectedOrder({ ...selectedOrder, status: "cancelled" });
     }
     toast.success(isRTL ? "تم إلغاء الطلب بنجاح" : "Order cancelled successfully");
+  };
+
+  const handlePrintReceipt = (order: any) => {
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+      toast.error(isRTL ? "فشل فتح نافذة الطباعة" : "Failed to open print window");
+      return;
+    }
+
+    // Build items HTML
+    const itemsHtml = order.products.map((prod: any) => `
+      <tr>
+        <td style="padding: 10px; border-bottom: 1px solid rgba(0,0,0,0.06); font-family: inherit;">
+          ${isRTL ? (prod.nameAr || prod.name) : prod.name}
+        </td>
+        <td style="padding: 10px; border-bottom: 1px solid rgba(0,0,0,0.06); text-align: center; font-family: inherit;">
+          ${prod.quantity}
+        </td>
+        <td style="padding: 10px; border-bottom: 1px solid rgba(0,0,0,0.06); text-align: right; font-family: inherit;">
+          ${t.currency} ${prod.price.toFixed(2)}
+        </td>
+        <td style="padding: 10px; border-bottom: 1px solid rgba(0,0,0,0.06); text-align: right; font-family: inherit;">
+          ${t.currency} ${(prod.price * prod.quantity).toFixed(2)}
+        </td>
+      </tr>
+    `).join("");
+
+    const receiptHtml = `
+      <!DOCTYPE html>
+      <html lang="${locale}" dir="${isRTL ? "rtl" : "ltr"}">
+      <head>
+        <meta charset="UTF-8">
+        <title>Haj Arafa - Receipt #${order.id}</title>
+        <style>
+          body {
+            font-family: ${isRTL ? "'Cairo', sans-serif" : "'Questrial', sans-serif"};
+            color: #1B1C1A;
+            margin: 0;
+            padding: 40px;
+            background: #FBF7F1;
+          }
+          .receipt-container {
+            max-width: 600px;
+            margin: 0 auto;
+            border: 1px solid #D8CEC4;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(27, 28, 26, 0.04);
+            background: #FFFFFF;
+          }
+          .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #8DA392;
+            padding-bottom: 20px;
+          }
+          .header h1 {
+            margin: 5px 0;
+            font-size: 24px;
+            color: #334537;
+          }
+          .header p {
+            margin: 5px 0;
+            color: #6B5E56;
+            font-size: 14px;
+          }
+          .details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            font-size: 14px;
+            border-bottom: 1px solid #D8CEC4;
+            padding-bottom: 15px;
+          }
+          .details-col {
+            flex: 1;
+            line-height: 1.6;
+          }
+          .details-col:last-child {
+            text-align: ${isRTL ? "left" : "right"};
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+          }
+          th {
+            background-color: #F0EAE0;
+            color: #334537;
+            text-align: ${isRTL ? "right" : "left"};
+            padding: 12px 10px;
+            border-bottom: 2px solid #D8CEC4;
+            font-weight: bold;
+          }
+          .totals {
+            margin-top: 20px;
+            border-top: 1px solid #D8CEC4;
+            padding-top: 15px;
+          }
+          .totals-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            font-size: 14px;
+          }
+          .totals-row.grand-total {
+            font-size: 18px;
+            font-weight: bold;
+            color: #C4622D;
+            margin-top: 10px;
+            border-top: 2px double #D8CEC4;
+            padding-top: 10px;
+          }
+          .address-section {
+            margin-top: 35px;
+            padding: 15px;
+            background-color: #FBF7F1;
+            border-radius: 8px;
+            border: 1px solid #D8CEC4;
+            font-size: 13px;
+          }
+          .address-section h3 {
+            margin-top: 0;
+            color: #334537;
+            font-size: 14px;
+            margin-bottom: 8px;
+          }
+          .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #6B5E56;
+            border-top: 1px solid #D8CEC4;
+            padding-top: 20px;
+          }
+          @media print {
+            body { 
+              padding: 0; 
+              background: #fff;
+            }
+            .receipt-container {
+              border: none;
+              box-shadow: none;
+              padding: 0;
+              background: #fff;
+            }
+            .no-print { display: none; }
+          }
+        </style>
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Questrial&display=swap" rel="stylesheet">
+      </head>
+      <body>
+        <div class="receipt-container">
+          <div class="header">
+            <h1>${isRTL ? "حاج عرفة" : "Haj Arafa"}</h1>
+            <p>${isRTL ? "بوتيك طبيعي - الجودة والأصالة" : "Natural Boutique - Quality & Authenticity"}</p>
+          </div>
+          
+          <div class="details">
+            <div class="details-col">
+              <strong>${isRTL ? "رقم الطلب:" : "Order ID:"}</strong> #${order.id}<br>
+              <strong>${isRTL ? "التاريخ:" : "Date:"}</strong> ${isRTL ? order.dateAr : order.dateEn}
+            </div>
+            <div class="details-col">
+              <strong>${isRTL ? "حالة الطلب:" : "Status:"}</strong> ${isRTL ? "مكتمل (تم التوصيل)" : "Completed (Delivered)"}<br>
+              <strong>${isRTL ? "طريقة الدفع:" : "Payment Method:"}</strong> ${isRTL ? "الدفع عند الاستلام" : "Cash on Delivery"}
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>${isRTL ? "المنتج" : "Item"}</th>
+                <th style="text-align: center;">${isRTL ? "الكمية" : "Qty"}</th>
+                <th style="text-align: right;">${isRTL ? "السعر" : "Price"}</th>
+                <th style="text-align: right;">${isRTL ? "المجموع" : "Total"}</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsHtml}
+            </tbody>
+          </table>
+
+          <div class="totals">
+            <div class="totals-row">
+              <span>${isRTL ? "المجموع الفرعي:" : "Subtotal:"}</span>
+              <span>${t.currency} ${order.receipt.subtotal.toFixed(2)}</span>
+            </div>
+            <div class="totals-row">
+              <span>${isRTL ? "الشحن:" : "Shipping:"}</span>
+              <span>${order.receipt.shipping === 0 ? (isRTL ? "مجاني" : "FREE") : `${t.currency} ${order.receipt.shipping.toFixed(2)}`}</span>
+            </div>
+            <div class="totals-row" style="color: #B43A2A;">
+              <span>${isRTL ? "الخصم:" : "Discount:"}</span>
+              <span>-${t.currency} ${order.receipt.discount.toFixed(2)}</span>
+            </div>
+            <div class="totals-row grand-total">
+              <span>${isRTL ? "المجموع الكلي:" : "Grand Total:"}</span>
+              <span>${t.currency} ${order.total.toFixed(2)}</span>
+            </div>
+          </div>
+
+          <div class="address-section">
+            <h3>${isRTL ? "عنوان التوصيل:" : "Delivery Address:"}</h3>
+            <p style="margin: 0; line-height: 1.4;">
+              ${isRTL ? order.deliveryAddressAr : order.deliveryAddress}
+            </p>
+          </div>
+
+          <div class="footer">
+            <p>${isRTL ? "شكراً لتسوقكم من حاج عرفة!" : "Thank you for shopping at Haj Arafa!"}</p>
+            <p style="font-size: 10px; margin-top: 5px; color: #A09890;">${isRTL ? "هذا إيصال إلكتروني رسمي وموثق." : "This is an official automated digital receipt."}</p>
+          </div>
+        </div>
+
+        <script>
+          window.onload = function() {
+            setTimeout(function() {
+              window.print();
+            }, 300);
+          }
+        </script>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.open();
+    printWindow.document.write(receiptHtml);
+    printWindow.document.close();
   };
 
   const copyToClipboard = (text: string) => {
@@ -1136,24 +1369,7 @@ export function Account() {
                   <Settings size={20} className="text-brand-terracotta" />
                   {t.settings}
                 </h3>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between py-1 border-b border-border/40 pb-3">
-                    <span className="text-sm text-foreground/80 font-medium">{t.theme}</span>
-                    <Segmented<"light" | "dark">
-                      value={theme}
-                      onChange={setTheme}
-                      options={[{ value: "light", label: t.light }, { value: "dark", label: t.dark }]}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between py-1 border-b border-border/40 pb-3">
-                    <span className="text-sm text-foreground/80 font-medium">{t.language}</span>
-                    <Segmented<"en" | "ar">
-                      value={locale}
-                      onChange={setLocale}
-                      options={[{ value: "en", label: "EN" }, { value: "ar", label: "ع" }]}
-                    />
-                  </div>
-                  <div className="space-y-3 pt-2">
+                  <div className="space-y-3">
                     <label className="text-xs text-muted-foreground block font-bold uppercase tracking-wider">{isRTL ? "تفضيلات الإشعارات" : "Notifications"}</label>
                     {Object.entries(notifications).map(([key, val]) => (
                       <div key={key} className="flex items-center justify-between text-sm">
@@ -1170,7 +1386,6 @@ export function Account() {
                     ))}
                   </div>
                 </div>
-              </div>
 
               {/* Saved triggers & Actions */}
               <div className="bg-card rounded-xl border border-border overflow-hidden shadow-soft">
@@ -1867,7 +2082,16 @@ export function Account() {
               </div>
 
               {/* Actions Footer (Render Cancel button if placed or processing) */}
-              <div className="flex gap-2 justify-end select-none">
+              <div className="flex flex-col sm:flex-row gap-2 justify-end items-stretch sm:items-center select-none w-full sm:w-auto">
+                {selectedOrder.status === "delivered" && (
+                  <button
+                    onClick={() => handlePrintReceipt(selectedOrder)}
+                    className="py-2.5 px-5 bg-brand-forest text-white hover:bg-brand-forest/90 text-xs rounded-xl font-bold uppercase transition-colors shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <Printer size={14} />
+                    {isRTL ? "طباعة الإيصال" : "Print Receipt"}
+                  </button>
+                )}
                 {["placed", "processing"].includes(selectedOrder.status) ? (
                   <button
                     onClick={() => {
@@ -1884,7 +2108,7 @@ export function Account() {
                     ⚠️ {isRTL ? "تم إلغاء هذه العملية بنجاح" : "This purchase transaction is cancelled"}
                   </p>
                 ) : (
-                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/40 border border-border/80 px-3.5 py-1.5 rounded-xl">
+                  <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground bg-muted/40 border border-border/80 px-3.5 py-1.5 rounded-xl">
                     <Info size={14} className="text-brand-ink-soft" />
                     <span>
                       {selectedOrder.status === "delivered" 
