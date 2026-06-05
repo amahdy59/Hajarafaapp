@@ -66,38 +66,47 @@ export function Home() {
 
           return (
             <div key={cat.slug} className="flex flex-col gap-4">
-              {/* Minimalist Color-Accented Category Header */}
-              <div className="flex items-center justify-between border-b border-border/40 pb-2 select-none">
-                <div className="flex items-center gap-3">
-                  {/* Vertical Colored Accent Line */}
-                  <div 
-                    className="w-1 h-5.5 rounded-full" 
-                    style={{ backgroundColor: categoryAccentColors[cat.slug] || "var(--brand-terracotta)" }}
-                  />
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg sm:text-xl flex items-center justify-center">{cat.icon}</span>
-                    <h2 className="font-display text-brand-forest dark:text-brand-sage text-base sm:text-base font-bold">
-                      {catName}
-                    </h2>
+              {/* Premium curved card shelf container with organic HSL accent bg */}
+              <div 
+                className="bg-card dark:bg-zinc-900/40 rounded-3xl p-5 sm:p-6 border border-border/50 shadow-[0_8px_30px_rgb(0,0,0,0.01)] relative overflow-hidden"
+                style={{ backgroundImage: `linear-gradient(135deg, ${cat.bgColor}12, transparent 50%)` }}
+              >
+                {/* Category Header Card */}
+                <div className="flex items-center justify-between mb-4.5 select-none">
+                  <div className="flex items-center gap-2.5">
+                    <div 
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-base shadow-sm border border-black/5"
+                      style={{ backgroundColor: cat.bgColor }}
+                    >
+                      {cat.icon}
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider text-brand-terracotta/80 dark:text-brand-terracotta">
+                        {cat.group === "foods" ? (isRTL ? "مأكولات طبيعية" : "Natural Foods") : (isRTL ? "منتجات العناية" : "Care & Wellness")}
+                      </span>
+                      <h2 className="font-display text-brand-forest dark:text-brand-sage text-sm sm:text-base font-bold leading-tight mt-0.5">
+                        {catName}
+                      </h2>
+                    </div>
                   </div>
+                  <Link
+                    to={`/category/${cat.slug}`}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 bg-background dark:bg-zinc-950/60 text-brand-terracotta border border-border hover:border-brand-terracotta rounded-full text-xs font-semibold shadow-sm hover:shadow-soft transition-all duration-300"
+                  >
+                    <span>{isRTL ? "عرض الكل" : "View All"}</span>
+                    <span className="rtl-flip">→</span>
+                  </Link>
                 </div>
-                <Link
-                  to={`/category/${cat.slug}`}
-                  className="text-xs sm:text-sm font-semibold text-brand-terracotta hover:text-brand-terracotta-dark transition-colors duration-200 flex items-center gap-1"
-                >
-                  <span>{isRTL ? "عرض الكل" : "View All"}</span>
-                  <span className="rtl-flip">→</span>
-                </Link>
-              </div>
 
-              {/* Scroll Rail */}
-              <ScrollRail>
-                {items.map(p => (
-                  <div key={p.id} className="flex-shrink-0 snap-start w-[calc(50vw-28px)] sm:w-56">
-                    <ProductCard product={p} />
-                  </div>
-                ))}
-              </ScrollRail>
+                {/* Scroll Rail */}
+                <ScrollRail>
+                  {items.map(p => (
+                    <div key={p.id} className="flex-shrink-0 snap-start w-[calc(50vw-28px)] sm:w-56 p-0.5">
+                      <ProductCard product={p} />
+                    </div>
+                  ))}
+                </ScrollRail>
+              </div>
 
               {/* Insert Bento promo after the second category (index 1) */}
               {idx === 1 && (
@@ -130,7 +139,7 @@ export function Home() {
         })}
 
         {/* Customer reviews */}
-        <section className="bg-brand-cream-2 rounded-2xl p-6 sm:p-8 border border-border shadow-soft">
+        <section className="hidden sm:block bg-brand-cream-2 rounded-2xl p-6 sm:p-8 border border-border shadow-soft">
           <h2 className="font-display text-brand-forest text-center mb-6 font-bold" style={{ fontSize: "clamp(1.25rem, 3.5vw, 1.5rem)" }}>
             {t.customerReviews}
           </h2>

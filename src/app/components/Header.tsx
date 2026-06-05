@@ -86,7 +86,7 @@ export function Header() {
             <div className="max-w-[1280px] mx-auto flex gap-2 w-max">
               <Link
                 to="/products"
-                className={`group flex items-center gap-2 px-3.5 py-1.5 bg-card rounded-xl border transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-soft flex-shrink-0 select-none ${
+                className={`group flex items-center gap-2 px-3.5 py-1.5 bg-card rounded-full border transition-all duration-300 hover:shadow-soft flex-shrink-0 select-none ${
                   location.pathname === "/products" && !searchParams.get("category")
                     ? "border-brand-terracotta bg-brand-peach/30"
                     : "border-border hover:border-brand-sage"
@@ -107,7 +107,7 @@ export function Header() {
                   <Link
                     key={cat.id}
                     to={`/category/${cat.slug}`}
-                    className={`group flex items-center gap-2 px-3.5 py-1.5 bg-card rounded-xl border transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-soft flex-shrink-0 select-none ${
+                    className={`group flex items-center gap-2 px-3.5 py-1.5 bg-card rounded-full border transition-all duration-300 hover:shadow-soft flex-shrink-0 select-none ${
                       active
                         ? "border-brand-terracotta bg-brand-peach/30"
                         : "border-border hover:border-brand-sage"

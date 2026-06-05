@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { ArrowLeft, HelpCircle, Search, ChevronDown, ChevronUp, Phone, MessageSquare, MessageCircle } from "lucide-react";
+import { ArrowLeft, CircleHelp, Search, ChevronDown, ChevronUp, Phone, MessageSquare, MessageCircle } from "lucide-react";
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
@@ -117,7 +117,7 @@ export function Help() {
             {isRTL ? "العودة للرئيسية" : "Back to Home"}
           </Link>
           <div className="flex items-center gap-3">
-            <HelpCircle size={24} className="text-brand-terracotta fill-brand-peach/50" />
+            <CircleHelp size={24} className="text-brand-terracotta fill-brand-peach/50" />
             <h1 className="text-foreground font-display text-2xl sm:text-3xl">{t.customerService}</h1>
           </div>
           <p className="text-muted-foreground text-sm max-w-xl">

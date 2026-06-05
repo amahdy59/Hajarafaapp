@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { X, Sun, Moon, Languages, User, Package, Heart, HelpCircle, Info, MapPin, Phone, ChevronRight, Settings } from "lucide-react";
+import { X, Sun, Moon, Languages, User, Package, Heart, CircleHelp, Info, MapPin, Phone, ChevronRight, Settings } from "lucide-react";
 import { Link } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import { useAppSettings } from "../context/AppSettingsContext";
@@ -59,7 +59,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-          if (parsed && typeof parsed === "object") {
+          if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
             if (parsed.email === "alex@example.com" || parsed.firstName === "Alex" || parsed.firstName === "alex") {
               const defaultUser = {
                 firstName: locale === "ar" ? "أحمد" : "Ahmed",
@@ -113,7 +113,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
     { icon: Settings, label: t.settings, to: "/account?tab=profile" },
   ];
   const help = [
-    { icon: HelpCircle, label: t.customerService, to: "/help" },
+    { icon: CircleHelp, label: t.customerService, to: "/help" },
     { icon: Info, label: locale === "ar" ? "عن حاج عرفة" : "About Haj Arafa", to: "/about" },
     { icon: MapPin, label: t.branches, to: "/branches" },
     { icon: Phone, label: t.contactUs, to: "/contact" },

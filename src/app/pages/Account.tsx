@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { 
   User, Package, Heart, Settings, ChevronRight, Bell, Shield, 
-  HelpCircle, LogOut, Star, MapPin, CreditCard, Award, 
+  CircleHelp, LogOut, Star, MapPin, CreditCard, Award, 
   Plus, Trash2, X, Camera, Languages, Sun, Moon, Copy, Check, Info,
   Mail, Lock, Eye, EyeOff, Phone
 } from "lucide-react";
@@ -226,7 +226,7 @@ export function Account() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed && typeof parsed === "object") {
+        if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
           // Reset if it's the old mock user from early versions
           if (parsed.email === "alex@example.com" || parsed.firstName === "Alex" || parsed.firstName === "alex") {
             const defaultUser = {
@@ -258,7 +258,10 @@ export function Account() {
     const saved = localStorage.getItem("hajarafa.orders");
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed;
+        }
       } catch (e) {
         console.error("Failed to parse orders from localStorage:", e);
       }
@@ -1131,7 +1134,7 @@ export function Account() {
                   { icon: CreditCard, label: t.paymentMethods, color: "text-brand-ink-soft hover:text-brand-terracotta", onClick: () => setIsPaymentsOpen(true) },
                   { icon: MapPin, label: t.savedAddresses, color: "text-brand-ink-soft hover:text-brand-terracotta", onClick: () => setIsAddressesOpen(true) },
                   { icon: Shield, label: t.privacySecurity, color: "text-brand-ink-soft hover:text-brand-terracotta hover:underline", to: "/help" },
-                  { icon: HelpCircle, label: t.helpSupport, color: "text-brand-ink-soft hover:text-brand-terracotta hover:underline", to: "/help" },
+                  { icon: CircleHelp, label: t.helpSupport, color: "text-brand-ink-soft hover:text-brand-terracotta hover:underline", to: "/help" },
                   { icon: LogOut, label: t.signOut, color: "text-destructive hover:text-destructive-dark font-medium", onClick: handleSignOut },
                 ].map((item, i) => {
                   const inner = (
