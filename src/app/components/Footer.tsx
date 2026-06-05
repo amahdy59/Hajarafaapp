@@ -46,11 +46,11 @@ export function Footer() {
         {/* Column 1: Brand & Heritage */}
         <div className="space-y-3.5">
           <Link to="/" className="inline-block select-none cursor-pointer">
-            <span className="font-display font-bold text-2xl tracking-wide text-brand-peach hover:text-white transition-colors">
+            <span className="font-display font-bold text-2xl tracking-wide text-[#F4E7DA] hover:text-white transition-colors">
               {locale === "ar" ? "حاج عرفة" : "Haj Arafa"}
             </span>
           </Link>
-          <p className="text-[#FAF6F0]/85 dark:text-[#EFECE6]/85 text-xs sm:text-sm leading-relaxed max-w-sm">
+          <p className="text-[#FAF6F0] dark:text-[#EFECE6] text-xs sm:text-sm leading-relaxed max-w-sm">
             {locale === "ar" 
               ? "تراث الأعشاب المصرية منذ ١٩٧٠. جودة ونقاء في كل منتج طبيعي." 
               : "Egyptian herbal heritage since 1970. Quality and purity in every natural product."}
@@ -70,31 +70,31 @@ export function Footer() {
 
         {/* Column 2: Customer Care (Useful Links) */}
         <div className="space-y-3.5">
-          <h4 className="text-brand-peach font-display text-sm font-semibold tracking-wider uppercase border-b border-white/10 pb-2 w-fit">
+          <h4 className="text-[#F4E7DA] font-display text-sm font-semibold tracking-wider uppercase border-b border-white/10 pb-2 w-fit">
             {locale === "ar" ? "الدعم والخدمات" : "Customer Care"}
           </h4>
           <ul className="space-y-2 text-xs sm:text-sm">
             <li>
-              <Link to="/about" className="text-[#FAF6F0]/85 dark:text-[#EFECE6]/80 hover:text-white transition-colors flex items-center gap-1.5">
-                <span className="text-[10px] text-brand-peach/40">✦</span>
+              <Link to="/about" className="text-[#FAF6F0] dark:text-[#EFECE6] hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+                <span className="text-[10px] text-[#F4E7DA]/50">✦</span>
                 <span>{locale === "ar" ? "عن حاج عرفة" : "About Haj Arafa"}</span>
               </Link>
             </li>
             <li>
-              <Link to="/branches" className="text-[#FAF6F0]/85 dark:text-[#EFECE6]/80 hover:text-white transition-colors flex items-center gap-1.5">
-                <span className="text-[10px] text-brand-peach/40">✦</span>
+              <Link to="/branches" className="text-[#FAF6F0] dark:text-[#EFECE6] hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+                <span className="text-[10px] text-[#F4E7DA]/50">✦</span>
                 <span>{locale === "ar" ? "فروعنا" : "Our Branches"}</span>
               </Link>
             </li>
             <li>
-              <Link to="/contact" className="text-[#FAF6F0]/85 dark:text-[#EFECE6]/80 hover:text-white transition-colors flex items-center gap-1.5">
-                <span className="text-[10px] text-brand-peach/40">✦</span>
+              <Link to="/contact" className="text-[#FAF6F0] dark:text-[#EFECE6] hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+                <span className="text-[10px] text-[#F4E7DA]/50">✦</span>
                 <span>{locale === "ar" ? "اتصل بنا" : "Contact Us"}</span>
               </Link>
             </li>
             <li>
-              <Link to="/help" className="text-[#FAF6F0]/85 dark:text-[#EFECE6]/80 hover:text-white transition-colors flex items-center gap-1.5">
-                <span className="text-[10px] text-brand-peach/40">✦</span>
+              <Link to="/help" className="text-[#FAF6F0] dark:text-[#EFECE6] hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+                <span className="text-[10px] text-[#F4E7DA]/50">✦</span>
                 <span>{locale === "ar" ? "الأسئلة الشائعة" : "FAQs & Support"}</span>
               </Link>
             </li>
@@ -103,7 +103,7 @@ export function Footer() {
 
         {/* Column 3: WhatsApp Direct & Support */}
         <div className="space-y-3.5">
-          <h4 className="text-brand-peach font-display text-sm font-semibold tracking-wider uppercase border-b border-white/10 pb-2 w-fit">
+          <h4 className="text-[#F4E7DA] font-display text-sm font-semibold tracking-wider uppercase border-b border-white/10 pb-2 w-fit">
             {locale === "ar" ? "الدعم المباشر" : "Direct Support"}
           </h4>
           <div className="space-y-4 flex flex-col items-start">
@@ -117,16 +117,16 @@ export function Footer() {
               <span>{locale === "ar" ? "تواصل عبر واتساب" : "Chat on WhatsApp"}</span>
             </a>
             
-            <div className="text-xs text-[#FAF6F0]/85 dark:text-[#EFECE6]/85 space-y-2.5 w-full">
+            <div className="text-xs text-[#FAF6F0] dark:text-[#EFECE6] space-y-2.5 w-full">
               <div className="flex items-center gap-2">
-                <Phone size={13} className="text-brand-peach flex-shrink-0" />
+                <Phone size={13} className="text-[#F4E7DA] flex-shrink-0" />
                 <span>{locale === "ar" ? "الخط الساخن: ١٧٣٠٩" : "Hotline: 17309"}</span>
               </div>
               <div className="flex items-center gap-2">
-                <Mail size={13} className="text-brand-peach flex-shrink-0" />
+                <Mail size={13} className="text-[#F4E7DA] flex-shrink-0" />
                 <a href="mailto:Marketing@hajarafa.com" className="hover:underline">Marketing@hajarafa.com</a>
               </div>
-              <div className="flex items-center gap-2 pt-1 text-[11px] text-brand-peach/95 bg-white/5 border border-white/5 px-2.5 py-1.5 rounded-lg w-fit">
+              <div className="flex items-center gap-2 pt-1 text-[11px] text-white bg-white/10 border border-white/15 px-3 py-1.5 rounded-lg w-fit font-semibold shadow-sm">
                 <span>🚚</span>
                 <span>
                   {locale === "ar" 
@@ -143,24 +143,24 @@ export function Footer() {
       {/* Bottom Copyright & Guarantee */}
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs relative z-10">
         
-        <div className="text-[#FAF6F0]/70 dark:text-[#EFECE6]/70 text-center sm:text-start flex items-center justify-center sm:justify-start gap-1 flex-wrap select-none">
+        <div className="text-[#FAF6F0]/90 dark:text-[#EFECE6]/90 text-center sm:text-start flex items-center justify-center sm:justify-start gap-1 flex-wrap select-none">
           <span>© {new Date().getFullYear()}</span>
           <span>{locale === "ar" ? "حاج عرفة. جميع الحقوق محفوظة." : "Haj Arafa. All rights reserved."}</span>
-          <span className="block sm:inline sm:ms-2 mt-1 sm:mt-0 text-[10px] text-[#FAF6F0]/50 dark:text-[#EFECE6]/50">
+          <span className="block sm:inline sm:ms-2 mt-1 sm:mt-0 text-[10px] text-[#FAF6F0]/70 dark:text-[#EFECE6]/70">
             {locale === "ar" ? "صنع بكل حب لعافيتك 🧡" : "Crafted with love for your wellness 🧡"}
           </span>
         </div>
 
         {/* Payment Badges & Guarantee */}
         <div className="flex items-center gap-4 flex-wrap justify-center">
-          <div className="flex items-center gap-1.5 text-[11px] text-[#FAF6F0]/80 dark:text-[#EFECE6]/80">
+          <div className="flex items-center gap-1.5 text-[11px] text-[#FAF6F0]/95 dark:text-[#EFECE6]/95">
             <ShieldCheck size={14} className="text-brand-sage" />
             <span>{locale === "ar" ? "دفع آمن ١٠٠٪" : "100% Secure Payment"}</span>
           </div>
           <div className="flex gap-2">
-            <span className="px-2 py-1 rounded bg-white/5 text-[#FAF6F0]/80 dark:text-[#EFECE6]/80 border border-white/10 font-semibold text-[9px]">VISA</span>
-            <span className="px-2 py-1 rounded bg-white/5 text-[#FAF6F0]/80 dark:text-[#EFECE6]/80 border border-white/10 font-semibold text-[9px]">MC</span>
-            <span className="px-2 py-1 rounded bg-white/5 text-[#FAF6F0]/80 dark:text-[#EFECE6]/80 border border-white/10 font-semibold text-[9px]">{locale === "ar" ? "الدفع عند الاستلام" : "COD"}</span>
+            <span className="px-2 py-1 rounded bg-white/10 text-[#FAF6F0] dark:text-[#EFECE6] border border-white/20 font-semibold text-[9px]">VISA</span>
+            <span className="px-2 py-1 rounded bg-white/10 text-[#FAF6F0] dark:text-[#EFECE6] border border-white/20 font-semibold text-[9px]">MC</span>
+            <span className="px-2 py-1 rounded bg-white/10 text-[#FAF6F0] dark:text-[#EFECE6] border border-white/20 font-semibold text-[9px]">{locale === "ar" ? "الدفع عند الاستلام" : "COD"}</span>
           </div>
         </div>
 

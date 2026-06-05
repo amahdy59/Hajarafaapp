@@ -48,7 +48,7 @@ export function Home() {
               </p>
               <Link
                 to="/products"
-                className="inline-flex items-center gap-2 bg-brand-terracotta text-white px-4.5 py-1.5 rounded-lg hover:bg-brand-terracotta-dark transition-colors active:scale-95 eyebrow text-xs font-semibold mt-1"
+                className="inline-flex items-center justify-center gap-2 bg-brand-terracotta text-white px-7 py-3 sm:px-9 sm:py-3.5 rounded-xl hover:bg-brand-terracotta-dark transition-all duration-300 hover:scale-[1.02] hover:shadow-lg active:scale-[0.97] text-xs sm:text-sm font-bold uppercase tracking-wider select-none mt-2 shadow-[0_4px_12px_rgba(196,98,45,0.3)] dark:shadow-[0_4px_12px_rgba(224,139,87,0.2)]"
               >
                 {t.explore}
               </Link>
@@ -61,55 +61,44 @@ export function Home() {
           const items = getProductsByCategory(cat.slug).slice(0, 8);
           if (!items.length) return null;
           const catName = isRTL && cat.nameAr ? cat.nameAr : cat.name;
+          const accentColor = categoryAccentColors[cat.slug] || "var(--brand-terracotta)";
 
           return (
             <div key={cat.slug} className="flex flex-col gap-4">
-              {/* Premium curved card shelf container with organic soft pastel tint & matching border */}
-              <div 
-                className="bg-card dark:bg-zinc-900/40 rounded-3xl p-5 sm:p-6 border shadow-[0_8px_30px_rgb(0,0,0,0.01)] relative overflow-hidden transition-all duration-300 hover:shadow-md"
-                style={{ 
-                  backgroundImage: `linear-gradient(135deg, ${cat.bgColor}15, ${cat.bgColor}0a)`,
-                  borderColor: `${cat.bgColor}30`
-                }}
-              >
-                {/* Category Header Card */}
-                <div className="flex items-center justify-between mb-4.5 select-none">
-                  <div className="flex items-center gap-2.5">
-                    <div 
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-base shadow-sm border border-black/5"
-                      style={{ backgroundColor: cat.bgColor }}
-                    >
-                      {cat.icon}
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider text-brand-terracotta/80 dark:text-brand-terracotta">
-                        {cat.group === "foods" ? (isRTL ? "مأكولات طبيعية" : "Natural Foods") : (isRTL ? "منتجات العناية" : "Care & Wellness")}
-                      </span>
-                      <h2 className="font-display text-brand-forest dark:text-brand-sage text-sm sm:text-base font-bold leading-tight mt-0.5">
-                        {catName}
-                      </h2>
-                    </div>
+              {/* Minimalist Category Header with Accent Line */}
+              <div className="flex items-center justify-between select-none">
+                <div className="flex items-center gap-3">
+                  {/* Vertical Accent Line */}
+                  <div 
+                    className="w-[3.5px] h-7 rounded-full" 
+                    style={{ backgroundColor: accentColor }}
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider text-brand-terracotta/80 dark:text-brand-terracotta">
+                      {cat.group === "foods" ? (isRTL ? "مأكولات طبيعية" : "Natural Foods") : (isRTL ? "منتجات العناية" : "Care & Wellness")}
+                    </span>
+                    <h2 className="font-display text-brand-forest dark:text-brand-sage text-sm sm:text-base font-bold leading-tight mt-0.5">
+                      {catName}
+                    </h2>
                   </div>
-                  <Link
-                    to={`/category/${cat.slug}`}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 bg-background dark:bg-zinc-950/60 text-brand-terracotta border border-border hover:border-brand-terracotta rounded-full text-xs font-semibold shadow-sm hover:shadow-soft transition-all duration-300"
-                  >
-                    <span>{isRTL ? "عرض الكل" : "View All"}</span>
-                    <span className="rtl-flip">→</span>
-                  </Link>
                 </div>
-
-                {/* Scroll Rail */}
-                <ScrollRail>
-                  {items.map(p => (
-                    <div key={p.id} className="flex-shrink-0 snap-start w-[calc(50vw-28px)] sm:w-56 p-0.5">
-                      <ProductCard product={p} />
-                    </div>
-                  ))}
-                </ScrollRail>
+                <Link
+                  to={`/category/${cat.slug}`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-card dark:bg-zinc-900/60 text-brand-terracotta border border-border hover:border-brand-terracotta rounded-full text-xs font-semibold shadow-sm hover:shadow-soft transition-all duration-300"
+                >
+                  <span>{isRTL ? "عرض الكل" : "View All"}</span>
+                  <span className="rtl-flip">→</span>
+                </Link>
               </div>
 
-
+              {/* Scroll Rail */}
+              <ScrollRail>
+                {items.map(p => (
+                  <div key={p.id} className="flex-shrink-0 snap-start w-[calc(50vw-28px)] sm:w-56 p-0.5">
+                    <ProductCard product={p} />
+                  </div>
+                ))}
+              </ScrollRail>
             </div>
           );
         })}
