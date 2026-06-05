@@ -106,12 +106,12 @@ export function ProductDetail() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="relative aspect-square bg-[#FAF6F0] rounded-3xl overflow-hidden"
+              className="relative aspect-square bg-[#FAF6F0] dark:bg-zinc-800/40 rounded-3xl overflow-hidden"
             >
               <img
                 src={product.images[activeImage] || product.image}
                 alt={product.name}
-                className="w-full h-full object-contain p-6 mix-blend-multiply"
+                className="w-full h-full object-contain p-6 mix-blend-multiply dark:mix-blend-normal"
               />
               {product.discount && (
                 <span className="absolute top-4 start-4 bg-brand-terracotta text-white px-3 py-1 rounded-full" style={{ fontSize: "0.8rem" }}>
@@ -131,11 +131,11 @@ export function ProductDetail() {
                   <button
                     key={i}
                     onClick={() => setActiveImage(i)}
-                    className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-colors bg-[#FAF6F0] ${
+                    className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-colors bg-[#FAF6F0] dark:bg-zinc-800/40 ${
                       activeImage === i ? "border-brand-terracotta" : "border-transparent"
                     }`}
                   >
-                    <img src={img} alt="" className="w-full h-full object-contain p-1 mix-blend-multiply" />
+                    <img src={img} alt="" className="w-full h-full object-contain p-1 mix-blend-multiply dark:mix-blend-normal" />
                   </button>
                 ))}
               </div>

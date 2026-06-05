@@ -1483,8 +1483,8 @@ export function Account() {
                 {/* Bottom Row */}
                 <div className="flex items-center justify-between gap-3 bg-brand-cream-2/60 p-2.5 rounded-xl border border-border/60">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-brand-peach/45 p-1 flex items-center justify-center border border-border/40 flex-shrink-0">
-                      <img src={order.image} alt={locale === "ar" ? "صورة المنتج" : "Product thumbnail"} className="w-full h-full object-contain mix-blend-multiply" />
+                    <div className="w-10 h-10 rounded-lg bg-muted p-1 flex items-center justify-center border border-border/40 flex-shrink-0">
+                      <img src={order.image} alt={locale === "ar" ? "صورة المنتج" : "Product thumbnail"} className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
                     </div>
                     <div className="text-xs">
                       <p className="text-foreground font-medium line-clamp-1">{isRTL ? "تفاصيل الشحنة" : "Shipment Details"}</p>

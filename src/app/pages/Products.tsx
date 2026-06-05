@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { SlidersHorizontal, Grid3X3, List, ChevronDown, X } from "lucide-react";
+import { SlidersHorizontal, Grid3X3, List, ChevronDown, X, Search } from "lucide-react";
 import { useSearchParams } from "react-router";
 import { products } from "../data/products";
 import { categories, categoryMapping } from "../data/categories";
@@ -24,6 +24,8 @@ interface FilterPanelProps {
   setShowOrganic: (show: boolean) => void;
   clearFilters: () => void;
   hideHeader?: boolean;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
 }
 
 function FilterPanel({
@@ -40,44 +42,66 @@ function FilterPanel({
   setShowOrganic,
   clearFilters,
   hideHeader = false,
+  searchQuery,
+  setSearchQuery,
 }: FilterPanelProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {!hideHeader && (
         <div className="flex items-center justify-between">
           <h3 className="text-foreground font-medium">{t.filters}</h3>
           {hasActiveFilters && (
-            <button onClick={clearFilters} className="text-xs text-brand-terracotta hover:underline flex items-center gap-1">
+            <button onClick={clearFilters} className="text-xs text-brand-terracotta hover:underline flex items-center gap-1 font-semibold">
               <X size={12} /> {t.clearAll}
             </button>
           )}
         </div>
       )}
 
+      {/* Search Input inside Filters */}
+      <div className="relative">
+        <Search size={14} className={`absolute ${isRTL ? "right-3" : "left-3"} top-1/2 -translate-y-1/2 text-muted-foreground`} />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+          placeholder={isRTL ? "بحث عن منتج..." : "Search products..."}
+          className={`w-full ${isRTL ? "pr-8.5 pl-8" : "pl-8.5 pr-8"} py-1.5 bg-input border border-border rounded-xl text-foreground placeholder:text-muted-foreground outline-none focus:border-brand-terracotta text-xs`}
+        />
+        {searchQuery && (
+          <button 
+            onClick={() => setSearchQuery("")} 
+            className={`absolute ${isRTL ? "left-2" : "right-2"} top-1/2 -translate-y-1/2 w-4 h-4 bg-muted rounded-full flex items-center justify-center hover:bg-border transition-colors`}
+          >
+            <X size={10} className="text-muted-foreground" />
+          </button>
+        )}
+      </div>
+
       {/* Categories */}
       <div>
-        <h4 className="text-sm text-foreground/80 mb-3">{t.shopByCategory}</h4>
-        <div className="space-y-2">
+        <h4 className="text-xs text-foreground/80 mb-2 font-semibold">{t.shopByCategory}</h4>
+        <div className="space-y-1.5">
           {categories.map(cat => (
             <label
               key={cat.id}
-              className="flex items-center gap-2.5 cursor-pointer group select-none"
+              className="flex items-center gap-2 cursor-pointer group select-none"
               onClick={() => toggleCategory(cat.slug)}
             >
               <div
-                className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-colors ${
+                className={`w-3.5 h-3.5 rounded border-2 flex items-center justify-center transition-colors ${
                   selectedCategories.includes(cat.slug)
                     ? "border-brand-terracotta bg-brand-terracotta"
                     : "border-border group-hover:border-brand-terracotta"
                 }`}
               >
                 {selectedCategories.includes(cat.slug) && (
-                  <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                    <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <svg width="8" height="6" viewBox="0 0 10 8" fill="none">
+                    <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 )}
               </div>
-              <span className="text-sm text-muted-foreground">{cat.icon} {isRTL && cat.nameAr ? cat.nameAr : cat.name}</span>
+              <span className="text-xs text-muted-foreground">{cat.icon} {isRTL && cat.nameAr ? cat.nameAr : cat.name}</span>
             </label>
           ))}
         </div>
@@ -85,22 +109,22 @@ function FilterPanel({
 
       {/* Price range */}
       <div>
-        <h4 className="text-sm text-foreground/80 mb-3">{t.priceRange}</h4>
-        <div className="flex items-center gap-2 mb-2">
+        <h4 className="text-xs text-foreground/80 mb-2 font-semibold">{t.priceRange}</h4>
+        <div className="flex items-center gap-1.5 mb-1.5">
           <input
             type="number"
             value={priceRange[0]}
             onChange={e => setPriceRange([+e.target.value, priceRange[1]])}
-            className="w-full border border-border bg-card rounded-lg px-2 py-1.5 text-sm text-center text-foreground outline-none focus:border-brand-terracotta"
+            className="w-full border border-border bg-card rounded-lg px-1.5 py-1 text-xs text-center text-foreground outline-none focus:border-brand-terracotta"
             min={0}
             max={priceRange[1]}
           />
-          <span className="text-muted-foreground text-sm">—</span>
+          <span className="text-muted-foreground text-xs">—</span>
           <input
             type="number"
             value={priceRange[1]}
             onChange={e => setPriceRange([priceRange[0], +e.target.value])}
-            className="w-full border border-border bg-card rounded-lg px-2 py-1.5 text-sm text-center text-foreground outline-none focus:border-brand-terracotta"
+            className="w-full border border-border bg-card rounded-lg px-1.5 py-1 text-xs text-center text-foreground outline-none focus:border-brand-terracotta"
             min={priceRange[0]}
             max={200}
           />
@@ -111,27 +135,27 @@ function FilterPanel({
           max={100}
           value={priceRange[1]}
           onChange={e => setPriceRange([priceRange[0], +e.target.value])}
-          className="w-full accent-brand-terracotta"
+          className="w-full accent-brand-terracotta h-1"
         />
       </div>
 
       {/* Rating */}
       <div>
-        <h4 className="text-sm text-foreground/80 mb-3">{t.minRating}</h4>
-        <div className="space-y-2">
+        <h4 className="text-xs text-foreground/80 mb-2 font-semibold">{t.minRating}</h4>
+        <div className="space-y-1.5">
           {[4, 3, 2].map(r => (
-            <label key={r} className="flex items-center gap-2 cursor-pointer text-muted-foreground select-none">
+            <label key={r} className="flex items-center gap-2 cursor-pointer text-muted-foreground select-none text-xs">
               <input
                 type="radio"
                 checked={minRating === r}
                 onChange={() => setMinRating(minRating === r ? 0 : r)}
-                className="accent-brand-terracotta"
+                className="accent-brand-terracotta w-3 h-3"
               />
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-0.5">
                 {[...Array(5)].map((_, i) => (
-                  <span key={i} className={`text-sm ${i < r ? "text-amber-400" : "text-border"}`}>★</span>
+                  <span key={i} className={`text-xs ${i < r ? "text-amber-400" : "text-border"}`}>★</span>
                 ))}
-                <span className="text-xs text-muted-foreground">& up</span>
+                <span className="text-[10px] text-muted-foreground ms-1">& up</span>
               </div>
             </label>
           ))}
@@ -140,15 +164,15 @@ function FilterPanel({
 
       {/* Organic only */}
       <label
-        className="flex items-center gap-3 cursor-pointer select-none"
+        className="flex items-center gap-2.5 cursor-pointer select-none"
         onClick={() => setShowOrganic(!showOrganic)}
       >
         <div
-          className={`w-10 h-6 rounded-full transition-colors relative ${showOrganic ? "bg-brand-terracotta" : "bg-border"}`}
+          className={`w-8 h-4.5 rounded-full transition-colors relative ${showOrganic ? "bg-brand-terracotta" : "bg-border"}`}
         >
-          <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${showOrganic ? (isRTL ? "-translate-x-5" : "translate-x-5") : "translate-x-1"}`} />
+          <div className={`absolute top-0.5 w-3.5 h-3.5 bg-white rounded-full shadow transition-transform ${showOrganic ? (isRTL ? "-translate-x-4" : "translate-x-4") : "translate-x-0.5"}`} />
         </div>
-        <span className="text-sm text-foreground/80">{t.organicOnly}</span>
+        <span className="text-xs text-foreground/80 font-medium">{t.organicOnly}</span>
       </label>
     </div>
   );
@@ -174,6 +198,7 @@ export function Products() {
   const [minRating, setMinRating] = useState(0);
   const [showOrganic, setShowOrganic] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
@@ -199,6 +224,16 @@ export function Products() {
       result = result.filter(p => p.isOrganic);
     }
 
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(p =>
+        p.name.toLowerCase().includes(q) ||
+        (p.nameAr && p.nameAr.toLowerCase().includes(q)) ||
+        p.category.toLowerCase().includes(q) ||
+        p.description.toLowerCase().includes(q)
+      );
+    }
+
     switch (sort) {
       case "price-asc": result.sort((a, b) => a.price - b.price); break;
       case "price-desc": result.sort((a, b) => b.price - a.price); break;
@@ -207,7 +242,7 @@ export function Products() {
     }
 
     return result;
-  }, [filter, selectedCategories, priceRange, minRating, showOrganic, sort]);
+  }, [filter, selectedCategories, priceRange, minRating, showOrganic, sort, searchQuery]);
 
   const toggleCategory = (slug: string) => {
     setSelectedCategories(prev =>
@@ -220,9 +255,10 @@ export function Products() {
     setPriceRange([0, 100]);
     setMinRating(0);
     setShowOrganic(false);
+    setSearchQuery("");
   };
 
-  const hasActiveFilters = selectedCategories.length > 0 || priceRange[0] > 0 || priceRange[1] < 100 || minRating > 0 || showOrganic;
+  const hasActiveFilters = selectedCategories.length > 0 || priceRange[0] > 0 || priceRange[1] < 100 || minRating > 0 || showOrganic || searchQuery.trim().length > 0;
 
   const panelProps = {
     t,
@@ -237,6 +273,8 @@ export function Products() {
     showOrganic,
     setShowOrganic,
     clearFilters,
+    searchQuery,
+    setSearchQuery,
   };
 
   return (
@@ -252,8 +290,8 @@ export function Products() {
 
         <div className="flex gap-6">
           {/* Sidebar - desktop */}
-          <aside className="hidden lg:block w-64 flex-shrink-0">
-            <div className="bg-card rounded-2xl p-5 border border-border sticky top-28 shadow-soft">
+          <aside className="hidden lg:block w-56 flex-shrink-0">
+            <div className="bg-card rounded-2xl p-4 border border-border sticky top-28 shadow-soft">
               <FilterPanel {...panelProps} />
             </div>
           </aside>
@@ -404,7 +442,7 @@ export function Products() {
               animate={{ x: 0 }}
               exit={{ x: isRTL ? "100%" : "-100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className={`fixed ${isRTL ? "right-0" : "left-0"} top-0 bottom-0 w-full max-w-[320px] bg-card z-50 overflow-y-auto p-5 shadow-elev border-r border-border`}
+              className={`fixed ${isRTL ? "right-0" : "left-0"} top-0 bottom-0 w-full max-w-[320px] bg-card z-50 overflow-y-auto p-4 shadow-elev border-r border-border`}
             >
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">

@@ -81,8 +81,8 @@ export function Cart() {
                     exit={{ opacity: 0, height: 0, marginBottom: 0 }}
                     className="bg-card rounded-2xl p-4 flex gap-4 border border-border"
                   >
-                    <Link to={`/products/${item.product.id}`} className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-[#FAF6F0] flex-shrink-0 flex items-center justify-center p-2">
-                      <img src={item.product.image} alt={item.product.name} className="w-full h-full object-contain mix-blend-multiply" />
+                    <Link to={`/products/${item.product.id}`} className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-[#FAF6F0] dark:bg-zinc-800/40 flex-shrink-0 flex items-center justify-center p-2">
+                      <img src={item.product.image} alt={item.product.name} className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
                     </Link>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">

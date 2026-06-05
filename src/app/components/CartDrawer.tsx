@@ -91,11 +91,11 @@ export function CartDrawer() {
                       transition={{ type: "spring", stiffness: 350, damping: 35 }}
                       className="flex gap-3 bg-card rounded-2xl p-3 border border-border"
                     >
-                      <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#FAF6F0] flex-shrink-0 flex items-center justify-center p-1">
+                      <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#FAF6F0] dark:bg-zinc-800/40 flex-shrink-0 flex items-center justify-center p-1">
                         <img
                           src={item.product.image}
                           alt={item.product.name}
-                          className="w-full h-full object-contain mix-blend-multiply"
+                          className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal"
                         />
                       </div>
                       <div className="flex-1 min-w-0">
