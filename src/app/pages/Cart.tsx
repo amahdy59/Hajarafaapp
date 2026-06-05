@@ -205,6 +205,15 @@ export function Cart() {
                   </div>
                 </div>
 
+                <div className="flex items-center justify-center gap-1.5 text-[11px] text-brand-terracotta/90 bg-brand-peach/40 border border-brand-peach/30 py-2 rounded-xl">
+                  <span>🚚</span>
+                  <span>
+                    {locale === "ar"
+                      ? "التوصيل المتوقع: ٥ إلى ٧ أيام عمل"
+                      : "Estimated delivery: 5 to 7 working days"}
+                  </span>
+                </div>
+
                 <Link
                   to="/checkout"
                   className="w-full block bg-brand-terracotta text-white py-3.5 rounded-xl text-center hover:bg-brand-terracotta-dark transition-colors active:scale-[0.98]"

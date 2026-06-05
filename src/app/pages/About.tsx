@@ -2,16 +2,14 @@ import { ArrowLeft, Award, Leaf, ShieldCheck, Sparkles } from "lucide-react";
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion } from "motion/react";
-import logoImg from "../../assets/logo.webp";
-
-const ABOUT_IMG = "https://images.unsplash.com/photo-1509156396595-449e10c5cd3e?w=800&auto=format&fit=crop";
+import ABOUT_IMG from "../../assets/natural_about_bg.png";
 
 export function About() {
   const { t, isRTL } = useAppSettings();
 
   // Localized copy
   const content = {
-    titleEn: "About HajArafa",
+    titleEn: "About Haj Arafa",
     titleAr: "عن حاج عرفة",
     subtitleEn: "Since 1968 · Pure Nature in Every Product",
     subtitleAr: "منذ ١٩٦٨ · الطبيعة النقية في كل منتج",
@@ -66,8 +64,7 @@ export function About() {
             className="max-w-xl space-y-2 select-none"
           >
             <h1 className="text-white text-3xl sm:text-4xl font-display flex items-center justify-center gap-2 flex-wrap select-none">
-              <span>{isRTL ? "عن" : "About"}</span>
-              <img src={logoImg} alt="HajArafa" className="h-8 sm:h-9 w-auto object-contain select-none pointer-events-none inline-block align-middle" />
+              <span>{isRTL ? "عن حاج عرفة" : "About Haj Arafa"}</span>
             </h1>
             <p className="text-brand-peach font-medium text-sm sm:text-base select-none">
               {isRTL ? content.subtitleAr : content.subtitleEn}
@@ -91,8 +88,8 @@ export function About() {
             <h2 className="text-foreground font-display text-2xl">
               {isRTL ? content.storyTitleAr : content.storyTitleEn}
             </h2>
-            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed flex flex-wrap items-center gap-1.5">
-              <img src={logoImg} alt="HajArafa" className="h-4.5 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
+            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+              <span className="font-semibold text-brand-forest">{isRTL ? "حاج عرفة " : "Haj Arafa "}</span>
               <span>{isRTL ? content.storyAr : content.storyEn}</span>
             </p>
           </div>

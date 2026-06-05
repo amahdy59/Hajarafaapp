@@ -62,19 +62,11 @@ export function Contact() {
             <Phone size={24} className="text-brand-terracotta fill-brand-peach/50" />
             <h1 className="text-foreground font-display text-2xl sm:text-3xl">{t.contactUs}</h1>
           </div>
-          <p className="text-muted-foreground text-sm max-w-xl leading-relaxed flex flex-wrap items-center gap-1.5 select-none">
+          <p className="text-muted-foreground text-sm max-w-xl leading-relaxed select-none">
             {isRTL ? (
-              <>
-                <span>لديك أي أسئلة أو استفسارات؟ فريق خدمة عملاء</span>
-                <img src={logoImg} alt="حاج عرفة" className="h-4.5 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
-                <span>يسعده الرد على اتصالاتكم ورسائلكم في أي وقت.</span>
-              </>
+              <span>لديك أي أسئلة أو استفسارات؟ فريق خدمة عملاء حاج عرفة يسعده الرد على اتصالاتكم ورسائلكم في أي وقت.</span>
             ) : (
-              <>
-                <span>Have questions or feedback? The</span>
-                <img src={logoImg} alt="HajArafa" className="h-4.5 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
-                <span>Customer Care team is here to support you with any inquiries.</span>
-              </>
+              <span>Have questions or feedback? The Haj Arafa Customer Care team is here to support you with any inquiries.</span>
             )}
           </p>
         </div>
@@ -90,29 +82,29 @@ export function Contact() {
               {/* Phone support */}
               <div className="space-y-1">
                 <span className="eyebrow text-[10px] block">{isRTL ? "الخط الساخن" : "Hotline"}</span>
-                <a href="tel:+201012345678" className="text-foreground font-semibold hover:text-brand-terracotta hover:underline flex items-center gap-2 text-sm sm:text-base">
-                  <Phone size={14} className="text-brand-terracotta" /> +20 101 234 5678
+                <a href="tel:17309" className="text-foreground font-semibold hover:text-brand-terracotta hover:underline flex items-center gap-2 text-sm sm:text-base">
+                  <Phone size={14} className="text-brand-terracotta" /> 17309
                 </a>
               </div>
 
               {/* Email Support */}
               <div className="space-y-1">
                 <span className="eyebrow text-[10px] block">{isRTL ? "البريد الإلكتروني" : "Email Support"}</span>
-                <a href="mailto:support@hajarafa.com" className="text-foreground font-semibold hover:text-brand-terracotta hover:underline flex items-center gap-2 text-sm sm:text-base break-all">
-                  <Mail size={14} className="text-brand-terracotta" /> support@hajarafa.com
+                <a href="mailto:Marketing@hajarafa.com" className="text-foreground font-semibold hover:text-brand-terracotta hover:underline flex items-center gap-2 text-sm sm:text-base break-all">
+                  <Mail size={14} className="text-brand-terracotta" /> Marketing@hajarafa.com
                 </a>
               </div>
 
-              {/* WhatsApp instant support button */}
+              {/* Messenger instant support button */}
               <div className="pt-2">
-                <span className="eyebrow text-[10px] block mb-2">{isRTL ? "دعم واتساب الفوري" : "Instant WhatsApp"}</span>
+                <span className="eyebrow text-[10px] block mb-2">{isRTL ? "راسلنا على فيسبوك" : "Facebook Messenger"}</span>
                 <a
-                  href="https://wa.me/201012345678"
+                  href="https://m.me/hajarafaeg"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2 bg-[#25D366] text-white hover:bg-[#128C7E] px-4 py-2.5 rounded-xl transition-all text-xs font-semibold uppercase tracking-wider"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-[#0084FF] text-white hover:bg-[#006FDF] px-4 py-2.5 rounded-xl transition-all text-xs font-semibold uppercase tracking-wider"
                 >
-                  <MessageSquare size={14} /> WhatsApp Chat
+                  <MessageSquare size={14} /> Messenger Chat
                 </a>
               </div>
             </div>

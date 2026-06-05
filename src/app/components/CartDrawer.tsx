@@ -156,6 +156,15 @@ export function CartDrawer() {
                   </p>
                 )}
 
+                <div className="flex items-center justify-center gap-1.5 text-[11px] text-brand-terracotta/90 bg-brand-peach/40 border border-brand-peach/30 py-2 rounded-xl">
+                  <span>🚚</span>
+                  <span>
+                    {locale === "ar"
+                      ? "التوصيل المتوقع: ٥ إلى ٧ أيام عمل"
+                      : "Estimated delivery: 5 to 7 working days"}
+                  </span>
+                </div>
+
                 <div className="flex items-center justify-between py-1">
                   <span className="text-muted-foreground" style={{ fontSize: "0.9rem" }}>{t.subtotal}</span>
                   <span className="text-foreground" style={{ fontSize: "0.9rem" }}>

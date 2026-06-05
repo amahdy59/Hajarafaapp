@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Award, ShieldCheck, Heart } from "lucide-react";
+import { Mail, Phone, MapPin, Facebook, Instagram, ShieldCheck } from "lucide-react";
 import { useAppSettings } from "../context/AppSettingsContext";
 import logoImg from "../../assets/logo.webp";
 
@@ -37,23 +37,30 @@ export function Footer() {
         
         {/* Brand Column */}
         <div className="space-y-4">
-          <Link to="/" className="inline-block h-12 select-none cursor-pointer">
-            <img src={logoImg} alt="HajArafa" className="h-12 w-auto object-contain select-none pointer-events-none" />
+          <Link to="/" className="inline-block select-none cursor-pointer">
+            <span className="font-display font-bold text-2xl tracking-wide text-brand-forest hover:text-brand-terracotta transition-colors">
+              {locale === "ar" ? "حاج عرفة" : "Haj Arafa"}
+            </span>
           </Link>
-          <p className="text-muted-foreground text-sm leading-relaxed max-w-sm flex items-center gap-1.5 flex-wrap">
-            <img src={logoImg} alt="HajArafa" className="h-4 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
+          <p className="text-muted-foreground text-sm leading-relaxed max-w-sm">
+            <span className="text-brand-forest font-semibold">{locale === "ar" ? "حاج عرفة" : "Haj Arafa"}</span>{" "}
             <span>{locale === "ar" ? footerTranslations.aboutTextAr : footerTranslations.aboutTextEn}</span>
           </p>
           <div className="flex items-center gap-3 pt-2">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-brand-peach flex items-center justify-center text-brand-terracotta hover:bg-brand-terracotta hover:text-white transition-all">
+            <a href="https://www.facebook.com/hajarafaeg?mibextid=LQQJ4d" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-brand-peach flex items-center justify-center text-brand-terracotta hover:bg-brand-terracotta hover:text-white transition-all" aria-label="Facebook">
               <Facebook size={16} />
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-brand-peach flex items-center justify-center text-brand-terracotta hover:bg-brand-terracotta hover:text-white transition-all">
+            <a href="https://www.instagram.com/hajarafa/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-brand-peach flex items-center justify-center text-brand-terracotta hover:bg-brand-terracotta hover:text-white transition-all" aria-label="Instagram">
               <Instagram size={16} />
             </a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-brand-peach flex items-center justify-center text-brand-terracotta hover:bg-brand-terracotta hover:text-white transition-all">
-              <Youtube size={16} />
-            </a>
+          </div>
+          <div className="pt-2 text-xs text-brand-forest/90 font-medium flex items-center gap-1.5 select-none bg-brand-cream-2 border border-brand-peach/40 px-3 py-2.5 rounded-xl w-fit">
+            <span>🚚</span>
+            <span>
+              {locale === "ar" 
+                ? "قد يستغرق التوصيل من ٥ إلى ٧ أيام عمل" 
+                : "Delivery may take 5 to 7 working days"}
+            </span>
           </div>
         </div>
 
@@ -86,8 +93,7 @@ export function Footer() {
             <li>
               <Link to="/about" className="text-muted-foreground hover:text-brand-terracotta hover:underline transition-colors flex items-center gap-1.5">
                 <span className="text-[10px] text-brand-terracotta/60">✦</span>
-                <span>{locale === "ar" ? "عن" : "About"}</span>
-                <img src={logoImg} alt="HajArafa" className="h-3 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
+                <span>{locale === "ar" ? "عن حاج عرفة" : "About Haj Arafa"}</span>
               </Link>
             </li>
             <li>
@@ -125,14 +131,14 @@ export function Footer() {
             </li>
             <li className="flex items-center gap-2.5">
               <Phone size={16} className="text-brand-terracotta flex-shrink-0" />
-              <a href="tel:+201002345678" className="text-muted-foreground hover:text-brand-terracotta hover:underline transition-colors">
-                +20 100 2345 678
+              <a href="tel:17309" className="text-muted-foreground hover:text-brand-terracotta hover:underline transition-colors">
+                17309
               </a>
             </li>
             <li className="flex items-center gap-2.5">
               <Mail size={16} className="text-brand-terracotta flex-shrink-0" />
-              <a href="mailto:support@hajarafa.com" className="text-muted-foreground hover:text-brand-terracotta hover:underline transition-colors">
-                support@hajarafa.com
+              <a href="mailto:Marketing@hajarafa.com" className="text-muted-foreground hover:text-brand-terracotta hover:underline transition-colors">
+                Marketing@hajarafa.com
               </a>
             </li>
           </ul>
@@ -146,8 +152,7 @@ export function Footer() {
         {/* Copyright */}
         <div className="text-muted-foreground text-center sm:text-start flex items-center justify-center sm:justify-start gap-1 flex-wrap select-none">
           <span>© {new Date().getFullYear()}</span>
-          <img src={logoImg} alt="HajArafa" className="h-4 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
-          <span>. {locale === "ar" ? footerTranslations.rightsAr : footerTranslations.rightsEn}</span>
+          <span>{locale === "ar" ? "حاج عرفة" : "Haj Arafa"}. {locale === "ar" ? footerTranslations.rightsAr : footerTranslations.rightsEn}</span>
           <span className="block sm:inline sm:ms-2 mt-1 sm:mt-0 text-[10px] text-muted-foreground/60 select-none">
             {locale === "ar" ? "صنع بكل حب لعافيتك 🧡" : "Crafted with love for your wellness 🧡"}
           </span>

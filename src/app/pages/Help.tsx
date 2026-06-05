@@ -28,8 +28,8 @@ const mockFAQs: FAQItem[] = [
     category: "shipping",
     questionEn: "How long does delivery take?",
     questionAr: "كم يستغرق توصيل الطلبات؟",
-    answerEn: "Delivery takes 1-3 working days for Cairo, Giza, and Alexandria. Other governorates receive deliveries within 3-5 working days.",
-    answerAr: "يستغرق التوصيل من يوم إلى ٣ أيام عمل للقاهرة والجيزة والإسكندرية. وتصل الطلبات للمحافظات الأخرى خلال ٣ إلى ٥ أيام عمل."
+    answerEn: "Delivery may take 5 to 7 working days across all governorates.",
+    answerAr: "قد يستغرق التوصيل من ٥ إلى ٧ أيام عمل في جميع المحافظات."
   },
   {
     id: "q3",
@@ -140,11 +140,11 @@ export function Help() {
             </p>
           </div>
           <div className="flex items-center gap-3 justify-end sm:justify-start flex-row-reverse sm:flex-row">
-            <a href="tel:+201012345678" className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-brand-terracotta text-white px-4 py-2.5 rounded-xl hover:bg-brand-terracotta-dark transition-all text-xs font-semibold">
+            <a href="tel:17309" className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-brand-terracotta text-white px-4 py-2.5 rounded-xl hover:bg-brand-terracotta-dark transition-all text-xs font-semibold">
               <Phone size={14} /> {isRTL ? "اتصل بنا" : "Call Support"}
             </a>
-            <a href="https://wa.me/201012345678" className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-[#25D366] text-white px-4 py-2.5 rounded-xl hover:bg-[#128C7E] transition-all text-xs font-semibold">
-              <MessageSquare size={14} /> WhatsApp
+            <a href="https://m.me/hajarafaeg" target="_blank" rel="noopener noreferrer" className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-[#0084FF] text-white px-4 py-2.5 rounded-xl hover:bg-[#006FDF] transition-all text-xs font-semibold">
+              <MessageSquare size={14} /> Messenger
             </a>
           </div>
         </div>

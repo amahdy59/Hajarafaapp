@@ -28,8 +28,8 @@ export function Home() {
     <div className="min-h-screen bg-background">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-4 sm:py-6 flex flex-col gap-10 sm:gap-14">
 
-        {/* Hero */}
-        <section className="relative rounded-md overflow-hidden shadow-soft" style={{ aspectRatio: "16/10", maxHeight: 420 }}>
+        {/* Hero — hidden on mobile */}
+        <section className="relative rounded-md overflow-hidden shadow-soft hidden sm:block" style={{ aspectRatio: "16/10", maxHeight: 420 }}>
           <img src={HERO_IMG} alt={isRTL ? "خلفية صحية طبيعية لعشبة البابونج" : "Chamomile natural wellness background"} className="absolute inset-0 w-full h-full object-cover" />
           <div className={`absolute inset-0 bg-gradient-to-${isRTL ? "l" : "r"} from-brand-ink/80 via-brand-ink/40 to-transparent`} />
           <div className="absolute inset-0 flex items-center p-4 sm:p-10">
@@ -59,8 +59,8 @@ export function Home() {
           </div>
         </section>
 
-        {/* Browse Departments (Updated to compact horizontal icon-only cards) */}
-        <Section title={t.browseDepartments}>
+        {/* Browse Departments — desktop only */}
+        <Section title={t.browseDepartments} className="hidden sm:flex">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {departments.map(d => (
               <Link
@@ -84,12 +84,23 @@ export function Home() {
           </div>
         </Section>
 
-        {/* Herbal Essentials grid */}
+        {/* Herbal Essentials — horizontal scroll on mobile, grid on desktop */}
         <Section
           title={t.herbalEssentials}
           viewAllHref="/products"
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          {/* Mobile: horizontal scroll rail, 2 cards per view */}
+          <div className="sm:hidden">
+            <ScrollRail>
+              {featured.map(p => (
+                <div key={p.id} className="flex-shrink-0 snap-start" style={{ width: "calc(50% - 6px)" }}>
+                  <ProductCard product={p} />
+                </div>
+              ))}
+            </ScrollRail>
+          </div>
+          {/* Desktop: grid layout */}
+          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {featured.map(p => (
               <ProductCard key={p.id} product={p} />
             ))}
@@ -137,7 +148,7 @@ export function Home() {
             >
               <ScrollRail>
                 {items.map(p => (
-                  <div key={p.id} className="flex-shrink-0 snap-start w-44 sm:w-56">
+                  <div key={p.id} className="flex-shrink-0 snap-start w-[calc(50vw-28px)] sm:w-56">
                     <ProductCard product={p} />
                   </div>
                 ))}

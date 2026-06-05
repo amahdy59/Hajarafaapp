@@ -84,19 +84,14 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
   }, [open, locale]);
 
   const account = [
-    { icon: User, label: t.yourAccount, to: "/account?tab=account" },
+    { icon: User, label: t.yourAccount, to: "/account?tab=profile" },
     { icon: Package, label: t.yourOrders, to: "/account?tab=orders" },
     { icon: Heart, label: t.yourWishlist, to: "/account?tab=wishlist" },
-    { icon: Settings, label: t.settings, to: "/account?tab=settings" },
+    { icon: Settings, label: t.settings, to: "/account?tab=profile" },
   ];
   const help = [
     { icon: HelpCircle, label: t.customerService, to: "/help" },
-    { icon: Info, label: (
-      <span className="flex items-center gap-1">
-        <span>{locale === "ar" ? "عن" : "About"}</span>
-        <img src={logoImg} alt="HajArafa" className="h-3.5 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
-      </span>
-    ), to: "/about" },
+    { icon: Info, label: locale === "ar" ? "عن حاج عرفة" : "About Haj Arafa", to: "/about" },
     { icon: MapPin, label: t.branches, to: "/branches" },
     { icon: Phone, label: t.contactUs, to: "/contact" },
   ];
@@ -140,9 +135,8 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
                       👤
                     </div>
                     <div className="flex flex-col leading-tight">
-                      <span className="flex items-center gap-1.5 flex-wrap" style={{ fontSize: "0.75rem", opacity: 0.85 }}>
-                        <span>{t.welcomeTo}</span>
-                        <img src={logoImg} alt="HajArafa" className="h-3 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
+                      <span className="flex items-center gap-1" style={{ fontSize: "0.75rem", opacity: 0.85 }}>
+                        <span>{locale === "ar" ? "مرحباً بك في حاج عرفة" : "Welcome to Haj Arafa"}</span>
                       </span>
                       <span className="font-semibold" style={{ fontSize: "1rem" }}>{profile.firstName} {profile.lastName}</span>
                     </div>
@@ -211,9 +205,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
               </div>
 
               <p className="text-brand-ink-soft flex items-center justify-center gap-1.5 pt-2 select-none" style={{ fontSize: "0.75rem" }}>
-                <span>© {new Date().getFullYear()}</span>
-                <img src={logoImg} alt="HajArafa" className="h-3 w-auto object-contain inline-block align-middle select-none pointer-events-none" />
-                <span>· {t.appTagline}</span>
+                <span>© {new Date().getFullYear()} {locale === "ar" ? "حاج عرفة" : "Haj Arafa"} · {t.appTagline}</span>
               </p>
             </div>
           </motion.aside>

@@ -41,7 +41,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
 
   --font-sans: 'Questrial', 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-display: 'Libre Caslon Text', 'Amiri', Georgia, serif;
+  --font-display: 'Questrial', 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   --color-brand-sage: var(--brand-sage);
   --color-brand-sage-dark: var(--brand-sage-dark);

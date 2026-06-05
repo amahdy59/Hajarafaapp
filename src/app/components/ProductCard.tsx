@@ -105,11 +105,11 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
       className="bg-card rounded-2xl border border-border dark:border-zinc-700/60 overflow-hidden flex flex-col h-full hover:shadow-soft hover:border-brand-terracotta/40 transition-all duration-300 group"
     >
       <Link to={`/products/${product.id}`} className="flex flex-col flex-1">
-        <div className="relative aspect-square bg-[#FAF6F0] overflow-hidden flex items-center justify-center p-6 border-b border-border/20">
+        <div className="relative aspect-square bg-[#FAF6F0] overflow-hidden flex items-center justify-center p-4 sm:p-6 border-b border-border/20">
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full max-h-[160px] object-contain mix-blend-multiply transition-transform duration-500 group-hover:-translate-y-1.5"
+            className="w-full h-full max-h-[120px] sm:max-h-[160px] object-contain mix-blend-multiply transition-transform duration-500 group-hover:-translate-y-1.5"
             loading="lazy"
           />
 
@@ -146,17 +146,17 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
           </motion.button>
         </div>
 
-        <div className="px-5 sm:px-6 py-4.5 flex flex-col gap-1 flex-1">
+        <div className="px-3 sm:px-5 py-3 sm:py-4.5 flex flex-col gap-1 flex-1">
           <h3
-            className="text-foreground text-sm sm:text-base font-semibold line-clamp-1 leading-snug group-hover:text-brand-terracotta transition-colors"
+            className="text-foreground text-[0.82rem] sm:text-base font-semibold line-clamp-2 leading-snug group-hover:text-brand-terracotta transition-colors"
           >
             {isRTL && product.nameAr ? product.nameAr : product.name}
           </h3>
-          <span className="text-brand-ink-soft text-xs font-medium">
+          <span className="text-brand-ink-soft text-[10px] sm:text-xs font-medium">
             {product.weight || product.category}
           </span>
-          <div className="flex items-center justify-between pt-3 mt-auto">
-            <span className="text-brand-forest font-bold text-base">
+          <div className="flex items-center justify-between pt-2 sm:pt-3 mt-auto">
+            <span className="text-brand-forest font-bold text-sm sm:text-base">
               {price}
             </span>
             <motion.button

@@ -67,10 +67,10 @@ const initialOrders = [
 ];
 
 const statusColors: Record<string, string> = {
-  delivered: "bg-green-100 text-green-700 dark:bg-green-950/30 dark:text-green-400",
-  shipped: "bg-blue-100 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400",
-  processing: "bg-amber-100 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400",
-  cancelled: "bg-red-100 text-red-700 dark:bg-red-950/30 dark:text-red-400",
+  delivered: "bg-brand-cream-2 text-brand-sage-dark dark:bg-brand-sage/15 dark:text-brand-sage",
+  shipped: "bg-brand-cream-2 text-brand-forest dark:bg-brand-forest/15 dark:text-brand-forest",
+  processing: "bg-brand-peach text-brand-terracotta dark:bg-brand-terracotta/15 dark:text-brand-terracotta",
+  cancelled: "bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400",
 };
 
 const statusTranslations: Record<string, { en: string; ar: string }> = {
@@ -197,7 +197,7 @@ function LeafletMap({ centerCoords, onLocationSelect, isRTL }: LeafletMapProps) 
   }, [centerCoords, isRTL]);
 
   return (
-    <div className="relative w-full rounded-2xl overflow-hidden border border-border shadow-soft my-2">
+    <div className="relative w-full rounded-xl overflow-hidden border border-border shadow-soft my-2">
       <div ref={mapRef} className="h-44 w-full z-0" />
       <div className="absolute bottom-2 left-2 right-2 z-10 bg-card/90 backdrop-blur-sm px-2.5 py-1.5 rounded-xl text-[10px] text-muted-foreground shadow-sm pointer-events-none text-center">
         {isRTL ? "📍 انقر على الخريطة أو اسحب الدبوس لتحديد موقعك" : "📍 Tap the map or drag the pin to select location"}
@@ -206,12 +206,12 @@ function LeafletMap({ centerCoords, onLocationSelect, isRTL }: LeafletMapProps) 
   );
 }
 
-type Tab = "account" | "orders" | "wishlist" | "settings";
+type Tab = "profile" | "orders" | "wishlist";
 
 export function Account() {
   const [searchParams, setSearchParams] = useSearchParams();
   const tabParam = searchParams.get("tab") as Tab;
-  const [activeTab, setActiveTab] = useState<Tab>("account");
+  const [activeTab, setActiveTab] = useState<Tab>("profile");
   const { items: wishlistItems } = useWishlist();
   const { t, isRTL, locale } = useAppSettings();
 
@@ -356,10 +356,10 @@ export function Account() {
   };
 
   useEffect(() => {
-    if (tabParam && ["account", "orders", "wishlist", "settings"].includes(tabParam)) {
+    if (tabParam && ["profile", "orders", "wishlist"].includes(tabParam)) {
       setActiveTab(tabParam);
     } else {
-      setActiveTab("account");
+      setActiveTab("profile");
     }
   }, [tabParam]);
 
@@ -514,40 +514,12 @@ export function Account() {
   // Render Login flow if profile is null
   if (!profile) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-brand-cream to-brand-peach/40 dark:from-zinc-950 dark:to-zinc-900/60 flex items-center justify-center py-10 px-4 sm:px-6 relative overflow-hidden">
-        {/* Decorative Floating Colorful Glass Blobs */}
-        <motion.div
-          animate={{
-            y: [0, -30, 0],
-            x: [0, 15, 0],
-            rotate: [0, 180, 360],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute top-[-10%] start-[-10%] w-[260px] sm:w-[450px] h-[260px] sm:h-[450px] bg-brand-terracotta/10 dark:bg-brand-terracotta/5 rounded-full blur-[80px] sm:blur-[120px] pointer-events-none"
-        />
-        <motion.div
-          animate={{
-            y: [0, 30, 0],
-            x: [0, -15, 0],
-            rotate: [360, 180, 0],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute bottom-[-10%] end-[-10%] w-[260px] sm:w-[450px] h-[260px] sm:h-[450px] bg-brand-sage/15 dark:bg-brand-sage/5 rounded-full blur-[80px] sm:blur-[120px] pointer-events-none"
-        />
-
+      <div className="min-h-screen bg-brand-cream dark:bg-background flex items-center justify-center py-10 px-4 sm:px-6 relative overflow-hidden">
         <motion.div 
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          className="w-full max-w-md bg-card/65 dark:bg-zinc-900/65 backdrop-blur-xl border border-white/20 dark:border-zinc-800/60 p-6 sm:p-8 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] relative z-10"
+          className="w-full max-w-md bg-card border border-border p-6 sm:p-8 rounded-2xl shadow-elev relative z-10"
         >
           {/* Logo Brand Header */}
           <div className="flex justify-center mb-6 select-none cursor-pointer">
@@ -563,16 +535,16 @@ export function Account() {
           </div>
 
           <div className="text-center mb-6">
-            <h2 className="text-brand-forest dark:text-brand-peach text-xl sm:text-2xl font-display font-bold">
+            <h2 className="text-brand-forest text-xl sm:text-2xl font-display font-bold">
               {isRTL ? "مرحباً بك في حاج عرفة" : "Welcome to Haj Arafa"}
             </h2>
-            <p className="text-brand-ink-soft dark:text-zinc-400 text-xs mt-1">
+            <p className="text-brand-ink-soft text-xs mt-1">
               {isRTL ? "أنشئ حساباً أو سجل دخولك لإتمام عملية الشراء" : "Sign in or register to manage your natural boutique account"}
             </p>
           </div>
 
           {/* Form Tabs */}
-          <div className="flex bg-muted/65 dark:bg-zinc-800/40 rounded-2xl p-1 gap-1 mb-6 border border-border/40 backdrop-blur-sm relative select-none">
+          <div className="flex bg-brand-cream-2 rounded-xl p-1 gap-1 mb-6 border border-border relative select-none">
             <button
               onClick={() => {
                 setAuthTab("signin");
@@ -581,7 +553,7 @@ export function Account() {
               className={`flex-1 py-2.5 rounded-xl text-xs font-bold uppercase transition-all duration-300 relative z-10 cursor-pointer ${
                 authTab === "signin" 
                   ? "bg-brand-terracotta text-white shadow-soft" 
-                  : "text-brand-ink-soft dark:text-zinc-400 hover:text-foreground dark:hover:text-white"
+                  : "text-brand-ink-soft hover:text-brand-forest"
               }`}
             >
               {isRTL ? "تسجيل الدخول" : "Sign In"}
@@ -594,7 +566,7 @@ export function Account() {
               className={`flex-1 py-2.5 rounded-xl text-xs font-bold uppercase transition-all duration-300 relative z-10 cursor-pointer ${
                 authTab === "signup" 
                   ? "bg-brand-terracotta text-white shadow-soft" 
-                  : "text-brand-ink-soft dark:text-zinc-400 hover:text-foreground dark:hover:text-white"
+                  : "text-brand-ink-soft hover:text-brand-forest"
               }`}
             >
               {isRTL ? "حساب جديد" : "Sign Up"}
@@ -625,7 +597,7 @@ export function Account() {
                     onBlur={() => setFocusedField(null)}
                     value={authEmail}
                     onChange={e => setAuthEmail(e.target.value)}
-                    className="w-full ps-11 pe-4 pt-6 pb-2 border border-border/80 dark:border-zinc-800 bg-background/60 dark:bg-zinc-950/40 text-foreground rounded-2xl text-sm outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all font-medium"
+                    className="w-full ps-11 pe-4 pt-6 pb-2 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all font-medium"
                   />
                   <label
                     className={`absolute ${isRTL ? "right-11" : "left-11"} transition-all pointer-events-none ${
@@ -650,7 +622,7 @@ export function Account() {
                     onBlur={() => setFocusedField(null)}
                     value={authPassword}
                     onChange={e => setAuthPassword(e.target.value)}
-                    className={`w-full ps-11 ${isRTL ? "pe-12 ps-4" : "pe-12"} pt-6 pb-2 border border-border/80 dark:border-zinc-800 bg-background/60 dark:bg-zinc-950/40 text-foreground rounded-2xl text-sm outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all font-medium`}
+                    className={`w-full ps-11 ${isRTL ? "pe-12 ps-4" : "pe-12"} pt-6 pb-2 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all font-medium`}
                   />
                   <label
                     className={`absolute ${isRTL ? "right-11" : "left-11"} transition-all pointer-events-none ${
@@ -707,7 +679,7 @@ export function Account() {
                     onBlur={() => setFocusedField(null)}
                     value={authName}
                     onChange={e => setAuthName(e.target.value)}
-                    className="w-full ps-11 pe-4 pt-6 pb-2 border border-border/80 dark:border-zinc-800 bg-background/60 dark:bg-zinc-950/40 text-foreground rounded-2xl text-sm outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all font-medium"
+                    className="w-full ps-11 pe-4 pt-6 pb-2 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all font-medium"
                   />
                   <label
                     className={`absolute ${isRTL ? "right-11" : "left-11"} transition-all pointer-events-none ${
@@ -732,7 +704,7 @@ export function Account() {
                     onBlur={() => setFocusedField(null)}
                     value={authEmail}
                     onChange={e => setAuthEmail(e.target.value)}
-                    className="w-full ps-11 pe-4 pt-6 pb-2 border border-border/80 dark:border-zinc-800 bg-background/60 dark:bg-zinc-950/40 text-foreground rounded-2xl text-sm outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all font-medium"
+                    className="w-full ps-11 pe-4 pt-6 pb-2 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all font-medium"
                   />
                   <label
                     className={`absolute ${isRTL ? "right-11" : "left-11"} transition-all pointer-events-none ${
@@ -756,7 +728,7 @@ export function Account() {
                     onBlur={() => setFocusedField(null)}
                     value={authPhone}
                     onChange={e => setAuthPhone(e.target.value)}
-                    className="w-full ps-11 pe-4 pt-6 pb-2 border border-border/80 dark:border-zinc-800 bg-background/60 dark:bg-zinc-950/40 text-foreground rounded-2xl text-sm outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all font-medium"
+                    className="w-full ps-11 pe-4 pt-6 pb-2 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all font-medium"
                   />
                   <label
                     className={`absolute ${isRTL ? "right-11" : "left-11"} transition-all pointer-events-none ${
@@ -781,7 +753,7 @@ export function Account() {
                     onBlur={() => setFocusedField(null)}
                     value={authPassword}
                     onChange={e => setAuthPassword(e.target.value)}
-                    className={`w-full ps-11 ${isRTL ? "pe-12 ps-4" : "pe-12"} pt-6 pb-2 border border-border/80 dark:border-zinc-800 bg-background/60 dark:bg-zinc-950/40 text-foreground rounded-2xl text-sm outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all font-medium`}
+                    className={`w-full ps-11 ${isRTL ? "pe-12 ps-4" : "pe-12"} pt-6 pb-2 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all font-medium`}
                   />
                   <label
                     className={`absolute ${isRTL ? "right-11" : "left-11"} transition-all pointer-events-none ${
@@ -815,8 +787,8 @@ export function Account() {
 
           {/* Social Logins Divider */}
           <div className="relative my-6 flex items-center justify-center select-none">
-            <div className="border-t border-border/60 dark:border-zinc-800 w-full absolute" />
-            <span className="relative z-10 bg-card dark:bg-zinc-900 px-3 text-[10px] uppercase font-bold text-brand-ink-soft dark:text-zinc-400 tracking-wider">
+            <div className="border-t border-border/70 w-full absolute" />
+            <span className="relative z-10 bg-card px-3 text-[10px] uppercase font-bold text-brand-ink-soft tracking-wider">
               {isRTL ? "أو الاستمرار بواسطة" : "Or continue with"}
             </span>
           </div>
@@ -829,14 +801,14 @@ export function Account() {
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => handleSocialLogin("Google")}
-              className="py-3 px-4 border border-border/60 dark:border-zinc-800 bg-background/60 dark:bg-zinc-950/30 hover:bg-muted/30 text-foreground rounded-2xl flex items-center justify-center shadow-sm transition-all cursor-pointer"
+              className="py-3 px-4 border border-border bg-brand-cream-2 hover:bg-brand-peach text-brand-forest rounded-xl flex items-center justify-center shadow-sm transition-all cursor-pointer"
               title="Google"
             >
               <svg viewBox="0 0 24 24" width="20" height="20" className="flex-shrink-0">
-                <path fill="#EA4335" d="M12 5.04c1.66 0 3.2.57 4.38 1.69l3.27-3.27C17.67 1.54 14.98 1 12 1 7.35 1 3.37 3.68 1.48 7.58l3.99 3.1A6.99 6.99 0 0 1 12 5.04z" />
-                <path fill="#4285F4" d="M23.45 12.3c0-.82-.07-1.6-.21-2.3H12v4.35h6.43a5.5 5.5 0 0 1-2.39 3.6l3.7 2.87c2.16-2 3.71-4.94 3.71-8.52z" />
-                <path fill="#FBBC05" d="M5.47 10.68A6.9 6.9 0 0 1 5 12c0 .46.05.9.14 1.32l-3.99 3.1A11.96 11.96 0 0 1 1 12c0-1.63.32-3.18.9-4.62l3.57 3.3z" />
-                <path fill="#34A853" d="M12 23c3.24 0 5.97-1.07 7.96-2.92l-3.7-2.87c-1.03.69-2.34 1.1-4.26 1.1-3.28 0-6.07-2.2-7.07-5.18l-3.99 3.1C3.37 20.32 7.35 23 12 23z" />
+                <path fill="currentColor" d="M12 5.04c1.66 0 3.2.57 4.38 1.69l3.27-3.27C17.67 1.54 14.98 1 12 1 7.35 1 3.37 3.68 1.48 7.58l3.99 3.1A6.99 6.99 0 0 1 12 5.04z" />
+                <path fill="currentColor" d="M23.45 12.3c0-.82-.07-1.6-.21-2.3H12v4.35h6.43a5.5 5.5 0 0 1-2.39 3.6l3.7 2.87c2.16-2 3.71-4.94 3.71-8.52z" />
+                <path fill="currentColor" d="M5.47 10.68A6.9 6.9 0 0 1 5 12c0 .46.05.9.14 1.32l-3.99 3.1A11.96 11.96 0 0 1 1 12c0-1.63.32-3.18.9-4.62l3.57 3.3z" />
+                <path fill="currentColor" d="M12 23c3.24 0 5.97-1.07 7.96-2.92l-3.7-2.87c-1.03.69-2.34 1.1-4.26 1.1-3.28 0-6.07-2.2-7.07-5.18l-3.99 3.1C3.37 20.32 7.35 23 12 23z" />
               </svg>
             </motion.button>
 
@@ -846,10 +818,10 @@ export function Account() {
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => handleSocialLogin("Facebook")}
-              className="py-3 px-4 bg-[#1877F2] hover:bg-[#166FE5] text-white rounded-2xl flex items-center justify-center shadow-sm transition-all cursor-pointer border border-transparent"
+              className="py-3 px-4 border border-border bg-brand-cream-2 hover:bg-brand-peach text-brand-forest rounded-xl flex items-center justify-center shadow-sm transition-all cursor-pointer"
               title="Facebook"
             >
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="white" className="flex-shrink-0">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" className="flex-shrink-0">
                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
               </svg>
             </motion.button>
@@ -860,7 +832,7 @@ export function Account() {
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => handleSocialLogin("Apple")}
-              className="py-3 px-4 bg-black dark:bg-white text-white dark:text-black hover:bg-zinc-900 dark:hover:bg-zinc-100 rounded-2xl flex items-center justify-center shadow-sm transition-all cursor-pointer border border-transparent"
+              className="py-3 px-4 border border-border bg-brand-cream-2 hover:bg-brand-peach text-brand-forest rounded-xl flex items-center justify-center shadow-sm transition-all cursor-pointer"
               title="Apple"
             >
               <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" className="flex-shrink-0">
@@ -893,10 +865,10 @@ export function Account() {
                 <img
                   src={avatarUrl}
                   alt="User Avatar"
-                  className="w-20 h-20 rounded-2xl object-cover border border-border shadow-soft transition-transform group-hover:scale-95"
+                  className="w-20 h-20 rounded-xl object-cover border border-border shadow-soft transition-transform group-hover:scale-95"
                 />
               ) : (
-                <div className="w-20 h-20 bg-muted rounded-2xl flex items-center justify-center text-3xl text-muted-foreground transition-all group-hover:scale-95">
+                <div className="w-20 h-20 bg-brand-peach rounded-xl flex items-center justify-center text-3xl text-brand-ink-soft transition-all group-hover:scale-95">
                   👤
                 </div>
               )}
@@ -909,7 +881,7 @@ export function Account() {
           <div>
             <div className="flex items-center gap-2.5 flex-wrap">
               <h2 className="text-foreground text-2xl font-display leading-tight">{profile.firstName} {profile.lastName}</h2>
-              <span className="bg-amber-100 text-amber-800 dark:bg-amber-950/30 dark:text-amber-400 text-xs px-2.5 py-0.5 rounded-full flex items-center gap-1 font-semibold border border-amber-200/50">
+              <span className="bg-brand-cream-2 text-brand-forest dark:bg-brand-sage/15 dark:text-brand-sage text-xs px-2.5 py-0.5 rounded-full flex items-center gap-1 font-semibold border border-brand-sage/30">
                 <Award size={10} /> {t.goldMember}
               </span>
             </div>
@@ -918,129 +890,261 @@ export function Account() {
           </div>
         </div>
 
-        {/* Tabs - Synced with Hamburger Menu */}
-        <div className="flex bg-card rounded-2xl p-1.5 gap-1 mb-6 border border-border shadow-soft">
-          {([
-            { key: "account", label: t.yourAccount },
-            { key: "orders", label: t.yourOrders },
-            { key: "wishlist", label: t.yourWishlist },
-            { key: "settings", label: t.settings }
-          ] as const).map(tab => (
-            <button
-              key={tab.key}
-              onClick={() => handleTabChange(tab.key)}
-              className={`flex-1 py-2.5 rounded-xl text-sm transition-all font-medium ${
-                activeTab === tab.key
-                  ? "bg-brand-terracotta text-white shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+
+        {/* Tabs Bar */}
+        {(() => {
+          const allTabs = [
+            { key: "profile" as Tab, label: isRTL ? "الحساب والإعدادات" : "Profile & Settings" },
+            { key: "orders" as Tab, label: t.yourOrders },
+            { key: "wishlist" as Tab, label: t.yourWishlist }
+          ];
+
+          return (
+            <div className="flex bg-brand-cream-2 rounded-xl p-1.5 gap-1 mb-6 border border-border shadow-soft">
+              {allTabs.map(tab => (
+                <button
+                  key={tab.key}
+                  onClick={() => handleTabChange(tab.key)}
+                  className={`flex-1 py-2.5 rounded-xl text-[11px] xs:text-xs sm:text-sm transition-all font-medium cursor-pointer ${
+                    activeTab === tab.key
+                      ? "bg-brand-terracotta text-white shadow-sm"
+                      : "text-brand-ink-soft hover:text-brand-ink"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          );
+        })()}
 
         {/* Tab content containers */}
         
-        {/* Tab 1: My Account / Overview */}
-        {activeTab === "account" && (
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-            
-            {/* Loyalty points card */}
-            <div className="bg-gradient-to-r from-amber-500/10 to-amber-500/20 rounded-2xl p-5 border border-amber-500/20 shadow-soft">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <Star size={18} className="text-amber-500 fill-amber-500" />
-                  <h3 className="text-amber-900 dark:text-amber-400 font-display text-sm sm:text-base">{t.loyaltyPoints}</h3>
+        {/* Tab 1: Profile & Settings */}
+        {activeTab === "profile" && (
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left/Main column: Forms (Profile, Password) */}
+            <div className="lg:col-span-2 space-y-6">
+              
+              {/* Profile Information Form */}
+              <div className="bg-card rounded-xl p-5 border border-border shadow-soft">
+                <h3 className="text-brand-forest font-display text-lg sm:text-xl font-bold flex items-center gap-2 mb-4">
+                  <User size={20} className="text-brand-terracotta" />
+                  {t.profileInformation}
+                </h3>
+                
+                {avatarUrl && (
+                  <div className="mb-4 pb-4 border-b border-border flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">{isRTL ? "الصورة الشخصية مضافة" : "Profile picture added"}</span>
+                    <button
+                      type="button"
+                      onClick={handleRemoveAvatar}
+                      className="text-xs text-destructive hover:underline flex items-center gap-1 font-semibold cursor-pointer"
+                    >
+                      <Trash2 size={13} /> {isRTL ? "إزالة الصورة" : "Remove Photo"}
+                    </button>
+                  </div>
+                )}
+
+                <div className="space-y-4 mb-5">
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-1.5">{t.firstName}</label>
+                    <input
+                      type="text"
+                      value={profile?.firstName || ""}
+                      onChange={e => setProfile(p => p ? { ...p, firstName: e.target.value } : null)}
+                      className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-1.5">{t.lastName}</label>
+                    <input
+                      type="text"
+                      value={profile?.lastName || ""}
+                      onChange={e => setProfile(p => p ? { ...p, lastName: e.target.value } : null)}
+                      className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-1.5">{t.email}</label>
+                    <input
+                      type="email"
+                      value={profile?.email || ""}
+                      onChange={e => setProfile(p => p ? { ...p, email: e.target.value } : null)}
+                      className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-1.5">{t.phone}</label>
+                    <input
+                      type="text"
+                      value={profile?.phone || ""}
+                      onChange={e => setProfile(p => p ? { ...p, phone: e.target.value } : null)}
+                      className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
+                    />
+                  </div>
                 </div>
-                <span className="text-xl text-amber-700 dark:text-amber-300 font-semibold">240 {t.pts}</span>
+                <button
+                  type="button"
+                  onClick={saveProfile}
+                  className="bg-brand-terracotta text-white px-6 py-2.5 rounded-xl text-sm hover:bg-brand-terracotta-dark transition-all active:scale-[0.98] font-medium shadow-sm cursor-pointer"
+                >
+                  {t.saveChanges}
+                </button>
               </div>
-              <div className="bg-white/40 dark:bg-black/35 rounded-full h-2 mb-2">
-                <div className="bg-amber-500 h-2 rounded-full" style={{ width: "48%" }} />
+
+              {/* Secure Password Change Section */}
+              <div className="bg-card rounded-xl p-5 border border-border shadow-soft">
+                <h3 className="text-brand-forest font-display text-lg sm:text-xl font-bold flex items-center gap-2 mb-4">
+                  <Lock size={20} className="text-brand-terracotta" />
+                  {isRTL ? "تغيير كلمة المرور" : "Change Password"}
+                </h3>
+                <div className="space-y-4 mb-5">
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-1.5">{isRTL ? "كلمة المرور الحالية" : "Current Password"}</label>
+                    <input
+                      type="password"
+                      placeholder="••••••••"
+                      className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-1.5">{isRTL ? "كلمة المرور الجديدة" : "New Password"}</label>
+                    <input
+                      type="password"
+                      placeholder="••••••••"
+                      className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-1.5">{isRTL ? "تأكيد كلمة المرور الجديدة" : "Confirm New Password"}</label>
+                    <input
+                      type="password"
+                      placeholder="••••••••"
+                      className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
+                    />
+                  </div>
+                  <div className="text-start">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        toast.success(
+                          isRTL 
+                            ? `تم إرسال رمز التحقق بنجاح إلى البريد الإلكتروني ${profile?.email || ""}` 
+                            : `A verification reset code has been sent to ${profile?.email || ""}`
+                        );
+                      }}
+                      className="text-xs text-brand-terracotta hover:underline font-semibold cursor-pointer"
+                    >
+                      {isRTL ? "هل نسيت كلمة المرور الحالية؟ أرسل رمز التحقق" : "Forgot current password? Send verification code"}
+                    </button>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    toast.success(isRTL ? "تم تحديث كلمة المرور بنجاح!" : "Password updated successfully!");
+                  }}
+                  className="bg-brand-terracotta text-white px-6 py-2.5 rounded-xl text-sm hover:bg-brand-terracotta-dark transition-all active:scale-[0.98] font-medium shadow-sm cursor-pointer"
+                >
+                  {isRTL ? "حفظ كلمة المرور" : "Update Password"}
+                </button>
               </div>
-              <p className="text-xs text-amber-700 dark:text-amber-300">260 {t.morePointsUntilGold}</p>
+
             </div>
 
-            {/* Teaser columns: Recent Orders & Wishlist Preview */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              
-              {/* Recent Orders teaser */}
-              <div className="bg-card rounded-2xl p-5 border border-border shadow-soft flex flex-col justify-between">
-                <div>
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-foreground font-display text-base flex items-center gap-2">
-                      <Package size={18} className="text-brand-terracotta" />
-                      {isRTL ? "آخر طلب" : "Recent Order"}
-                    </h3>
-                    <button onClick={() => handleTabChange("orders")} className="text-brand-terracotta hover:underline text-xs font-semibold flex items-center gap-1">
-                      {isRTL ? "عرض الكل" : "View All"} <ChevronRight size={14} className="rtl-flip" />
-                    </button>
+            {/* Right/Side column: Loyalty, settings, saved actions */}
+            <div className="space-y-6">
+              {/* Loyalty points card */}
+              <div className="bg-brand-cream-2 rounded-xl p-5 border border-brand-sage/25 shadow-soft">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Star size={18} className="text-brand-sage fill-brand-sage" />
+                    <h3 className="text-brand-forest font-display text-sm sm:text-base font-bold">{t.loyaltyPoints}</h3>
                   </div>
-
-                  <div className="bg-background/40 border border-border/60 rounded-xl p-3.5 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-mono font-semibold text-foreground">#{orders[0].id}</span>
-                      <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium ${statusColors[orders[0].status]}`}>
-                        {statusTranslations[orders[0].status]?.[locale] || orders[0].status}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center text-xs text-muted-foreground">
-                      <span>{isRTL ? orders[0].dateAr : orders[0].dateEn}</span>
-                      <span className="font-semibold text-brand-terracotta">{t.currency} {orders[0].total.toFixed(2)}</span>
-                    </div>
-                  </div>
+                  <span className="text-xl text-brand-forest font-bold">240 {t.pts}</span>
                 </div>
-                
-                <button 
-                  onClick={() => setSelectedOrder(orders[0])}
-                  className="w-full mt-4 py-2 bg-brand-peach/40 hover:bg-brand-peach text-brand-terracotta text-xs rounded-xl font-semibold transition-colors flex items-center justify-center gap-1.5"
-                >
-                  <Package size={14} /> {isRTL ? "تفاصيل وتتبع الطلب" : "Details & Tracking"}
-                </button>
+                <div className="bg-background/60 rounded-full h-2 mb-2">
+                  <div className="bg-brand-sage h-2 rounded-full" style={{ width: "48%" }} />
+                </div>
+                <p className="text-xs text-brand-ink-soft">260 {t.morePointsUntilGold}</p>
               </div>
 
-              {/* Wishlist Preview teaser */}
-              <div className="bg-card rounded-2xl p-5 border border-border shadow-soft flex flex-col justify-between">
-                <div>
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-foreground font-display text-base flex items-center gap-2">
-                      <Heart size={18} className="text-brand-terracotta fill-brand-terracotta" />
-                      {isRTL ? "المفضلة" : "Wishlist"}
-                    </h3>
-                    <button onClick={() => handleTabChange("wishlist")} className="text-brand-terracotta hover:underline text-xs font-semibold flex items-center gap-1">
-                      {isRTL ? "عرض الكل" : "View All"} <ChevronRight size={14} className="rtl-flip" />
-                    </button>
+              {/* App settings pane */}
+              <div className="bg-card rounded-xl p-5 border border-border shadow-soft">
+                <h3 className="text-brand-forest font-display text-lg sm:text-xl font-bold flex items-center gap-2 mb-4">
+                  <Settings size={20} className="text-brand-terracotta" />
+                  {t.settings}
+                </h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between py-1 border-b border-border/40 pb-3">
+                    <span className="text-sm text-foreground/80 font-medium">{t.theme}</span>
+                    <Segmented<"light" | "dark">
+                      value={theme}
+                      onChange={setTheme}
+                      options={[{ value: "light", label: t.light }, { value: "dark", label: t.dark }]}
+                    />
                   </div>
-
-                  {wishlistItems.length === 0 ? (
-                    <div className="text-center py-4 bg-background/20 rounded-xl border border-dashed border-border/80">
-                      <Heart size={20} className="text-muted-foreground/40 mx-auto mb-1" />
-                      <p className="text-xs text-muted-foreground">{t.wishlistEmpty}</p>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide py-1">
-                      {wishlistItems.slice(0, 3).map(item => (
-                        <div key={item.id} className="w-12 h-12 rounded-lg bg-background p-1 flex items-center justify-center border border-border flex-shrink-0">
-                          <img src={item.image} alt={item.name} className="w-full h-full object-contain" />
+                  <div className="flex items-center justify-between py-1 border-b border-border/40 pb-3">
+                    <span className="text-sm text-foreground/80 font-medium">{t.language}</span>
+                    <Segmented<"en" | "ar">
+                      value={locale}
+                      onChange={setLocale}
+                      options={[{ value: "en", label: "EN" }, { value: "ar", label: "ع" }]}
+                    />
+                  </div>
+                  <div className="space-y-3 pt-2">
+                    <label className="text-xs text-muted-foreground block font-bold uppercase tracking-wider">{isRTL ? "تفضيلات الإشعارات" : "Notifications"}</label>
+                    {Object.entries(notifications).map(([key, val]) => (
+                      <div key={key} className="flex items-center justify-between text-sm">
+                        <span className="text-foreground/80">
+                          {key === "newsletter" ? (isRTL ? "النشرة البريدية" : "Newsletter") : key === "orders" ? t.orderUpdates : t.promotionsDeals}
+                        </span>
+                        <div
+                          className={`w-10 h-6 rounded-full transition-colors relative cursor-pointer ${val ? "bg-brand-terracotta" : "bg-brand-line"}`}
+                          onClick={() => setNotifications(n => ({ ...n, [key]: !val }))}
+                        >
+                          <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${val ? (isRTL ? "-translate-x-5" : "translate-x-5") : "translate-x-1"}`} />
                         </div>
-                      ))}
-                      {wishlistItems.length > 3 && (
-                        <div className="w-10 h-10 rounded-full bg-brand-peach/40 text-brand-terracotta text-xs font-semibold flex items-center justify-center border border-border flex-shrink-0">
-                          +{wishlistItems.length - 3}
-                        </div>
-                      )}
-                    </div>
-                  )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-
-                <button 
-                  onClick={() => handleTabChange("wishlist")}
-                  className="w-full mt-4 py-2 bg-brand-peach/40 hover:bg-brand-peach text-brand-terracotta text-xs rounded-xl font-semibold transition-colors flex items-center justify-center gap-1.5"
-                >
-                  <Heart size={14} /> {isRTL ? "عرض قائمة المفضلة" : "View Full Wishlist"}
-                </button>
               </div>
 
+              {/* Saved triggers & Actions */}
+              <div className="bg-card rounded-xl border border-border overflow-hidden shadow-soft">
+                {[
+                  { icon: CreditCard, label: t.paymentMethods, color: "text-brand-ink-soft hover:text-brand-terracotta", onClick: () => setIsPaymentsOpen(true) },
+                  { icon: MapPin, label: t.savedAddresses, color: "text-brand-ink-soft hover:text-brand-terracotta", onClick: () => setIsAddressesOpen(true) },
+                  { icon: Shield, label: t.privacySecurity, color: "text-brand-ink-soft hover:text-brand-terracotta hover:underline", to: "/help" },
+                  { icon: HelpCircle, label: t.helpSupport, color: "text-brand-ink-soft hover:text-brand-terracotta hover:underline", to: "/help" },
+                  { icon: LogOut, label: t.signOut, color: "text-destructive hover:text-destructive-dark font-medium", onClick: handleSignOut },
+                ].map((item, i) => {
+                  const inner = (
+                    <>
+                      <div className="flex items-center gap-3">
+                        <item.icon size={18} className={item.color.includes("destructive") ? "text-destructive" : "text-brand-terracotta"} />
+                        <span className={`text-sm ${item.color}`}>{item.label}</span>
+                      </div>
+                      <ChevronRight size={16} className="text-brand-ink-soft rtl-flip" />
+                    </>
+                  );
+                  const classStr = `w-full flex items-center justify-between px-5 py-3.5 hover:bg-brand-peach/40 transition-colors cursor-pointer ${i > 0 ? "border-t border-border" : ""}`;
+                  if (item.to) {
+                    return (
+                      <Link key={item.label} to={item.to} className={classStr}>
+                        {inner}
+                      </Link>
+                    );
+                  }
+                  return (
+                    <button key={item.label} type="button" onClick={item.onClick} className={classStr}>
+                      {inner}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </motion.div>
         )}
@@ -1048,9 +1152,12 @@ export function Account() {
         {/* Tab 2: My Orders history */}
         {activeTab === "orders" && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
-            <h2 className="text-foreground font-display mb-4">{t.myOrders}</h2>
+            <h3 className="text-brand-forest font-display text-lg sm:text-xl font-bold flex items-center gap-2 mb-4">
+              <Package size={20} className="text-brand-terracotta" />
+              {t.myOrders}
+            </h3>
             {orders.map(order => (
-              <div key={order.id} className="bg-card border border-border rounded-2xl p-4 sm:p-5 shadow-soft hover:shadow-md transition-all">
+              <div key={order.id} className="bg-card border border-border rounded-xl p-4 sm:p-5 shadow-soft hover:shadow-md transition-all">
                 {/* Top Row */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border/50 pb-3 mb-3">
                   <div className="flex items-center gap-2 flex-wrap">
@@ -1082,9 +1189,9 @@ export function Account() {
                 </div>
 
                 {/* Bottom Row */}
-                <div className="flex items-center justify-between gap-3 bg-background/50 p-2.5 rounded-xl border border-border/40">
+                <div className="flex items-center justify-between gap-3 bg-brand-cream-2/60 p-2.5 rounded-xl border border-border/60">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-[#FAF6F0] p-1 flex items-center justify-center border border-border/40 flex-shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-brand-peach/45 p-1 flex items-center justify-center border border-border/40 flex-shrink-0">
                       <img src={order.image} alt={locale === "ar" ? "صورة المنتج" : "Product thumbnail"} className="w-full h-full object-contain mix-blend-multiply" />
                     </div>
                     <div className="text-xs">
@@ -1107,16 +1214,16 @@ export function Account() {
         {/* Tab 3: Wishlist items embedded directly */}
         {activeTab === "wishlist" && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
-            <div className="flex items-center gap-3 mb-4">
-              <Heart size={20} className="text-brand-terracotta fill-brand-terracotta" />
-              <h3 className="text-foreground font-display text-base sm:text-lg">{t.wishlist}</h3>
-              <span className="bg-brand-peach text-brand-terracotta text-xs px-2.5 py-0.5 rounded-full font-medium">
+            <div className="flex items-center gap-2.5 mb-4 border-b border-border/40 pb-2">
+              <Heart size={20} className="text-brand-terracotta fill-brand-peach/40" />
+              <h3 className="text-brand-forest font-display text-lg sm:text-xl font-bold">{t.wishlist}</h3>
+              <span className="bg-brand-cream-2 text-brand-forest text-xs px-2.5 py-0.5 rounded-full font-semibold border border-brand-sage/25">
                 {wishlistItems.length} {wishlistItems.length === 1 ? t.item : t.items}
               </span>
             </div>
 
             {wishlistItems.length === 0 ? (
-              <div className="text-center py-16 bg-card border border-border rounded-3xl shadow-soft">
+              <div className="text-center py-16 bg-card border border-border rounded-xl shadow-soft">
                 <Heart size={44} className="text-border mx-auto mb-3" />
                 <h4 className="text-foreground font-medium mb-1">{t.wishlistEmpty}</h4>
                 <p className="text-muted-foreground text-xs mb-5">{t.wishlistEmptyHint}</p>
@@ -1137,143 +1244,6 @@ export function Account() {
           </motion.div>
         )}
 
-        {/* Tab 4: Settings (Consolidated Settings Pane) */}
-        {activeTab === "settings" && (
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            {/* Left side settings: Profile edit form */}
-            <div className="md:col-span-2 space-y-6">
-              
-              {/* Edit Profile Form */}
-              <div className="bg-card rounded-2xl p-5 border border-border shadow-soft">
-                <h3 className="text-foreground font-display text-base sm:text-lg mb-4">{t.profileInformation}</h3>
-                
-                {avatarUrl && (
-                  <div className="mb-4 pb-4 border-b border-border flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">{isRTL ? "الصورة الشخصية مضافة" : "Profile picture added"}</span>
-                    <button
-                      type="button"
-                      onClick={handleRemoveAvatar}
-                      className="text-xs text-destructive hover:underline flex items-center gap-1 font-semibold"
-                    >
-                      <Trash2 size={13} /> {isRTL ? "إزالة الصورة" : "Remove Photo"}
-                    </button>
-                  </div>
-                )}
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <label className="block text-xs text-muted-foreground mb-1.5">{t.firstName}</label>
-                    <input
-                      type="text"
-                      value={profile.firstName}
-                      onChange={e => setProfile(p => p ? { ...p, firstName: e.target.value } : null)}
-                      className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs text-muted-foreground mb-1.5">{t.lastName}</label>
-                    <input
-                      type="text"
-                      value={profile.lastName}
-                      onChange={e => setProfile(p => p ? { ...p, lastName: e.target.value } : null)}
-                      className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <label className="block text-xs text-muted-foreground mb-1.5">{t.email}</label>
-                    <input
-                      type="email"
-                      value={profile.email}
-                      onChange={e => setProfile(p => p ? { ...p, email: e.target.value } : null)}
-                      className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs text-muted-foreground mb-1.5">{t.phone}</label>
-                    <input
-                      type="text"
-                      value={profile.phone}
-                      onChange={e => setProfile(p => p ? { ...p, phone: e.target.value } : null)}
-                      className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
-                    />
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={saveProfile}
-                  className="bg-brand-terracotta text-white px-6 py-2.5 rounded-xl text-sm hover:bg-brand-terracotta-dark transition-all active:scale-[0.98] font-medium shadow-sm"
-                >
-                  {t.saveChanges}
-                </button>
-              </div>
-
-              {/* Notifications switches */}
-              <div className="bg-card rounded-2xl p-5 border border-border shadow-soft">
-                <h3 className="text-foreground font-display text-base sm:text-lg mb-4 flex items-center gap-2">
-                  <Bell size={18} className="text-brand-terracotta" /> {isRTL ? "إشعارات البريد والهاتف" : "Notification Preferences"}
-                </h3>
-                <div className="space-y-3">
-                  {Object.entries(notifications).map(([key, val]) => (
-                    <div key={key} className="flex items-center justify-between">
-                      <span className="text-sm text-foreground/80 capitalize">
-                        {key === "newsletter" ? (isRTL ? "النشرة البريدية" : "Newsletter") : key === "orders" ? t.orderUpdates : t.promotionsDeals}
-                      </span>
-                      <div
-                        className={`w-10 h-6 rounded-full transition-colors relative cursor-pointer ${val ? "bg-brand-terracotta" : "bg-border"}`}
-                        onClick={() => setNotifications(n => ({ ...n, [key]: !val }))}
-                      >
-                        <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${val ? (isRTL ? "-translate-x-5" : "translate-x-5") : "translate-x-1"}`} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-
-            {/* Right side settings: Actions, addresses, card triggers */}
-            <div className="space-y-6">
-              
-              <div className="bg-card rounded-2xl border border-border overflow-hidden shadow-soft">
-                {[
-                  { icon: CreditCard, label: t.paymentMethods, color: "text-foreground/80 hover:text-brand-terracotta", onClick: () => setIsPaymentsOpen(true) },
-                  { icon: MapPin, label: t.savedAddresses, color: "text-foreground/80 hover:text-brand-terracotta", onClick: () => setIsAddressesOpen(true) },
-                  { icon: Shield, label: t.privacySecurity, color: "text-foreground/80 hover:text-brand-terracotta hover:underline", to: "/help" },
-                  { icon: HelpCircle, label: t.helpSupport, color: "text-foreground/80 hover:text-brand-terracotta hover:underline", to: "/help" },
-                  { icon: LogOut, label: t.signOut, color: "text-destructive hover:text-destructive-dark font-medium", onClick: handleSignOut },
-                ].map((item, i) => {
-                  const inner = (
-                    <>
-                      <div className="flex items-center gap-3">
-                        <item.icon size={18} className={item.color.includes("destructive") ? "text-destructive" : "text-brand-ink-soft"} />
-                        <span className={`text-sm ${item.color}`}>{item.label}</span>
-                      </div>
-                      <ChevronRight size={16} className="text-brand-ink-soft rtl-flip" />
-                    </>
-                  );
-                  const classStr = `w-full flex items-center justify-between px-5 py-3.5 hover:bg-muted transition-colors ${i > 0 ? "border-t border-border" : ""}`;
-                  if (item.to) {
-                    return (
-                      <Link key={item.label} to={item.to} className={classStr}>
-                        {inner}
-                      </Link>
-                    );
-                  }
-                  return (
-                    <button key={item.label} type="button" onClick={item.onClick} className={classStr}>
-                      {inner}
-                    </button>
-                  );
-                })}
-              </div>
-
-            </div>
-
-          </motion.div>
-        )}
 
       </div>
 
