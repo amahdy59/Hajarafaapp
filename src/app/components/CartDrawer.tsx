@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, Truck } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { useAppSettings } from "../context/AppSettingsContext";
@@ -9,6 +10,15 @@ const THRESHOLD = 500;
 export function CartDrawer() {
   const { items, isCartOpen, setCartOpen, updateQuantity, removeFromCart, totalPrice, totalItems } = useCart();
   const { t, isRTL } = useAppSettings();
+
+  useEffect(() => {
+    if (!isCartOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setCartOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isCartOpen, setCartOpen]);
 
   const progressPct = Math.min((totalPrice / THRESHOLD) * 100, 100);
   const remaining = (THRESHOLD - totalPrice).toFixed(2);
@@ -25,6 +35,9 @@ export function CartDrawer() {
             onClick={() => setCartOpen(false)}
           />
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label={isRTL ? "عربة التسوق" : "Shopping Cart"}
             initial={{ x: isRTL ? "-100%" : "100%" }}
             animate={{ x: 0 }}
             exit={{ x: isRTL ? "-100%" : "100%" }}

@@ -97,6 +97,15 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
     }
   }, [open, locale]);
 
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open, onClose]);
+
   const account = [
     { icon: User, label: t.yourAccount, to: "/account?tab=profile" },
     { icon: Package, label: t.yourOrders, to: "/account?tab=orders" },
@@ -121,6 +130,9 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
             className="fixed inset-0 bg-brand-ink/45 backdrop-blur-sm z-40"
           />
           <motion.aside
+            role="dialog"
+            aria-modal="true"
+            aria-label={locale === "ar" ? "قائمة التنقل" : "Navigation Menu"}
             initial={{ x: isRTL ? "100%" : "-100%" }}
             animate={{ x: 0 }}
             exit={{ x: isRTL ? "100%" : "-100%" }}

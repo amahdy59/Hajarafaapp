@@ -2,7 +2,7 @@ import { ArrowLeft, Award, Leaf, ShieldCheck, Sparkles } from "lucide-react";
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion } from "motion/react";
-import ABOUT_IMG from "../../assets/natural_about_bg.png";
+import ABOUT_IMG from "../../assets/natural_about_bg.webp";
 
 export function About() {
   const { t, isRTL } = useAppSettings();

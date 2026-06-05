@@ -12,10 +12,10 @@ import { useAppSettings } from "../context/AppSettingsContext";
 import { toast } from "sonner";
 import { ProductCard } from "../components/ProductCard";
 import logoImg from "../../assets/logo.webp";
-import sidrHoneyImg from "../../assets/sidr_honey.png";
-import bbqSpicesImg from "../../assets/bbq_spices.png";
-import bayLeavesImg from "../../assets/bay_leaves.png";
-import dateMaamoulImg from "../../assets/date_maamoul.png";
+import sidrHoneyImg from "../../assets/sidr_honey.webp";
+import bbqSpicesImg from "../../assets/bbq_spices.webp";
+import bayLeavesImg from "../../assets/bay_leaves.webp";
+import dateMaamoulImg from "../../assets/date_maamoul.webp";
 
 // Mock Orders with detailed products and receipt breakdowns
 const initialOrders = [

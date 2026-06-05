@@ -1,14 +1,14 @@
 import { categoryMapping } from "./categories";
-import cheeseRingsImg from "../../assets/cheese_rings.png";
-import redLentilsImg from "../../assets/red_lentils.png";
-import driedApricotsImg from "../../assets/dried_apricots.png";
-import darkChocolateImg from "../../assets/dark_chocolate_bar.png";
-import dateMaamoulImg from "../../assets/date_maamoul.png";
-import bbqSpicesImg from "../../assets/bbq_spices.png";
-import bayLeavesImg from "../../assets/bay_leaves.png";
-import sidrHoneyImg from "../../assets/sidr_honey.png";
-import saltedCaramelPopcornImg from "../../assets/salted_caramel_popcorn.png";
-import babyOilImg from "../../assets/baby_oil.png";
+import cheeseRingsImg from "../../assets/cheese_rings.webp";
+import redLentilsImg from "../../assets/red_lentils.webp";
+import driedApricotsImg from "../../assets/dried_apricots.webp";
+import darkChocolateImg from "../../assets/dark_chocolate_bar.webp";
+import dateMaamoulImg from "../../assets/date_maamoul.webp";
+import bbqSpicesImg from "../../assets/bbq_spices.webp";
+import bayLeavesImg from "../../assets/bay_leaves.webp";
+import sidrHoneyImg from "../../assets/sidr_honey.webp";
+import saltedCaramelPopcornImg from "../../assets/salted_caramel_popcorn.webp";
+import babyOilImg from "../../assets/baby_oil.webp";
 
 export interface Product {
   id: string;
