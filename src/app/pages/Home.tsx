@@ -10,6 +10,16 @@ import { useAppSettings } from "../context/AppSettingsContext";
 const HERO_IMG = "https://images.unsplash.com/photo-1758745464235-ccb8c1253074?w=1400&auto=format&fit=crop";
 const HERITAGE_IMG = "https://images.unsplash.com/photo-1509156396595-449e10c5cd3e?w=900&auto=format&fit=crop";
 
+const categoryAccentColors: Record<string, string> = {
+  "coffee-drinks": "var(--brand-terracotta)",
+  "honey": "#D0A040", // Honey Gold
+  "spices": "var(--brand-sage-dark)", // Spice Sage Green
+  "nuts": "#A07050", // Nuts Brown
+  "wellness": "var(--brand-sage)", // Wellness Light Green
+  "cosmetics": "#C44E8C", // Cosmetics Rose Pink
+  "incense": "#7E5E4E", // Incense Sandalwood Brown
+};
+
 export function Home() {
   const { t, isRTL } = useAppSettings();
 
@@ -55,32 +65,29 @@ export function Home() {
           const catName = isRTL && cat.nameAr ? cat.nameAr : cat.name;
 
           return (
-            <div key={cat.slug} className="flex flex-col gap-6">
-              {/* Category-specific Banners */}
-              <div className="relative h-18 sm:h-22 rounded-2xl overflow-hidden shadow-soft select-none border border-border/40">
-                <img 
-                  src={cat.image} 
-                  alt={catName} 
-                  className="absolute inset-0 w-full h-full object-cover" 
-                />
-                <div className={`absolute inset-0 bg-gradient-to-${isRTL ? "l" : "r"} from-black/70 via-black/45 to-black/25`} />
-                <div className="absolute inset-0 flex items-center justify-between px-4 sm:px-6">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8.5 h-8.5 rounded-xl bg-white/20 flex items-center justify-center text-base backdrop-blur-sm border border-white/10">
-                      {cat.icon}
-                    </div>
-                    <h2 className="font-display text-white text-base sm:text-xl font-bold drop-shadow-sm">
+            <div key={cat.slug} className="flex flex-col gap-4">
+              {/* Minimalist Color-Accented Category Header */}
+              <div className="flex items-center justify-between border-b border-border/40 pb-2 select-none">
+                <div className="flex items-center gap-3">
+                  {/* Vertical Colored Accent Line */}
+                  <div 
+                    className="w-1 h-5.5 rounded-full" 
+                    style={{ backgroundColor: categoryAccentColors[cat.slug] || "var(--brand-terracotta)" }}
+                  />
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg sm:text-xl flex items-center justify-center">{cat.icon}</span>
+                    <h2 className="font-display text-brand-forest dark:text-brand-sage text-base sm:text-base font-bold">
                       {catName}
                     </h2>
                   </div>
-                  <Link
-                    to={`/category/${cat.slug}`}
-                    className="text-xs sm:text-sm font-semibold text-brand-peach hover:text-white transition-colors duration-200 flex items-center gap-1.5 drop-shadow-sm"
-                  >
-                    <span>{isRTL ? "عرض الكل" : "View All"}</span>
-                    <span className="rtl-flip">→</span>
-                  </Link>
                 </div>
+                <Link
+                  to={`/category/${cat.slug}`}
+                  className="text-xs sm:text-sm font-semibold text-brand-terracotta hover:text-brand-terracotta-dark transition-colors duration-200 flex items-center gap-1"
+                >
+                  <span>{isRTL ? "عرض الكل" : "View All"}</span>
+                  <span className="rtl-flip">→</span>
+                </Link>
               </div>
 
               {/* Scroll Rail */}
