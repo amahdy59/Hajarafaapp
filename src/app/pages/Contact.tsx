@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowLeft, Mail, Phone, MessageSquare, Send, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Mail, Phone, MessageSquare, Send, CheckCircle2, MessageCircle } from "lucide-react";
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
@@ -95,16 +95,16 @@ export function Contact() {
                 </a>
               </div>
 
-              {/* Messenger instant support button */}
+              {/* WhatsApp instant support button */}
               <div className="pt-2">
-                <span className="eyebrow text-[10px] block mb-2">{isRTL ? "راسلنا على فيسبوك" : "Facebook Messenger"}</span>
+                <span className="eyebrow text-[10px] block mb-2">{isRTL ? "تواصل معنا مباشرة" : "WhatsApp Support"}</span>
                 <a
-                  href="https://m.me/hajarafaeg"
+                  href="https://wa.me/201020401400"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2 bg-[#0084FF] text-white hover:bg-[#006FDF] px-4 py-2.5 rounded-xl transition-all text-xs font-semibold uppercase tracking-wider"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-[#25D366] text-white hover:bg-[#1EBE57] px-4 py-2.5 rounded-xl transition-all text-xs font-semibold uppercase tracking-wider"
                 >
-                  <MessageSquare size={14} /> Messenger Chat
+                  <MessageCircle size={14} /> WhatsApp Chat
                 </a>
               </div>
             </div>

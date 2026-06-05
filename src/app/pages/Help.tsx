@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { ArrowLeft, HelpCircle, Search, ChevronDown, ChevronUp, Phone, MessageSquare } from "lucide-react";
+import { ArrowLeft, HelpCircle, Search, ChevronDown, ChevronUp, Phone, MessageSquare, MessageCircle } from "lucide-react";
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
@@ -143,8 +143,8 @@ export function Help() {
             <a href="tel:17309" className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-brand-terracotta text-white px-4 py-2.5 rounded-xl hover:bg-brand-terracotta-dark transition-all text-xs font-semibold">
               <Phone size={14} /> {isRTL ? "اتصل بنا" : "Call Support"}
             </a>
-            <a href="https://m.me/hajarafaeg" target="_blank" rel="noopener noreferrer" className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-[#0084FF] text-white px-4 py-2.5 rounded-xl hover:bg-[#006FDF] transition-all text-xs font-semibold">
-              <MessageSquare size={14} /> Messenger
+            <a href="https://wa.me/201020401400" target="_blank" rel="noopener noreferrer" className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-[#25D366] text-white px-4 py-2.5 rounded-xl hover:bg-[#1EBE57] transition-all text-xs font-semibold">
+              <MessageCircle size={14} /> WhatsApp
             </a>
           </div>
         </div>

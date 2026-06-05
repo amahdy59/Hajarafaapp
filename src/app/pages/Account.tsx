@@ -256,7 +256,14 @@ export function Account() {
 
   const [orders, setOrders] = useState(() => {
     const saved = localStorage.getItem("hajarafa.orders");
-    return saved ? JSON.parse(saved) : initialOrders;
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error("Failed to parse orders from localStorage:", e);
+      }
+    }
+    return initialOrders;
   });
 
   const saveOrders = (updatedOrders: typeof orders) => {

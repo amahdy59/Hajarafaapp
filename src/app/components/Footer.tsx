@@ -1,25 +1,9 @@
 import { Link } from "react-router";
-import { Mail, Phone, MapPin, Facebook, Instagram, ShieldCheck } from "lucide-react";
+import { Mail, Phone, Facebook, Instagram, MessageCircle, ShieldCheck } from "lucide-react";
 import { useAppSettings } from "../context/AppSettingsContext";
-import logoImg from "../../assets/logo.webp";
 
 export function Footer() {
   const { t, isRTL, locale } = useAppSettings();
-
-  const footerTranslations = {
-    aboutTextEn: "represents over 50 years of traditional Egyptian herbal wisdom, bringing you the finest natural honey, fresh spices, organic nuts, and botanical cosmetics.",
-    aboutTextAr: "يمثل أكثر من ٥٠ عاماً من الحكمة العشبية المصرية التقليدية، حيث يقدم لك أجود أنواع العسل الطبيعي، التوابل الطازجة، المكسرات العضوية، ومستحضرات التجميل النباتية.",
-    quickLinksEn: "Quick Links",
-    quickLinksAr: "روابط سريعة",
-    supportEn: "Help & Support",
-    supportAr: "الدعم والمساعدة",
-    contactEn: "Contact Us",
-    contactAr: "اتصل بنا",
-    paymentEn: "Payment Methods",
-    paymentAr: "طرق الدفع",
-    rightsEn: "All rights reserved.",
-    rightsAr: "جميع الحقوق محفوظة.",
-  };
 
   const categoriesLinks = [
     { slug: "coffee-drinks", en: "Coffee & Drinks", ar: "قهوة ومشروبات" },
@@ -32,51 +16,51 @@ export function Footer() {
   ];
 
   return (
-    <footer className="bg-card text-foreground border-t border-border/80 pt-12 pb-24 sm:pb-12 mt-16 select-none">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <footer className="bg-[#14201A] text-[#FAF6F0] border-t border-white/5 pt-12 pb-24 sm:pb-12 mt-16 select-none relative overflow-hidden">
+      {/* Subtle organic background accent */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-brand-sage/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-brand-terracotta/5 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
         
-        {/* Brand Column */}
+        {/* Column 1: Brand & Heritage */}
         <div className="space-y-4">
           <Link to="/" className="inline-block select-none cursor-pointer">
-            <span className="font-display font-bold text-2xl tracking-wide text-brand-forest hover:text-brand-terracotta transition-colors">
+            <span className="font-display font-bold text-2xl tracking-wide text-brand-peach hover:text-white transition-colors">
               {locale === "ar" ? "حاج عرفة" : "Haj Arafa"}
             </span>
           </Link>
-          <p className="text-muted-foreground text-sm leading-relaxed max-w-sm">
-            <span className="text-brand-forest font-semibold">{locale === "ar" ? "حاج عرفة" : "Haj Arafa"}</span>{" "}
-            <span>{locale === "ar" ? footerTranslations.aboutTextAr : footerTranslations.aboutTextEn}</span>
+          <p className="text-[#FAF6F0]/75 text-sm leading-relaxed max-w-sm">
+            {locale === "ar" 
+              ? "تراث الأعشاب المصرية التقليدية منذ ١٩٧٠. نقدم أجود أنواع العسل الطبيعي، التوابل النقية، والمستحضرات النباتية." 
+              : "Traditional Egyptian herbal heritage since 1970. Providing premium natural honey, pure spices, and botanical wellness."}
           </p>
-          <div className="flex items-center gap-3 pt-2">
-            <a href="https://www.facebook.com/hajarafaeg?mibextid=LQQJ4d" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-brand-peach flex items-center justify-center text-brand-terracotta hover:bg-brand-terracotta hover:text-white transition-all" aria-label="Facebook">
-              <Facebook size={16} />
+          <div className="flex items-center gap-3 pt-1">
+            <a href="https://www.facebook.com/hajarafaeg?mibextid=LQQJ4d" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#1877F2] text-[#FAF6F0] flex items-center justify-center transition-all" aria-label="Facebook">
+              <Facebook size={15} />
             </a>
-            <a href="https://www.instagram.com/hajarafa/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-brand-peach flex items-center justify-center text-brand-terracotta hover:bg-brand-terracotta hover:text-white transition-all" aria-label="Instagram">
-              <Instagram size={16} />
+            <a href="https://www.instagram.com/hajarafa/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#E1306C] text-[#FAF6F0] flex items-center justify-center transition-all" aria-label="Instagram">
+              <Instagram size={15} />
             </a>
-          </div>
-          <div className="pt-2 text-xs text-brand-forest/90 font-medium flex items-center gap-1.5 select-none bg-brand-cream-2 border border-brand-peach/40 px-3 py-2.5 rounded-xl w-fit">
-            <span>🚚</span>
-            <span>
-              {locale === "ar" 
-                ? "قد يستغرق التوصيل من ٥ إلى ٧ أيام عمل" 
-                : "Delivery may take 5 to 7 working days"}
-            </span>
+            <a href="https://wa.me/201020401400" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#25D366] text-[#FAF6F0] flex items-center justify-center transition-all" aria-label="WhatsApp">
+              <MessageCircle size={15} />
+            </a>
           </div>
         </div>
 
-        {/* Categories Link Column */}
+        {/* Column 2: Quick Links (IA Navigation) */}
         <div className="space-y-4">
-          <h4 className="text-foreground font-display text-base font-semibold border-b border-border/40 pb-2 w-fit">
-            {locale === "ar" ? footerTranslations.quickLinksAr : footerTranslations.quickLinksEn}
+          <h4 className="text-brand-peach font-display text-sm font-semibold tracking-wider uppercase border-b border-white/10 pb-2 w-fit">
+            {locale === "ar" ? "تسوق الفئات" : "Shop Categories"}
           </h4>
-          <ul className="grid grid-cols-1 gap-2.5 text-sm">
+          <ul className="grid grid-cols-1 gap-2 text-sm">
             {categoriesLinks.map(cat => (
               <li key={cat.slug}>
                 <Link 
                   to={`/category/${cat.slug}`} 
-                  className="text-muted-foreground hover:text-brand-terracotta hover:underline transition-colors flex items-center gap-1.5"
+                  className="text-[#FAF6F0]/75 hover:text-white transition-colors flex items-center gap-1.5"
                 >
-                  <span className="text-[10px] text-brand-terracotta/60">✦</span>
+                  <span className="text-[10px] text-brand-peach/40">✦</span>
                   {locale === "ar" ? cat.ar : cat.en}
                 </Link>
               </li>
@@ -84,90 +68,99 @@ export function Footer() {
           </ul>
         </div>
 
-        {/* Customer Support Column */}
+        {/* Column 3: Customer Care */}
         <div className="space-y-4">
-          <h4 className="text-foreground font-display text-base font-semibold border-b border-border/40 pb-2 w-fit">
-            {locale === "ar" ? footerTranslations.supportAr : footerTranslations.supportEn}
+          <h4 className="text-brand-peach font-display text-sm font-semibold tracking-wider uppercase border-b border-white/10 pb-2 w-fit">
+            {locale === "ar" ? "الدعم والخدمات" : "Customer Care"}
           </h4>
-          <ul className="space-y-2.5 text-sm">
+          <ul className="space-y-2 text-sm">
             <li>
-              <Link to="/about" className="text-muted-foreground hover:text-brand-terracotta hover:underline transition-colors flex items-center gap-1.5">
-                <span className="text-[10px] text-brand-terracotta/60">✦</span>
+              <Link to="/about" className="text-[#FAF6F0]/75 hover:text-white transition-colors flex items-center gap-1.5">
+                <span className="text-[10px] text-brand-peach/40">✦</span>
                 <span>{locale === "ar" ? "عن حاج عرفة" : "About Haj Arafa"}</span>
               </Link>
             </li>
             <li>
-              <Link to="/branches" className="text-muted-foreground hover:text-brand-terracotta hover:underline transition-colors flex items-center gap-1.5">
-                <span className="text-[10px] text-brand-terracotta/60">✦</span>
-                {t.branches}
+              <Link to="/branches" className="text-[#FAF6F0]/75 hover:text-white transition-colors flex items-center gap-1.5">
+                <span className="text-[10px] text-brand-peach/40">✦</span>
+                <span>{locale === "ar" ? "فروعنا" : "Our Branches"}</span>
               </Link>
             </li>
             <li>
-              <Link to="/contact" className="text-muted-foreground hover:text-brand-terracotta hover:underline transition-colors flex items-center gap-1.5">
-                <span className="text-[10px] text-brand-terracotta/60">✦</span>
-                {t.contactUs}
+              <Link to="/contact" className="text-[#FAF6F0]/75 hover:text-white transition-colors flex items-center gap-1.5">
+                <span className="text-[10px] text-brand-peach/40">✦</span>
+                <span>{locale === "ar" ? "اتصل بنا" : "Contact Us"}</span>
               </Link>
             </li>
             <li>
-              <Link to="/help" className="text-muted-foreground hover:text-brand-terracotta hover:underline transition-colors flex items-center gap-1.5">
-                <span className="text-[10px] text-brand-terracotta/60">✦</span>
-                {t.customerService}
+              <Link to="/help" className="text-[#FAF6F0]/75 hover:text-white transition-colors flex items-center gap-1.5">
+                <span className="text-[10px] text-brand-peach/40">✦</span>
+                <span>{locale === "ar" ? "الأسئلة الشائعة" : "FAQs & Support"}</span>
               </Link>
             </li>
           </ul>
         </div>
 
-        {/* Contact Info Column */}
+        {/* Column 4: WhatsApp Direct & Support */}
         <div className="space-y-4">
-          <h4 className="text-foreground font-display text-base font-semibold border-b border-border/40 pb-2 w-fit">
-            {locale === "ar" ? footerTranslations.contactAr : footerTranslations.contactEn}
+          <h4 className="text-brand-peach font-display text-sm font-semibold tracking-wider uppercase border-b border-white/10 pb-2 w-fit">
+            {locale === "ar" ? "الدعم المباشر" : "Direct Support"}
           </h4>
-          <ul className="space-y-3 text-sm">
-            <li className="flex items-start gap-2.5">
-              <MapPin size={16} className="text-brand-terracotta mt-0.5 flex-shrink-0" />
-              <span className="text-muted-foreground leading-relaxed">
-                {locale === "ar" ? "القاهرة، جمهورية مصر العربية" : "Cairo, Arab Republic of Egypt"}
-              </span>
-            </li>
-            <li className="flex items-center gap-2.5">
-              <Phone size={16} className="text-brand-terracotta flex-shrink-0" />
-              <a href="tel:17309" className="text-muted-foreground hover:text-brand-terracotta hover:underline transition-colors">
-                17309
-              </a>
-            </li>
-            <li className="flex items-center gap-2.5">
-              <Mail size={16} className="text-brand-terracotta flex-shrink-0" />
-              <a href="mailto:Marketing@hajarafa.com" className="text-muted-foreground hover:text-brand-terracotta hover:underline transition-colors">
-                Marketing@hajarafa.com
-              </a>
-            </li>
-          </ul>
+          <div className="space-y-3">
+            <a
+              href="https://wa.me/201020401400"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white hover:bg-[#1EBE57] px-4 py-2.5 rounded-xl transition-all text-xs font-bold w-full shadow-sm select-none"
+            >
+              <MessageCircle size={16} />
+              <span>{locale === "ar" ? "تواصل عبر واتساب" : "Chat on WhatsApp"}</span>
+            </a>
+            
+            <div className="text-xs text-[#FAF6F0]/80 space-y-2 pt-1.5">
+              <div className="flex items-center gap-2">
+                <Phone size={13} className="text-brand-peach flex-shrink-0" />
+                <span>{locale === "ar" ? "الخط الساخن: ١٧٣٠٩" : "Hotline: 17309"}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail size={13} className="text-brand-peach flex-shrink-0" />
+                <a href="mailto:Marketing@hajarafa.com" className="hover:underline">Marketing@hajarafa.com</a>
+              </div>
+              <div className="flex items-center gap-2 pt-1 text-[11px] text-brand-peach/90 bg-white/5 border border-white/5 px-2.5 py-1.5 rounded-lg w-fit">
+                <span>🚚</span>
+                <span>
+                  {locale === "ar" 
+                    ? "التوصيل خلال ٥ إلى ٧ أيام" 
+                    : "Delivery: 5 to 7 working days"}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
       </div>
 
-      {/* Bottom Bar */}
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 mt-12 pt-6 border-t border-border/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+      {/* Bottom Copyright & Guarantee */}
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs relative z-10">
         
-        {/* Copyright */}
-        <div className="text-muted-foreground text-center sm:text-start flex items-center justify-center sm:justify-start gap-1 flex-wrap select-none">
+        <div className="text-[#FAF6F0]/60 text-center sm:text-start flex items-center justify-center sm:justify-start gap-1 flex-wrap select-none">
           <span>© {new Date().getFullYear()}</span>
-          <span>{locale === "ar" ? "حاج عرفة" : "Haj Arafa"}. {locale === "ar" ? footerTranslations.rightsAr : footerTranslations.rightsEn}</span>
-          <span className="block sm:inline sm:ms-2 mt-1 sm:mt-0 text-[10px] text-muted-foreground/60 select-none">
+          <span>{locale === "ar" ? "حاج عرفة. جميع الحقوق محفوظة." : "Haj Arafa. All rights reserved."}</span>
+          <span className="block sm:inline sm:ms-2 mt-1 sm:mt-0 text-[10px] text-[#FAF6F0]/40">
             {locale === "ar" ? "صنع بكل حب لعافيتك 🧡" : "Crafted with love for your wellness 🧡"}
           </span>
         </div>
 
-        {/* Badges / Payments */}
+        {/* Payment Badges & Guarantee */}
         <div className="flex items-center gap-4 flex-wrap justify-center">
-          <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+          <div className="flex items-center gap-1.5 text-[11px] text-[#FAF6F0]/70">
             <ShieldCheck size={14} className="text-brand-sage" />
             <span>{locale === "ar" ? "دفع آمن ١٠٠٪" : "100% Secure Payment"}</span>
           </div>
           <div className="flex gap-2">
-            <span className="px-2 py-1 rounded bg-muted-foreground/5 text-muted-foreground border border-border/40 font-semibold tracking-wider text-[10px]">VISA</span>
-            <span className="px-2 py-1 rounded bg-muted-foreground/5 text-muted-foreground border border-border/40 font-semibold tracking-wider text-[10px]">MC</span>
-            <span className="px-2 py-1 rounded bg-muted-foreground/5 text-muted-foreground border border-border/40 font-semibold tracking-wider text-[10px]">{locale === "ar" ? "نقدًا" : "COD"}</span>
+            <span className="px-2 py-1 rounded bg-white/5 text-[#FAF6F0]/80 border border-white/10 font-semibold text-[9px]">VISA</span>
+            <span className="px-2 py-1 rounded bg-white/5 text-[#FAF6F0]/80 border border-white/10 font-semibold text-[9px]">MC</span>
+            <span className="px-2 py-1 rounded bg-white/5 text-[#FAF6F0]/80 border border-white/10 font-semibold text-[9px]">{locale === "ar" ? "الدفع عند الاستلام" : "COD"}</span>
           </div>
         </div>
 
