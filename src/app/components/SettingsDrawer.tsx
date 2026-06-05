@@ -59,7 +59,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-          if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+          if (parsed && typeof parsed === "object" && !Array.isArray(parsed) && parsed.firstName) {
             if (parsed.email === "alex@example.com" || parsed.firstName === "Alex" || parsed.firstName === "alex") {
               const defaultUser = {
                 firstName: locale === "ar" ? "أحمد" : "Ahmed",
@@ -73,17 +73,17 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
               setProfile(parsed);
             }
           } else {
-            const defaultUser = {
-              firstName: locale === "ar" ? "أحمد" : "Ahmed",
-              lastName: locale === "ar" ? "مهدي" : "Mahdy",
-              email: "ahmed.mahdy@example.com",
-              phone: "+20 100 123 4567"
-            };
-            localStorage.setItem("hajarafa.profile", JSON.stringify(defaultUser));
-            setProfile(defaultUser);
+            setProfile(null);
           }
         } catch (e) {
           console.error("Failed to parse profile JSON in SettingsDrawer:", e);
+          setProfile(null);
+        }
+      } else {
+        // If saved profile is null, check if explicitly logged out
+        if (localStorage.getItem("hajarafa.logged_out") === "true") {
+          setProfile(null);
+        } else {
           const defaultUser = {
             firstName: locale === "ar" ? "أحمد" : "Ahmed",
             lastName: locale === "ar" ? "مهدي" : "Mahdy",
@@ -93,15 +93,6 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           localStorage.setItem("hajarafa.profile", JSON.stringify(defaultUser));
           setProfile(defaultUser);
         }
-      } else {
-        const defaultUser = {
-          firstName: locale === "ar" ? "أحمد" : "Ahmed",
-          lastName: locale === "ar" ? "مهدي" : "Mahdy",
-          email: "ahmed.mahdy@example.com",
-          phone: "+20 100 123 4567"
-        };
-        localStorage.setItem("hajarafa.profile", JSON.stringify(defaultUser));
-        setProfile(defaultUser);
       }
     }
   }, [open, locale]);

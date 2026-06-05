@@ -12,7 +12,7 @@ const SHIPPING_COST = 49;
 
 export function Cart() {
   const { items, updateQuantity, removeFromCart, totalPrice, totalItems } = useCart();
-  const { t, isRTL } = useAppSettings();
+  const { t, isRTL, locale } = useAppSettings();
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
 
@@ -141,6 +141,12 @@ export function Cart() {
             <div className="space-y-4">
               <div className="bg-card rounded-2xl p-5 space-y-4 border border-border">
                 <h2 className="text-foreground" style={{ fontSize: "1rem" }}>{t.orderSummary}</h2>
+
+                {/* Free delivery promo banner */}
+                <div className="bg-brand-peach/40 text-brand-terracotta text-xs font-semibold px-4.5 py-3 rounded-xl border border-brand-peach/30 flex items-center gap-2 select-none">
+                  <span>✨</span>
+                  <span>{t.freeShipping}</span>
+                </div>
 
                 {/* Coupon */}
                 {!couponApplied ? (

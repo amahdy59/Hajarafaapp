@@ -25,7 +25,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (typeof window === "undefined") return [];
     try {
       const stored = localStorage.getItem("hajarafa.cart");
-      return stored ? JSON.parse(stored) : [];
+      const parsed = stored ? JSON.parse(stored) : [];
+      if (Array.isArray(parsed)) {
+        return parsed.filter((item: any) => 
+          item && 
+          item.product && 
+          typeof item.product === "object" && 
+          item.product.id && 
+          typeof item.product.price === "number" &&
+          typeof item.quantity === "number"
+        );
+      }
+      return [];
     } catch (e) {
       console.error("Failed to load cart", e);
       return [];

@@ -16,7 +16,11 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
     if (typeof window === "undefined") return [];
     try {
       const stored = localStorage.getItem("hajarafa.wishlist");
-      return stored ? JSON.parse(stored) : [];
+      const parsed = stored ? JSON.parse(stored) : [];
+      if (Array.isArray(parsed)) {
+        return parsed.filter((p: any) => p && typeof p === "object" && p.id && typeof p.price === "number");
+      }
+      return [];
     } catch (e) {
       console.error("Failed to load wishlist", e);
       return [];

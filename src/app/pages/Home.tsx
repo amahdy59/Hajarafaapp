@@ -1,6 +1,5 @@
 import { Link } from "react-router";
 import { motion } from "motion/react";
-import { Truck } from "lucide-react";
 import { getProductsByCategory } from "../data/products";
 import { categories } from "../data/categories";
 import { ProductCard } from "../components/ProductCard";
@@ -8,7 +7,6 @@ import { ScrollRail } from "../components/ui/ScrollRail";
 import { useAppSettings } from "../context/AppSettingsContext";
 
 const HERO_IMG = "https://images.unsplash.com/photo-1758745464235-ccb8c1253074?w=1400&auto=format&fit=crop";
-const HERITAGE_IMG = "https://images.unsplash.com/photo-1509156396595-449e10c5cd3e?w=900&auto=format&fit=crop";
 
 const categoryAccentColors: Record<string, string> = {
   "coffee-drinks": "var(--brand-terracotta)",
@@ -108,32 +106,7 @@ export function Home() {
                 </ScrollRail>
               </div>
 
-              {/* Insert Bento promo after the second category (index 1) */}
-              {idx === 1 && (
-                <section className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 my-4">
-                  <div className="bg-brand-peach border border-border rounded-xl p-8 flex flex-col items-center justify-center text-center min-h-[182px] shadow-soft">
-                    <Truck size={32} className="text-brand-terracotta mb-3" strokeWidth={1.5} />
-                    <p className="text-foreground mb-1 font-semibold" style={{ fontSize: "1.2rem", letterSpacing: "0.6px" }}>
-                      {t.freeDelivery}
-                    </p>
-                    <p className="text-muted-foreground" style={{ fontSize: "0.9rem" }}>
-                      {t.freeDeliveryNote} {t.currency} 500
-                    </p>
-                  </div>
-                  <div className="relative rounded-xl overflow-hidden border border-border min-h-[182px] shadow-soft">
-                    <img src={HERITAGE_IMG} alt={isRTL ? "هاون خشبي تقليدي وأعشاب مجففة" : "Traditional wooden mortar and dried herbs"} className="absolute inset-0 w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-brand-forest/85 via-brand-forest/30 to-transparent" />
-                    <div className="absolute inset-0 flex flex-col justify-end p-6">
-                      <h3 className="font-display text-brand-peach mb-2 font-bold" style={{ fontSize: "1.4rem" }}>
-                        {t.heritage}
-                      </h3>
-                      <p className="text-brand-peach/90 max-w-xs" style={{ fontSize: "0.88rem", lineHeight: 1.5 }}>
-                        {t.heritageDesc}
-                      </p>
-                    </div>
-                  </div>
-                </section>
-              )}
+
             </div>
           );
         })}

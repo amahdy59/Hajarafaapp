@@ -226,7 +226,7 @@ export function Account() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+        if (parsed && typeof parsed === "object" && !Array.isArray(parsed) && parsed.firstName) {
           // Reset if it's the old mock user from early versions
           if (parsed.email === "alex@example.com" || parsed.firstName === "Alex" || parsed.firstName === "alex") {
             const defaultUser = {
@@ -244,6 +244,10 @@ export function Account() {
         console.error("Failed to parse profile JSON from localStorage:", e);
       }
     }
+    // Check if user explicitly signed out
+    if (localStorage.getItem("hajarafa.logged_out") === "true") {
+      return null;
+    }
     const defaultUser = {
       firstName: locale === "ar" ? "أحمد" : "Ahmed",
       lastName: locale === "ar" ? "مهدي" : "Mahdy",
@@ -260,7 +264,21 @@ export function Account() {
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) {
-          return parsed;
+          // Filter to make sure order properties are safe and complete
+          const validOrders = parsed.filter(o => 
+            o && 
+            typeof o === "object" && 
+            typeof o.id === "string" && 
+            typeof o.status === "string" && 
+            typeof o.total === "number" &&
+            typeof o.items === "number" &&
+            typeof o.image === "string" &&
+            o.receipt && typeof o.receipt === "object" &&
+            Array.isArray(o.products)
+          );
+          if (validOrders.length > 0) {
+            return validOrders;
+          }
         }
       } catch (e) {
         console.error("Failed to parse orders from localStorage:", e);
@@ -297,6 +315,7 @@ export function Account() {
     };
     setProfile(mockUser);
     localStorage.setItem("hajarafa.profile", JSON.stringify(mockUser));
+    localStorage.removeItem("hajarafa.logged_out");
     toast.success(isRTL ? "مرحباً بك مجدداً!" : "Welcome back!");
   };
 
@@ -317,6 +336,7 @@ export function Account() {
     };
     setProfile(newUser);
     localStorage.setItem("hajarafa.profile", JSON.stringify(newUser));
+    localStorage.removeItem("hajarafa.logged_out");
     toast.success(isRTL ? "تم إنشاء الحساب بنجاح!" : "Account created successfully!");
   };
 
@@ -329,6 +349,7 @@ export function Account() {
     };
     setProfile(mockUser);
     localStorage.setItem("hajarafa.profile", JSON.stringify(mockUser));
+    localStorage.removeItem("hajarafa.logged_out");
     toast.success(isRTL 
       ? `تم تسجيل الدخول بنجاح عبر ${platform}` 
       : `Successfully signed in via ${platform}`
@@ -368,6 +389,7 @@ export function Account() {
     setProfile(null);
     localStorage.removeItem("hajarafa.profile");
     localStorage.removeItem("hajarafa.avatar");
+    localStorage.setItem("hajarafa.logged_out", "true");
     toast.success(isRTL ? "تم تسجيل الخروج بنجاح!" : "Signed out successfully!");
   };
 
