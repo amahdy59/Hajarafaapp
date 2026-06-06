@@ -160,7 +160,7 @@ export function Footer() {
               Visa
             </span>
             {/* MasterCard Badge */}
-            <span className="px-2 rounded bg-white text-[#eb001b] border border-white/10 font-black text-[9px] uppercase tracking-wider select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Mastercard">
+            <span className="px-2 rounded bg-white text-[#be0c1b] border border-white/10 font-black text-[9px] uppercase tracking-wider select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Mastercard">
               MasterCard
             </span>
             {/* Meeza Badge */}
@@ -168,11 +168,11 @@ export function Footer() {
               {locale === "ar" ? "ميزة" : "Meeza"}
             </span>
             {/* Vodafone Cash Badge */}
-            <span className="px-2 rounded bg-[#e60000] text-white border border-white/10 font-bold text-[8px] sm:text-[9px] select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Vodafone Cash">
+            <span className="px-2 rounded bg-[#bd0000] text-white border border-white/10 font-bold text-[8px] sm:text-[9px] select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Vodafone Cash">
               {locale === "ar" ? "فودافون كاش" : "VF Cash"}
             </span>
             {/* COD Badge */}
-            <span className="px-2.5 rounded bg-white/10 text-[#FAF6F0] dark:text-[#EFECE6] border border-white/15 font-semibold text-[9px] select-none h-6 flex items-center justify-center font-sans" title="Cash on Delivery">
+            <span className="px-2.5 rounded bg-zinc-800 text-white border border-white/10 font-semibold text-[9px] select-none h-6 flex items-center justify-center font-sans" title="Cash on Delivery">
               {locale === "ar" ? "الدفع عند الاستلام" : "COD"}
             </span>
           </div>

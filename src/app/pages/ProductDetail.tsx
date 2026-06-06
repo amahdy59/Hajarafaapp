@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router";
 import { Heart, ShoppingCart, Share2, ChevronLeft, ChevronDown, Star, Plus, Minus, Leaf, Truck, Shield, RotateCcw, Check } from "lucide-react";
 import { getProductById, products } from "../data/products";
+import { categories, categoryMapping } from "../data/categories";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { useAppSettings } from "../context/AppSettingsContext";
@@ -38,6 +39,12 @@ export function ProductDetail() {
     setAccordionOpen(prev => ({ ...prev, [section]: !prev[section] }));
   };
   const wishlisted = product ? isWishlisted(product.id) : false;
+
+  const parentSlug = product ? (categoryMapping[product.categorySlug] || product.categorySlug) : "";
+  const parentCategory = categories.find(c => c.slug === parentSlug);
+  const categoryName = parentCategory
+    ? (isRTL && parentCategory.nameAr ? parentCategory.nameAr : parentCategory.name)
+    : (product ? product.category : "");
 
   if (!product) {
     return (
@@ -101,8 +108,8 @@ export function ProductDetail() {
           <ChevronLeft size={12} className="text-muted-foreground rtl-flip" />
           <Link to="/products" className="text-muted-foreground hover:text-foreground transition-colors">{t.shopAll}</Link>
           <ChevronLeft size={12} className="text-muted-foreground rtl-flip" />
-          <Link to={`/category/${product.categorySlug}`} className="text-muted-foreground hover:text-foreground transition-colors">
-            {isRTL && product.categoryAr ? product.categoryAr : product.category}
+          <Link to={`/category/${parentSlug}`} className="text-muted-foreground hover:text-foreground transition-colors">
+            {categoryName}
           </Link>
           <ChevronLeft size={12} className="text-muted-foreground rtl-flip" />
           <span className="text-foreground truncate max-w-40">{isRTL && product.nameAr ? product.nameAr : product.name}</span>
@@ -111,12 +118,12 @@ export function ProductDetail() {
         {/* Breadcrumb - Mobile/Tablet only compact back button */}
         <div className="md:hidden mb-4">
           <Link 
-            to={`/category/${product.categorySlug}`} 
+            to={`/category/${parentSlug}`} 
             className="inline-flex items-center gap-1.5 text-brand-ink-soft hover:text-foreground transition-colors text-xs font-semibold py-1 px-2.5 bg-card border border-border rounded-xl"
           >
             <ChevronLeft size={14} className="rtl-flip text-brand-ink-soft" />
             <span>
-              {isRTL ? "العودة إلى" : "Back to"} {isRTL && product.categoryAr ? product.categoryAr : product.category}
+              {isRTL ? "العودة إلى" : "Back to"} {categoryName}
             </span>
           </Link>
         </div>
@@ -168,10 +175,10 @@ export function ProductDetail() {
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-2 mb-1 flex-wrap">
                 <Link
-                  to={`/category/${product.categorySlug}`}
+                  to={`/category/${parentSlug}`}
                   className="text-brand-terracotta bg-brand-peach px-2.5 py-0.5 rounded-full text-xs font-semibold"
                 >
-                  {isRTL && product.categoryAr ? product.categoryAr : product.category}
+                  {categoryName}
                 </Link>
                 {product.isBestSeller && (
                   <span className="text-brand-forest bg-brand-cream-2 px-2.5 py-0.5 rounded-full text-xs font-semibold">
@@ -274,7 +281,7 @@ export function ProductDetail() {
               <Button
                 onClick={handleAddToCart}
                 size="md"
-                className="flex-1 font-bold text-sm"
+                className="flex-1 font-bold text-sm h-11"
                 leftIcon={<ShoppingCart size={16} />}
               >
                 {t.addToCart}
@@ -345,7 +352,7 @@ export function ProductDetail() {
                   {[
                     { label: isRTL ? "الوزن" : "Weight", value: product.weight },
                     { label: isRTL ? "المنشأ" : "Origin", value: product.origin },
-                    { label: isRTL ? "الفئة" : "Category", value: isRTL && product.categoryAr ? product.categoryAr : product.category },
+                    { label: isRTL ? "الفئة" : "Category", value: categoryName },
                     { label: isRTL ? "عضوي" : "Organic", value: product.isOrganic ? (isRTL ? "نعم ✓" : "Yes ✓") : (isRTL ? "لا" : "No") },
                   ].map(d => (
                     <div key={d.label}>
@@ -445,7 +452,7 @@ export function ProductDetail() {
                   {[
                     { label: isRTL ? "الوزن" : "Weight", value: product.weight },
                     { label: isRTL ? "المنشأ" : "Origin", value: product.origin },
-                    { label: isRTL ? "الفئة" : "Category", value: isRTL && product.categoryAr ? product.categoryAr : product.category },
+                    { label: isRTL ? "الفئة" : "Category", value: categoryName },
                     { label: isRTL ? "عضوي" : "Organic", value: product.isOrganic ? (isRTL ? "نعم ✓" : "Yes ✓") : (isRTL ? "لا" : "No") },
                   ].map(d => (
                     <div key={d.label}>

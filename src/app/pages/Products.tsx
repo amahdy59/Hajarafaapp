@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { SlidersHorizontal, Grid3X3, List, ChevronDown, X, Search } from "lucide-react";
 import { useSearchParams } from "react-router";
 import { products } from "../data/products";
@@ -8,9 +8,9 @@ import { motion, AnimatePresence } from "motion/react";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { CustomDropdown } from "../components/ui/CustomDropdown";
 
-type SortOption = "featured" | "price-asc" | "price-desc" | "rating" | "new";
+export type SortOption = "featured" | "price-asc" | "price-desc" | "rating" | "new";
 
-interface FilterPanelProps {
+export interface FilterPanelProps {
   t: any;
   isRTL: boolean;
   hasActiveFilters: boolean;
@@ -24,9 +24,10 @@ interface FilterPanelProps {
   setShowOrganic: (show: boolean) => void;
   clearFilters: () => void;
   hideHeader?: boolean;
+  showCategoryFilter?: boolean;
 }
 
-function FilterPanel({
+export function FilterPanel({
   t,
   isRTL,
   hasActiveFilters,
@@ -40,6 +41,7 @@ function FilterPanel({
   setShowOrganic,
   clearFilters,
   hideHeader = false,
+  showCategoryFilter = true,
 }: FilterPanelProps) {
   return (
     <div className="space-y-3 sm:space-y-4">
@@ -55,33 +57,40 @@ function FilterPanel({
       )}
 
       {/* Categories */}
-      <div>
-        <h4 className="text-sm text-foreground/80 mb-2 font-bold">{t.shopByCategory}</h4>
-        <div className="space-y-1 sm:space-y-1.5">
-          {categories.map(cat => (
-            <label
-              key={cat.id}
-              className="flex items-center gap-2.5 cursor-pointer group select-none"
-              onClick={() => toggleCategory(cat.slug)}
-            >
-              <div
-                className={`w-4.5 h-4.5 rounded border flex items-center justify-center transition-colors ${
-                  selectedCategories.includes(cat.slug)
-                    ? "border-brand-terracotta bg-brand-terracotta"
-                    : "border-border group-hover:border-brand-terracotta"
-                }`}
+      {showCategoryFilter && (
+        <div>
+          <h4 className="text-sm text-foreground/80 mb-2 font-bold">{t.shopByCategory}</h4>
+          <div className="space-y-1 sm:space-y-1.5">
+            {categories.map(cat => (
+              <label
+                key={cat.id}
+                className="flex items-center gap-2.5 cursor-pointer group select-none text-sm text-foreground/80 font-medium focus-within:text-brand-terracotta"
               >
-                {selectedCategories.includes(cat.slug) && (
-                  <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                    <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                )}
-              </div>
-              <span className="text-sm text-foreground/80 font-medium">{cat.icon} {isRTL && cat.nameAr ? cat.nameAr : cat.name}</span>
-            </label>
-          ))}
+                <input
+                  type="checkbox"
+                  checked={selectedCategories.includes(cat.slug)}
+                  onChange={() => toggleCategory(cat.slug)}
+                  className="sr-only peer"
+                />
+                <div
+                  className={`w-4.5 h-4.5 rounded border flex items-center justify-center transition-colors peer-focus:ring-2 peer-focus:ring-brand-terracotta/40 ${
+                    selectedCategories.includes(cat.slug)
+                      ? "border-brand-terracotta bg-brand-terracotta"
+                      : "border-border group-hover:border-brand-terracotta"
+                  }`}
+                >
+                  {selectedCategories.includes(cat.slug) && (
+                    <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                      <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  )}
+                </div>
+                <span>{cat.icon} {isRTL && cat.nameAr ? cat.nameAr : cat.name}</span>
+              </label>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Price range */}
       <div>
@@ -140,15 +149,20 @@ function FilterPanel({
 
       {/* Organic only */}
       <label
-        className="flex items-center gap-2.5 cursor-pointer select-none"
-        onClick={() => setShowOrganic(!showOrganic)}
+        className="flex items-center gap-2.5 cursor-pointer select-none text-sm text-foreground/80 font-semibold focus-within:text-brand-terracotta"
       >
+        <input
+          type="checkbox"
+          checked={showOrganic}
+          onChange={() => setShowOrganic(!showOrganic)}
+          className="sr-only peer"
+        />
         <div
-          className={`w-9 h-5 rounded-full transition-colors relative ${showOrganic ? "bg-brand-terracotta" : "bg-border"}`}
+          className={`w-9 h-5 rounded-full transition-colors relative peer-focus:ring-2 peer-focus:ring-brand-terracotta/40 ${showOrganic ? "bg-brand-terracotta" : "bg-border"}`}
         >
           <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${showOrganic ? (isRTL ? "-translate-x-4.5" : "translate-x-4.5") : (isRTL ? "-translate-x-0.5" : "translate-x-0.5")}`} />
         </div>
-        <span className="text-sm text-foreground/80 font-semibold">{t.organicOnly}</span>
+        <span>{t.organicOnly}</span>
       </label>
     </div>
   );
@@ -176,10 +190,17 @@ export function Products() {
   const [showOrganic, setShowOrganic] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState(urlQuery);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setSearchQuery(urlQuery);
   }, [urlQuery]);
+
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, []);
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
@@ -264,10 +285,10 @@ export function Products() {
           <h1 className="text-foreground font-display text-2xl font-bold leading-tight">
             {filter === "deals" ? `🔥 ${t.todaysDeals}` : t.shopAll}
           </h1>
-          <p className="text-muted-foreground text-sm">{filteredProducts.length} {t.productsFound}</p>
+          <p className="text-muted-foreground text-sm hidden lg:block">{filteredProducts.length} {t.productsFound}</p>
         </div>
 
-        <div className="flex gap-6">
+        <div className="flex gap-6 items-start">
           {/* Sidebar - desktop */}
           <aside className="hidden lg:block w-56 flex-shrink-0">
             <div className="bg-card rounded-2xl p-4 border border-border sticky top-28 shadow-soft">
@@ -278,11 +299,12 @@ export function Products() {
           {/* Main content */}
           <div className="flex-1 min-w-0">
             {/* Toolbar */}
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-4 bg-card border border-border rounded-xl p-3 sm:px-4 sm:py-3 shadow-soft">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-6">
               {/* Search products box */}
               <div className="relative w-full lg:max-w-xs">
                 <Search size={15} className={`absolute ${isRTL ? "right-3.5" : "left-3.5"} top-1/2 -translate-y-1/2 text-muted-foreground`} />
                 <input
+                  ref={searchInputRef}
                   type="text"
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}

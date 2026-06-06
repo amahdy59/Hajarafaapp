@@ -26,8 +26,8 @@ function deriveBadge(p: Product, isRTL: boolean): { label: string; tone: BadgeTo
 }
 
 const badgeCls: Record<BadgeTone, string> = {
-  sage: "bg-brand-cream-2 text-brand-sage border-brand-sage",
-  terracotta: "bg-brand-peach text-brand-terracotta border-brand-terracotta",
+  sage: "bg-brand-cream-2 !text-brand-sage border-brand-sage",
+  terracotta: "bg-brand-peach !text-brand-terracotta border-brand-terracotta",
 };
 
 export const ProductCard = memo(function ProductCard({ product, view = "grid" }: ProductCardProps) {

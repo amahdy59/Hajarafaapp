@@ -85,7 +85,7 @@ export function Header() {
         </div>
 
         {/* Category Navigation Rail */}
-        {(location.pathname === "/" || location.pathname.startsWith("/category/")) && (
+        {(location.pathname === "/" || location.pathname.startsWith("/category/") || location.pathname === "/products") && (
           <div className="border-t border-border overflow-x-auto scrollbar-hide py-2.5 px-4 sm:px-6 w-full max-w-full">
             <div className="max-w-[1280px] mx-auto flex gap-2 w-max">
               <Link

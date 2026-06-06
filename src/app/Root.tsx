@@ -18,6 +18,9 @@ export function Root() {
   const location = useLocation();
   const isCheckout = location.pathname === "/checkout";
 
+  const hasCategoryRail = location.pathname === "/" || location.pathname.startsWith("/category/") || location.pathname === "/products";
+  const mainPadding = hasCategoryRail ? "pt-[108px]" : "pt-16";
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [location.pathname, location.search]);
@@ -46,7 +49,7 @@ export function Root() {
         </div>
       ) : (
         <>
-          <main className={`${(location.pathname === "/" || location.pathname.startsWith("/category/")) ? "pt-[108px]" : "pt-16"} pb-24 sm:pb-8 w-full max-w-full overflow-x-hidden`}>
+          <main className={`${mainPadding} pb-24 sm:pb-8 w-full max-w-full overflow-x-hidden`}>
             <ErrorBoundary>
               <Suspense fallback={<PageLoader />}>
                 <Outlet />

@@ -287,7 +287,7 @@ export function Branches() {
             <MapPin size={24} className="text-brand-terracotta fill-brand-peach/50" />
             <div>
               <h1 className="text-brand-forest font-display text-2xl sm:text-3xl">{t.branches}</h1>
-              <p className="eyebrow text-brand-terracotta">{isRTL ? "الفروع الرئيسية" : "Our Main Branches"}</p>
+              <p className="eyebrow !text-brand-terracotta">{isRTL ? "الفروع الرئيسية" : "Our Main Branches"}</p>
             </div>
             <span className="text-xs text-muted-foreground font-medium bg-brand-peach/30 rounded-full px-2.5 py-0.5">
               {totalBranches} {isRTL ? "فرع" : "branches"}

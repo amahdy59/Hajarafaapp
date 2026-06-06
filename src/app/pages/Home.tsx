@@ -36,7 +36,7 @@ export function Home() {
               transition={{ duration: 0.5 }}
               className="max-w-md bg-black/20 backdrop-blur-[2px] p-4.5 rounded-xl border border-white/5 shadow-lg select-none"
             >
-              <span className="eyebrow text-brand-peach drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">{t.appTagline}</span>
+              <span className="eyebrow !text-brand-peach drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">{t.appTagline}</span>
               <h1
                 className="font-display text-white mt-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]"
                 style={{ fontSize: "clamp(1.35rem, 3.5vw, 1.85rem)", lineHeight: 1.15, letterSpacing: "-0.5px" }}
