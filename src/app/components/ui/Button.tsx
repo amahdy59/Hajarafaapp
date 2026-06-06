@@ -51,7 +51,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         className={`inline-flex items-center justify-center gap-2 transition-all duration-200 select-none cursor-pointer font-sans border-0 font-medium ${
           variantMap[variant]
         } ${sizeMap[size]} ${
-          fullWidth ? "w-full md:w-auto" : ""
+          fullWidth ? "w-full" : ""
         } ${className}`}
         {...rest}
       >

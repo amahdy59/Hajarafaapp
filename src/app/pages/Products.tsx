@@ -258,7 +258,7 @@ export function Products() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pt-[28px] pb-6">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pt-4 sm:pt-6 pb-6">
         {/* Page header */}
         <div className="mb-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 select-none">
           <h1 className="text-foreground font-display text-2xl font-bold leading-tight">
