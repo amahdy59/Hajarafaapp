@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { SlidersHorizontal, Grid3X3, List, X, Search } from "lucide-react";
 import { getProductsByCategory } from "../data/products";
 import { categories } from "../data/categories";
@@ -38,6 +38,14 @@ export function Category() {
     setShowOrganic(false);
     setSearchQuery("");
     setSort("featured");
+  }, [slug]);
+
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
   }, [slug]);
 
   const filteredProducts = useMemo(() => {
@@ -139,6 +147,7 @@ export function Category() {
               <div className="relative w-full lg:max-w-xs">
                 <Search size={15} className={`absolute ${isRTL ? "right-3.5" : "left-3.5"} top-1/2 -translate-y-1/2 text-muted-foreground`} />
                 <input
+                  ref={searchInputRef}
                   type="text"
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router";
 import { Search as SearchIcon, X } from "lucide-react";
 import { products } from "../data/products";
@@ -15,6 +15,13 @@ export function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { t, isRTL } = useAppSettings();
   const [query, setQuery] = useState(searchParams.get("q") || "");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, []);
 
   useEffect(() => {
     setQuery(searchParams.get("q") || "");
@@ -54,11 +61,11 @@ export function Search() {
         <div className="relative mb-6">
           <SearchIcon size={18} className={`absolute ${isRTL ? "right-4" : "left-4"} top-1/2 -translate-y-1/2 text-muted-foreground`} />
           <input
+            ref={searchInputRef}
             type="text"
             value={query}
             onChange={e => handleSearch(e.target.value)}
             placeholder={t.searchPlaceholder}
-            autoFocus
             className={`w-full ${isRTL ? "pr-11 pl-11" : "pl-11 pr-11"} py-4 bg-card border border-border rounded-2xl text-foreground placeholder:text-muted-foreground outline-none focus:border-brand-terracotta focus:ring-2 focus:ring-brand-terracotta/20 transition-all text-sm shadow-sm`}
           />
           {hasQuery && (

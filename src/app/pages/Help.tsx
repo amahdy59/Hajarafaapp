@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { ArrowLeft, CircleHelp, Search, ChevronDown, Phone, MessageCircle } from "lucide-react";
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
@@ -59,6 +59,13 @@ const mockFAQs: FAQItem[] = [
 export function Help() {
   const { t, isRTL } = useAppSettings();
   const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, []);
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [expandedCategory, setExpandedCategory] = useState<string | null>("shipping");
   const [openId, setOpenId] = useState<string | null>("q1");
@@ -131,6 +138,7 @@ export function Help() {
         <div className="relative">
           <Search size={18} className={`absolute ${isRTL ? "right-4" : "left-4"} top-1/2 -translate-y-1/2 text-muted-foreground`} />
           <input
+            ref={searchInputRef}
             type="text"
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
