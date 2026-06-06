@@ -422,6 +422,16 @@ export function Checkout() {
                   <span className="text-brand-terracotta">{t.currency} {total.toFixed(2)}</span>
                 </div>
               </div>
+
+              {/* Delivery Info Tag */}
+              <div className="flex items-center gap-2.5 bg-brand-peach/40 dark:bg-zinc-800/40 border border-brand-terracotta/10 dark:border-white/5 py-2.5 px-3.5 rounded-xl text-[11px] font-semibold text-brand-forest dark:text-[#EFECE6] select-none shadow-sm leading-none justify-center">
+                <Truck size={14} className="text-brand-terracotta flex-shrink-0" />
+                <span>
+                  {isRTL 
+                    ? "التوصيل المتوقع خلال ٥ إلى ٧ أيام عمل" 
+                    : "Estimated delivery: 5 to 7 working days"}
+                </span>
+              </div>
             </div>
           </div>
         )}

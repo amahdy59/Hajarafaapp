@@ -146,21 +146,35 @@ export function Footer() {
         <div className="text-[#FAF6F0]/90 dark:text-[#EFECE6]/90 text-center sm:text-start flex items-center justify-center sm:justify-start gap-1 flex-wrap select-none">
           <span>© {new Date().getFullYear()}</span>
           <span>{locale === "ar" ? "حاج عرفة. جميع الحقوق محفوظة." : "Haj Arafa. All rights reserved."}</span>
-          <span className="block sm:inline sm:ms-2 mt-1 sm:mt-0 text-[10px] text-[#FAF6F0]/70 dark:text-[#EFECE6]/70">
-            {locale === "ar" ? "صنع بكل حب لعافيتك 🧡" : "Crafted with love for your wellness 🧡"}
-          </span>
         </div>
 
         {/* Payment Badges & Guarantee */}
-        <div className="flex items-center gap-4 flex-wrap justify-center">
-          <div className="flex items-center gap-1.5 text-[11px] text-[#FAF6F0]/95 dark:text-[#EFECE6]/95">
-            <ShieldCheck size={14} className="text-brand-sage" />
-            <span>{locale === "ar" ? "دفع آمن ١٠٠٪" : "100% Secure Payment"}</span>
+        <div className="flex items-center gap-3.5 flex-wrap justify-center sm:justify-end">
+          <div className="flex items-center gap-1.5 text-[11px] text-[#FAF6F0]/90 dark:text-[#EFECE6]/90 font-medium">
+            <ShieldCheck size={15} className="text-[#8DA392] flex-shrink-0" />
+            <span>{locale === "ar" ? "دفع آمن ١٠٠٪:" : "100% Secure Payment:"}</span>
           </div>
-          <div className="flex gap-2">
-            <span className="px-2 py-1 rounded bg-white/10 text-[#FAF6F0] dark:text-[#EFECE6] border border-white/20 font-semibold text-[9px]">VISA</span>
-            <span className="px-2 py-1 rounded bg-white/10 text-[#FAF6F0] dark:text-[#EFECE6] border border-white/20 font-semibold text-[9px]">MC</span>
-            <span className="px-2 py-1 rounded bg-white/10 text-[#FAF6F0] dark:text-[#EFECE6] border border-white/20 font-semibold text-[9px]">{locale === "ar" ? "الدفع عند الاستلام" : "COD"}</span>
+          <div className="flex items-center gap-2 flex-wrap">
+            {/* Visa Badge */}
+            <span className="px-2 rounded bg-white text-[#1a1f71] border border-white/10 font-bold text-[9px] uppercase tracking-wider select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Visa">
+              Visa
+            </span>
+            {/* MasterCard Badge */}
+            <span className="px-2 rounded bg-white text-[#eb001b] border border-white/10 font-black text-[9px] uppercase tracking-wider select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Mastercard">
+              MasterCard
+            </span>
+            {/* Meeza Badge */}
+            <span className="px-2 rounded bg-[#005c53] text-white border border-white/10 font-bold text-[9px] select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Meeza">
+              {locale === "ar" ? "ميزة" : "Meeza"}
+            </span>
+            {/* Vodafone Cash Badge */}
+            <span className="px-2 rounded bg-[#e60000] text-white border border-white/10 font-bold text-[8px] sm:text-[9px] select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Vodafone Cash">
+              {locale === "ar" ? "فودافون كاش" : "VF Cash"}
+            </span>
+            {/* COD Badge */}
+            <span className="px-2.5 rounded bg-white/10 text-[#FAF6F0] dark:text-[#EFECE6] border border-white/15 font-semibold text-[9px] select-none h-6 flex items-center justify-center font-sans" title="Cash on Delivery">
+              {locale === "ar" ? "الدفع عند الاستلام" : "COD"}
+            </span>
           </div>
         </div>
 

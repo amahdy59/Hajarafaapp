@@ -50,14 +50,18 @@ export function Header() {
           scrolled ? "shadow-soft border-b border-border" : "border-b border-transparent"
         }`}
       >
-        <div className="h-16 px-4 sm:px-6 max-w-[1280px] mx-auto grid grid-cols-[auto_1fr_auto] items-center gap-2">
-          <IconButton onClick={() => setMenuOpen(true)} aria-label={t.menu}>
-            <Menu size={20} />
-          </IconButton>
+        <div className="relative h-16 px-4 sm:px-6 max-w-[1280px] mx-auto flex items-center justify-between gap-2">
+          <div className="flex items-center justify-start z-10">
+            <IconButton onClick={() => setMenuOpen(true)} aria-label={t.menu}>
+              <Menu size={20} />
+            </IconButton>
+          </div>
 
-          <Link to="/" className="justify-self-center flex items-center justify-center min-w-0 h-14 select-none cursor-pointer w-fit no-underline"><img src={logoImg} alt="HajArafa Logo" className="h-9 xs:h-12 sm:h-14 w-auto object-contain max-w-[42vw] sm:max-w-[220px] select-none" /></Link>
+          <Link to="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center min-w-0 h-14 select-none cursor-pointer w-fit no-underline z-10">
+            <img src={logoImg} alt="HajArafa Logo" className="h-9 xs:h-12 sm:h-14 w-auto object-contain max-w-[42vw] sm:max-w-[220px] select-none" />
+          </Link>
 
-          <div className="flex items-center gap-0.5">
+          <div className="flex items-center gap-0.5 justify-end z-10">
             <IconButton onClick={() => navigate("/products")} aria-label={t.searchPlaceholder} className="hidden sm:flex">
               <Search size={19} />
             </IconButton>

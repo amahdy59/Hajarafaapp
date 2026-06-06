@@ -19,8 +19,8 @@ export function Root() {
   const isCheckout = location.pathname === "/checkout";
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [location.pathname, location.search]);
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans w-full max-w-full overflow-x-hidden">
