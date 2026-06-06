@@ -2,7 +2,7 @@ import { ArrowLeft, Award, Leaf, ShieldCheck, Sparkles } from "lucide-react";
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion } from "motion/react";
-import ABOUT_IMG from "../../assets/natural_about_bg.webp";
+import logoImg from "../../assets/logo.webp";
 
 export function About() {
   const { t, isRTL } = useAppSettings();
@@ -54,21 +54,30 @@ export function About() {
   return (
     <div className="min-h-screen bg-background">
       {/* Banner */}
-      <div className="relative h-64 sm:h-80 overflow-hidden bg-brand-forest/90">
-        <img src={ABOUT_IMG} alt="" className="absolute inset-0 w-full h-full object-cover opacity-60" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/35" />
+      <div className="relative h-64 sm:h-80 overflow-hidden bg-gradient-to-br from-brand-forest via-brand-forest/95 to-brand-forest/85">
+        {/* CSS-generated subtle organic texture/pattern */}
+        <div className="absolute inset-0 opacity-15" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, #FAF6F0 1px, transparent 0)`,
+          backgroundSize: "24px 24px"
+        }} />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/25" />
         <div className="absolute inset-0 flex items-center justify-center p-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            className="max-w-xl space-y-2 select-none"
+            className="max-w-xl space-y-3.5 select-none flex flex-col items-center"
           >
-            <h1 className="text-white text-3xl sm:text-4xl font-display flex items-center justify-center gap-2 flex-wrap select-none">
-              <span>{isRTL ? "عن حاج عرفة" : "About Haj Arafa"}</span>
-            </h1>
-            <p className="text-brand-peach font-medium text-sm sm:text-base select-none">
-              {isRTL ? content.subtitleAr : content.subtitleEn}
-            </p>
+            <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 shadow-inner w-fit">
+              <img src={logoImg} alt="Haj Arafa Logo" className="h-12 sm:h-14 w-auto object-contain select-none pointer-events-none" />
+            </div>
+            <div className="space-y-1">
+              <h1 className="text-white text-2xl sm:text-3xl font-display select-none">
+                {isRTL ? "عن حاج عرفة" : "About Haj Arafa"}
+              </h1>
+              <p className="text-brand-peach font-medium text-xs sm:text-sm select-none">
+                {isRTL ? content.subtitleAr : content.subtitleEn}
+              </p>
+            </div>
           </motion.div>
         </div>
       </div>

@@ -46,7 +46,7 @@ export function Root() {
         </div>
       ) : (
         <>
-          <main className={`${!["/checkout", "/account"].includes(location.pathname) ? "pt-[108px]" : "pt-16"} pb-24 sm:pb-8 w-full max-w-full overflow-x-hidden`}>
+          <main className={`${(location.pathname === "/" || location.pathname.startsWith("/category/")) ? "pt-[108px]" : "pt-16"} pb-24 sm:pb-8 w-full max-w-full overflow-x-hidden`}>
             <ErrorBoundary>
               <Suspense fallback={<PageLoader />}>
                 <Outlet />

@@ -1,4 +1,4 @@
-import { ArrowLeft, Clock, MapPin, ExternalLink } from "lucide-react";
+import { ArrowLeft, Clock, MapPin, ExternalLink, Map, Phone, MessageCircle } from "lucide-react";
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { useState } from "react";
@@ -246,18 +246,15 @@ function RegionSection({
                 <span className="text-foreground text-sm sm:text-[0.9375rem] font-medium leading-relaxed">
                   {isRTL ? branch.nameAr : branch.nameEn}
                 </span>
-                <span className="text-[10px] text-muted-foreground bg-muted border border-border/40 px-2 py-0.5 rounded-md w-fit font-mono select-all">
-                  📞 01020401400 | ☎️ 17309
-                </span>
               </div>
               <a
                 href={mapsLink(region.nameEn, branch)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-brand-terracotta hover:text-brand-terracotta-dark transition-colors flex-shrink-0 text-xs font-semibold bg-brand-peach/60 border border-brand-terracotta/15 rounded-full px-2.5 py-1"
+                className="inline-flex items-center justify-center gap-1.5 h-9 bg-brand-peach/60 dark:bg-brand-peach/30 border border-brand-terracotta/25 text-brand-terracotta-dark dark:text-brand-terracotta hover:bg-brand-terracotta hover:text-white dark:hover:bg-brand-terracotta dark:hover:text-zinc-950 transition-colors flex-shrink-0 text-xs font-semibold rounded-xl px-3.5 shadow-sm"
                 title={isRTL ? "عرض على الخريطة" : "View on Map"}
               >
-                <ExternalLink size={14} />
+                <Map size={14} className="flex-shrink-0" />
                 <span>{isRTL ? "الخريطة" : "Map"}</span>
               </a>
             </li>
@@ -303,6 +300,20 @@ export function Branches() {
               "Haj Arafa is proud to serve you from our flagship store branches across Egypt. Visit us to explore our fresh range of organic herbs, spices, and natural beauty remedies."
             )}
           </p>
+
+          {/* Hotline Banner */}
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2.5 bg-brand-peach/40 dark:bg-zinc-800/40 border border-brand-terracotta/10 dark:border-white/5 p-3.5 px-4.5 rounded-2xl text-xs sm:text-sm font-medium w-fit shadow-sm mt-1">
+            <span className="text-brand-forest font-semibold">{isRTL ? "للطلب والاستفسار (الخط الساخن):" : "For orders & inquiries (Hotline):"}</span>
+            <div className="flex items-center gap-3.5 flex-wrap">
+              <a href="tel:17309" className="text-brand-terracotta-dark dark:text-brand-terracotta hover:underline font-bold font-mono flex items-center gap-1.5">
+                <Phone size={14} className="text-brand-terracotta" /> 17309
+              </a>
+              <span className="text-brand-line dark:text-zinc-700 select-none">|</span>
+              <a href="https://wa.me/201020401400" target="_blank" rel="noopener noreferrer" className="text-[#0e7065] dark:text-[#55c7b9] hover:underline font-bold font-mono flex items-center gap-1.5">
+                <MessageCircle size={14} className="text-[#128C7E]" /> 01020401400
+              </a>
+            </div>
+          </div>
         </div>
 
         {/* ─── Region Sections ─── */}

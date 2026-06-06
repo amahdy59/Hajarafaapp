@@ -1,9 +1,8 @@
 import { useState, useMemo } from "react";
-import { ArrowLeft, CircleHelp, Search, ChevronDown, ChevronUp, Phone, MessageSquare, MessageCircle } from "lucide-react";
+import { ArrowLeft, CircleHelp, Search, ChevronDown, Phone, MessageCircle } from "lucide-react";
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
-import logoImg from "../../assets/logo.webp";
 
 interface FAQItem {
   id: string;
@@ -50,8 +49,8 @@ const mockFAQs: FAQItem[] = [
   {
     id: "q5",
     category: "products",
-    questionEn: "Are HajArafa products 100% organic and natural?",
-    questionAr: "هل منتجات حاج عارفة طبيعية وعضوية ١٠٠٪؟",
+    questionEn: "Are Haj Arafa products 100% organic and natural?",
+    questionAr: "هل منتجات حاج عرفة طبيعية وعضوية ١٠٠٪؟",
     answerEn: "Yes, all our herbal remedies, cold-pressed oils, raw honeys, and botanical cosmetics are completely natural, chemical-free, and ethically sourced.",
     answerAr: "نعم، جميع الأعشاب الطبية، الزيوت المعصورة على البارد، العسل الخام، ومستحضرات التجميل النباتية لدينا طبيعية بالكامل وخالية من الكيماويات ومستخلصة بطرق مستدامة."
   }
@@ -61,14 +60,15 @@ export function Help() {
   const { t, isRTL } = useAppSettings();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [expandedCategory, setExpandedCategory] = useState<string | null>("shipping");
   const [openId, setOpenId] = useState<string | null>("q1");
 
   const categories = [
-    { key: "all", labelEn: "All Topics", labelAr: "كل المواضيع" },
-    { key: "shipping", labelEn: "Shipping & Delivery", labelAr: "الشحن والتوصيل" },
-    { key: "payments", labelEn: "Payments & Orders", labelAr: "الدفع والطلبات" },
-    { key: "returns", labelEn: "Returns & Refunds", labelAr: "الاسترجاع والاسترداد" },
-    { key: "products", labelEn: "Product Quality", labelAr: "جودة المنتجات" }
+    { key: "all", labelEn: "All Topics", labelAr: "كل المواضيع", emoji: "🌿" },
+    { key: "shipping", labelEn: "Shipping & Delivery", labelAr: "الشحن والتوصيل", emoji: "🚚" },
+    { key: "payments", labelEn: "Payments & Orders", labelAr: "الدفع والطلبات", emoji: "💳" },
+    { key: "returns", labelEn: "Returns & Refunds", labelAr: "الاسترجاع والاسترداد", emoji: "🔄" },
+    { key: "products", labelEn: "Product Quality", labelAr: "جودة المنتجات", emoji: "🌿" }
   ];
 
   const filteredFAQs = useMemo(() => {
@@ -83,28 +83,6 @@ export function Help() {
 
   const toggleFAQ = (id: string) => {
     setOpenId(openId === id ? null : id);
-  };
-
-  const renderQuestionWithLogo = (text: string) => {
-    const regex = /(HajArafa|Haj\s+Arafa|حاج\s+عارفة|حاج\s+عرفة)/gi;
-    const parts = text.split(regex);
-    return (
-      <span className="inline-flex items-center gap-1.5 flex-wrap select-none">
-        {parts.map((part, index) => {
-          if (regex.test(part)) {
-            return (
-              <img
-                key={index}
-                src={logoImg}
-                alt="HajArafa"
-                className="h-4.5 w-auto object-contain inline-block align-middle select-none pointer-events-none"
-              />
-            );
-          }
-          return <span key={index}>{part}</span>;
-        })}
-      </span>
-    );
   };
 
   return (
@@ -128,7 +106,7 @@ export function Help() {
         </div>
 
         {/* Support quick contact banner */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-brand-peach/60 border border-brand-terracotta/10 p-5 rounded-2xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 bg-brand-peach/60 border border-brand-terracotta/10 p-5 rounded-2xl">
           <div className="space-y-1.5">
             <h3 className="text-brand-forest font-display text-sm sm:text-base">
               {isRTL ? "هل تحتاج لمساعدة فورية؟" : "Need Instant Help?"}
@@ -139,11 +117,11 @@ export function Help() {
                 : "Our support agents are available to assist you from 9:00 AM to 11:00 PM."}
             </p>
           </div>
-          <div className="flex items-center gap-3 justify-end sm:justify-start flex-row-reverse sm:flex-row">
-            <a href="tel:17309" className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-brand-terracotta text-white px-4 py-2.5 rounded-xl hover:bg-brand-terracotta-dark transition-all text-xs font-semibold">
+          <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-stretch sm:items-center sm:justify-end">
+            <a href="tel:17309" className="inline-flex items-center justify-center gap-2 bg-brand-terracotta text-white px-4 py-3 rounded-xl hover:bg-brand-terracotta-dark transition-all text-xs font-semibold w-full sm:w-auto h-11">
               <Phone size={14} /> {isRTL ? "اتصل بنا" : "Call Support"}
             </a>
-            <a href="https://wa.me/201020401400" target="_blank" rel="noopener noreferrer" className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-[#128C7E] text-white px-4 py-2.5 rounded-xl hover:bg-[#0e7065] transition-all text-xs font-semibold">
+            <a href="https://wa.me/201020401400" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-[#128C7E] text-white px-4 py-3 rounded-xl hover:bg-[#0e7065] transition-all text-xs font-semibold w-full sm:w-auto h-11">
               <MessageCircle size={14} /> WhatsApp
             </a>
           </div>
@@ -161,71 +139,193 @@ export function Help() {
           />
         </div>
 
-        {/* Category filters */}
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-          {categories.map(cat => (
-            <button
-              key={cat.key}
-              onClick={() => setActiveCategory(cat.key)}
-              className={`px-4 py-2 rounded-xl whitespace-nowrap text-sm border flex-shrink-0 font-medium transition-all ${
-                activeCategory === cat.key
-                  ? "bg-brand-terracotta text-white border-brand-terracotta shadow-sm"
-                  : "bg-card text-foreground border-border hover:bg-brand-peach hover:border-brand-terracotta"
-              }`}
-            >
-              {isRTL ? cat.labelAr : cat.labelEn}
-            </button>
-          ))}
-        </div>
-
-        {/* FAQs Accordion */}
-        <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-soft divide-y divide-border">
-          {filteredFAQs.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-2xl mb-2">🌿</p>
-              <p className="text-muted-foreground text-sm">
-                {isRTL ? "لا توجد نتائج مطابقة لبحثك." : "No matching questions found."}
-              </p>
+        {/* --- FAQ Layout (Hybrid Mobile Category Accordion vs Desktop Tabs) --- */}
+        {searchQuery.trim() !== "" ? (
+          /* Search Results Mode: Simple vertical list */
+          <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-soft divide-y divide-border">
+            {filteredFAQs.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-2xl mb-2">🌿</p>
+                <p className="text-muted-foreground text-sm">
+                  {isRTL ? "لا توجد نتائج مطابقة لبحثك." : "No matching questions found."}
+                </p>
+              </div>
+            ) : (
+              filteredFAQs.map(faq => {
+                const isOpen = openId === faq.id;
+                const catInfo = categories.find(c => c.key === faq.category);
+                return (
+                  <div key={faq.id} className="transition-colors">
+                    <button
+                      onClick={() => toggleFAQ(faq.id)}
+                      className="w-full px-5 py-4 flex items-center justify-between text-start hover:bg-muted/40 transition-colors"
+                    >
+                      <div className="space-y-1">
+                        <span className="text-[10px] text-brand-terracotta bg-brand-peach/40 px-2 py-0.5 rounded-full font-medium inline-block mb-1">
+                          {isRTL ? catInfo?.labelAr : catInfo?.labelEn}
+                        </span>
+                        <span className="text-foreground font-medium text-sm sm:text-base block">
+                          {isRTL ? faq.questionAr : faq.questionEn}
+                        </span>
+                      </div>
+                      <ChevronDown className={`text-brand-terracotta flex-shrink-0 ml-4 rtl:mr-4 rtl:ml-0 transition-transform duration-250 ${isOpen ? "rotate-180" : ""}`} size={18} />
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-5 pb-5 pt-1 text-muted-foreground text-xs sm:text-sm leading-relaxed border-t border-border/20">
+                            {isRTL ? faq.answerAr : faq.answerEn}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        ) : (
+          /* Normal Mode */
+          <>
+            {/* Desktop-only Horizontal Category Filters */}
+            <div className="hidden sm:flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+              {categories.map(cat => (
+                <button
+                  key={cat.key}
+                  onClick={() => setActiveCategory(cat.key)}
+                  className={`px-4 py-2 rounded-xl whitespace-nowrap text-sm border flex-shrink-0 font-medium transition-all ${
+                    activeCategory === cat.key
+                      ? "bg-brand-terracotta text-white border-brand-terracotta shadow-sm"
+                      : "bg-card text-foreground border-border hover:bg-brand-peach hover:border-brand-terracotta"
+                  }`}
+                >
+                  {isRTL ? cat.labelAr : cat.labelEn}
+                </button>
+              ))}
             </div>
-          ) : (
-            filteredFAQs.map(faq => {
-              const isOpen = openId === faq.id;
-              return (
-                <div key={faq.id} className="transition-colors">
-                  <button
-                    onClick={() => toggleFAQ(faq.id)}
-                    className="w-full px-5 py-4 flex items-center justify-between text-start hover:bg-muted/40 transition-colors"
-                  >
-                    <span className="text-foreground font-medium text-sm sm:text-base">
-                      {renderQuestionWithLogo(isRTL ? faq.questionAr : faq.questionEn)}
-                    </span>
-                    {isOpen ? (
-                      <ChevronUp className="text-brand-terracotta flex-shrink-0 ml-4 rtl:mr-4 rtl:ml-0" size={18} />
-                    ) : (
-                      <ChevronDown className="text-brand-ink-soft flex-shrink-0 ml-4 rtl:mr-4 rtl:ml-0" size={18} />
-                    )}
-                  </button>
 
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="px-5 pb-5 pt-1 text-muted-foreground text-xs sm:text-sm leading-relaxed border-t border-border/20">
-                          {isRTL ? faq.answerAr : faq.answerEn}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            })
-          )}
-        </div>
+            {/* Desktop-only FAQs Accordion List */}
+            <div className="hidden sm:block bg-card border border-border rounded-2xl overflow-hidden shadow-soft divide-y divide-border">
+              {filteredFAQs.map(faq => {
+                const isOpen = openId === faq.id;
+                return (
+                  <div key={faq.id} className="transition-colors">
+                    <button
+                      onClick={() => toggleFAQ(faq.id)}
+                      className="w-full px-5 py-4 flex items-center justify-between text-start hover:bg-muted/40 transition-colors"
+                    >
+                      <span className="text-foreground font-medium text-sm sm:text-base">
+                        {isRTL ? faq.questionAr : faq.questionEn}
+                      </span>
+                      <ChevronDown className={`text-brand-terracotta flex-shrink-0 ml-4 rtl:mr-4 rtl:ml-0 transition-transform duration-250 ${isOpen ? "rotate-180" : ""}`} size={18} />
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-5 pb-5 pt-1 text-muted-foreground text-xs sm:text-sm leading-relaxed border-t border-border/20">
+                            {isRTL ? faq.answerAr : faq.answerEn}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Mobile-only Collapsible Category Accordion List */}
+            <div className="block sm:hidden space-y-3">
+              {categories.filter(c => c.key !== "all").map(cat => {
+                const isCatExpanded = expandedCategory === cat.key;
+                const catFAQs = mockFAQs.filter(faq => faq.category === cat.key);
+                return (
+                  <div key={cat.key} className="bg-card border border-border rounded-2xl overflow-hidden shadow-soft">
+                    <button
+                      type="button"
+                      onClick={() => setExpandedCategory(isCatExpanded ? null : cat.key)}
+                      className="w-full flex items-center justify-between gap-3 px-5 py-4 text-start bg-brand-cream-2 hover:bg-brand-peach/40 transition-colors cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-base flex-shrink-0">{cat.emoji}</span>
+                        <span className="text-foreground font-display text-sm font-semibold">
+                          {isRTL ? cat.labelAr : cat.labelEn}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground bg-background/60 rounded-full px-2 py-0.5 font-medium">
+                          {catFAQs.length}
+                        </span>
+                      </div>
+                      <ChevronDown
+                        size={18}
+                        className={`text-brand-terracotta transition-transform duration-250 ${isCatExpanded ? "rotate-180" : ""}`}
+                      />
+                    </button>
+
+                    <AnimatePresence initial={false}>
+                      {isCatExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="divide-y divide-border/40 border-t border-border bg-brand-cream/10">
+                            {catFAQs.map(faq => {
+                              const isOpen = openId === faq.id;
+                              return (
+                                <div key={faq.id} className="transition-colors">
+                                  <button
+                                    onClick={() => toggleFAQ(faq.id)}
+                                    className="w-full px-5 py-3.5 flex items-center justify-between text-start hover:bg-muted/40 transition-colors"
+                                  >
+                                    <span className="text-foreground text-xs font-medium pr-3 rtl:pl-3 rtl:pr-0 leading-snug">
+                                      {isRTL ? faq.questionAr : faq.questionEn}
+                                    </span>
+                                    <ChevronDown
+                                      size={15}
+                                      className={`text-brand-terracotta flex-shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`}
+                                    />
+                                  </button>
+                                  <AnimatePresence initial={false}>
+                                    {isOpen && (
+                                      <motion.div
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: "auto", opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        transition={{ duration: 0.18 }}
+                                        className="overflow-hidden"
+                                      >
+                                        <div className="px-5 pb-4 pt-1 text-muted-foreground text-[11px] leading-relaxed border-t border-border/10">
+                                          {isRTL ? faq.answerAr : faq.answerEn}
+                                        </div>
+                                      </motion.div>
+                                    )}
+                                  </AnimatePresence>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
       </div>
       <div className="h-20 sm:h-6" />
     </div>
