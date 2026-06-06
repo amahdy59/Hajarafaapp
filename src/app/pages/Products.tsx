@@ -7,6 +7,7 @@ import { ProductCard } from "../components/ProductCard";
 import { motion, AnimatePresence } from "motion/react";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { CustomDropdown } from "../components/ui/CustomDropdown";
+import { Button } from "../components/ui/Button";
 
 export type SortOption = "featured" | "price-asc" | "price-desc" | "rating" | "new";
 

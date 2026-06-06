@@ -8,6 +8,7 @@ import { useAppSettings } from "../context/AppSettingsContext";
 import { FilterPanel, SortOption } from "./Products";
 import { motion, AnimatePresence } from "motion/react";
 import { CustomDropdown } from "../components/ui/CustomDropdown";
+import { Button } from "../components/ui/Button";
 
 export function Category() {
   const { slug } = useParams();
