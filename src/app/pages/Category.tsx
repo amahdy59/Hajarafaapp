@@ -123,9 +123,9 @@ export function Category() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pt-4 sm:pt-6 pb-6">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pt-1 sm:pt-6 pb-6">
         {/* Page header */}
-        <div className="mb-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 select-none">
+        <div className="mb-3 sm:mb-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 select-none">
           <h1 className="text-foreground font-display text-2xl font-bold leading-tight">
             {categoryName}
           </h1>
@@ -143,7 +143,7 @@ export function Category() {
           {/* Main content */}
           <div className="flex-1 min-w-0">
             {/* Toolbar */}
-            <div className="mb-6">
+            <div className="mb-3.5 sm:mb-6">
               {/* Desktop layout: search box on left, sorting + grid/list on right */}
               <div className="hidden lg:flex items-center justify-between gap-3">
                 {/* Search products box */}

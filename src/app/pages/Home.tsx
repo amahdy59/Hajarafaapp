@@ -23,7 +23,7 @@ export function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-4 sm:py-6 flex flex-col gap-10 sm:gap-14">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pt-1 pb-4 sm:py-6 flex flex-col gap-8 sm:gap-14">
 
         {/* Hero — hidden on mobile */}
         <section className="relative rounded-2xl overflow-hidden shadow-soft hidden sm:block" style={{ aspectRatio: "16/5", maxHeight: 240 }}>

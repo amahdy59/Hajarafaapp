@@ -19,7 +19,7 @@ export function Root() {
   const isCheckout = location.pathname === "/checkout";
 
   const hasCategoryRail = location.pathname === "/" || location.pathname.startsWith("/category/") || location.pathname === "/products";
-  const mainPadding = hasCategoryRail ? "pt-[108px]" : "pt-16";
+  const mainPadding = hasCategoryRail ? "pt-16 sm:pt-[108px]" : "pt-16";
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
