@@ -123,7 +123,7 @@ export function Search() {
           <div>
             <p className="text-muted-foreground text-sm mb-4">
               {results.length === 0
-                ? `${isRTL ? "لا توجد نتائج لـ" : "No results for"} "${query}"`
+                ? `${t.noResultsFor} "${query}"`
                 : `${results.length} ${t.productsFound} "${query}"`}
             </p>
 
@@ -131,10 +131,10 @@ export function Search() {
               <div className="text-center py-16 bg-card border border-border rounded-2xl shadow-soft">
                 <p className="text-4xl mb-4">🔍</p>
                 <p className="text-foreground font-medium mb-2">
-                  {isRTL ? `لا توجد نتائج لـ "${query}"` : `No products found for "${query}"`}
+                  {t.noProductsFoundFor} "${query}"
                 </p>
                 <p className="text-muted-foreground text-sm mb-6">
-                  {isRTL ? "جرب كلمات مختلفة أو تصفح الأقسام" : "Try different keywords or browse categories"}
+                  {t.searchTryDifferent}
                 </p>
                 <div className="flex flex-wrap gap-2 justify-center">
                   {popular.map(s => (

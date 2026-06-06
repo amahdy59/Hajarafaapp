@@ -99,16 +99,14 @@ export function Help() {
         <div className="flex flex-col gap-4">
           <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-brand-terracotta text-sm transition-colors w-fit">
             <ArrowLeft size={16} className="rtl-flip" />
-            {isRTL ? "العودة للرئيسية" : "Back to Home"}
+            {t.backToHome}
           </Link>
           <div className="flex items-center gap-3">
             <CircleHelp size={24} className="text-brand-terracotta fill-brand-peach/50" />
             <h1 className="text-foreground font-display text-2xl sm:text-3xl">{t.customerService}</h1>
           </div>
           <p className="text-muted-foreground text-sm max-w-xl">
-            {isRTL 
-              ? "ابحث عن إجابات سريعة للأسئلة الشائعة أو تواصل مع فريق خدمة العملاء للحصول على المساعدة." 
-              : "Search for instant answers to frequently asked questions, or reach out directly to customer service for help."}
+            {t.helpHeaderDesc}
           </p>
         </div>
 
@@ -116,17 +114,15 @@ export function Help() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 bg-brand-peach/60 border border-brand-terracotta/10 p-5 rounded-2xl">
           <div className="space-y-1.5">
             <h3 className="text-brand-forest font-display text-sm sm:text-base">
-              {isRTL ? "هل تحتاج لمساعدة فورية؟" : "Need Instant Help?"}
+              {t.needInstantHelp}
             </h3>
             <p className="text-muted-foreground text-xs leading-relaxed">
-              {isRTL 
-                ? "فريق الدعم لدينا متاح لمساعدتك من الساعة ٩ صباحاً وحتى ١١ مساءً." 
-                : "Our support agents are available to assist you from 9:00 AM to 11:00 PM."}
+              {t.helpSupportHours}
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-stretch sm:items-center sm:justify-end">
             <a href="tel:17309" className="inline-flex items-center justify-center gap-2 bg-brand-terracotta text-white px-4 py-3 rounded-xl hover:bg-brand-terracotta-dark transition-all text-xs font-semibold w-full sm:w-auto h-11">
-              <Phone size={14} /> {isRTL ? "اتصل بنا" : "Call Support"}
+              <Phone size={14} /> {t.callSupport}
             </a>
             <a href="https://wa.me/201020401400" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-[#128C7E] text-white px-4 py-3 rounded-xl hover:bg-[#0e7065] transition-all text-xs font-semibold w-full sm:w-auto h-11">
               <MessageCircle size={14} /> WhatsApp
@@ -142,7 +138,7 @@ export function Help() {
             type="text"
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            placeholder={isRTL ? "ابحث في الأسئلة الشائعة..." : "Search FAQs..."}
+            placeholder={t.searchFAQs}
             className={`w-full ${isRTL ? "pr-11 pl-4" : "pl-11 pr-4"} py-3 bg-card border border-border rounded-xl text-foreground placeholder:text-muted-foreground outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all text-sm`}
           />
         </div>
@@ -155,7 +151,7 @@ export function Help() {
               <div className="text-center py-12">
                 <p className="text-2xl mb-2">🌿</p>
                 <p className="text-muted-foreground text-sm">
-                  {isRTL ? "لا توجد نتائج مطابقة لبحثك." : "No matching questions found."}
+                  {t.noMatchingFAQs}
                 </p>
               </div>
             ) : (
@@ -202,7 +198,7 @@ export function Help() {
           /* Normal Mode */
           <>
             {/* Desktop-only Horizontal Category Filters */}
-            <div className="hidden sm:flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+            <nav className="hidden sm:flex gap-2 overflow-x-auto pb-2 scrollbar-hide" aria-label={isRTL ? "مواضيع الأسئلة الشائعة" : "FAQ Topics"}>
               {categories.map(cat => (
                 <button
                   key={cat.key}
@@ -216,7 +212,7 @@ export function Help() {
                   {isRTL ? cat.labelAr : cat.labelEn}
                 </button>
               ))}
-            </div>
+            </nav>
 
             {/* Desktop-only FAQs Accordion List */}
             <div className="hidden sm:block bg-card border border-border rounded-2xl overflow-hidden shadow-soft divide-y divide-border">

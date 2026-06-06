@@ -176,9 +176,9 @@ export function Products() {
 
   const sortOptions = [
     { value: "featured", label: t.trending },
-    { value: "price-asc", label: isRTL ? "السعر: من الأقل للأعلى" : "Price: Low to High" },
-    { value: "price-desc", label: isRTL ? "السعر: من الأعلى للأقل" : "Price: High to Low" },
-    { value: "rating", label: isRTL ? "الأعلى تقييماً" : "Top Rated" },
+    { value: "price-asc", label: t.sortPriceAsc },
+    { value: "price-desc", label: t.sortPriceDesc },
+    { value: "rating", label: t.sortRating },
     { value: "new", label: t.newArrivals },
   ];
 
@@ -430,7 +430,7 @@ export function Products() {
             {filteredProducts.length === 0 ? (
               <div className="text-center py-20 bg-card border border-border rounded-2xl">
                 <p className="text-4xl mb-4">🌿</p>
-                <p className="text-muted-foreground">{isRTL ? "لا توجد منتجات تطابق خيارات التصفية" : "No products match your filters"}</p>
+                <p className="text-muted-foreground">{t.noProductsMatchFilters}</p>
                 <button onClick={clearFilters} className="mt-4 text-brand-terracotta text-sm hover:underline">{t.clearAll}</button>
               </div>
             ) : (

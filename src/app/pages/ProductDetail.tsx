@@ -19,81 +19,6 @@ const mockReviews = [
   { id: 3, name: "Emma L.", rating: 4, date: "March 2025", verified: true, review: "Great product overall. Will definitely reorder.", helpful: 12 },
 ];
 
-const benefitTranslations: Record<string, string> = {
-  "Long-lasting aroma": "رائحة تدوم طويلاً",
-  "Hand-rolled": "ملفوف يدوياً",
-  "Premium ingredients": "مكونات ممتازة",
-  "Deep amber aroma": "رائحة العنبر العميقة",
-  "Long burn": "فترة احتراق طويلة",
-  "Authentic recipe": "وصفة أصيلة",
-  "Naturally sweet": "حلو المذاق طبيعياً",
-  "Rich in fiber": "غني بالألياف",
-  "Energy boost": "تعزيز الطاقة",
-  "Deep hydration": "ترطيب عميق",
-  "Antioxidant": "مضاد للأكسدة",
-  "Softens skin": "ينعم البشرة",
-  "Alcohol-free": "خالٍ من الكحول",
-  "Long-lasting": "يدوم طويلاً",
-  "Travel size": "حجم مناسب للسفر",
-  "Hair-safe": "آمن للشعر",
-  "Long fragrance": "عطر يدوم طويلاً",
-  "Lightweight": "خفيف الوزن",
-  "Hydrating": "مرطب",
-  "Sensual scent": "رائحة جذابة",
-  "Multi-use": "متعدد الاستخدامات",
-  "Vitamin E": "فيتامين هـ",
-  "Plant protein": "بروتين نباتي",
-  "Healthy fats": "دهون صحية",
-  "Crunchy": "مقرمش",
-  "Natural": "طبيعي",
-  "Roasted dry": "محمص جاف",
-  "Heart healthy": "مفيد لصحة القلب",
-  "High protein": "غني بالبروتين",
-  "Satisfying snack": "وجبة خفيفة مشبعة",
-  "Digestive aid": "مساعد للهضم",
-  "Calming": "مهدئ",
-  "Sweet aroma": "رائحة حلوة",
-  "Gut health": "صحة الجهاز الهضمي",
-  "Raw & unfiltered": "خام وغير مصفى",
-  "Versatile": "متعدد الاستخدامات",
-  "100% fruit": "فاكهة ١٠٠٪",
-  "No added sugar": "بدون سكر مضاف",
-  "Fresh-pressed": "معصور طازجاً",
-  "Hand-blended": "مخلوط يدوياً",
-  "Cardamom & saffron": "هيل وزعفران",
-  "Ceremonial grade": "درجة احتفالية فاخرة",
-  "No additives": "بدون إضافات",
-  "Bold flavor": "نكهة قوية",
-  "Aromatic": "عطري",
-  "Whole leaves": "أوراق كاملة",
-  "Long shelf-life": "صلاحية طويلة",
-  "Premium grade": "درجة ممتازة",
-  "Naturally raw": "خام طبيعياً",
-  "Antioxidant rich": "غني بمضادات الأكسدة",
-  "Natural energy boost": "تعزيز طبيعي للطاقة",
-  "Daily sweetener": "محلي يومي",
-  "Rich in minerals": "غني بالمعادن",
-  "Immune support": "دعم المناعة",
-  "Anti-inflammatory": "مضاد للالتهابات",
-  "Rich bold taste": "طعم قوي وغني",
-  "High protein snack": "وجبة خفيفة غنية بالبروتين",
-  "Rich in nutrients": "غني بالعناصر الغذائية",
-  "Delicious flavor": "نكهة لذيذة",
-  "Whole grain": "حبوب كاملة",
-  "Sweet & salty": "حلو ومالح",
-  "Protein-rich": "غني بالبروتين",
-  "Light snack": "وجبة خفيفة",
-  "Quick cooking": "سريع التحضير",
-  "High fiber": "عالي الألياف",
-  "70% cocoa": "٧٠٪ كاكاو",
-  "Small batch": "دفعات صغيرة",
-  "Traditional recipe": "وصفة تقليدية",
-  "Hand-shaped": "مشكل يدوياً",
-  "Hypoallergenic": "مضاد للحساسية",
-  "Light scent": "رائحة خفيفة",
-  "Pediatrician-approved formula": "تركيبة معتمدة من أطباء الأطفال"
-};
-
 export function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -126,7 +51,7 @@ export function ProductDetail() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center space-y-4">
           <p className="text-5xl">🌿</p>
-          <h2 className="text-foreground">{isRTL ? "المنتج غير موجود" : "Product not found"}</h2>
+          <h2 className="text-foreground">{t.productNotFound}</h2>
           <Link to="/products" className="text-brand-terracotta hover:underline" style={{ fontSize: "0.9rem" }}>
             {t.browseProducts}
           </Link>
@@ -141,15 +66,14 @@ export function ProductDetail() {
 
   const handleAddToCart = () => {
     addToCart(product, quantity);
-    toast.success(`${quantity}× ${isRTL && product.nameAr ? product.nameAr : product.name} ${isRTL ? "أضيف للسلة" : "added to cart"}`);
+    toast.success(`${quantity}× ${isRTL && product.nameAr ? product.nameAr : product.name} ${t.addedToCart}`);
   };
 
   const handleWishlist = () => {
     toggleWishlist(product);
-    toast(wishlisted
-      ? (isRTL ? "أُزيل من المفضلة" : "Removed from wishlist")
-      : (isRTL ? "أُضيف للمفضلة" : "Added to wishlist"),
-      { icon: wishlisted ? "💔" : "❤️" });
+    toast(wishlisted ? t.removedFromWishlist : t.addedToWishlist, {
+      icon: wishlisted ? "💔" : "❤️",
+    });
   };
 
   const handleShare = () => {
@@ -164,7 +88,7 @@ export function ProductDetail() {
     } else {
       navigator.clipboard.writeText(window.location.href)
         .then(() => toast.success(t.productCopied))
-        .catch(() => toast.error(isRTL ? "فشل نسخ الرابط" : "Failed to copy link"));
+        .catch(() => toast.error(t.failedToCopyLink));
     }
   };
 
@@ -198,7 +122,7 @@ export function ProductDetail() {
           >
             <ChevronLeft size={14} className="rtl-flip text-brand-ink-soft" />
             <span>
-              {isRTL ? "العودة إلى" : "Back to"} {categoryName}
+              {t.backTo} {categoryName}
             </span>
           </Link>
         </div>
@@ -223,7 +147,7 @@ export function ProductDetail() {
               )}
               {product.isOrganic && (
                 <span className="absolute top-4 end-4 bg-brand-sage-dark text-white px-3 py-1 rounded-full flex items-center gap-1" style={{ fontSize: "0.8rem" }}>
-                  <Leaf size={11} /> {isRTL ? "عضوي" : "Organic"}
+                  <Leaf size={11} /> {t.organic}
                 </span>
               )}
             </motion.div>
@@ -287,13 +211,13 @@ export function ProductDetail() {
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-brand-peach rounded-xl px-4 py-2.5">
                 <p className="text-muted-foreground mb-0.5" style={{ fontSize: "0.72rem" }}>
-                  {isRTL ? "الوزن / الحجم" : "Weight / Size"}
+                  {t.weightSize}
                 </p>
                 <p className="text-foreground" style={{ fontSize: "0.9rem" }}>{product.weight}</p>
               </div>
               <div className="bg-brand-peach rounded-xl px-4 py-2.5">
                 <p className="text-muted-foreground mb-0.5" style={{ fontSize: "0.72rem" }}>
-                  {isRTL ? "المنشأ" : "Origin"}
+                  {t.origin}
                 </p>
                 <p className="text-foreground" style={{ fontSize: "0.9rem" }}>{product.origin}</p>
               </div>
@@ -302,7 +226,7 @@ export function ProductDetail() {
             {/* Benefits */}
             <div className="hidden sm:block">
               <p className="text-muted-foreground mb-2" style={{ fontSize: "0.8rem" }}>
-                {isRTL ? "الفوائد الرئيسية" : "Key Benefits"}
+                {t.keyBenefits}
               </p>
               <div className="flex flex-wrap gap-2">
                 {product.benefits.map(benefit => (
@@ -311,7 +235,7 @@ export function ProductDetail() {
                     className="inline-flex items-center gap-1 bg-brand-cream-2 text-brand-forest px-3 py-1.5 rounded-full"
                     style={{ fontSize: "0.75rem" }}
                   >
-                    <Check size={10} /> {isRTL ? (benefitTranslations[benefit] || benefit) : benefit}
+                    <Check size={10} /> {t[`benefit.${benefit}` as keyof typeof t] || benefit}
                   </span>
                 ))}
               </div>
@@ -425,10 +349,10 @@ export function ProductDetail() {
                 <p className="text-muted-foreground leading-relaxed mb-4" style={{ fontSize: "0.9rem" }}>{product.description}</p>
                 <div className="grid grid-cols-2 gap-4" style={{ fontSize: "0.875rem" }}>
                   {[
-                    { label: isRTL ? "الوزن" : "Weight", value: product.weight },
-                    { label: isRTL ? "المنشأ" : "Origin", value: product.origin },
-                    { label: isRTL ? "الفئة" : "Category", value: categoryName },
-                    { label: isRTL ? "عضوي" : "Organic", value: product.isOrganic ? (isRTL ? "نعم ✓" : "Yes ✓") : (isRTL ? "لا" : "No") },
+                    { label: t.weight, value: product.weight },
+                    { label: t.origin, value: product.origin },
+                    { label: t.category, value: categoryName },
+                    { label: t.organic, value: product.isOrganic ? t.yes : t.no },
                   ].map(d => (
                     <div key={d.label}>
                       <p className="text-muted-foreground mb-1" style={{ fontSize: "0.75rem" }}>{d.label}</p>
@@ -440,11 +364,11 @@ export function ProductDetail() {
             )}
             {activeTab === "usage" && (
               <div>
-                <h4 className="text-foreground mb-3">{isRTL ? "طريقة الاستخدام" : "How to Use"}</h4>
+                <h4 className="text-foreground mb-3">{t.howToUse}</h4>
                 <p className="text-muted-foreground leading-relaxed" style={{ fontSize: "0.875rem" }}>{product.usage}</p>
                 <div className="mt-4 bg-brand-peach border border-brand-terracotta/20 rounded-xl p-4">
                   <p className="text-brand-terracotta" style={{ fontSize: "0.8rem" }}>
-                    ⚠️ {isRTL ? "هذا المنتج لدعم الصحة العامة. استشر طبيبك عند الحاجة." : "This product is for wellness support. Consult a healthcare professional if you have any medical conditions."}
+                    ⚠️ {t.consultDoctor}
                   </p>
                 </div>
               </div>
@@ -455,7 +379,7 @@ export function ProductDetail() {
                   <div className="text-center">
                     <p className="text-brand-terracotta" style={{ fontSize: "2.5rem", lineHeight: 1 }}>{product.rating}</p>
                     <StarRating rating={product.rating} showCount={false} size="md" />
-                    <p className="text-muted-foreground mt-1" style={{ fontSize: "0.72rem" }}>{product.reviewCount} {isRTL ? "تقييم" : "reviews"}</p>
+                    <p className="text-muted-foreground mt-1" style={{ fontSize: "0.72rem" }}>{product.reviewCount} {t.reviews}</p>
                   </div>
                   <div className="flex-1 space-y-1.5">
                     {[5, 4, 3, 2, 1].map(stars => {
@@ -480,7 +404,7 @@ export function ProductDetail() {
                           <p className="text-foreground" style={{ fontSize: "0.875rem" }}>{review.name}</p>
                           {review.verified && (
                             <span className="text-brand-sage-dark bg-brand-cream-2 px-2 py-0.5 rounded-full flex items-center gap-0.5" style={{ fontSize: "0.7rem" }}>
-                              <Check size={9} /> {isRTL ? "مشترٍ موثق" : "Verified"}
+                              <Check size={9} /> {t.verifiedBuyer}
                             </span>
                           )}
                         </div>
@@ -494,7 +418,7 @@ export function ProductDetail() {
                     </div>
                     <p className="text-muted-foreground" style={{ fontSize: "0.875rem" }}>{review.review}</p>
                     <p className="text-muted-foreground mt-2" style={{ fontSize: "0.72rem" }}>
-                      {review.helpful} {isRTL ? "وجدوا هذا مفيداً" : "people found this helpful"}
+                      {review.helpful} {t.peopleFoundHelpful}
                     </p>
                   </div>
                 ))}
@@ -525,10 +449,10 @@ export function ProductDetail() {
                 <p className="text-muted-foreground leading-relaxed mb-4" style={{ fontSize: "0.875rem" }}>{product.description}</p>
                 <div className="grid grid-cols-2 gap-4" style={{ fontSize: "0.8125rem" }}>
                   {[
-                    { label: isRTL ? "الوزن" : "Weight", value: product.weight },
-                    { label: isRTL ? "المنشأ" : "Origin", value: product.origin },
-                    { label: isRTL ? "الفئة" : "Category", value: categoryName },
-                    { label: isRTL ? "عضوي" : "Organic", value: product.isOrganic ? (isRTL ? "نعم ✓" : "Yes ✓") : (isRTL ? "لا" : "No") },
+                    { label: t.weight, value: product.weight },
+                    { label: t.origin, value: product.origin },
+                    { label: t.category, value: categoryName },
+                    { label: t.organic, value: product.isOrganic ? t.yes : t.no },
                   ].map(d => (
                     <div key={d.label}>
                       <p className="text-muted-foreground mb-0.5" style={{ fontSize: "0.72rem" }}>{d.label}</p>
@@ -560,7 +484,7 @@ export function ProductDetail() {
                 <p className="text-muted-foreground leading-relaxed" style={{ fontSize: "0.875rem" }}>{product.usage}</p>
                 <div className="mt-4 bg-brand-peach border border-brand-terracotta/20 rounded-xl p-4">
                   <p className="text-brand-terracotta" style={{ fontSize: "0.75rem" }}>
-                    ⚠️ {isRTL ? "هذا المنتج لدعم الصحة العامة. استشر طبيبك عند الحاجة." : "This product is for wellness support. Consult a healthcare professional if you have any medical conditions."}
+                    ⚠️ {t.consultDoctor}
                   </p>
                 </div>
               </div>
@@ -590,7 +514,7 @@ export function ProductDetail() {
                     <div className="flex justify-center my-1">
                       <StarRating rating={product.rating} showCount={false} size="sm" />
                     </div>
-                    <p className="text-muted-foreground" style={{ fontSize: "0.72rem" }}>{product.reviewCount} {isRTL ? "تقييم" : "reviews"}</p>
+                    <p className="text-muted-foreground" style={{ fontSize: "0.72rem" }}>{product.reviewCount} {t.reviews}</p>
                   </div>
                   <div className="flex-1 w-full space-y-1.5">
                     {[5, 4, 3, 2, 1].map(stars => {
@@ -615,7 +539,7 @@ export function ProductDetail() {
                           <p className="text-foreground font-medium" style={{ fontSize: "0.8125rem" }}>{review.name}</p>
                           {review.verified && (
                             <span className="text-brand-sage-dark bg-brand-cream-2 px-2 py-0.5 rounded-full flex items-center gap-0.5" style={{ fontSize: "0.65rem" }}>
-                              <Check size={8} /> {isRTL ? "مشترٍ موثق" : "Verified"}
+                              <Check size={8} /> {t.verifiedBuyer}
                             </span>
                           )}
                         </div>
@@ -629,7 +553,7 @@ export function ProductDetail() {
                     </div>
                     <p className="text-muted-foreground" style={{ fontSize: "0.8125rem", lineHeight: 1.4 }}>{review.review}</p>
                     <p className="text-muted-foreground mt-2" style={{ fontSize: "0.6875rem" }}>
-                      {review.helpful} {isRTL ? "وجدوا هذا مفيداً" : "people found this helpful"}
+                      {review.helpful} {t.peopleFoundHelpful}
                     </p>
                   </div>
                 ))}
