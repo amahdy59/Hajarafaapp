@@ -19,6 +19,81 @@ const mockReviews = [
   { id: 3, name: "Emma L.", rating: 4, date: "March 2025", verified: true, review: "Great product overall. Will definitely reorder.", helpful: 12 },
 ];
 
+const benefitTranslations: Record<string, string> = {
+  "Long-lasting aroma": "رائحة تدوم طويلاً",
+  "Hand-rolled": "ملفوف يدوياً",
+  "Premium ingredients": "مكونات ممتازة",
+  "Deep amber aroma": "رائحة العنبر العميقة",
+  "Long burn": "فترة احتراق طويلة",
+  "Authentic recipe": "وصفة أصيلة",
+  "Naturally sweet": "حلو المذاق طبيعياً",
+  "Rich in fiber": "غني بالألياف",
+  "Energy boost": "تعزيز الطاقة",
+  "Deep hydration": "ترطيب عميق",
+  "Antioxidant": "مضاد للأكسدة",
+  "Softens skin": "ينعم البشرة",
+  "Alcohol-free": "خالٍ من الكحول",
+  "Long-lasting": "يدوم طويلاً",
+  "Travel size": "حجم مناسب للسفر",
+  "Hair-safe": "آمن للشعر",
+  "Long fragrance": "عطر يدوم طويلاً",
+  "Lightweight": "خفيف الوزن",
+  "Hydrating": "مرطب",
+  "Sensual scent": "رائحة جذابة",
+  "Multi-use": "متعدد الاستخدامات",
+  "Vitamin E": "فيتامين هـ",
+  "Plant protein": "بروتين نباتي",
+  "Healthy fats": "دهون صحية",
+  "Crunchy": "مقرمش",
+  "Natural": "طبيعي",
+  "Roasted dry": "محمص جاف",
+  "Heart healthy": "مفيد لصحة القلب",
+  "High protein": "غني بالبروتين",
+  "Satisfying snack": "وجبة خفيفة مشبعة",
+  "Digestive aid": "مساعد للهضم",
+  "Calming": "مهدئ",
+  "Sweet aroma": "رائحة حلوة",
+  "Gut health": "صحة الجهاز الهضمي",
+  "Raw & unfiltered": "خام وغير مصفى",
+  "Versatile": "متعدد الاستخدامات",
+  "100% fruit": "فاكهة ١٠٠٪",
+  "No added sugar": "بدون سكر مضاف",
+  "Fresh-pressed": "معصور طازجاً",
+  "Hand-blended": "مخلوط يدوياً",
+  "Cardamom & saffron": "هيل وزعفران",
+  "Ceremonial grade": "درجة احتفالية فاخرة",
+  "No additives": "بدون إضافات",
+  "Bold flavor": "نكهة قوية",
+  "Aromatic": "عطري",
+  "Whole leaves": "أوراق كاملة",
+  "Long shelf-life": "صلاحية طويلة",
+  "Premium grade": "درجة ممتازة",
+  "Naturally raw": "خام طبيعياً",
+  "Antioxidant rich": "غني بمضادات الأكسدة",
+  "Natural energy boost": "تعزيز طبيعي للطاقة",
+  "Daily sweetener": "محلي يومي",
+  "Rich in minerals": "غني بالمعادن",
+  "Immune support": "دعم المناعة",
+  "Anti-inflammatory": "مضاد للالتهابات",
+  "Rich bold taste": "طعم قوي وغني",
+  "High protein snack": "وجبة خفيفة غنية بالبروتين",
+  "Rich in nutrients": "غني بالعناصر الغذائية",
+  "Delicious flavor": "نكهة لذيذة",
+  "Whole grain": "حبوب كاملة",
+  "Sweet & salty": "حلو ومالح",
+  "Protein-rich": "غني بالبروتين",
+  "Light snack": "وجبة خفيفة",
+  "Quick cooking": "سريع التحضير",
+  "High fiber": "عالي الألياف",
+  "70% cocoa": "٧٠٪ كاكاو",
+  "Small batch": "دفعات صغيرة",
+  "Traditional recipe": "وصفة تقليدية",
+  "Hand-shaped": "مشكل يدوياً",
+  "Hypoallergenic": "مضاد للحساسية",
+  "Light scent": "رائحة خفيفة",
+  "Pediatrician-approved formula": "تركيبة معتمدة من أطباء الأطفال"
+};
+
 export function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -225,7 +300,7 @@ export function ProductDetail() {
             </div>
 
             {/* Benefits */}
-            <div>
+            <div className="hidden sm:block">
               <p className="text-muted-foreground mb-2" style={{ fontSize: "0.8rem" }}>
                 {isRTL ? "الفوائد الرئيسية" : "Key Benefits"}
               </p>
@@ -236,7 +311,7 @@ export function ProductDetail() {
                     className="inline-flex items-center gap-1 bg-brand-cream-2 text-brand-forest px-3 py-1.5 rounded-full"
                     style={{ fontSize: "0.75rem" }}
                   >
-                    <Check size={10} /> {benefit}
+                    <Check size={10} /> {isRTL ? (benefitTranslations[benefit] || benefit) : benefit}
                   </span>
                 ))}
               </div>
