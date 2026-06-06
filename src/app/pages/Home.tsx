@@ -94,7 +94,7 @@ export function Home() {
               {/* Scroll Rail */}
               <ScrollRail>
                 {items.map(p => (
-                  <div key={p.id} className="flex-shrink-0 snap-start w-[calc(50vw-28px)] sm:w-56 p-0.5">
+                  <div key={p.id} className="flex-shrink-0 snap-start w-[calc(50vw-20px)] sm:w-56 p-0.5">
                     <ProductCard product={p} />
                   </div>
                 ))}

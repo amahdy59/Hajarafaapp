@@ -27,14 +27,11 @@ export function Category() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pt-[28px]">
-        <div className="mb-6 flex items-start gap-2.5">
-          <span className="text-2xl sm:text-3xl pt-0.5 select-none">{category.icon}</span>
-          <div>
-            <h1 className="text-foreground font-display text-2xl mb-1 leading-tight">
-              {categoryName}
-            </h1>
-            <p className="text-muted-foreground text-sm">{categoryProducts.length} {t.productsFound}</p>
-          </div>
+        <div className="mb-6">
+          <h1 className="text-foreground font-display text-2xl mb-1 leading-tight">
+            {categoryName}
+          </h1>
+          <p className="text-muted-foreground text-sm">{categoryProducts.length} {t.productsFound}</p>
         </div>
       </div>
 
@@ -51,7 +48,7 @@ export function Category() {
             <div className="flex items-center justify-between mb-4">
               <p className="text-muted-foreground text-sm">{categoryProducts.length} {t.productsFound}</p>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
               {categoryProducts.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}

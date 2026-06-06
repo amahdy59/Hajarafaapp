@@ -242,7 +242,7 @@ export function Cart() {
         {suggestedProducts.length > 0 && (
           <section className="mt-10">
             <h2 className="text-foreground mb-5" style={{ fontSize: "1.1rem" }}>{t.youMightAlsoLike}</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
               {suggestedProducts.map(p => (
                 <ProductCard key={p.id} product={p} />
               ))}

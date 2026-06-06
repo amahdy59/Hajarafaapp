@@ -54,9 +54,9 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
         whileTap={{ scale: 0.995 }}
         transition={{ type: "spring", stiffness: 350, damping: 25 }}
-        className="bg-card rounded-2xl border border-border dark:border-zinc-700/60 overflow-hidden hover:shadow-soft hover:border-brand-terracotta/40 transition-all duration-300 group"
+        className="bg-card rounded-2xl border-0 sm:border border-border dark:border-zinc-700/60 overflow-hidden hover:shadow-soft hover:border-brand-terracotta/40 transition-all duration-300 group"
       >
-        <Link to={`/products/${product.id}`} className="flex gap-4 p-4 items-center">
+        <Link to={`/products/${product.id}`} className="flex gap-4 p-3 items-center">
           <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 rounded-xl overflow-hidden bg-[#FAF6F0] dark:bg-zinc-800/40 flex items-center justify-center border border-border/40 p-1 sm:p-1.5">
             <img 
               src={product.image} 
@@ -65,7 +65,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
               loading="lazy" 
             />
           </div>
-          <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch py-1.5 px-2 sm:px-4">
+          <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch py-1 px-1.5 sm:px-3">
             <div className="flex flex-col gap-1">
               {product.isOrganic && (
                 <span className="inline-flex items-center gap-1 text-brand-sage eyebrow" style={{ fontSize: "9px" }}>
@@ -82,11 +82,12 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
               <motion.button
                 onClick={onAdd}
                 aria-label={t.addToCart}
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.92 }}
-                className="w-9 h-9 rounded-xl bg-brand-terracotta text-white flex items-center justify-center hover:bg-brand-terracotta-dark shadow-sm transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="h-8.5 sm:h-9 px-3 rounded-lg sm:rounded-xl bg-brand-terracotta text-white flex items-center justify-center gap-1.5 hover:bg-brand-terracotta-dark shadow-sm transition-colors text-xs font-semibold"
               >
-                <Plus size={18} />
+                <Plus size={13} className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span>{isRTL ? "أضف" : "Add"}</span>
               </motion.button>
             </div>
           </div>
@@ -100,10 +101,10 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
       initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
       whileTap={{ scale: 0.99 }}
       transition={{ type: "spring", stiffness: 350, damping: 25 }}
-      className="bg-card rounded-2xl border border-border dark:border-zinc-700/60 overflow-hidden flex flex-col h-full hover:shadow-soft hover:border-brand-terracotta/40 transition-all duration-300 group"
+      className="bg-card rounded-2xl border-0 sm:border border-border dark:border-zinc-700/60 overflow-hidden flex flex-col h-full hover:shadow-soft hover:border-brand-terracotta/40 transition-all duration-300 group"
     >
       <Link to={`/products/${product.id}`} className="flex flex-col flex-1">
-        <div className="relative aspect-[1.1] sm:aspect-square bg-[#FAF6F0] dark:bg-zinc-800/40 overflow-hidden flex items-center justify-center p-1 sm:p-1.5 border-b border-border/20">
+        <div className="relative aspect-[1.1] sm:aspect-square bg-[#FAF6F0] dark:bg-zinc-800/40 overflow-hidden flex items-center justify-center p-1 sm:p-1.5 border-b-0 sm:border-b border-border/20">
           <img
             src={product.image}
             alt={product.name}
@@ -144,7 +145,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
           </motion.button>
         </div>
 
-        <div className="px-3.5 sm:px-5 py-4 sm:py-4.5 flex flex-col flex-1">
+        <div className="px-2.5 sm:px-4 py-3 sm:py-3.5 flex flex-col flex-1">
           <div className="flex flex-col gap-1.5">
             <h3
               className="text-foreground text-xs sm:text-base font-semibold line-clamp-2 leading-snug group-hover:text-brand-terracotta transition-colors"
@@ -159,16 +160,16 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
             </span>
           </div>
 
-          <div className="pt-3.5 sm:pt-4.5 mt-auto w-full">
+          <div className="pt-3 sm:pt-3.5 mt-auto w-full">
             <motion.button
               onClick={onAdd}
               aria-label={t.addToCart}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full sm:w-9 h-8.5 sm:h-9 rounded-lg sm:rounded-xl bg-brand-terracotta text-white flex items-center justify-center gap-1 hover:bg-brand-terracotta-dark shadow-sm transition-colors text-xs font-semibold px-2 sm:px-0"
+              className="w-full h-8.5 sm:h-9 rounded-lg bg-brand-terracotta text-white flex items-center justify-center gap-1.5 hover:bg-brand-terracotta-dark shadow-sm transition-colors text-xs font-semibold px-3"
             >
-              <Plus size={13} className="sm:w-[18px] sm:h-[18px]" />
-              <span className="sm:hidden">{isRTL ? "أضف" : "Add"}</span>
+              <Plus size={13} />
+              <span>{isRTL ? "أضف" : "Add"}</span>
             </motion.button>
           </div>
         </div>

@@ -10,7 +10,7 @@ interface ScrollRailProps {
   showFades?: boolean;
 }
 
-export function ScrollRail({ children, gap = "0.75rem", className = "", showFades = true }: ScrollRailProps) {
+export function ScrollRail({ children, gap = "0.5rem", className = "", showFades = true }: ScrollRailProps) {
   const { isRTL } = useAppSettings();
 
   return (
