@@ -103,7 +103,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
       className="bg-card rounded-2xl border border-border dark:border-zinc-700/60 overflow-hidden flex flex-col h-full hover:shadow-soft hover:border-brand-terracotta/40 transition-all duration-300 group"
     >
       <Link to={`/products/${product.id}`} className="flex flex-col flex-1">
-        <div className="relative aspect-square bg-[#FAF6F0] dark:bg-zinc-800/40 overflow-hidden flex items-center justify-center p-1 sm:p-1.5 border-b border-border/20">
+        <div className="relative aspect-[4/3] sm:aspect-square bg-[#FAF6F0] dark:bg-zinc-800/40 overflow-hidden flex items-center justify-center p-1 sm:p-1.5 border-b border-border/20">
           <img
             src={product.image}
             alt={product.name}
@@ -113,7 +113,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
 
           {badge && (
             <span
-              className={`absolute top-3.5 start-3.5 px-2.5 py-0.5 rounded bg-card border ${badgeCls[badge.tone]} eyebrow shadow-sm`}
+              className={`absolute top-2 sm:top-3.5 start-2 sm:start-3.5 px-1.5 sm:px-2.5 py-0.5 rounded bg-card border ${badgeCls[badge.tone]} eyebrow shadow-sm hidden sm:inline-block`}
               style={{ fontSize: "9px" }}
             >
               {badge.label}
@@ -132,39 +132,40 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
               }
             }}
             whileTap={{ scale: 0.85 }}
-            className="absolute top-3.5 end-3.5 w-8.5 h-8.5 bg-card/90 backdrop-blur rounded-full flex items-center justify-center border border-border text-brand-ink-soft hover:text-brand-terracotta hover:border-brand-terracotta shadow-sm transition-colors duration-200 z-10"
+            className="absolute top-2 sm:top-3.5 end-2 sm:end-3.5 w-7 h-7 sm:w-8.5 sm:h-8.5 bg-card/90 backdrop-blur rounded-full flex items-center justify-center border border-border text-brand-ink-soft hover:text-brand-terracotta hover:border-brand-terracotta shadow-sm transition-colors duration-200 z-10"
           >
             <motion.span
               animate={wishlisted ? { scale: [1, 1.35, 1] } : { scale: 1 }}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
               className="flex items-center justify-center"
             >
-              <Heart size={15} className={wishlisted ? "fill-brand-terracotta text-brand-terracotta" : ""} />
+              <Heart className={`w-3 h-3 sm:w-[15px] sm:h-[15px] ${wishlisted ? "fill-brand-terracotta text-brand-terracotta" : ""}`} />
             </motion.span>
           </motion.button>
         </div>
 
-        <div className="px-3 sm:px-5 py-3 sm:py-4.5 flex flex-col gap-1 flex-1">
+        <div className="px-2 sm:px-5 py-2 sm:py-4.5 flex flex-col gap-0.5 sm:gap-1 flex-1">
           <h3
-            className="text-foreground text-[0.82rem] sm:text-base font-semibold line-clamp-2 leading-snug group-hover:text-brand-terracotta transition-colors"
+            className="text-foreground text-xs sm:text-base font-semibold line-clamp-2 leading-snug group-hover:text-brand-terracotta transition-colors"
           >
             {isRTL && product.nameAr ? product.nameAr : product.name}
           </h3>
-          <span className="text-brand-ink-soft text-[10px] sm:text-xs font-medium">
+          <span className="text-brand-ink-soft text-[9px] sm:text-xs font-medium">
             {product.weight || product.category}
           </span>
-          <div className="flex items-center justify-between pt-2 sm:pt-3 mt-auto">
-            <span className="text-brand-forest font-bold text-sm sm:text-base">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 sm:gap-2 pt-1 sm:pt-3 mt-auto w-full">
+            <span className="text-brand-forest font-bold text-xs sm:text-base">
               {price}
             </span>
             <motion.button
               onClick={onAdd}
               aria-label={t.addToCart}
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.92 }}
-              className="w-9 h-9 rounded-xl bg-brand-terracotta text-white flex items-center justify-center hover:bg-brand-terracotta-dark shadow-sm transition-colors"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full sm:w-9 h-8 sm:h-9 rounded-lg sm:rounded-xl bg-brand-terracotta text-white flex items-center justify-center gap-1 hover:bg-brand-terracotta-dark shadow-sm transition-colors text-xs font-semibold px-2 sm:px-0"
             >
-              <Plus size={18} />
+              <Plus size={13} className="sm:w-[18px] sm:h-[18px]" />
+              <span className="sm:hidden">{isRTL ? "أضف" : "Add"}</span>
             </motion.button>
           </div>
         </div>
