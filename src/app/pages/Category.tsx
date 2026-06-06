@@ -142,66 +142,36 @@ export function Category() {
           {/* Main content */}
           <div className="flex-1 min-w-0">
             {/* Toolbar */}
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-6">
-              {/* Search products box */}
-              <div className="relative w-full lg:max-w-xs">
-                <Search size={15} className={`absolute ${isRTL ? "right-3.5" : "left-3.5"} top-1/2 -translate-y-1/2 text-muted-foreground`} />
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
-                  placeholder={t.searchInThisCategory}
-                  className={`w-full h-11 ${isRTL ? "pr-10 pl-10" : "pl-10 pr-10"} bg-brand-peach/40 dark:bg-zinc-800/80 border border-brand-terracotta/20 rounded-xl text-foreground placeholder:text-muted-foreground outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all text-sm font-semibold`}
-                />
-                {searchQuery && (
-                  <button 
-                    onClick={() => setSearchQuery("")} 
-                    className={`absolute ${isRTL ? "left-3" : "right-3"} top-1/2 -translate-y-1/2 w-5 h-5 bg-muted rounded-full flex items-center justify-center hover:bg-border transition-colors`}
-                  >
-                    <X size={11} className="text-muted-foreground" />
-                  </button>
-                )}
-              </div>
-
-              {/* Row 1 (Mobile) / Left Group (Desktop - Hidden) */}
-              <div className="flex items-center justify-between gap-2.5 w-full lg:w-auto lg:hidden">
-                <button
-                  onClick={() => setIsFilterOpen(true)}
-                  className="flex items-center justify-center gap-2 h-11 text-sm font-semibold text-brand-terracotta bg-brand-peach dark:bg-zinc-800/80 border border-brand-terracotta/20 rounded-xl px-4 hover:bg-brand-peach/80 transition-all duration-200 active:scale-95 shadow-sm flex-1 min-w-0"
-                >
-                  <SlidersHorizontal size={13} className="flex-shrink-0" />
-                  <span className="truncate">{t.filters}</span>
-                  {hasActiveFilters && (
-                    <span className="bg-brand-terracotta text-white text-[10px] w-4.5 h-4.5 rounded-full flex items-center justify-center font-bold flex-shrink-0">
-                      {showOrganic ? 1 : 0}
-                    </span>
+            <div className="mb-6">
+              {/* Desktop layout: search box on left, sorting + grid/list on right */}
+              <div className="hidden lg:flex items-center justify-between gap-3">
+                {/* Search products box */}
+                <div className="relative w-full max-w-xs">
+                  <Search size={15} className={`absolute ${isRTL ? "right-3.5" : "left-3.5"} top-1/2 -translate-y-1/2 text-muted-foreground`} />
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    placeholder={t.searchInThisCategory}
+                    className={`w-full h-11 ${isRTL ? "pr-10 pl-10" : "pl-10 pr-10"} bg-brand-peach/40 dark:bg-zinc-800/80 border border-brand-terracotta/20 rounded-xl text-foreground placeholder:text-muted-foreground outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all text-sm font-semibold`}
+                  />
+                  {searchQuery && (
+                    <button 
+                      onClick={() => setSearchQuery("")} 
+                      className={`absolute ${isRTL ? "left-3" : "right-3"} top-1/2 -translate-y-1/2 w-5 h-5 bg-muted rounded-full flex items-center justify-center hover:bg-border transition-colors`}
+                    >
+                      <X size={11} className="text-muted-foreground" />
+                    </button>
                   )}
-                </button>
+                </div>
 
-                {/* Custom sort select dropdown inside Row 1 on mobile */}
-                <CustomDropdown
-                  value={sort}
-                  onChange={val => setSort(val as SortOption)}
-                  options={sortOptions}
-                  className="flex-1 min-w-0"
-                />
-              </div>
-
-              {/* Row 2 (Mobile) / Right Group (Desktop) */}
-              <div className="flex items-center justify-between lg:justify-end gap-3 w-full lg:w-auto border-t border-border/40 lg:border-t-0 pt-2 lg:pt-0">
-                {/* Product Count on Mobile */}
-                <span className="text-muted-foreground text-xs font-semibold lg:hidden">
-                  {filteredProducts.length} {t.productsFound}
-                </span>
-
-                <div className="flex items-center gap-3 ms-auto lg:ms-0">
-                  {/* Custom sort select dropdown for desktop only */}
+                <div className="flex items-center gap-3">
                   <CustomDropdown
                     value={sort}
                     onChange={val => setSort(val as SortOption)}
                     options={sortOptions}
-                    className="hidden lg:block w-48"
+                    className="w-48"
                   />
 
                   {/* Grid / List view switch */}
@@ -219,6 +189,67 @@ export function Category() {
                       aria-label="List view"
                     >
                       <List size={15} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mobile layout: search box + filter button on same row */}
+              <div className="lg:hidden flex flex-col gap-2.5">
+                <div className="flex items-center gap-2.5 w-full">
+                  <div className="relative flex-1">
+                    <Search size={15} className={`absolute ${isRTL ? "right-3.5" : "left-3.5"} top-1/2 -translate-y-1/2 text-muted-foreground`} />
+                    <input
+                      ref={searchInputRef}
+                      type="text"
+                      value={searchQuery}
+                      onChange={e => setSearchQuery(e.target.value)}
+                      placeholder={t.searchInThisCategory}
+                      className={`w-full h-11 ${isRTL ? "pr-10 pl-10" : "pl-10 pr-10"} bg-brand-peach/40 dark:bg-zinc-800/80 border border-brand-terracotta/20 rounded-xl text-foreground placeholder:text-muted-foreground outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all text-sm font-semibold`}
+                    />
+                    {searchQuery && (
+                      <button 
+                        onClick={() => setSearchQuery("")} 
+                        className={`absolute ${isRTL ? "left-3" : "right-3"} top-1/2 -translate-y-1/2 w-5 h-5 bg-muted rounded-full flex items-center justify-center hover:bg-border transition-colors`}
+                      >
+                        <X size={11} className="text-muted-foreground" />
+                      </button>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={() => setIsFilterOpen(true)}
+                    className="flex items-center justify-center w-11 h-11 text-brand-terracotta bg-brand-peach dark:bg-zinc-800/80 border border-brand-terracotta/20 rounded-xl hover:bg-brand-peach/80 transition-all duration-200 active:scale-95 shadow-sm relative flex-shrink-0"
+                    aria-label={t.filters}
+                  >
+                    <SlidersHorizontal size={16} />
+                    {hasActiveFilters && (
+                      <span className="absolute -top-1 -end-1 bg-brand-terracotta text-white text-[9px] w-4.5 h-4.5 rounded-full flex items-center justify-center font-bold">
+                        {(showOrganic ? 1 : 0) + (sort !== "featured" ? 1 : 0)}
+                      </span>
+                    )}
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between px-0.5 mt-0.5">
+                  <span className="text-muted-foreground text-xs font-semibold">
+                    {filteredProducts.length} {t.productsFound}
+                  </span>
+
+                  <div className="flex items-center gap-1 bg-brand-peach rounded-lg p-0.5 border border-brand-terracotta/10">
+                    <button
+                      onClick={() => setView("grid")}
+                      className={`p-1.5 rounded transition-all ${view === "grid" ? "bg-card shadow-sm text-brand-terracotta" : "text-brand-ink-soft hover:text-brand-terracotta"}`}
+                      aria-label="Grid view"
+                    >
+                      <Grid3X3 size={14} />
+                    </button>
+                    <button
+                      onClick={() => setView("list")}
+                      className={`p-1.5 rounded transition-all ${view === "list" ? "bg-card shadow-sm text-brand-terracotta" : "text-brand-ink-soft hover:text-brand-terracotta"}`}
+                      aria-label="List view"
+                    >
+                      <List size={14} />
                     </button>
                   </div>
                 </div>
@@ -282,39 +313,83 @@ export function Category() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-brand-ink/40 backdrop-blur-sm z-40"
+              className="fixed inset-0 bg-brand-ink/45 backdrop-blur-sm z-40"
               onClick={() => setIsFilterOpen(false)}
             />
             <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-label={t.filters}
               initial={{ x: isRTL ? "100%" : "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: isRTL ? "100%" : "-100%" }}
-              transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className={`fixed ${isRTL ? "right-0" : "left-0"} top-0 bottom-0 w-full max-w-[320px] bg-card z-50 overflow-y-auto p-3.5 shadow-elev border-r border-border`}
+              transition={{ type: "spring", damping: 32, stiffness: 320 }}
+              className={`fixed top-0 bottom-0 ${isRTL ? "right-0" : "left-0"} w-full lg:max-w-sm bg-card text-card-foreground z-50 overflow-y-auto shadow-elev flex flex-col`}
             >
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <h2 className="text-foreground font-display text-lg font-bold">{t.filters}</h2>
-                  {hasActiveFilters && (
-                    <button 
-                      onClick={clearFilters}
-                      className="text-sm text-brand-terracotta hover:underline font-bold"
-                    >
-                      {t.clearAll}
-                    </button>
-                  )}
-                </div>
-                <button onClick={() => setIsFilterOpen(false)}>
-                  <X size={20} className="text-muted-foreground hover:text-foreground" />
+              {/* Header */}
+              <div className="sticky top-0 z-10 bg-card/95 backdrop-blur-xl border-b border-border px-4 py-3 flex items-center justify-between safe-area-pt flex-shrink-0">
+                <h2 className="text-foreground font-display text-lg font-bold">{t.filters}</h2>
+                <button
+                  onClick={() => setIsFilterOpen(false)}
+                  aria-label="Close"
+                  className="p-1 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <X size={18} />
                 </button>
               </div>
-              <FilterPanel {...panelProps} hideHeader />
-              <button
-                onClick={() => setIsFilterOpen(false)}
-                className="w-full bg-brand-terracotta text-white py-2.5 rounded-xl mt-4 text-sm font-semibold active:scale-[0.98] transition-all"
-              >
-                {t.applyFilters} ({filteredProducts.length})
-              </button>
+
+              {/* Content */}
+              <div className="p-4 flex flex-col gap-6 flex-1 overflow-y-auto">
+                {/* Sort By section (mobile only, since it's hidden on the main toolbar on mobile) */}
+                <div className="flex flex-col gap-2">
+                  <span className="eyebrow px-1">{isRTL ? "ترتيب حسب" : "Sort By"}</span>
+                  <div className="bg-muted/50 rounded-md overflow-hidden border border-border p-3 space-y-2.5">
+                    {sortOptions.map(opt => (
+                      <label key={opt.value} className="flex items-center gap-2.5 cursor-pointer text-foreground/80 select-none text-sm font-medium">
+                        <input
+                          type="radio"
+                          name="sortOption"
+                          value={opt.value}
+                          checked={sort === opt.value}
+                          onChange={() => setSort(opt.value as SortOption)}
+                          className="accent-brand-terracotta w-4 h-4 cursor-pointer"
+                        />
+                        <span>{opt.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Filter options section */}
+                <div className="flex flex-col gap-2">
+                  <span className="eyebrow px-1">{t.filters}</span>
+                  <div className="bg-muted/50 rounded-md overflow-hidden border border-border p-3.5">
+                    <FilterPanel {...panelProps} hideHeader />
+                  </div>
+                </div>
+              </div>
+
+              {/* Sticky bottom bar */}
+              <div className="sticky bottom-0 bg-card/95 backdrop-blur-md border-t border-border p-4 mt-auto flex gap-3 flex-shrink-0">
+                {hasActiveFilters && (
+                  <Button
+                    onClick={() => {
+                      clearFilters();
+                      setIsFilterOpen(false);
+                    }}
+                    variant="secondary"
+                    className="flex-1 text-sm font-semibold h-11"
+                  >
+                    {t.clearAll}
+                  </Button>
+                )}
+                <Button
+                  onClick={() => setIsFilterOpen(false)}
+                  className="flex-1 text-sm font-semibold h-11"
+                >
+                  {t.applyFilters} ({filteredProducts.length})
+                </Button>
+              </div>
             </motion.div>
           </>
         )}

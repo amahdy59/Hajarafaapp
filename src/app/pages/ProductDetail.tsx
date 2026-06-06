@@ -127,18 +127,18 @@ export function ProductDetail() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-8 mb-12">
           {/* Images */}
           <div className="space-y-3">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="relative aspect-square bg-[#FAF6F0] dark:bg-zinc-800/40 rounded-3xl overflow-hidden"
+              className="relative aspect-[4/3] sm:aspect-square bg-[#FAF6F0] dark:bg-zinc-800/40 rounded-3xl overflow-hidden max-h-[300px] sm:max-h-none flex items-center justify-center"
             >
               <img
                 src={product.images[activeImage] || product.image}
                 alt={product.name}
-                className="w-full h-full object-contain p-6 mix-blend-multiply dark:mix-blend-normal"
+                className="w-full h-full object-contain p-4 sm:p-6 mix-blend-multiply dark:mix-blend-normal"
               />
               {product.discount && (
                 <span className="absolute top-4 start-4 bg-brand-terracotta text-white px-3 py-1 rounded-full" style={{ fontSize: "0.8rem" }}>
@@ -433,8 +433,7 @@ export function ProductDetail() {
           <div className="bg-card rounded-2xl border border-border overflow-hidden">
             <button
               onClick={() => toggleAccordion("description")}
-              className="w-full flex items-center justify-between p-4 text-start font-semibold text-foreground"
-              style={{ fontSize: "0.9rem" }}
+              className="w-full flex items-center justify-between p-4 text-start font-semibold text-foreground text-sm sm:text-base"
             >
               <span>{tabLabels.description}</span>
               <ChevronDown
@@ -446,8 +445,8 @@ export function ProductDetail() {
             </button>
             {accordionOpen.description && (
               <div className="px-4 pb-5 border-t border-border/50 pt-4">
-                <p className="text-muted-foreground leading-relaxed mb-4" style={{ fontSize: "0.875rem" }}>{product.description}</p>
-                <div className="grid grid-cols-2 gap-4" style={{ fontSize: "0.8125rem" }}>
+                <p className="text-muted-foreground leading-relaxed mb-4 text-sm sm:text-base">{product.description}</p>
+                <div className="grid grid-cols-2 gap-4 text-sm sm:text-base">
                   {[
                     { label: t.weight, value: product.weight },
                     { label: t.origin, value: product.origin },
@@ -455,8 +454,8 @@ export function ProductDetail() {
                     { label: t.organic, value: product.isOrganic ? t.yes : t.no },
                   ].map(d => (
                     <div key={d.label}>
-                      <p className="text-muted-foreground mb-0.5" style={{ fontSize: "0.72rem" }}>{d.label}</p>
-                      <p className="text-foreground font-medium">{d.value}</p>
+                      <p className="text-muted-foreground mb-0.5 text-xs sm:text-sm">{d.label}</p>
+                      <p className="text-foreground font-semibold">{d.value}</p>
                     </div>
                   ))}
                 </div>
@@ -468,8 +467,7 @@ export function ProductDetail() {
           <div className="bg-card rounded-2xl border border-border overflow-hidden">
             <button
               onClick={() => toggleAccordion("usage")}
-              className="w-full flex items-center justify-between p-4 text-start font-semibold text-foreground"
-              style={{ fontSize: "0.9rem" }}
+              className="w-full flex items-center justify-between p-4 text-start font-semibold text-foreground text-sm sm:text-base"
             >
               <span>{tabLabels.usage}</span>
               <ChevronDown
@@ -481,9 +479,9 @@ export function ProductDetail() {
             </button>
             {accordionOpen.usage && (
               <div className="px-4 pb-5 border-t border-border/50 pt-4">
-                <p className="text-muted-foreground leading-relaxed" style={{ fontSize: "0.875rem" }}>{product.usage}</p>
+                <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">{product.usage}</p>
                 <div className="mt-4 bg-brand-peach border border-brand-terracotta/20 rounded-xl p-4">
-                  <p className="text-brand-terracotta" style={{ fontSize: "0.75rem" }}>
+                  <p className="text-brand-terracotta text-xs sm:text-sm font-medium">
                     ⚠️ {t.consultDoctor}
                   </p>
                 </div>
@@ -495,8 +493,7 @@ export function ProductDetail() {
           <div className="bg-card rounded-2xl border border-border overflow-hidden">
             <button
               onClick={() => toggleAccordion("reviews")}
-              className="w-full flex items-center justify-between p-4 text-start font-semibold text-foreground"
-              style={{ fontSize: "0.9rem" }}
+              className="w-full flex items-center justify-between p-4 text-start font-semibold text-foreground text-sm sm:text-base"
             >
               <span>{tabLabels.reviews}</span>
               <ChevronDown
@@ -510,17 +507,17 @@ export function ProductDetail() {
               <div className="px-4 pb-5 border-t border-border/50 pt-4 space-y-4">
                 <div className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-brand-peach rounded-2xl">
                   <div className="text-center w-full sm:w-auto">
-                    <p className="text-brand-terracotta" style={{ fontSize: "2.25rem", lineHeight: 1 }}>{product.rating}</p>
-                    <div className="flex justify-center my-1">
+                    <p className="text-brand-terracotta text-3xl font-extrabold" style={{ lineHeight: 1 }}>{product.rating}</p>
+                    <div className="flex justify-center my-1.5">
                       <StarRating rating={product.rating} showCount={false} size="sm" />
                     </div>
-                    <p className="text-muted-foreground" style={{ fontSize: "0.72rem" }}>{product.reviewCount} {t.reviews}</p>
+                    <p className="text-muted-foreground text-xs">{product.reviewCount} {t.reviews}</p>
                   </div>
                   <div className="flex-1 w-full space-y-1.5">
                     {[5, 4, 3, 2, 1].map(stars => {
                       const pct = stars === 5 ? 68 : stars === 4 ? 22 : stars === 3 ? 7 : stars === 2 ? 2 : 1;
                       return (
-                        <div key={stars} className="flex items-center gap-2 text-muted-foreground" style={{ fontSize: "0.72rem" }}>
+                        <div key={stars} className="flex items-center gap-2 text-muted-foreground text-xs">
                           <span className="w-5 text-end">{stars}★</span>
                           <div className="flex-1 bg-white/70 rounded-full h-1.5 overflow-hidden">
                             <div className="bg-brand-terracotta h-1.5 rounded-full" style={{ width: `${pct}%` }} />
@@ -536,23 +533,23 @@ export function ProductDetail() {
                     <div className="flex items-start justify-between mb-2">
                       <div>
                         <div className="flex items-center gap-2">
-                          <p className="text-foreground font-medium" style={{ fontSize: "0.8125rem" }}>{review.name}</p>
+                          <p className="text-foreground font-semibold text-sm sm:text-base">{review.name}</p>
                           {review.verified && (
-                            <span className="text-brand-sage-dark bg-brand-cream-2 px-2 py-0.5 rounded-full flex items-center gap-0.5" style={{ fontSize: "0.65rem" }}>
-                              <Check size={8} /> {t.verifiedBuyer}
+                            <span className="text-brand-sage-dark bg-brand-cream-2 px-2 py-0.5 rounded-full flex items-center gap-0.5 text-[10px]">
+                              <Check size={8} className="stroke-[3]" /> {t.verifiedBuyer}
                             </span>
                           )}
                         </div>
-                        <p className="text-muted-foreground" style={{ fontSize: "0.6875rem" }}>{review.date}</p>
+                        <p className="text-muted-foreground text-[11px] mt-0.5">{review.date}</p>
                       </div>
                       <div className="flex">
                         {[...Array(review.rating)].map((_, i) => (
-                          <Star key={i} size={10} className="text-amber-400 fill-amber-400" />
+                          <Star key={i} size={11} className="text-amber-400 fill-amber-400" />
                         ))}
                       </div>
                     </div>
-                    <p className="text-muted-foreground" style={{ fontSize: "0.8125rem", lineHeight: 1.4 }}>{review.review}</p>
-                    <p className="text-muted-foreground mt-2" style={{ fontSize: "0.6875rem" }}>
+                    <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">{review.review}</p>
+                    <p className="text-muted-foreground mt-2 text-[11px]">
                       {review.helpful} {t.peopleFoundHelpful}
                     </p>
                   </div>
