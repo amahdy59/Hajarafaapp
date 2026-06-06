@@ -281,7 +281,7 @@ export function ProductDetail() {
               <Button
                 onClick={handleAddToCart}
                 size="md"
-                className="flex-1 font-bold text-sm h-11"
+                className="w-full sm:flex-1 font-bold text-sm h-11"
                 leftIcon={<ShoppingCart size={16} />}
               >
                 {t.addToCart}
