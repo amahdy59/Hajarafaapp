@@ -6,7 +6,6 @@ const Home = lazy(() => import("./pages/Home").then(m => ({ default: m.Home })))
 const Products = lazy(() => import("./pages/Products").then(m => ({ default: m.Products })));
 const ProductDetail = lazy(() => import("./pages/ProductDetail").then(m => ({ default: m.ProductDetail })));
 const Category = lazy(() => import("./pages/Category").then(m => ({ default: m.Category })));
-const Search = lazy(() => import("./pages/Search").then(m => ({ default: m.Search })));
 const Cart = lazy(() => import("./pages/Cart").then(m => ({ default: m.Cart })));
 const Checkout = lazy(() => import("./pages/Checkout").then(m => ({ default: m.Checkout })));
 const Account = lazy(() => import("./pages/Account").then(m => ({ default: m.Account })));
