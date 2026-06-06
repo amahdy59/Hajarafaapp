@@ -102,13 +102,13 @@ function FilterPanel({
             onChange={e => setPriceRange([priceRange[0], +e.target.value])}
             className="w-full border border-border bg-card rounded-lg px-2 py-1.5 text-sm text-center text-foreground outline-none focus:border-brand-terracotta"
             min={priceRange[0]}
-            max={200}
+            max={500}
           />
         </div>
         <input
           type="range"
           min={0}
-          max={100}
+          max={500}
           value={priceRange[1]}
           onChange={e => setPriceRange([priceRange[0], +e.target.value])}
           className="w-full accent-brand-terracotta h-1"
@@ -171,7 +171,7 @@ export function Products() {
   const [view, setView] = useState<"grid" | "list">("grid");
   const [sort, setSort] = useState<SortOption>("featured");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 100]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 500]);
   const [minRating, setMinRating] = useState(0);
   const [showOrganic, setShowOrganic] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -233,13 +233,13 @@ export function Products() {
 
   const clearFilters = () => {
     setSelectedCategories([]);
-    setPriceRange([0, 100]);
+    setPriceRange([0, 500]);
     setMinRating(0);
     setShowOrganic(false);
     setSearchQuery("");
   };
 
-  const hasActiveFilters = selectedCategories.length > 0 || priceRange[0] > 0 || priceRange[1] < 100 || minRating > 0 || showOrganic || searchQuery.trim().length > 0;
+  const hasActiveFilters = selectedCategories.length > 0 || priceRange[0] > 0 || priceRange[1] < 500 || minRating > 0 || showOrganic || searchQuery.trim().length > 0;
 
   const panelProps = {
     t,
@@ -281,18 +281,18 @@ export function Products() {
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-4 bg-card border border-border rounded-xl p-3 sm:px-4 sm:py-3 shadow-soft">
               {/* Search products box */}
               <div className="relative w-full lg:max-w-xs">
-                <Search size={15} className={`absolute ${isRTL ? "right-3" : "left-3"} top-1/2 -translate-y-1/2 text-muted-foreground`} />
+                <Search size={15} className={`absolute ${isRTL ? "right-3.5" : "left-3.5"} top-1/2 -translate-y-1/2 text-muted-foreground`} />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   placeholder={isRTL ? "بحث عن منتج..." : "Search products..."}
-                  className={`w-full ${isRTL ? "pr-8.5 pl-8" : "pl-8.5 pr-8"} py-1.5 bg-input border border-border rounded-xl text-foreground placeholder:text-muted-foreground outline-none focus:border-brand-terracotta text-sm`}
+                  className={`w-full h-11 ${isRTL ? "pr-10 pl-10" : "pl-10 pr-10"} bg-brand-peach/40 dark:bg-zinc-800/80 border border-brand-terracotta/20 rounded-xl text-foreground placeholder:text-muted-foreground outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all text-sm font-semibold`}
                 />
                 {searchQuery && (
                   <button 
                     onClick={() => setSearchQuery("")} 
-                    className={`absolute ${isRTL ? "left-2.5" : "right-2.5"} top-1/2 -translate-y-1/2 w-4.5 h-4.5 bg-muted rounded-full flex items-center justify-center hover:bg-border transition-colors`}
+                    className={`absolute ${isRTL ? "left-3" : "right-3"} top-1/2 -translate-y-1/2 w-5 h-5 bg-muted rounded-full flex items-center justify-center hover:bg-border transition-colors`}
                   >
                     <X size={11} className="text-muted-foreground" />
                   </button>
@@ -303,7 +303,7 @@ export function Products() {
               <div className="flex items-center justify-between gap-2.5 w-full lg:w-auto lg:hidden">
                 <button
                   onClick={() => setIsFilterOpen(true)}
-                  className="flex items-center justify-center gap-1.5 text-xs font-semibold text-brand-terracotta bg-brand-peach border border-brand-terracotta/20 rounded-lg px-2.5 py-2.5 hover:bg-brand-peach/80 transition-all duration-200 active:scale-95 shadow-sm flex-1 min-w-0"
+                  className="flex items-center justify-center gap-2 h-11 text-sm font-semibold text-brand-terracotta bg-brand-peach dark:bg-zinc-800/80 border border-brand-terracotta/20 rounded-xl px-4 hover:bg-brand-peach/80 transition-all duration-200 active:scale-95 shadow-sm flex-1 min-w-0"
                 >
                   <SlidersHorizontal size={13} className="flex-shrink-0" />
                   <span className="truncate">{t.filters}</span>

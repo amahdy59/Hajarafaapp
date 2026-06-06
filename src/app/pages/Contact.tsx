@@ -4,6 +4,8 @@ import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
 import logoImg from "../../assets/logo.webp";
+import { Button } from "../components/ui/Button";
+
 
 export function Contact() {
   const { t, isRTL } = useAppSettings();
@@ -102,7 +104,7 @@ export function Contact() {
                   href="https://wa.me/201020401400"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2 bg-[#25D366] text-white hover:bg-[#1EBE57] px-4 py-2.5 rounded-xl transition-all text-xs font-semibold uppercase tracking-wider"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-[#128C7E] text-white hover:bg-[#0e7065] px-4.5 py-2.5 rounded-xl transition-all text-xs font-semibold uppercase tracking-wider"
                 >
                   <MessageCircle size={14} /> WhatsApp Chat
                 </a>
@@ -195,19 +197,15 @@ export function Contact() {
                     </div>
 
                     {/* Submit Button */}
-                    <button
+                    <Button
                       type="submit"
-                      disabled={loading}
-                      className="w-full inline-flex items-center justify-center gap-2 bg-brand-terracotta disabled:bg-brand-terracotta/60 text-white px-6 py-3 rounded-xl hover:bg-brand-terracotta-dark transition-all active:scale-[0.98] font-medium shadow-sm"
+                      isLoading={loading}
+                      size="lg"
+                      fullWidth
+                      rightIcon={<Send size={14} />}
                     >
-                      {loading ? (
-                        <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      ) : (
-                        <>
-                          {isRTL ? "إرسال الرسالة" : "Send Message"} <Send size={14} />
-                        </>
-                      )}
-                    </button>
+                      {isRTL ? "إرسال الرسالة" : "Send Message"}
+                    </Button>
                   </form>
                 )}
               </AnimatePresence>

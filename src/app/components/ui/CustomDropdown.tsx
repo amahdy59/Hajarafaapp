@@ -67,7 +67,7 @@ export function CustomDropdown({ value, onChange, options, className = "" }: Cus
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full inline-flex items-center justify-between bg-brand-peach dark:bg-zinc-800/80 border border-brand-terracotta/20 hover:border-brand-terracotta/40 px-3.5 py-2.5 rounded-xl text-sm text-brand-terracotta font-semibold outline-none cursor-pointer active:scale-[0.98] transition-all duration-200 shadow-sm"
+        className="w-full h-11 inline-flex items-center justify-between bg-brand-peach dark:bg-zinc-800/80 border border-brand-terracotta/20 hover:border-brand-terracotta/40 px-4 rounded-xl text-sm text-brand-terracotta font-semibold outline-none cursor-pointer active:scale-[0.98] transition-all duration-200 shadow-sm"
       >
         <span className="truncate">{selectedOption?.label}</span>
         <ChevronDown 

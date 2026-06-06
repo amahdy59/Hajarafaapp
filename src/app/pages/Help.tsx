@@ -143,7 +143,7 @@ export function Help() {
             <a href="tel:17309" className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-brand-terracotta text-white px-4 py-2.5 rounded-xl hover:bg-brand-terracotta-dark transition-all text-xs font-semibold">
               <Phone size={14} /> {isRTL ? "اتصل بنا" : "Call Support"}
             </a>
-            <a href="https://wa.me/201020401400" target="_blank" rel="noopener noreferrer" className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-[#25D366] text-white px-4 py-2.5 rounded-xl hover:bg-[#1EBE57] transition-all text-xs font-semibold">
+            <a href="https://wa.me/201020401400" target="_blank" rel="noopener noreferrer" className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-[#128C7E] text-white px-4 py-2.5 rounded-xl hover:bg-[#0e7065] transition-all text-xs font-semibold">
               <MessageCircle size={14} /> WhatsApp
             </a>
           </div>

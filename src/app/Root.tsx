@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { Outlet, useLocation } from "react-router";
 import { Toaster } from "sonner";
 import { Header } from "./components/Header";
@@ -17,6 +17,10 @@ const PageLoader = () => (
 export function Root() {
   const location = useLocation();
   const isCheckout = location.pathname === "/checkout";
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans w-full max-w-full overflow-x-hidden">

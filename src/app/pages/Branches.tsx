@@ -2,6 +2,7 @@ import { ArrowLeft, Clock, MapPin, ExternalLink } from "lucide-react";
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { useState } from "react";
+import { motion } from "motion/react";
 
 /* ─── Types ─── */
 interface Branch {

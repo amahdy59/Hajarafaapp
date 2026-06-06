@@ -9,6 +9,8 @@ import { StarRating } from "../components/StarRating";
 import { ProductCard } from "../components/ProductCard";
 import { toast } from "sonner";
 import { motion } from "motion/react";
+import { Button } from "../components/ui/Button";
+
 
 const mockReviews = [
   { id: 1, name: "Sarah M.", rating: 5, date: "April 2025", verified: true, review: "Absolutely love this product! The quality is exceptional and the results speak for themselves.", helpful: 24 },
@@ -269,13 +271,14 @@ export function ProductDetail() {
               </div>
 
               {/* Add to Cart button */}
-              <button
+              <Button
                 onClick={handleAddToCart}
-                className="flex-1 bg-brand-terracotta text-white h-11 rounded-xl flex items-center justify-center gap-2 hover:bg-brand-terracotta-dark transition-colors active:scale-[0.98] text-sm font-bold shadow-sm"
+                size="md"
+                className="flex-1 font-bold text-sm"
+                leftIcon={<ShoppingCart size={16} />}
               >
-                <ShoppingCart size={16} />
                 {t.addToCart}
-              </button>
+              </Button>
 
               {/* Wishlist Button - desktop only */}
               <button

@@ -62,7 +62,7 @@ export function Footer() {
             <a href="https://www.instagram.com/hajarafa/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#E1306C] text-[#FAF6F0] flex items-center justify-center transition-all" aria-label="Instagram">
               <Instagram size={15} />
             </a>
-            <a href="https://wa.me/201020401400" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#25D366] text-[#FAF6F0] flex items-center justify-center transition-all" aria-label="WhatsApp">
+            <a href="https://wa.me/201020401400" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#128C7E] text-[#FAF6F0] flex items-center justify-center transition-all" aria-label="WhatsApp">
               <MessageCircle size={15} />
             </a>
           </div>
@@ -111,7 +111,7 @@ export function Footer() {
               href="https://wa.me/201020401400"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white hover:bg-[#1EBE57] px-4.5 py-2.5 rounded-xl transition-all text-xs font-bold w-fit shadow-sm select-none"
+              className="inline-flex items-center justify-center gap-2 bg-[#128C7E] text-white hover:bg-[#0e7065] px-4.5 py-2.5 rounded-xl transition-all text-xs font-bold w-fit shadow-sm select-none"
             >
               <MessageCircle size={16} />
               <span>{locale === "ar" ? "تواصل عبر واتساب" : "Chat on WhatsApp"}</span>

@@ -7,6 +7,8 @@ import { useWishlist } from "../context/WishlistContext";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { toast } from "sonner";
 import { motion } from "motion/react";
+import { Button } from "./ui/Button";
+
 
 interface ProductCardProps {
   product: Product;
@@ -79,16 +81,14 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
             </div>
             <div className="flex items-center justify-between mt-2">
               <span className="text-brand-forest font-bold" style={{ fontSize: "1.05rem" }}>{price}</span>
-              <motion.button
+              <Button
                 onClick={onAdd}
-                aria-label={t.addToCart}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="h-8.5 sm:h-9 px-3 rounded-lg sm:rounded-xl bg-brand-terracotta text-white flex items-center justify-center gap-1.5 hover:bg-brand-terracotta-dark shadow-sm transition-colors text-xs font-semibold"
+                size="sm"
+                className="h-10 sm:h-11 text-xs font-semibold rounded-xl"
+                leftIcon={<Plus size={13} className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
               >
-                <Plus size={13} className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                <span>{isRTL ? "أضف" : "Add"}</span>
-              </motion.button>
+                {isRTL ? "أضف" : "Add"}
+              </Button>
             </div>
           </div>
         </Link>
@@ -161,16 +161,15 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
           </div>
 
           <div className="pt-3 sm:pt-3.5 mt-auto w-full">
-            <motion.button
+            <Button
               onClick={onAdd}
-              aria-label={t.addToCart}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full h-8.5 sm:h-9 rounded-lg bg-brand-terracotta text-white flex items-center justify-center gap-1.5 hover:bg-brand-terracotta-dark shadow-sm transition-colors text-xs font-semibold px-3"
+              size="sm"
+              fullWidth
+              className="h-10 sm:h-11 text-xs font-semibold rounded-xl"
+              leftIcon={<Plus size={13} />}
             >
-              <Plus size={13} />
-              <span>{isRTL ? "أضف" : "Add"}</span>
-            </motion.button>
+              {isRTL ? "أضف" : "Add"}
+            </Button>
           </div>
         </div>
       </Link>

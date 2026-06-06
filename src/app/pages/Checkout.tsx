@@ -5,6 +5,8 @@ import { useCart } from "../context/CartContext";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
+import { Button } from "../components/ui/Button";
+
 
 type Step = "shipping" | "payment" | "confirmation";
 
@@ -286,13 +288,14 @@ export function Checkout() {
                       </div>
                     </div>
 
-                    <button
+                    <Button
                       onClick={handleContinueToPayment}
-                      className="w-full bg-brand-terracotta text-white py-3.5 rounded-xl hover:bg-brand-terracotta-dark transition-colors active:scale-[0.98] flex items-center justify-center gap-2"
+                      size="lg"
+                      fullWidth
+                      rightIcon={<CreditCard size={16} />}
                     >
                       {t.continueToPay}
-                      <CreditCard size={16} />
-                    </button>
+                    </Button>
                   </motion.div>
                 )}
 
@@ -353,29 +356,26 @@ export function Checkout() {
                     </div>
 
                     <div className="flex gap-3">
-                      <button
+                      <Button
+                        type="button"
                         onClick={() => setStep("shipping")}
-                        className="flex items-center gap-2 text-muted-foreground hover:text-foreground border border-border px-4 py-3 rounded-xl transition-colors hover:bg-muted"
-                        style={{ fontSize: "0.875rem" }}
+                        variant="outline"
+                        size="lg"
+                        className="flex-none px-4"
+                        leftIcon={<ChevronLeft size={16} className="rtl-flip" />}
                       >
-                        <ChevronLeft size={16} className="rtl-flip" />
                         {t.back}
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        type="button"
                         onClick={handlePlaceOrder}
-                        disabled={isPlacingOrder}
-                        className="flex-1 bg-brand-terracotta text-white py-3 rounded-xl hover:bg-brand-terracotta-dark transition-colors active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-60"
-                        style={{ fontSize: "0.9rem" }}
+                        isLoading={isPlacingOrder}
+                        variant="primary"
+                        size="lg"
+                        className="flex-1 text-sm sm:text-base"
                       >
-                        {isPlacingOrder ? (
-                          <>
-                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                            {isRTL ? "جارٍ المعالجة..." : "Processing..."}
-                          </>
-                        ) : (
-                          <>{t.placeOrder} · {t.currency} {total.toFixed(2)}</>
-                        )}
-                      </button>
+                        {t.placeOrder} · {t.currency} {total.toFixed(2)}
+                      </Button>
                     </div>
                   </motion.div>
                 )}

@@ -11,6 +11,7 @@ import { useWishlist } from "../context/WishlistContext";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { toast } from "sonner";
 import { ProductCard } from "../components/ProductCard";
+import { Button } from "../components/ui/Button";
 import logoImg from "../../assets/logo.webp";
 import sidrHoneyImg from "../../assets/sidr_honey.webp";
 import bbqSpicesImg from "../../assets/bbq_spices.webp";
@@ -959,14 +960,14 @@ export function Account() {
                   </a>
                 </div>
 
-                <motion.button
+                <Button
                   type="submit"
-                  whileHover={{ scale: 1.01, backgroundColor: "var(--brand-terracotta-dark)" }}
-                  whileTap={{ scale: 0.985 }}
-                  className="w-full py-3.5 bg-brand-terracotta text-white text-xs rounded-2xl font-bold uppercase transition-all shadow-md shadow-brand-terracotta/15 cursor-pointer text-center"
+                  size="lg"
+                  fullWidth
+                  className="w-full uppercase font-bold text-xs"
                 >
                   {isRTL ? "تسجيل الدخول" : "Sign In"}
-                </motion.button>
+                </Button>
               </motion.form>
             ) : (
               <motion.form 
@@ -1084,14 +1085,14 @@ export function Account() {
                   </button>
                 </div>
 
-                <motion.button
+                <Button
                   type="submit"
-                  whileHover={{ scale: 1.01, backgroundColor: "var(--brand-terracotta-dark)" }}
-                  whileTap={{ scale: 0.985 }}
-                  className="w-full py-3.5 bg-brand-terracotta text-white text-xs rounded-2xl font-bold uppercase transition-all shadow-md shadow-brand-terracotta/15 cursor-pointer text-center"
+                  size="lg"
+                  fullWidth
+                  className="w-full uppercase font-bold text-xs"
                 >
                   {isRTL ? "إنشاء حساب" : "Create Account"}
-                </motion.button>
+                </Button>
               </motion.form>
             )}
           </AnimatePresence>
@@ -1295,13 +1296,15 @@ export function Account() {
                     />
                   </div>
                 </div>
-                <button
+                <Button
                   type="button"
                   onClick={saveProfile}
-                  className="bg-brand-terracotta text-white px-6 py-2.5 rounded-xl text-sm hover:bg-brand-terracotta-dark transition-all active:scale-[0.98] font-medium shadow-sm cursor-pointer"
+                  size="lg"
+                  fullWidth
+                  className="w-full md:w-auto font-medium text-sm"
                 >
                   {t.saveChanges}
-                </button>
+                </Button>
               </div>
 
               {/* Secure Password Change Section */}
@@ -1351,15 +1354,17 @@ export function Account() {
                     </button>
                   </div>
                 </div>
-                <button
+                <Button
                   type="button"
                   onClick={() => {
                     toast.success(isRTL ? "تم تحديث كلمة المرور بنجاح!" : "Password updated successfully!");
                   }}
-                  className="bg-brand-terracotta text-white px-6 py-2.5 rounded-xl text-sm hover:bg-brand-terracotta-dark transition-all active:scale-[0.98] font-medium shadow-sm cursor-pointer"
+                  size="lg"
+                  fullWidth
+                  className="w-full md:w-auto font-medium text-sm"
                 >
                   {isRTL ? "حفظ كلمة المرور" : "Update Password"}
-                </button>
+                </Button>
               </div>
 
             </div>
@@ -1653,23 +1658,26 @@ export function Account() {
                       </div>
 
                       <div className="flex gap-2">
-                        <button
+                        <Button
                           type="submit"
-                          className="flex-1 py-2 bg-brand-terracotta text-white rounded-lg text-xs font-semibold hover:bg-brand-terracotta-dark"
+                          size="md"
+                          className="flex-1 text-xs font-semibold rounded-lg"
                         >
                           {isRTL ? "حفظ العنوان" : "Save Location"}
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                           type="button"
                           onClick={() => {
                             setIsAddingAddress(false);
                             setNewAddrDetails("");
                             setNewAddrType("");
                           }}
-                          className="px-4 py-2 border border-border text-foreground hover:bg-muted rounded-lg text-xs"
+                          variant="outline"
+                          size="md"
+                          className="px-4 rounded-lg text-xs"
                         >
                           {isRTL ? "إلغاء" : "Cancel"}
-                        </button>
+                        </Button>
                       </div>
                     </motion.form>
                   ) : null}
@@ -1824,19 +1832,22 @@ export function Account() {
                       </div>
 
                       <div className="flex gap-2 pt-2">
-                        <button
+                        <Button
                           type="submit"
-                          className="flex-1 py-2 bg-brand-terracotta text-white rounded-lg text-xs font-semibold hover:bg-brand-terracotta-dark"
+                          size="md"
+                          className="flex-1 text-xs font-semibold rounded-lg"
                         >
                           {isRTL ? "إضافة البطاقة" : "Save Card"}
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                           type="button"
                           onClick={() => setIsAddingCard(false)}
-                          className="px-4 py-2 border border-border text-foreground hover:bg-muted rounded-lg text-xs"
+                          variant="outline"
+                          size="md"
+                          className="px-4 rounded-lg text-xs"
                         >
                           {isRTL ? "إلغاء" : "Cancel"}
-                        </button>
+                        </Button>
                       </div>
                     </motion.form>
                   ) : null}

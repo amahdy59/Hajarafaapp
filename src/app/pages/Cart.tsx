@@ -1,11 +1,13 @@
 import { ShoppingBag, Plus, Minus, Trash2, ArrowRight, Tag, Truck } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useCart } from "../context/CartContext";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { products } from "../data/products";
 import { ProductCard } from "../components/ProductCard";
+import { Button } from "../components/ui/Button";
+
 
 const SHIPPING_THRESHOLD = 500;
 const SHIPPING_COST = 49;
@@ -13,6 +15,8 @@ const SHIPPING_COST = 49;
 export function Cart() {
   const { items, updateQuantity, removeFromCart, totalPrice, totalItems } = useCart();
   const { t, isRTL, locale } = useAppSettings();
+  const navigate = useNavigate();
+
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
 
@@ -162,13 +166,13 @@ export function Cart() {
                         style={{ fontSize: "0.875rem" }}
                       />
                     </div>
-                    <button
+                    <Button
                       onClick={applyCoupon}
-                      className="bg-brand-terracotta text-white px-4 py-2.5 rounded-xl hover:bg-brand-terracotta-dark transition-colors active:scale-95"
-                      style={{ fontSize: "0.875rem" }}
+                      size="sm"
+                      className="h-10 px-4 rounded-xl text-sm"
                     >
                       {t.apply}
-                    </button>
+                    </Button>
                   </div>
                 ) : (
                   <div className="flex items-center justify-between bg-brand-peach rounded-xl p-3">
@@ -220,13 +224,14 @@ export function Cart() {
                   </span>
                 </div>
 
-                <Link
-                  to="/checkout"
-                  className="w-full block bg-brand-terracotta text-white py-3.5 rounded-xl text-center hover:bg-brand-terracotta-dark transition-colors active:scale-[0.98]"
-                  style={{ fontSize: "0.95rem" }}
+                <Button
+                  onClick={() => navigate("/checkout")}
+                  size="lg"
+                  fullWidth
+                  className="w-full text-base font-bold"
                 >
                   {t.proceedToCheckout}
-                </Link>
+                </Button>
 
                 <div className="flex items-center justify-center gap-3 text-muted-foreground pt-1" style={{ fontSize: "0.75rem" }}>
                   <span>{t.secureCheckoutNote}</span>

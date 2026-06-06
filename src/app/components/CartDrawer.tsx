@@ -3,13 +3,17 @@ import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, Truck } from "lucide-r
 import { useCart } from "../context/CartContext";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { Button } from "./ui/Button";
+
 
 const THRESHOLD = 500;
 
 export function CartDrawer() {
   const { items, isCartOpen, setCartOpen, updateQuantity, removeFromCart, totalPrice, totalItems } = useCart();
   const { t, isRTL } = useAppSettings();
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     if (!isCartOpen) return;
@@ -185,15 +189,17 @@ export function CartDrawer() {
                   </span>
                 </div>
 
-                <Link
-                  to="/checkout"
-                  onClick={() => setCartOpen(false)}
-                  className="w-full bg-brand-terracotta text-white py-3.5 rounded-xl flex items-center justify-center gap-2 hover:bg-brand-terracotta-dark transition-colors active:scale-[0.98]"
-                  style={{ fontSize: "0.95rem" }}
+                <Button
+                  onClick={() => {
+                    setCartOpen(false);
+                    navigate("/checkout");
+                  }}
+                  size="lg"
+                  fullWidth
+                  rightIcon={<ArrowRight size={16} className="rtl-flip" />}
                 >
                   {t.proceedToCheckout}
-                  <ArrowRight size={16} className="rtl-flip" />
-                </Link>
+                </Button>
                 <Link
                   to="/cart"
                   onClick={() => setCartOpen(false)}
