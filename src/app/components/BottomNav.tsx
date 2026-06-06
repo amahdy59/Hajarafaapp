@@ -13,7 +13,6 @@ export function BottomNav() {
   const items = [
     { key: "home", icon: Home, label: t.home, to: "/" },
     { key: "shop", icon: Store, label: t.shopAll, to: "/products" },
-    { key: "search", icon: Search, label: t.searchPlaceholder.split(" ")[0], onClick: () => navigate("/search") },
     { key: "cart", icon: ShoppingBag, label: t.cart, onClick: () => setCartOpen(true), badge: totalItems },
     { key: "profile", icon: User, label: t.account, to: "/account" },
   ];
@@ -21,7 +20,6 @@ export function BottomNav() {
   const activeKey = (() => {
     if (location.pathname === "/") return "home";
     if (location.pathname.startsWith("/products") || location.pathname.startsWith("/category")) return "shop";
-    if (location.pathname.startsWith("/search")) return "search";
     if (location.pathname.startsWith("/account") || location.pathname.startsWith("/wishlist")) return "profile";
     return "";
   })();

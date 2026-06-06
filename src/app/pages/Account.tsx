@@ -1257,41 +1257,41 @@ export function Account() {
                   </div>
                 )}
 
-                <div className="space-y-4 mb-5">
+                <div className="space-y-2.5 sm:space-y-4 mb-5">
                   <div>
-                    <label className="block text-xs text-muted-foreground mb-1.5">{t.firstName}</label>
+                    <label className="block text-xs text-muted-foreground mb-1 sm:mb-1.5">{t.firstName}</label>
                     <input
                       type="text"
                       value={profile?.firstName || ""}
                       onChange={e => setProfile(p => p ? { ...p, firstName: e.target.value } : null)}
-                      className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-muted-foreground mb-1.5">{t.lastName}</label>
+                    <label className="block text-xs text-muted-foreground mb-1 sm:mb-1.5">{t.lastName}</label>
                     <input
                       type="text"
                       value={profile?.lastName || ""}
                       onChange={e => setProfile(p => p ? { ...p, lastName: e.target.value } : null)}
-                      className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-muted-foreground mb-1.5">{t.email}</label>
+                    <label className="block text-xs text-muted-foreground mb-1 sm:mb-1.5">{t.email}</label>
                     <input
                       type="email"
                       value={profile?.email || ""}
                       onChange={e => setProfile(p => p ? { ...p, email: e.target.value } : null)}
-                      className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-muted-foreground mb-1.5">{t.phone}</label>
+                    <label className="block text-xs text-muted-foreground mb-1 sm:mb-1.5">{t.phone}</label>
                     <input
                       type="text"
                       value={profile?.phone || ""}
                       onChange={e => setProfile(p => p ? { ...p, phone: e.target.value } : null)}
-                      className="w-full px-4 py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-2.5 border border-border bg-background text-foreground rounded-xl text-sm outline-none focus:border-brand-terracotta transition-colors"
                     />
                   </div>
                 </div>

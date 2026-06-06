@@ -35,7 +35,7 @@ export function Header() {
     e.preventDefault();
     const q = searchQuery.trim();
     if (q) {
-      navigate(`/search?q=${encodeURIComponent(q)}`);
+      navigate(`/products?q=${encodeURIComponent(q)}`);
       setSearchQuery("");
       setSearchOpen(false);
     }
@@ -58,7 +58,7 @@ export function Header() {
           <Link to="/" className="justify-self-center flex items-center justify-center min-w-0 h-14 select-none cursor-pointer w-fit no-underline"><img src={logoImg} alt="HajArafa Logo" className="h-9 xs:h-12 sm:h-14 w-auto object-contain max-w-[42vw] sm:max-w-[220px] select-none" /></Link>
 
           <div className="flex items-center gap-0.5">
-            <IconButton onClick={() => navigate("/search")} aria-label={t.searchPlaceholder} className="hidden sm:flex">
+            <IconButton onClick={() => navigate("/products")} aria-label={t.searchPlaceholder} className="hidden sm:flex">
               <Search size={19} />
             </IconButton>
             <IconButton
