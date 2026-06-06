@@ -11,7 +11,7 @@ const THRESHOLD = 500;
 
 export function CartDrawer() {
   const { items, isCartOpen, setCartOpen, updateQuantity, removeFromCart, totalPrice, totalItems } = useCart();
-  const { t, isRTL } = useAppSettings();
+  const { t, isRTL, locale } = useAppSettings();
   const navigate = useNavigate();
 
 
