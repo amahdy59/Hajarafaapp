@@ -55,6 +55,7 @@
   --color-brand-line: var(--brand-line);
   --color-brand-ink: var(--brand-ink);
   --color-brand-ink-soft: var(--brand-ink-soft);
+  --breakpoint-xs: 375px;
 }
 
 @layer base {

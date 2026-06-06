@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { useAppSettings } from "../../context/AppSettingsContext";
 
 interface ScrollRailProps {
   children: ReactNode;
@@ -10,13 +11,21 @@ interface ScrollRailProps {
 }
 
 export function ScrollRail({ children, gap = "0.75rem", className = "", showFades = true }: ScrollRailProps) {
+  const { isRTL } = useAppSettings();
+
   return (
     <div className={`relative ${className}`}>
       {/* Edge fade — start */}
       {showFades && (
         <>
-          <div className="absolute top-0 bottom-0 start-0 w-4 sm:hidden z-10 pointer-events-none" style={{ background: "linear-gradient(to right, var(--color-background), transparent)" }} />
-          <div className="absolute top-0 bottom-0 end-0 w-6 sm:hidden z-10 pointer-events-none" style={{ background: "linear-gradient(to left, var(--color-background), transparent)" }} />
+          <div 
+            className="absolute top-0 bottom-0 start-0 w-4 sm:hidden z-10 pointer-events-none" 
+            style={{ background: `linear-gradient(to ${isRTL ? "left" : "right"}, var(--color-background), transparent)` }} 
+          />
+          <div 
+            className="absolute top-0 bottom-0 end-0 w-6 sm:hidden z-10 pointer-events-none" 
+            style={{ background: `linear-gradient(to ${isRTL ? "right" : "left"}, var(--color-background), transparent)` }} 
+          />
         </>
       )}
       <div

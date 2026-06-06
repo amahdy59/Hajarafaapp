@@ -301,15 +301,15 @@ export function Products() {
             {/* Toolbar */}
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-4 bg-card border border-border rounded-xl px-4 py-3 shadow-soft">
               {/* Row 1 (Mobile) / Left Group (Desktop) */}
-              <div className="flex items-center justify-between gap-3 w-full lg:w-auto">
+              <div className="flex items-center justify-between gap-2.5 w-full lg:w-auto">
                 <button
                   onClick={() => setIsFilterOpen(true)}
-                  className="lg:hidden flex items-center gap-2 text-sm font-semibold text-brand-terracotta bg-brand-peach border border-brand-terracotta/20 rounded-lg px-3.5 py-2 hover:bg-brand-peach/80 transition-all duration-200 active:scale-95 shadow-sm"
+                  className="lg:hidden flex items-center justify-center gap-1.5 text-xs font-semibold text-brand-terracotta bg-brand-peach border border-brand-terracotta/20 rounded-lg px-2.5 py-2.5 hover:bg-brand-peach/80 transition-all duration-200 active:scale-95 shadow-sm flex-1 min-w-0"
                 >
-                  <SlidersHorizontal size={15} />
-                  <span>{t.filters}</span>
+                  <SlidersHorizontal size={13} className="flex-shrink-0" />
+                  <span className="truncate">{t.filters}</span>
                   {hasActiveFilters && (
-                    <span className="bg-brand-terracotta text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                    <span className="bg-brand-terracotta text-white text-[10px] w-4.5 h-4.5 rounded-full flex items-center justify-center font-bold flex-shrink-0">
                       {selectedCategories.length + (showOrganic ? 1 : 0)}
                     </span>
                   )}
@@ -320,7 +320,7 @@ export function Products() {
                   value={sort}
                   onChange={val => setSort(val as SortOption)}
                   options={sortOptions}
-                  className="w-40 sm:w-48 lg:hidden"
+                  className="flex-1 min-w-0 lg:hidden"
                 />
               </div>
 

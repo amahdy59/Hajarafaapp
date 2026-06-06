@@ -36,7 +36,7 @@ export function BottomNav() {
           const Icon = item.icon;
           const active = activeKey === item.key;
           const inner = (
-            <div className="flex flex-col items-center justify-center gap-1 pt-1.5 pb-1 min-w-[56px]">
+            <div className="flex flex-col items-center justify-center gap-1 pt-1.5 pb-1 min-w-[46px] xs:min-w-[56px]">
               <div className="relative h-7 w-12 flex items-center justify-center">
                 {active && (
                   <motion.div
