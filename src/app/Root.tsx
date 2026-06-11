@@ -28,12 +28,12 @@ export function Root() {
   }, []);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
 
     const timer = setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: "instant" });
+      window.scrollTo({ top: 0, behavior: "smooth" });
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
     }, 20);

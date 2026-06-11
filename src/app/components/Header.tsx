@@ -51,7 +51,7 @@ export function Header() {
         }`}
       >
         <div className="relative h-16 px-4 sm:px-6 max-w-[1280px] mx-auto flex items-center justify-between gap-2">
-          <div className="flex items-center justify-start z-10">
+          <div className="flex items-center justify-start z-10 -ms-2 sm:-ms-2.5">
             <IconButton onClick={() => setMenuOpen(true)} aria-label={t.menu}>
               <Menu size={20} />
             </IconButton>
@@ -61,7 +61,7 @@ export function Header() {
             <img src={logoImg} alt="HajArafa Logo" className="h-9 xs:h-12 sm:h-14 w-auto object-contain max-w-[42vw] sm:max-w-[220px] select-none" />
           </Link>
 
-          <div className="flex items-center gap-0.5 justify-end z-10">
+          <div className="flex items-center gap-0.5 justify-end z-10 -me-2 sm:-me-2.5">
             <IconButton onClick={() => navigate("/products")} aria-label={t.searchPlaceholder} className="hidden sm:flex">
               <Search size={19} />
             </IconButton>
@@ -91,11 +91,11 @@ export function Header() {
               <Link
                 to="/products"
                 onClick={() => {
-                  window.scrollTo({ top: 0, behavior: "instant" });
+                  window.scrollTo({ top: 0, behavior: "smooth" });
                   document.documentElement.scrollTop = 0;
                   document.body.scrollTop = 0;
                   setTimeout(() => {
-                    window.scrollTo({ top: 0, behavior: "instant" });
+                    window.scrollTo({ top: 0, behavior: "smooth" });
                     document.documentElement.scrollTop = 0;
                     document.body.scrollTop = 0;
                   }, 100);
@@ -122,11 +122,11 @@ export function Header() {
                     key={cat.id}
                     to={`/category/${cat.slug}`}
                     onClick={() => {
-                      window.scrollTo({ top: 0, behavior: "instant" });
+                      window.scrollTo({ top: 0, behavior: "smooth" });
                       document.documentElement.scrollTop = 0;
                       document.body.scrollTop = 0;
                       setTimeout(() => {
-                        window.scrollTo({ top: 0, behavior: "instant" });
+                        window.scrollTo({ top: 0, behavior: "smooth" });
                         document.documentElement.scrollTop = 0;
                         document.body.scrollTop = 0;
                       }, 100);
