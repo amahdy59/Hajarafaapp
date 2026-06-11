@@ -106,7 +106,7 @@ export function Contact() {
                   rel="noopener noreferrer"
                   className="w-full inline-flex items-center justify-center gap-2 bg-[#128C7E] text-white hover:bg-[#0e7065] px-4.5 py-2.5 rounded-xl transition-all text-xs font-semibold uppercase tracking-wider"
                 >
-                  <MessageCircle size={14} /> WhatsApp Chat
+                  <MessageCircle size={14} /> {isRTL ? "دردشة واتساب" : "WhatsApp Chat"}
                 </a>
               </div>
             </div>

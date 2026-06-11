@@ -125,7 +125,7 @@ export function Help() {
               <Phone size={14} /> {t.callSupport}
             </a>
             <a href="https://wa.me/201020401400" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-[#128C7E] text-white px-4 py-3 rounded-xl hover:bg-[#0e7065] transition-all text-xs font-semibold w-full sm:w-auto h-11">
-              <MessageCircle size={14} /> WhatsApp
+              <MessageCircle size={14} /> {isRTL ? "واتساب" : "WhatsApp"}
             </a>
           </div>
         </div>

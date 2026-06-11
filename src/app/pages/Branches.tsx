@@ -17,10 +17,15 @@ interface Region {
   branches: Branch[];
 }
 
+interface SellingGroupItem {
+  en: string;
+  ar: string;
+}
+
 interface SellingGroup {
   titleEn: string;
   titleAr: string;
-  items: string[];
+  items: SellingGroupItem[];
 }
 
 /* ─── Helpers ─── */
@@ -154,31 +159,31 @@ const sellingSpots: SellingGroup[] = [
     titleEn: "Carrefour Locations",
     titleAr: "فروع كارفور",
     items: [
-      "City Centre Maadi",
-      "City Centre Alexandria",
-      "Winget - Alexandria",
-      "Madinaty",
-      "Lulu Market - 1st Settlement",
-      "Rehab",
-      "Gezira - 6th October",
-      "Degla - Maadi",
-      "Asmrat - Mokattam",
-      "Sheraton",
-      "Ismailiya",
-      "Shoubra",
-      "Damanhour",
+      { en: "City Centre Maadi", ar: "سيتي سنتر المعادي" },
+      { en: "City Centre Alexandria", ar: "سيتي سنتر الإسكندرية" },
+      { en: "Winget - Alexandria", ar: "وينجت - الإسكندرية" },
+      { en: "Madinaty", ar: "مدينتي" },
+      { en: "Lulu Market - 1st Settlement", ar: "لولو ماركت - التجمع الأول" },
+      { en: "Rehab", ar: "الرحاب" },
+      { en: "Gezira - 6th October", ar: "الجزيرة - ٦ أكتوبر" },
+      { en: "Degla - Maadi", ar: "دجلة - المعادي" },
+      { en: "Asmrat - Mokattam", ar: "الأسمرات - المقطم" },
+      { en: "Sheraton", ar: "شيراتون" },
+      { en: "Ismailiya", ar: "الإسماعيلية" },
+      { en: "Shoubra", ar: "شبرا" },
+      { en: "Damanhour", ar: "دمنهور" },
     ],
   },
   {
     titleEn: "Other Retail Partners",
     titleAr: "شركاء التجزئة الآخرون",
     items: [
-      "Fathallah Market",
-      "Oscar",
-      "Géant",
-      "Gomla Market",
-      "Mahmoud Elfar",
-      "LULU Market",
+      { en: "Fathallah Market", ar: "فتح الله ماركت" },
+      { en: "Oscar", ar: "أوسكار" },
+      { en: "Géant", ar: "جيان" },
+      { en: "Gomla Market", ar: "جملة ماركت" },
+      { en: "Mahmoud Elfar", ar: "محمود الفار" },
+      { en: "LULU Market", ar: "لولو ماركت" },
     ],
   },
 ];
@@ -352,14 +357,14 @@ export function Branches() {
                 </div>
                 <ul className="divide-y divide-border/50">
                   {group.items.map((item) => (
-                    <li key={item}>
+                    <li key={item.en}>
                       <a
-                        href={sellingSpotLink(item)}
+                        href={sellingSpotLink(item.en)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="px-5 py-2.5 text-brand-ink-soft hover:text-brand-terracotta text-sm leading-relaxed flex items-center justify-between gap-3"
                       >
-                        <span>{item}</span>
+                        <span>{isRTL ? item.ar : item.en}</span>
                         <ExternalLink size={13} className="text-brand-terracotta flex-shrink-0" />
                       </a>
                     </li>
