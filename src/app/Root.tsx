@@ -34,18 +34,19 @@ export function Root() {
       document.body.scrollTop = 0;
     };
 
+    // Scroll immediately
     resetScroll();
 
-    const t1 = setTimeout(resetScroll, 20);
-    const t2 = setTimeout(resetScroll, 80);
-    const t3 = setTimeout(resetScroll, 150);
-    const t4 = setTimeout(resetScroll, 300);
+    // Reset scroll periodically for 1.5 seconds to cover lazy loading and exit animations
+    const intervalId = setInterval(resetScroll, 50);
+
+    const timeoutId = setTimeout(() => {
+      clearInterval(intervalId);
+    }, 1500);
 
     return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-      clearTimeout(t4);
+      clearInterval(intervalId);
+      clearTimeout(timeoutId);
     };
   }, [location.pathname, location.search]);
 
