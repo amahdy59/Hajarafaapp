@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { ChevronLeft, Check, CreditCard, Truck, MapPin, Shield, ArrowLeft } from "lucide-react";
 import { useCart } from "../context/CartContext";
@@ -16,6 +16,12 @@ export function Checkout() {
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>("shipping");
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [step]);
 
   const shipping = totalPrice >= 500 ? 0 : 49;
   const tax = totalPrice * 0.14;

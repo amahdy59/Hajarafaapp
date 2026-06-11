@@ -287,13 +287,13 @@ export function Category() {
 
             {/* Products grid */}
             {filteredProducts.length === 0 ? (
-              <div className="text-center py-20 bg-card border border-border rounded-2xl">
+              <div id="product-grid" className="text-center py-20 bg-card border border-border rounded-2xl">
                 <p className="text-4xl mb-4">🌿</p>
                 <p className="text-muted-foreground">{t.noProductsMatchFilters}</p>
                 <button onClick={clearFilters} className="mt-4 text-brand-terracotta text-sm hover:underline">{t.clearAll}</button>
               </div>
             ) : (
-              <div className={view === "grid"
+              <div id="product-grid" className={view === "grid"
                 ? "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-4"
                 : "flex flex-col gap-2 sm:gap-3"
               }>

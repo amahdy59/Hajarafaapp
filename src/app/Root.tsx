@@ -1,5 +1,5 @@
-import { Suspense, useEffect } from "react";
-import { Outlet, useLocation } from "react-router";
+import { Suspense, useEffect, useRef } from "react";
+import { Outlet, useLocation, useNavigationType } from "react-router";
 import { Toaster } from "sonner";
 import { Header } from "./components/Header";
 import { BottomNav } from "./components/BottomNav";
@@ -16,39 +16,38 @@ const PageLoader = () => (
 
 export function Root() {
   const location = useLocation();
+  const navType = useNavigationType();
   const isCheckout = location.pathname === "/checkout";
 
   const hasCategoryRail = location.pathname === "/" || location.pathname.startsWith("/category/") || location.pathname === "/products";
   const mainPadding = hasCategoryRail ? "pt-16 sm:pt-[108px]" : "pt-16";
 
+  const scrollPositions = useRef<Record<string, number>>({});
+
+  // Track scroll positions for POP (back/forward) restoration
   useEffect(() => {
-    if (typeof window !== "undefined" && "history" in window && "scrollRestoration" in window.history) {
-      window.history.scrollRestoration = "manual";
-    }
-  }, []);
-
-  useEffect(() => {
-    const resetScroll = () => {
-      window.scrollTo({ top: 0, behavior: "instant" });
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
+    const handleScroll = () => {
+      scrollPositions.current[location.pathname + location.search] = window.scrollY;
     };
-
-    // Scroll immediately
-    resetScroll();
-
-    // Reset scroll periodically for 1.5 seconds to cover lazy loading and exit animations
-    const intervalId = setInterval(resetScroll, 50);
-
-    const timeoutId = setTimeout(() => {
-      clearInterval(intervalId);
-    }, 1500);
-
-    return () => {
-      clearInterval(intervalId);
-      clearTimeout(timeoutId);
-    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [location.pathname, location.search]);
+
+  useEffect(() => {
+    if (navType === "POP") {
+      // Back/Forward: restore saved position after lazy content has expanded
+      const savedPos = scrollPositions.current[location.pathname + location.search];
+      const timer = setTimeout(() => {
+        window.scrollTo({ top: savedPos ?? 0, behavior: "instant" });
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+
+    // PUSH / REPLACE navigation: always scroll to top immediately
+    window.scrollTo({ top: 0, behavior: "instant" });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [location.pathname, location.search, navType]);
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans w-full max-w-full overflow-x-hidden">
@@ -87,6 +86,7 @@ export function Root() {
 
       <CartDrawer />
       <BottomNav />
+
       <Toaster position="top-center" closeButton />
     </div>
   );
