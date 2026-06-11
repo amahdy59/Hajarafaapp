@@ -1,4 +1,11 @@
 import { Suspense, useEffect, useRef } from "react";
+
+// Disable browser's native scroll restoration so our custom logic has full control.
+// Without this, the browser restores the previous scroll position after every navigation,
+// overriding our window.scrollTo({ top: 0 }) calls.
+if (typeof window !== "undefined" && "scrollRestoration" in window.history) {
+  window.history.scrollRestoration = "manual";
+}
 import { Outlet, useLocation, useNavigationType } from "react-router";
 import { Toaster } from "sonner";
 import { Header } from "./components/Header";
