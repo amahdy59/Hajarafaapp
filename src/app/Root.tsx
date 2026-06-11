@@ -86,7 +86,7 @@ export function Root() {
 
       <CartDrawer />
       <BottomNav />
-      <Toaster position="top-center" />
+      <Toaster position="top-center" closeButton />
     </div>
   );
 }
