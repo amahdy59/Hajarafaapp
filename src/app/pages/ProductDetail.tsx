@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router";
 import { Heart, ShoppingCart, Share2, ChevronLeft, ChevronDown, Star, Plus, Minus, Leaf, Truck, Shield, RotateCcw, Check } from "lucide-react";
 import { getProductById, products } from "../data/products";
@@ -34,6 +34,19 @@ export function ProductDetail() {
     usage: false,
     reviews: false,
   });
+
+  // Scroll to top and reset UI state when navigating between products.
+  // This runs AFTER the new product DOM is committed, so it always wins
+  // over any browser or layout-shift interference.
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    setQuantity(1);
+    setActiveImage(0);
+    setActiveTab("description");
+    setAccordionOpen({ description: true, usage: false, reviews: false });
+  }, [id]);
 
   const toggleAccordion = (section: "description" | "usage" | "reviews") => {
     setAccordionOpen(prev => ({ ...prev, [section]: !prev[section] }));
