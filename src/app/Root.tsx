@@ -28,17 +28,25 @@ export function Root() {
   }, []);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-
-    const timer = setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    const resetScroll = () => {
+      window.scrollTo({ top: 0, behavior: "instant" });
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
-    }, 20);
+    };
 
-    return () => clearTimeout(timer);
+    resetScroll();
+
+    const t1 = setTimeout(resetScroll, 20);
+    const t2 = setTimeout(resetScroll, 80);
+    const t3 = setTimeout(resetScroll, 150);
+    const t4 = setTimeout(resetScroll, 300);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(t4);
+    };
   }, [location.pathname, location.search]);
 
   return (

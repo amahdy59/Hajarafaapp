@@ -91,11 +91,11 @@ export function Header() {
               <Link
                 to="/products"
                 onClick={() => {
-                  window.scrollTo({ top: 0, behavior: "smooth" });
+                  window.scrollTo({ top: 0, behavior: "instant" });
                   document.documentElement.scrollTop = 0;
                   document.body.scrollTop = 0;
                   setTimeout(() => {
-                    window.scrollTo({ top: 0, behavior: "smooth" });
+                    window.scrollTo({ top: 0, behavior: "instant" });
                     document.documentElement.scrollTop = 0;
                     document.body.scrollTop = 0;
                   }, 100);
@@ -122,11 +122,11 @@ export function Header() {
                     key={cat.id}
                     to={`/category/${cat.slug}`}
                     onClick={() => {
-                      window.scrollTo({ top: 0, behavior: "smooth" });
+                      window.scrollTo({ top: 0, behavior: "instant" });
                       document.documentElement.scrollTop = 0;
                       document.body.scrollTop = 0;
                       setTimeout(() => {
-                        window.scrollTo({ top: 0, behavior: "smooth" });
+                        window.scrollTo({ top: 0, behavior: "instant" });
                         document.documentElement.scrollTop = 0;
                         document.body.scrollTop = 0;
                       }, 100);
