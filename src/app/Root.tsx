@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect } from "react";
 
 // Disable browser's native scroll restoration so our custom logic has full control.
 // Without this, the browser restores the previous scroll position after every navigation,
@@ -29,32 +29,14 @@ export function Root() {
   const hasCategoryRail = location.pathname === "/" || location.pathname.startsWith("/category/") || location.pathname === "/products";
   const mainPadding = hasCategoryRail ? "pt-16 sm:pt-[108px]" : "pt-16";
 
-  const scrollPositions = useRef<Record<string, number>>({});
-
-  // Track scroll positions for POP (back/forward) restoration
+  // Scroll to top on every forward navigation.
+  // key={location.pathname} on Outlet (below) handles the remount;
+  // this is a safety net for the window scroll position.
   useEffect(() => {
-    const handleScroll = () => {
-      scrollPositions.current[location.pathname + location.search] = window.scrollY;
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [location.pathname, location.search]);
-
-  useEffect(() => {
-    if (navType === "POP") {
-      // Back/Forward: restore saved position after lazy content has expanded
-      const savedPos = scrollPositions.current[location.pathname + location.search];
-      const timer = setTimeout(() => {
-        window.scrollTo({ top: savedPos ?? 0, behavior: "instant" });
-      }, 100);
-      return () => clearTimeout(timer);
+    if (navType !== "POP") {
+      window.scrollTo(0, 0);
     }
-
-    // PUSH / REPLACE navigation: always scroll to top immediately
-    window.scrollTo({ top: 0, behavior: "instant" });
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-  }, [location.pathname, location.search, navType]);
+  }, [location.pathname, navType]);
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans w-full max-w-full overflow-x-hidden">
@@ -83,7 +65,10 @@ export function Root() {
           <main className={`${mainPadding} pb-24 sm:pb-8 w-full max-w-full overflow-x-hidden`}>
             <ErrorBoundary>
               <Suspense fallback={<PageLoader />}>
-                <Outlet />
+                {/* key forces a full remount on path change — the only reliable
+                    way to reset scroll when React reuses the same component
+                    instance (e.g. /products/A → /products/B). */}
+                <Outlet key={location.pathname} />
               </Suspense>
             </ErrorBoundary>
           </main>
