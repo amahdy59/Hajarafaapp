@@ -22,7 +22,23 @@ export function Root() {
   const mainPadding = hasCategoryRail ? "pt-16 sm:pt-[108px]" : "pt-16";
 
   useEffect(() => {
+    if (typeof window !== "undefined" && "history" in window && "scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+  }, []);
+
+  useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+
+    const timer = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "instant" });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }, 20);
+
+    return () => clearTimeout(timer);
   }, [location.pathname, location.search]);
 
   return (
