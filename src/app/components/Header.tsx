@@ -94,6 +94,11 @@ export function Header() {
                   window.scrollTo({ top: 0, behavior: "instant" });
                   document.documentElement.scrollTop = 0;
                   document.body.scrollTop = 0;
+                  setTimeout(() => {
+                    window.scrollTo({ top: 0, behavior: "instant" });
+                    document.documentElement.scrollTop = 0;
+                    document.body.scrollTop = 0;
+                  }, 100);
                 }}
                 className={`group flex items-center gap-2 px-3.5 py-1.5 bg-card rounded-full border transition-all duration-300 hover:shadow-soft flex-shrink-0 select-none ${
                   location.pathname === "/products" && !searchParams.get("category")
@@ -120,6 +125,11 @@ export function Header() {
                       window.scrollTo({ top: 0, behavior: "instant" });
                       document.documentElement.scrollTop = 0;
                       document.body.scrollTop = 0;
+                      setTimeout(() => {
+                        window.scrollTo({ top: 0, behavior: "instant" });
+                        document.documentElement.scrollTop = 0;
+                        document.body.scrollTop = 0;
+                      }, 100);
                     }}
                     className={`group flex items-center gap-2 px-3.5 py-1.5 bg-card rounded-full border transition-all duration-300 hover:shadow-soft flex-shrink-0 select-none ${
                       active
