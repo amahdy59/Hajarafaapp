@@ -45,7 +45,7 @@ export function Category() {
 
   useEffect(() => {
     if (searchInputRef.current) {
-      searchInputRef.current.focus();
+      searchInputRef.current.focus({ preventScroll: true });
     }
   }, [slug]);
 

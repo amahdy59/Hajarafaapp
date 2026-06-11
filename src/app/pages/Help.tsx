@@ -63,7 +63,7 @@ export function Help() {
 
   useEffect(() => {
     if (searchInputRef.current) {
-      searchInputRef.current.focus();
+      searchInputRef.current.focus({ preventScroll: true });
     }
   }, []);
   const [activeCategory, setActiveCategory] = useState<string>("all");

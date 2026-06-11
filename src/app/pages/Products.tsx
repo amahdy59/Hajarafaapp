@@ -199,7 +199,7 @@ export function Products() {
 
   useEffect(() => {
     if (searchInputRef.current) {
-      searchInputRef.current.focus();
+      searchInputRef.current.focus({ preventScroll: true });
     }
   }, []);
 
