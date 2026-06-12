@@ -64,9 +64,7 @@ export function Header() {
           <div className="flex items-center gap-0.5 justify-end z-10 -me-2 sm:-me-2.5">
             <div className="hidden lg:flex items-center gap-0.5 me-2 border-e border-border pe-2">
               <IconButton onClick={() => setLocale(locale === "en" ? "ar" : "en")} aria-label={t.language}>
-                <div className="flex items-center justify-center font-bold text-sm leading-none pt-0.5 w-5 h-5">
-                  {locale === "en" ? "ع" : "EN"}
-                </div>
+                <Languages size={19} />
               </IconButton>
               <IconButton onClick={() => setTheme(theme === "light" ? "dark" : "light")} aria-label={t.theme}>
                 {theme === "light" ? <Moon size={19} /> : <Sun size={19} />}
