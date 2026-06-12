@@ -35,13 +35,8 @@ export function ProductDetail() {
     reviews: false,
   });
 
-  // Scroll to top and reset UI state when navigating between products.
-  // This runs AFTER the new product DOM is committed, so it always wins
-  // over any browser or layout-shift interference.
+  // Reset UI state when navigating between products.
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
     setQuantity(1);
     setActiveImage(0);
     setActiveTab("description");

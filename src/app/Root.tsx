@@ -1,12 +1,5 @@
-import { Suspense, useEffect } from "react";
-
-// Disable browser's native scroll restoration so our custom logic has full control.
-// Without this, the browser restores the previous scroll position after every navigation,
-// overriding our window.scrollTo({ top: 0 }) calls.
-if (typeof window !== "undefined" && "scrollRestoration" in window.history) {
-  window.history.scrollRestoration = "manual";
-}
-import { Outlet, useLocation, useNavigationType } from "react-router";
+import { Suspense } from "react";
+import { Outlet, useLocation, ScrollRestoration } from "react-router";
 import { Toaster } from "sonner";
 import { Header } from "./components/Header";
 import { BottomNav } from "./components/BottomNav";
@@ -23,20 +16,9 @@ const PageLoader = () => (
 
 export function Root() {
   const location = useLocation();
-  const navType = useNavigationType();
   const isCheckout = location.pathname === "/checkout";
-
   const hasCategoryRail = location.pathname === "/" || location.pathname.startsWith("/category/") || location.pathname === "/products";
   const mainPadding = hasCategoryRail ? "pt-16 sm:pt-[108px]" : "pt-16";
-
-  // Scroll to top on every forward navigation.
-  // key={location.pathname} on Outlet (below) handles the remount;
-  // this is a safety net for the window scroll position.
-  useEffect(() => {
-    if (navType !== "POP") {
-      window.scrollTo(0, 0);
-    }
-  }, [location.pathname, navType]);
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans w-full max-w-full overflow-x-hidden">
@@ -65,10 +47,7 @@ export function Root() {
           <main className={`${mainPadding} pb-24 sm:pb-8 w-full max-w-full overflow-x-hidden`}>
             <ErrorBoundary>
               <Suspense fallback={<PageLoader />}>
-                {/* key forces a full remount on path change — the only reliable
-                    way to reset scroll when React reuses the same component
-                    instance (e.g. /products/A → /products/B). */}
-                <Outlet key={location.pathname} />
+                <Outlet />
               </Suspense>
             </ErrorBoundary>
           </main>
@@ -80,6 +59,7 @@ export function Root() {
       <BottomNav />
 
       <Toaster position="top-center" closeButton />
+      <ScrollRestoration />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, ShoppingBag, Heart, Menu, X } from "lucide-react";
+import { Search, ShoppingBag, Heart, Menu, X, Languages, Sun, Moon } from "lucide-react";
 import { Link, useNavigate, useLocation, useSearchParams } from "react-router";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
@@ -13,7 +13,7 @@ import logoImg from "../../assets/logo.webp";
 export function Header() {
   const { totalItems, setCartOpen } = useCart();
   const { items: wishlistItems } = useWishlist();
-  const { t, isRTL } = useAppSettings();
+  const { theme, setTheme, locale, setLocale, t, isRTL } = useAppSettings();
   const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [scrolled, setScrolled] = useState(false);
@@ -62,6 +62,16 @@ export function Header() {
           </Link>
 
           <div className="flex items-center gap-0.5 justify-end z-10 -me-2 sm:-me-2.5">
+            <div className="hidden lg:flex items-center gap-0.5 me-2 border-e border-border pe-2">
+              <IconButton onClick={() => setLocale(locale === "en" ? "ar" : "en")} aria-label={t.language}>
+                <div className="flex items-center justify-center font-bold text-sm leading-none pt-0.5 w-5 h-5">
+                  {locale === "en" ? "ع" : "EN"}
+                </div>
+              </IconButton>
+              <IconButton onClick={() => setTheme(theme === "light" ? "dark" : "light")} aria-label={t.theme}>
+                {theme === "light" ? <Moon size={19} /> : <Sun size={19} />}
+              </IconButton>
+            </div>
             <IconButton onClick={() => navigate("/products")} aria-label={t.searchPlaceholder} className="hidden sm:flex">
               <Search size={19} />
             </IconButton>
@@ -86,9 +96,10 @@ export function Header() {
 
         {/* Category Navigation Rail */}
         {(location.pathname === "/" || location.pathname.startsWith("/category/") || location.pathname === "/products") && (
-          <div className="hidden sm:block border-t border-border overflow-x-auto scrollbar-hide py-2.5 px-4 sm:px-6 w-full max-w-full">
-            <div className="max-w-[1280px] mx-auto flex gap-2 w-max">
-              <Link
+          <div className="hidden sm:block border-t border-border">
+            <div className="max-w-[1280px] mx-auto px-4 sm:px-6 overflow-x-auto scrollbar-hide py-2.5 w-full">
+              <div className="flex gap-2 w-max">
+                <Link
                 to="/products"
                 className={`group flex items-center gap-2 px-3.5 py-1.5 bg-card rounded-full border transition-all duration-300 hover:shadow-soft flex-shrink-0 select-none ${
                   location.pathname === "/products" && !searchParams.get("category")
@@ -126,6 +137,7 @@ export function Header() {
                   </Link>
                 );
               })}
+              </div>
             </div>
           </div>
         )}
