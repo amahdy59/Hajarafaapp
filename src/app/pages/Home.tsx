@@ -34,21 +34,20 @@ export function Home() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="max-w-md bg-black/20 backdrop-blur-[2px] p-4.5 rounded-xl border border-white/5 shadow-lg select-none"
+              className="max-w-md bg-black/20 backdrop-blur-[2px] p-5 sm:p-6 rounded-xl border border-white/5 shadow-lg select-none text-start"
             >
-              <span className="eyebrow !text-brand-peach drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">{t.appTagline}</span>
               <h1
-                className="font-display text-white mt-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]"
+                className="font-display text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]"
                 style={{ fontSize: "clamp(1.35rem, 3.5vw, 1.85rem)", lineHeight: 1.15, letterSpacing: "-0.5px" }}
               >
                 {t.heroHeadline}
               </h1>
-              <p className="text-white/85 mt-1.5 mb-3.5 drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)] hidden md:block" style={{ fontSize: "0.85rem", lineHeight: 1.4, maxWidth: 360 }}>
+              <p className="text-white/85 mt-2 drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)] hidden md:block" style={{ fontSize: "0.85rem", lineHeight: 1.5, maxWidth: 360 }}>
                 {t.heroSubline}
               </p>
               <Link
                 to="/products"
-                className="inline-flex items-center justify-center gap-2 bg-brand-terracotta text-white dark:text-zinc-950 hover:text-white dark:hover:text-white px-5 py-2.5 sm:px-7 sm:py-3 rounded-xl hover:bg-brand-terracotta-dark transition-all duration-300 hover:scale-[1.02] hover:shadow-lg active:scale-[0.97] text-xs sm:text-sm font-bold uppercase tracking-wider select-none mt-2 shadow-[0_4px_12px_rgba(196,98,45,0.3)] dark:shadow-[0_4px_12px_rgba(224,139,87,0.2)]"
+                className="inline-flex items-center justify-center gap-2 bg-brand-terracotta text-white dark:text-zinc-950 hover:text-white dark:hover:text-white px-5 py-2.5 sm:px-7 sm:py-3 rounded-xl hover:bg-brand-terracotta-dark transition-all duration-300 hover:scale-[1.02] hover:shadow-lg active:scale-[0.97] text-xs sm:text-sm font-bold uppercase tracking-wider select-none mt-4 shadow-[0_4px_12px_rgba(196,98,45,0.3)] dark:shadow-[0_4px_12px_rgba(224,139,87,0.2)]"
               >
                 {t.explore}
               </Link>

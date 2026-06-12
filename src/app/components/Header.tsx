@@ -97,46 +97,46 @@ export function Header() {
         {/* Category Navigation Rail */}
         {(location.pathname === "/" || location.pathname.startsWith("/category/") || location.pathname === "/products") && (
           <div className="hidden sm:block border-t border-border">
-            <div className="max-w-[1280px] mx-auto px-4 sm:px-6 overflow-x-auto scrollbar-hide py-2.5 w-full">
+            <div className="max-w-[1280px] mx-auto px-4 sm:px-6 overflow-x-auto scrollbar-hide py-2.5">
               <div className="flex gap-2 w-max">
                 <Link
-                to="/products"
-                className={`group flex items-center gap-2 px-3.5 py-1.5 bg-card rounded-full border transition-all duration-300 hover:shadow-soft flex-shrink-0 select-none ${
-                  location.pathname === "/products" && !searchParams.get("category")
-                    ? "border-brand-terracotta bg-brand-peach/30"
-                    : "border-border hover:border-brand-sage"
-                }`}
-              >
-                <div className="w-5.5 h-5.5 rounded-full bg-brand-peach flex items-center justify-center text-[10px] flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                  📦
-                </div>
-                <span className={`text-[10px] sm:text-xs font-semibold ${location.pathname === "/products" && !searchParams.get("category") ? "text-brand-terracotta font-bold" : "text-foreground"}`}>
-                  {isRTL ? "الكل" : "All Products"}
-                </span>
-              </Link>
-              {categories.map(cat => {
-                const catName = isRTL && cat.nameAr ? cat.nameAr : cat.name;
-                const active = location.pathname === `/category/${cat.slug}` ||
-                               (location.pathname === "/products" && searchParams.get("category") === cat.slug);
-                return (
-                  <Link
-                    key={cat.id}
-                    to={`/category/${cat.slug}`}
-                    className={`group flex items-center gap-2 px-3.5 py-1.5 bg-card rounded-full border transition-all duration-300 hover:shadow-soft flex-shrink-0 select-none ${
-                      active
-                        ? "border-brand-terracotta bg-brand-peach/30"
-                        : "border-border hover:border-brand-sage"
-                    }`}
-                  >
-                    <div className="w-5.5 h-5.5 rounded-full bg-brand-peach flex items-center justify-center text-[10px] flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                      {cat.icon}
-                    </div>
-                    <span className={`text-[10px] sm:text-xs font-semibold ${active ? "text-brand-terracotta font-bold" : "text-foreground"}`}>
-                      {catName}
-                    </span>
-                  </Link>
-                );
-              })}
+                  to="/products"
+                  className={`group flex items-center gap-2 px-3.5 py-1.5 bg-card rounded-full border transition-all duration-300 hover:shadow-soft flex-shrink-0 select-none ${
+                    location.pathname === "/products" && !searchParams.get("category")
+                      ? "border-brand-terracotta bg-brand-peach/30"
+                      : "border-border hover:border-brand-sage"
+                  }`}
+                >
+                  <div className="w-5.5 h-5.5 rounded-full bg-brand-peach flex items-center justify-center text-[10px] flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                    📦
+                  </div>
+                  <span className={`text-[10px] sm:text-xs font-semibold ${location.pathname === "/products" && !searchParams.get("category") ? "text-brand-terracotta font-bold" : "text-foreground"}`}>
+                    {isRTL ? "الكل" : "All Products"}
+                  </span>
+                </Link>
+                {categories.map(cat => {
+                  const catName = isRTL && cat.nameAr ? cat.nameAr : cat.name;
+                  const active = location.pathname === `/category/${cat.slug}` ||
+                                 (location.pathname === "/products" && searchParams.get("category") === cat.slug);
+                  return (
+                    <Link
+                      key={cat.id}
+                      to={`/category/${cat.slug}`}
+                      className={`group flex items-center gap-2 px-3.5 py-1.5 bg-card rounded-full border transition-all duration-300 hover:shadow-soft flex-shrink-0 select-none ${
+                        active
+                          ? "border-brand-terracotta bg-brand-peach/30"
+                          : "border-border hover:border-brand-sage"
+                      }`}
+                    >
+                      <div className="w-5.5 h-5.5 rounded-full bg-brand-peach flex items-center justify-center text-[10px] flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                        {cat.icon}
+                      </div>
+                      <span className={`text-[10px] sm:text-xs font-semibold ${active ? "text-brand-terracotta font-bold" : "text-foreground"}`}>
+                        {catName}
+                      </span>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </div>
