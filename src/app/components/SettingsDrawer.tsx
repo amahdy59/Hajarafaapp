@@ -187,7 +187,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
                 </Link>
               )}
 
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 lg:hidden">
                 <span className="eyebrow px-1">{t.settings}</span>
                 <div className="bg-muted/50 rounded-md overflow-hidden border border-border">
                   <div className="flex items-center justify-between px-4 py-3 border-b border-border">

@@ -52,9 +52,14 @@ export function Header() {
       >
         <div className="relative h-16 px-4 sm:px-6 max-w-[1280px] mx-auto flex items-center justify-between gap-2">
           <div className="flex items-center justify-start z-10 -ms-2 sm:-ms-2.5">
-            <IconButton onClick={() => setMenuOpen(true)} aria-label={t.menu}>
-              <Menu size={20} />
-            </IconButton>
+            <div className="relative group">
+              <IconButton onClick={() => setMenuOpen(true)} aria-label={t.menu}>
+                <Menu size={20} />
+              </IconButton>
+              <span className="absolute top-full mt-1.5 start-0 scale-90 opacity-0 pointer-events-none group-hover:scale-100 group-hover:opacity-100 transition-all duration-150 ease-out bg-brand-ink/95 dark:bg-zinc-800 text-white dark:text-zinc-100 text-[10px] sm:text-[10.5px] font-medium py-1 px-2.5 rounded-md whitespace-nowrap shadow-elev z-50 border border-white/5">
+                {t.menu}
+              </span>
+            </div>
           </div>
 
           <Link to="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center min-w-0 h-14 select-none cursor-pointer w-fit no-underline z-10">
@@ -63,32 +68,59 @@ export function Header() {
 
           <div className="flex items-center gap-0.5 justify-end z-10 -me-2 sm:-me-2.5">
             <div className="hidden lg:flex items-center gap-0.5 me-2 border-e border-border pe-2">
-              <IconButton onClick={() => setLocale(locale === "en" ? "ar" : "en")} aria-label={t.language}>
-                <Languages size={19} />
-              </IconButton>
-              <IconButton onClick={() => setTheme(theme === "light" ? "dark" : "light")} aria-label={t.theme}>
-                {theme === "light" ? <Moon size={19} /> : <Sun size={19} />}
-              </IconButton>
+              <div className="relative group">
+                <IconButton onClick={() => setLocale(locale === "en" ? "ar" : "en")} aria-label={t.language}>
+                  <Languages size={19} />
+                </IconButton>
+                <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 scale-90 opacity-0 pointer-events-none group-hover:scale-100 group-hover:opacity-100 transition-all duration-150 ease-out bg-brand-ink/95 dark:bg-zinc-800 text-white dark:text-zinc-100 text-[10px] sm:text-[10.5px] font-medium py-1 px-2.5 rounded-md whitespace-nowrap shadow-elev z-50 border border-white/5">
+                  {locale === "en" ? "العربية" : "English"}
+                </span>
+              </div>
+              <div className="relative group">
+                <IconButton onClick={() => setTheme(theme === "light" ? "dark" : "light")} aria-label={t.theme}>
+                  {theme === "light" ? <Moon size={19} /> : <Sun size={19} />}
+                </IconButton>
+                <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 scale-90 opacity-0 pointer-events-none group-hover:scale-100 group-hover:opacity-100 transition-all duration-150 ease-out bg-brand-ink/95 dark:bg-zinc-800 text-white dark:text-zinc-100 text-[10px] sm:text-[10.5px] font-medium py-1 px-2.5 rounded-md whitespace-nowrap shadow-elev z-50 border border-white/5">
+                  {theme === "light" ? (isRTL ? "المظهر الداكن" : "Dark Mode") : (isRTL ? "المظهر الفاتح" : "Light Mode")}
+                </span>
+              </div>
             </div>
-            <IconButton onClick={() => navigate("/products")} aria-label={t.searchPlaceholder} className="hidden sm:flex">
-              <Search size={19} />
-            </IconButton>
-            <IconButton
-              onClick={() => navigate("/account?tab=wishlist")}
-              aria-label={t.favourites}
-              badge={wishlistItems.length}
-              className="flex"
-            >
-              <Heart size={19} />
-            </IconButton>
-            <IconButton 
-              onClick={() => setCartOpen(true)} 
-              aria-label={t.cart} 
-              badge={totalItems}
-              className="hidden sm:flex"
-            >
-              <ShoppingBag size={19} />
-            </IconButton>
+            
+            <div className="relative group hidden sm:block">
+              <IconButton onClick={() => navigate("/products")} aria-label={t.searchPlaceholder}>
+                <Search size={19} />
+              </IconButton>
+              <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 scale-90 opacity-0 pointer-events-none group-hover:scale-100 group-hover:opacity-100 transition-all duration-150 ease-out bg-brand-ink/95 dark:bg-zinc-800 text-white dark:text-zinc-100 text-[10px] sm:text-[10.5px] font-medium py-1 px-2.5 rounded-md whitespace-nowrap shadow-elev z-50 border border-white/5">
+                {t.search}
+              </span>
+            </div>
+
+            <div className="relative group">
+              <IconButton
+                onClick={() => navigate("/account?tab=wishlist")}
+                aria-label={t.favourites}
+                badge={wishlistItems.length}
+                className="flex"
+              >
+                <Heart size={19} />
+              </IconButton>
+              <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 scale-90 opacity-0 pointer-events-none group-hover:scale-100 group-hover:opacity-100 transition-all duration-150 ease-out bg-brand-ink/95 dark:bg-zinc-800 text-white dark:text-zinc-100 text-[10px] sm:text-[10.5px] font-medium py-1 px-2.5 rounded-md whitespace-nowrap shadow-elev z-50 border border-white/5">
+                {t.favourites}
+              </span>
+            </div>
+
+            <div className="relative group hidden sm:block">
+              <IconButton 
+                onClick={() => setCartOpen(true)} 
+                aria-label={t.cart} 
+                badge={totalItems}
+              >
+                <ShoppingBag size={19} />
+              </IconButton>
+              <span className="absolute top-full mt-1.5 end-0 scale-90 opacity-0 pointer-events-none group-hover:scale-100 group-hover:opacity-100 transition-all duration-150 ease-out bg-brand-ink/95 dark:bg-zinc-800 text-white dark:text-zinc-100 text-[10px] sm:text-[10.5px] font-medium py-1 px-2.5 rounded-md whitespace-nowrap shadow-elev z-50 border border-white/5">
+                {t.cart}
+              </span>
+            </div>
           </div>
         </div>
 
