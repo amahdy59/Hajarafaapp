@@ -87,7 +87,16 @@ export function Header() {
             </div>
             
             <div className="relative group hidden sm:block">
-              <IconButton onClick={() => navigate("/products")} aria-label={t.searchPlaceholder}>
+              <IconButton 
+                onClick={() => {
+                  if (location.pathname === "/products") {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  } else {
+                    navigate("/products");
+                  }
+                }} 
+                aria-label={t.searchPlaceholder}
+              >
                 <Search size={19} />
               </IconButton>
               <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 scale-90 opacity-0 pointer-events-none group-hover:scale-100 group-hover:opacity-100 transition-all duration-150 ease-out bg-brand-ink/95 dark:bg-zinc-800 text-white dark:text-zinc-100 text-[10px] sm:text-[10.5px] font-medium py-1 px-2.5 rounded-md whitespace-nowrap shadow-elev z-50 border border-white/5">
@@ -97,7 +106,13 @@ export function Header() {
 
             <div className="relative group">
               <IconButton
-                onClick={() => navigate("/account?tab=wishlist")}
+                onClick={() => {
+                  if (location.pathname === "/account" && searchParams.get("tab") === "wishlist") {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  } else {
+                    navigate("/account?tab=wishlist");
+                  }
+                }}
                 aria-label={t.favourites}
                 badge={wishlistItems.length}
                 className="flex"

@@ -1,4 +1,4 @@
-import { Suspense, useLayoutEffect } from "react";
+import { Suspense, useLayoutEffect, useEffect } from "react";
 import { Outlet, useLocation, ScrollRestoration } from "react-router";
 import { Toaster } from "sonner";
 import { Header } from "./components/Header";
@@ -39,6 +39,27 @@ export function Root() {
       clearTimeout(t2);
     };
   }, [location.pathname]);
+
+  /* Global listener to smoothly scroll the page to top if the user clicks
+     a link pointing to the current path (e.g. Logo, active navigation items). */
+  useEffect(() => {
+    const handleSamePageClick = (e: MouseEvent) => {
+      const anchor = (e.target as HTMLElement).closest("a");
+      if (!anchor) return;
+      const href = anchor.getAttribute("href");
+      if (!href) return;
+      try {
+        const url = new URL(href, window.location.href);
+        if (url.origin === window.location.origin && url.pathname === window.location.pathname && !url.hash) {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      } catch (err) {
+        // Ignore invalid URLs
+      }
+    };
+    document.addEventListener("click", handleSamePageClick);
+    return () => document.removeEventListener("click", handleSamePageClick);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans w-full max-w-full overflow-x-hidden">
