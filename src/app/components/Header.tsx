@@ -95,8 +95,8 @@ export function Header() {
         {/* Category Navigation Rail */}
         {(location.pathname === "/" || location.pathname.startsWith("/category/") || location.pathname === "/products") && (
           <div className="hidden sm:block border-t border-border">
-            <div className="max-w-[1280px] mx-auto px-4 sm:px-6 overflow-x-auto scrollbar-hide py-2.5">
-              <div className="flex gap-2 w-max">
+            <div className="max-w-[1280px] mx-auto overflow-x-auto scrollbar-hide py-2.5">
+              <div className="flex gap-2 w-max px-4 sm:px-6">
                 <Link
                   to="/products"
                   className={`group flex items-center gap-2 px-3.5 py-1.5 bg-card rounded-full border transition-all duration-300 hover:shadow-soft flex-shrink-0 select-none ${

@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useLayoutEffect } from "react";
 import { Outlet, useLocation, ScrollRestoration } from "react-router";
 import { Toaster } from "sonner";
 import { Header } from "./components/Header";
@@ -7,6 +7,12 @@ import { CartDrawer } from "./components/CartDrawer";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import logoImg from "../assets/logo.webp";
 import { Footer } from "./components/Footer";
+
+/* Prevent the browser from automatically restoring scroll positions.
+   We handle this ourselves via <ScrollRestoration /> + the useLayoutEffect below. */
+if (typeof window !== "undefined") {
+  window.history.scrollRestoration = "manual";
+}
 
 const PageLoader = () => (
   <div className="min-h-[50vh] flex items-center justify-center">
@@ -19,6 +25,20 @@ export function Root() {
   const isCheckout = location.pathname === "/checkout";
   const hasCategoryRail = location.pathname === "/" || location.pathname.startsWith("/category/") || location.pathname === "/products";
   const mainPadding = hasCategoryRail ? "pt-16 sm:pt-[108px]" : "pt-16";
+
+  /* Synchronous scroll-to-top on every forward navigation.
+     useLayoutEffect fires before the browser paints, guaranteeing
+     the user never sees the old scroll position flash. We also use delayed
+     scrolls to ensure the page remains at the top when lazy-loaded chunks mount. */
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+    const t1 = setTimeout(() => window.scrollTo(0, 0), 50);
+    const t2 = setTimeout(() => window.scrollTo(0, 0), 150);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [location.pathname]);
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans w-full max-w-full overflow-x-hidden">
