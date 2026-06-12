@@ -95,14 +95,14 @@ export function CartDrawer() {
                       transition={{ type: "spring", stiffness: 350, damping: 35 }}
                       className="flex gap-3 bg-card rounded-2xl p-3 border border-border"
                     >
-                      <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#FAF6F0] dark:bg-zinc-800/40 flex-shrink-0 flex items-center justify-center p-1">
+                      <div className={`w-16 h-16 rounded-xl overflow-hidden bg-[#FAF6F0] dark:bg-zinc-800/40 flex-shrink-0 flex items-center justify-center p-1 ${isRTL ? "order-2" : "order-1"}`}>
                         <img
                           src={item.product.image}
                           alt={item.product.name}
                           className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal"
                         />
                       </div>
-                      <div className="flex-1 min-w-0">
+                      <div className={`flex-1 min-w-0 ${isRTL ? "order-1" : "order-2"}`}>
                         <p className="text-foreground line-clamp-2 mb-0.5" style={{ fontSize: "0.875rem" }}>
                           {item.product.name}
                         </p>
@@ -134,7 +134,7 @@ export function CartDrawer() {
                       </div>
                       <button
                         onClick={() => removeFromCart(item.product.id)}
-                        className="self-start text-muted-foreground hover:text-destructive transition-colors p-1 mt-0.5"
+                        className="self-start text-muted-foreground hover:text-destructive transition-colors p-1 mt-0.5 order-3"
                         aria-label="Remove"
                       >
                         <Trash2 size={14} />

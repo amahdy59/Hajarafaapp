@@ -137,7 +137,7 @@ export function ProductDetail() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-8 mb-12">
           {/* Images */}
-          <div className="space-y-3">
+          <div className={`space-y-3 ${isRTL ? "lg:order-2" : "lg:order-1"}`}>
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -178,7 +178,7 @@ export function ProductDetail() {
           </div>
 
           {/* Product info */}
-          <div className="space-y-5">
+          <div className={`space-y-5 ${isRTL ? "lg:order-1" : "lg:order-2"}`}>
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-2 mb-1 flex-wrap">
                 <Link
