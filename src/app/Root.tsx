@@ -1,5 +1,5 @@
 import { Suspense, useLayoutEffect, useEffect } from "react";
-import { Outlet, useLocation, ScrollRestoration } from "react-router";
+import { Outlet, useLocation, useNavigationType, ScrollRestoration } from "react-router";
 import { Toaster } from "sonner";
 import { Header } from "./components/Header";
 import { BottomNav } from "./components/BottomNav";
@@ -26,19 +26,25 @@ export function Root() {
   const hasCategoryRail = location.pathname === "/" || location.pathname.startsWith("/category/") || location.pathname === "/products";
   const mainPadding = hasCategoryRail ? "pt-16 sm:pt-[108px]" : "pt-16";
 
-  /* Synchronous scroll-to-top on every forward navigation.
-     useLayoutEffect fires before the browser paints, guaranteeing
-     the user never sees the old scroll position flash. We also use delayed
-     scrolls to ensure the page remains at the top when lazy-loaded chunks mount. */
+  const navType = useNavigationType();
+
+  /* Aggressive scroll-to-top on every forward navigation.
+     For PUSH/REPLACE navigations, we force the scroll position to the top
+     multiple times to handle async lazy-loaded route mounts.
+     POP navigations are handled naturally by react-router's ScrollRestoration. */
   useLayoutEffect(() => {
-    window.scrollTo(0, 0);
-    const t1 = setTimeout(() => window.scrollTo(0, 0), 50);
-    const t2 = setTimeout(() => window.scrollTo(0, 0), 150);
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
-  }, [location.pathname]);
+    if (navType === "PUSH" || navType === "REPLACE") {
+      window.scrollTo(0, 0);
+      const timers = [
+        setTimeout(() => window.scrollTo(0, 0), 30),
+        setTimeout(() => window.scrollTo(0, 0), 80),
+        setTimeout(() => window.scrollTo(0, 0), 150),
+        setTimeout(() => window.scrollTo(0, 0), 300),
+        setTimeout(() => window.scrollTo(0, 0), 500),
+      ];
+      return () => timers.forEach(clearTimeout);
+    }
+  }, [location.pathname, navType]);
 
   /* Global listener to smoothly scroll the page to top if the user clicks
      a link pointing to the current path (e.g. Logo, active navigation items). */

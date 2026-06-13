@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router";
 import { Heart, ShoppingCart, Share2, ChevronLeft, ChevronDown, Star, Plus, Minus, Leaf, Truck, Shield, RotateCcw, Check } from "lucide-react";
 import { getProductById, products } from "../data/products";
@@ -41,6 +41,11 @@ export function ProductDetail() {
     setActiveImage(0);
     setActiveTab("description");
     setAccordionOpen({ description: true, usage: false, reviews: false });
+  }, [id]);
+
+  // Force scroll-to-top synchronously on ID change
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
   }, [id]);
 
   const toggleAccordion = (section: "description" | "usage" | "reviews") => {
@@ -136,49 +141,8 @@ export function ProductDetail() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-8 mb-12">
-          {/* Images */}
-          <div className={`space-y-3 ${isRTL ? "lg:order-2" : "lg:order-1"}`}>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="relative aspect-[4/3] sm:aspect-square bg-[#FAF6F0] dark:bg-zinc-800/40 rounded-3xl overflow-hidden max-h-[300px] sm:max-h-none flex items-center justify-center"
-            >
-              <img
-                src={product.images[activeImage] || product.image}
-                alt={product.name}
-                className="w-full h-full object-contain p-4 sm:p-6 mix-blend-multiply dark:mix-blend-normal"
-              />
-              {product.discount && (
-                <span className="absolute top-4 start-4 bg-brand-terracotta text-white px-3 py-1 rounded-full" style={{ fontSize: "0.8rem" }}>
-                  -{product.discount}%
-                </span>
-              )}
-              {product.isOrganic && (
-                <span className="absolute top-4 end-4 bg-brand-sage-dark text-white px-3 py-1 rounded-full flex items-center gap-1" style={{ fontSize: "0.8rem" }}>
-                  <Leaf size={11} /> {t.organic}
-                </span>
-              )}
-            </motion.div>
-
-            {product.images.length > 1 && (
-              <div className="flex gap-2">
-                {product.images.map((img, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setActiveImage(i)}
-                    className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-colors bg-[#FAF6F0] dark:bg-zinc-800/40 ${
-                      activeImage === i ? "border-brand-terracotta" : "border-transparent"
-                    }`}
-                  >
-                    <img src={img} alt="" className="w-full h-full object-contain p-1 mix-blend-multiply dark:mix-blend-normal" />
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
           {/* Product info */}
-          <div className={`space-y-5 ${isRTL ? "lg:order-1" : "lg:order-2"}`}>
+          <div className="space-y-5">
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-2 mb-1 flex-wrap">
                 <Link
@@ -329,6 +293,47 @@ export function ProductDetail() {
             >
               <Share2 size={14} /> {t.shareThisProduct}
             </button>
+          </div>
+
+          {/* Images */}
+          <div className="space-y-3">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="relative aspect-[4/3] sm:aspect-square bg-[#FAF6F0] dark:bg-zinc-800/40 rounded-3xl overflow-hidden max-h-[300px] sm:max-h-none flex items-center justify-center"
+            >
+              <img
+                src={product.images[activeImage] || product.image}
+                alt={product.name}
+                className="w-full h-full object-contain p-4 sm:p-6 mix-blend-multiply dark:mix-blend-normal"
+              />
+              {product.discount && (
+                <span className="absolute top-4 start-4 bg-brand-terracotta text-white px-3 py-1 rounded-full" style={{ fontSize: "0.8rem" }}>
+                  -{product.discount}%
+                </span>
+              )}
+              {product.isOrganic && (
+                <span className="absolute top-4 end-4 bg-brand-sage-dark text-white px-3 py-1 rounded-full flex items-center gap-1" style={{ fontSize: "0.8rem" }}>
+                  <Leaf size={11} /> {t.organic}
+                </span>
+              )}
+            </motion.div>
+
+            {product.images.length > 1 && (
+              <div className="flex gap-2">
+                {product.images.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveImage(i)}
+                    className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-colors bg-[#FAF6F0] dark:bg-zinc-800/40 ${
+                      activeImage === i ? "border-brand-terracotta" : "border-transparent"
+                    }`}
+                  >
+                    <img src={img} alt="" className="w-full h-full object-contain p-1 mix-blend-multiply dark:mix-blend-normal" />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 

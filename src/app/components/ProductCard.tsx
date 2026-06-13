@@ -59,15 +59,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
         className="bg-card rounded-2xl border-0 sm:border border-border dark:border-zinc-700/60 overflow-hidden hover:shadow-soft hover:border-brand-terracotta/40 transition-all duration-300 group"
       >
         <Link to={`/products/${product.id}`} className="flex gap-4 p-3 items-center">
-          <div className={`relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 rounded-xl overflow-hidden bg-[#FAF6F0] dark:bg-zinc-800/40 flex items-center justify-center border border-border/40 p-1 sm:p-1.5 ${isRTL ? "order-2" : "order-1"}`}>
-            <img 
-              src={product.image} 
-              alt={product.name} 
-              className="w-[93%] h-[93%] object-contain mix-blend-multiply dark:mix-blend-normal transition-transform duration-500 group-hover:-translate-y-1" 
-              loading="lazy" 
-            />
-          </div>
-          <div className={`flex-1 min-w-0 flex flex-col justify-between self-stretch py-1 px-1.5 sm:px-3 ${isRTL ? "order-1" : "order-2"}`}>
+          <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch py-1 px-1.5 sm:px-3">
             <div className="flex flex-col gap-1">
               {product.isOrganic && (
                 <span className="inline-flex items-center gap-1 text-brand-sage eyebrow" style={{ fontSize: "9px" }}>
@@ -90,6 +82,14 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
                 {isRTL ? "أضف" : "Add"}
               </Button>
             </div>
+          </div>
+          <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 rounded-xl overflow-hidden bg-[#FAF6F0] dark:bg-zinc-800/40 flex items-center justify-center border border-border/40 p-1 sm:p-1.5">
+            <img 
+              src={product.image} 
+              alt={product.name} 
+              className="w-[93%] h-[93%] object-contain mix-blend-multiply dark:mix-blend-normal transition-transform duration-500 group-hover:-translate-y-1" 
+              loading="lazy" 
+            />
           </div>
         </Link>
       </motion.article>
