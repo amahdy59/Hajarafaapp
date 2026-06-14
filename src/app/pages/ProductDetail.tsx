@@ -19,6 +19,40 @@ const mockReviews = [
   { id: 3, name: "Emma L.", rating: 4, date: "March 2025", verified: true, review: "Great product overall. Will definitely reorder.", helpful: 12 },
 ];
 
+const getLocalizedOrigin = (origin: string, isRTL: boolean) => {
+  if (!isRTL) return origin;
+  switch (origin.toLowerCase().trim()) {
+    case "egypt": return "مصر";
+    case "saudi arabia": return "السعودية";
+    case "turkey": return "تركيا";
+    case "yemen": return "اليمن";
+    case "usa": return "أمريكا";
+    case "california": return "كاليفورنيا";
+    default: return origin;
+  }
+};
+
+const getLocalizedWeight = (weight: string, isRTL: boolean) => {
+  if (!isRTL) return weight;
+  
+  const toArabicDigits = (str: string) => {
+    const englishDigits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    const arabicDigits = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+    return str.split("").map(char => {
+      const idx = englishDigits.indexOf(char);
+      return idx !== -1 ? arabicDigits[idx] : char;
+    }).join("");
+  };
+
+  let localized = weight;
+  localized = localized.replace(/\bg\b/gi, "جم");
+  localized = localized.replace(/\bml\b/gi, "مل");
+  localized = localized.replace(/\bl\b/gi, "لتر");
+  localized = localized.replace(/Pack of (\d+)/gi, (_, num) => `عبوة من ${num}`);
+  
+  return toArabicDigits(localized);
+};
+
 export function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -181,17 +215,17 @@ export function ProductDetail() {
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-brand-peach rounded-xl px-4 py-2.5">
-                <p className="text-muted-foreground mb-0.5" style={{ fontSize: "0.72rem" }}>
+              <div className="bg-brand-peach rounded-xl px-4 h-11 flex items-center justify-between select-none">
+                <span className="text-muted-foreground text-xs font-semibold">
                   {t.weightSize}
-                </p>
-                <p className="text-foreground" style={{ fontSize: "0.9rem" }}>{product.weight}</p>
+                </span>
+                <span className="text-foreground text-xs font-bold">{getLocalizedWeight(product.weight, isRTL)}</span>
               </div>
-              <div className="bg-brand-peach rounded-xl px-4 py-2.5">
-                <p className="text-muted-foreground mb-0.5" style={{ fontSize: "0.72rem" }}>
+              <div className="bg-brand-peach rounded-xl px-4 h-11 flex items-center justify-between select-none">
+                <span className="text-muted-foreground text-xs font-semibold">
                   {t.origin}
-                </p>
-                <p className="text-foreground" style={{ fontSize: "0.9rem" }}>{product.origin}</p>
+                </span>
+                <span className="text-foreground text-xs font-bold">{getLocalizedOrigin(product.origin, isRTL)}</span>
               </div>
             </div>
 
@@ -277,11 +311,11 @@ export function ProductDetail() {
                 { icon: Shield, en: "Quality guaranteed", ar: "جودة مضمونة" },
                 { icon: RotateCcw, en: "30-day returns", ar: "إرجاع خلال ٣٠ يوماً" },
               ].map(item => (
-                <div key={item.en} className="flex flex-col items-center gap-1.5 text-center p-3 bg-brand-peach rounded-xl">
-                  <item.icon size={18} className="text-brand-terracotta" />
-                  <p className="text-muted-foreground" style={{ fontSize: "0.7rem", lineHeight: 1.3 }}>
+                <div key={item.en} className="h-11 flex items-center justify-center gap-1.5 px-2 bg-brand-peach rounded-xl select-none">
+                  <item.icon size={14} className="text-brand-terracotta flex-shrink-0" />
+                  <span className="text-muted-foreground font-semibold text-[8.5px] xs:text-[9.5px] sm:text-[10px] leading-none truncate">
                     {isRTL ? item.ar : item.en}
-                  </p>
+                  </span>
                 </div>
               ))}
             </div>
@@ -362,8 +396,8 @@ export function ProductDetail() {
                 <p className="text-muted-foreground leading-relaxed mb-4" style={{ fontSize: "0.9rem" }}>{product.description}</p>
                 <div className="grid grid-cols-2 gap-4" style={{ fontSize: "0.875rem" }}>
                   {[
-                    { label: t.weight, value: product.weight },
-                    { label: t.origin, value: product.origin },
+                    { label: t.weight, value: getLocalizedWeight(product.weight, isRTL) },
+                    { label: t.origin, value: getLocalizedOrigin(product.origin, isRTL) },
                     { label: t.category, value: categoryName },
                     { label: t.organic, value: product.isOrganic ? t.yes : t.no },
                   ].map(d => (
@@ -459,15 +493,15 @@ export function ProductDetail() {
             {accordionOpen.description && (
               <div className="px-4 pb-5 border-t border-border/50 pt-4">
                 <p className="text-muted-foreground leading-relaxed mb-4 text-sm sm:text-base">{product.description}</p>
-                <div className="grid grid-cols-2 gap-4 text-sm sm:text-base">
-                  {[
-                    { label: t.weight, value: product.weight },
-                    { label: t.origin, value: product.origin },
-                    { label: t.category, value: categoryName },
-                    { label: t.organic, value: product.isOrganic ? t.yes : t.no },
-                  ].map(d => (
-                    <div key={d.label}>
-                      <p className="text-muted-foreground mb-0.5 text-xs sm:text-sm">{d.label}</p>
+                 <div className="flex flex-col gap-3 text-sm sm:text-base">
+                   {[
+                     { label: t.weight, value: getLocalizedWeight(product.weight, isRTL) },
+                     { label: t.origin, value: getLocalizedOrigin(product.origin, isRTL) },
+                     { label: t.category, value: categoryName },
+                     { label: t.organic, value: product.isOrganic ? t.yes : t.no },
+                   ].map(d => (
+                    <div key={d.label} className="flex justify-between border-b border-border/50 pb-2">
+                      <p className="text-muted-foreground text-xs sm:text-sm">{d.label}</p>
                       <p className="text-foreground font-semibold">{d.value}</p>
                     </div>
                   ))}
