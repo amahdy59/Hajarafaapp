@@ -196,7 +196,7 @@ export function Cart() {
                     <span>{t.currency} {totalPrice.toFixed(2)}</span>
                   </div>
                   {couponApplied && (
-                    <div className="flex justify-between text-brand-sage">
+                    <div className="flex justify-between text-brand-sage-dark">
                       <span>{t.discount} (10%)</span>
                       <span>-{t.currency} {discount.toFixed(2)}</span>
                     </div>
@@ -205,7 +205,7 @@ export function Cart() {
                     <span>{t.shipping}</span>
                     <span>
                       {shipping === 0
-                        ? <span className="text-brand-sage">{t.free}</span>
+                        ? <span className="text-brand-sage-dark">{t.free}</span>
                         : `${t.currency} ${shipping.toFixed(2)}`}
                     </span>
                   </div>

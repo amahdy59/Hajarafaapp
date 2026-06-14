@@ -76,7 +76,7 @@ export function Home() {
                     <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider text-brand-terracotta/80 dark:text-brand-terracotta">
                       {cat.group === "foods" ? (isRTL ? "مأكولات طبيعية" : "Natural Foods") : (isRTL ? "منتجات العناية" : "Care & Wellness")}
                     </span>
-                    <h2 className="font-display text-brand-forest dark:text-brand-sage text-sm sm:text-base font-bold leading-tight mt-0.5">
+                    <h2 className="font-display text-brand-forest dark:text-brand-sage-dark text-sm sm:text-base font-bold leading-tight mt-0.5">
                       {catName}
                     </h2>
                   </div>

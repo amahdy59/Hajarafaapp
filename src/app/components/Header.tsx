@@ -155,7 +155,7 @@ export function Header() {
                   <div className="w-5.5 h-5.5 rounded-full bg-brand-peach flex items-center justify-center text-[10px] flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                     📦
                   </div>
-                  <span className={`text-[10px] sm:text-xs font-semibold ${location.pathname === "/products" && !searchParams.get("category") ? "text-brand-terracotta font-bold" : "text-foreground"}`}>
+                  <span className={`text-[10px] sm:text-xs font-semibold ${location.pathname === "/products" && !searchParams.get("category") ? "text-brand-terracotta-dark dark:text-brand-terracotta font-bold" : "text-foreground"}`}>
                     {isRTL ? "الكل" : "All Products"}
                   </span>
                 </Link>
@@ -176,7 +176,7 @@ export function Header() {
                       <div className="w-5.5 h-5.5 rounded-full bg-brand-peach flex items-center justify-center text-[10px] flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                         {cat.icon}
                       </div>
-                      <span className={`text-[10px] sm:text-xs font-semibold ${active ? "text-brand-terracotta font-bold" : "text-foreground"}`}>
+                      <span className={`text-[10px] sm:text-xs font-semibold ${active ? "text-brand-terracotta-dark dark:text-brand-terracotta font-bold" : "text-foreground"}`}>
                         {catName}
                       </span>
                     </Link>

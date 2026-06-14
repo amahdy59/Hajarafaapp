@@ -168,7 +168,7 @@ export function CartDrawer() {
                   </div>
                 )}
                 {totalPrice >= THRESHOLD && (
-                  <p className="text-center text-brand-sage" style={{ fontSize: "0.8rem" }}>
+                  <p className="text-center text-brand-sage-dark" style={{ fontSize: "0.8rem" }}>
                     🎉 {t.freeShipping}
                   </p>
                 )}

@@ -26,8 +26,8 @@ function deriveBadge(p: Product, isRTL: boolean): { label: string; tone: BadgeTo
 }
 
 const badgeCls: Record<BadgeTone, string> = {
-  sage: "bg-brand-cream-2 !text-brand-sage border-brand-sage",
-  terracotta: "bg-brand-peach !text-brand-terracotta border-brand-terracotta",
+  sage: "bg-brand-sage/10 !text-brand-forest dark:!text-brand-sage-dark border-brand-sage/20",
+  terracotta: "bg-brand-terracotta/10 !text-brand-terracotta-dark dark:!text-[#FFCFB3] border-brand-terracotta/20",
 };
 
 export const ProductCard = memo(function ProductCard({ product, view = "grid" }: ProductCardProps) {
@@ -62,7 +62,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
           <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch py-1 px-1.5 sm:px-3">
             <div className="flex flex-col gap-1">
               {product.isOrganic && (
-                <span className="inline-flex items-center gap-1 text-brand-sage eyebrow" style={{ fontSize: "9px" }}>
+                <span className="inline-flex items-center gap-1 text-brand-forest dark:text-brand-sage-dark eyebrow" style={{ fontSize: "9px" }}>
                   <Leaf size={9} /> {isRTL ? "عضوي" : "Organic"}
                 </span>
               )}
@@ -114,7 +114,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
 
           {badge && (
             <span
-              className={`absolute top-2.5 sm:top-3.5 start-2.5 sm:start-3.5 px-1.5 sm:px-2.5 py-0.5 rounded bg-card border ${badgeCls[badge.tone]} eyebrow shadow-sm hidden sm:inline-block`}
+              className={`absolute top-2.5 sm:top-3.5 start-2.5 sm:start-3.5 px-1.5 sm:px-2.5 py-0.5 rounded border ${badgeCls[badge.tone]} eyebrow shadow-sm hidden sm:inline-block`}
               style={{ fontSize: "9px" }}
             >
               {badge.label}

@@ -147,17 +147,17 @@ export function ProductDetail() {
               <div className="flex items-center gap-2 mb-1 flex-wrap">
                 <Link
                   to={`/category/${parentSlug}`}
-                  className="text-brand-terracotta bg-brand-peach px-2.5 py-0.5 rounded-full text-xs font-semibold"
+                  className="bg-brand-terracotta/10 text-brand-terracotta-dark dark:text-[#FFCFB3] border border-brand-terracotta/20 px-2.5 py-0.5 rounded-full text-xs font-semibold"
                 >
                   {categoryName}
                 </Link>
                 {product.isBestSeller && (
-                  <span className="text-brand-forest bg-brand-cream-2 px-2.5 py-0.5 rounded-full text-xs font-semibold">
+                  <span className="bg-brand-sage/10 text-brand-forest dark:text-brand-sage-dark border border-brand-sage/20 px-2.5 py-0.5 rounded-full text-xs font-semibold">
                     {t.bestSellers}
                   </span>
                 )}
                 {product.isNew && (
-                  <span className="text-brand-sage-dark bg-brand-cream-2 px-2.5 py-0.5 rounded-full text-xs font-semibold">
+                  <span className="bg-brand-sage/10 text-brand-forest dark:text-brand-sage-dark border border-brand-sage/20 px-2.5 py-0.5 rounded-full text-xs font-semibold">
                     {t.newArrivals}
                   </span>
                 )}
@@ -308,12 +308,12 @@ export function ProductDetail() {
                 className="w-full h-full object-contain p-4 sm:p-6 mix-blend-multiply dark:mix-blend-normal"
               />
               {product.discount && (
-                <span className="absolute top-4 start-4 bg-brand-terracotta text-white px-3 py-1 rounded-full" style={{ fontSize: "0.8rem" }}>
+                <span className="absolute top-4 start-4 bg-brand-terracotta-dark dark:bg-brand-terracotta text-white dark:text-brand-cream px-3 py-1 rounded-full font-bold" style={{ fontSize: "0.8rem" }}>
                   -{product.discount}%
                 </span>
               )}
               {product.isOrganic && (
-                <span className="absolute top-4 end-4 bg-brand-sage-dark text-white px-3 py-1 rounded-full flex items-center gap-1" style={{ fontSize: "0.8rem" }}>
+                <span className="absolute top-4 end-4 bg-brand-sage-dark text-white dark:text-brand-cream px-3 py-1 rounded-full flex items-center gap-1 font-bold" style={{ fontSize: "0.8rem" }}>
                   <Leaf size={11} /> {t.organic}
                 </span>
               )}
@@ -416,7 +416,7 @@ export function ProductDetail() {
                         <div className="flex items-center gap-2">
                           <p className="text-foreground" style={{ fontSize: "0.875rem" }}>{review.name}</p>
                           {review.verified && (
-                            <span className="text-brand-sage-dark bg-brand-cream-2 px-2 py-0.5 rounded-full flex items-center gap-0.5" style={{ fontSize: "0.7rem" }}>
+                            <span className="bg-brand-sage/10 text-brand-forest dark:text-brand-sage-dark border border-brand-sage/20 px-2 py-0.5 rounded-full flex items-center gap-0.5" style={{ fontSize: "0.7rem" }}>
                               <Check size={9} /> {t.verifiedBuyer}
                             </span>
                           )}
@@ -548,7 +548,7 @@ export function ProductDetail() {
                         <div className="flex items-center gap-2">
                           <p className="text-foreground font-semibold text-sm sm:text-base">{review.name}</p>
                           {review.verified && (
-                            <span className="text-brand-sage-dark bg-brand-cream-2 px-2 py-0.5 rounded-full flex items-center gap-0.5 text-[10px]">
+                            <span className="bg-brand-sage/10 text-brand-forest dark:text-brand-sage-dark border border-brand-sage/20 px-2 py-0.5 rounded-full flex items-center gap-0.5 text-[10px]">
                               <Check size={8} className="stroke-[3]" /> {t.verifiedBuyer}
                             </span>
                           )}

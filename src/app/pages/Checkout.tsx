@@ -417,7 +417,7 @@ export function Checkout() {
                 </div>
                 <div className="flex justify-between text-muted-foreground">
                   <span>{t.shipping}</span>
-                  <span>{shipping === 0 ? <span className="text-brand-sage">{t.free}</span> : `${t.currency} ${shipping.toFixed(2)}`}</span>
+                  <span>{shipping === 0 ? <span className="text-brand-sage-dark">{t.free}</span> : `${t.currency} ${shipping.toFixed(2)}`}</span>
                 </div>
                 <div className="flex justify-between text-muted-foreground">
                   <span>{t.tax} (14%)</span>
