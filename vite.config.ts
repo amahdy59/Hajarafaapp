@@ -17,6 +17,7 @@ function figmaAssetResolver() {
 }
 
 export default defineConfig({
+  base: process.env.GITHUB_ACTIONS ? '/Hajarafaapp/' : '/',
   server: {
     host: true,
     port: 5173,
