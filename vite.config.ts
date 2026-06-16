@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
+import fs from 'fs'
 
 
 function figmaAssetResolver() {
@@ -16,6 +17,21 @@ function figmaAssetResolver() {
   }
 }
 
+function copyIndexTo404() {
+  return {
+    name: 'copy-index-to-404',
+    closeBundle() {
+      const distDir = path.resolve(__dirname, 'dist')
+      const indexPath = path.resolve(distDir, 'index.html')
+      const path404 = path.resolve(distDir, '404.html')
+      if (fs.existsSync(indexPath)) {
+        fs.copyFileSync(indexPath, path404)
+        console.log('Copied index.html to 404.html for SPA routing support')
+      }
+    }
+  }
+}
+
 export default defineConfig({
   base: process.env.GITHUB_ACTIONS ? '/Hajarafaapp/' : '/',
   server: {
@@ -24,6 +40,7 @@ export default defineConfig({
   },
   plugins: [
     figmaAssetResolver(),
+    copyIndexTo404(),
     // The React and Tailwind plugins are both required for Make, even if
     // Tailwind is not being actively used – do not remove them
     react(),
