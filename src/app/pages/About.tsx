@@ -97,7 +97,7 @@ export function About() {
             <h2 className="text-foreground font-display text-2xl">
               {isRTL ? content.storyTitleAr : content.storyTitleEn}
             </h2>
-            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed max-w-prose">
               <span className="font-semibold text-brand-forest">{isRTL ? "حاج عرفة " : "Haj Arafa "}</span>
               <span>{isRTL ? content.storyAr : content.storyEn}</span>
             </p>
@@ -132,7 +132,7 @@ export function About() {
                     <h3 className="text-foreground font-medium text-sm sm:text-base">
                       {isRTL ? val.titleAr : val.titleEn}
                     </h3>
-                    <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
+                    <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed max-w-prose">
                       {isRTL ? val.descAr : val.descEn}
                     </p>
                   </div>

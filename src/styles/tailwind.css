@@ -166,17 +166,17 @@
 /* HajArafa brand — terracotta on warm cream */
 :root {
   --brand-sage: #8DA392;
-  --brand-sage-dark: #4A5D4E;
+  --brand-sage-dark: #3E4E41;
   --brand-forest: #334537;
-  --brand-terracotta: #C4622D;
-  --brand-terracotta-dark: #9A4A20;
+  --brand-terracotta: #8D3C14;
+  --brand-terracotta-dark: #73300E;
   --brand-peach: #F4E7DA;
   --brand-cream: #FBF7F1;
   --brand-cream-2: #F0EAE0;
   --brand-beige: #EFEEEB;
   --brand-line: #D8CEC4;
   --brand-ink: #1B1C1A;
-  --brand-ink-soft: #6B5E56;
+  --brand-ink-soft: #554B43;
 
   --primary: var(--brand-terracotta);
   --primary-foreground: #FFFFFF;
@@ -288,4 +288,17 @@
 .dark .bg-brand-terracotta:hover *,
 .dark .bg-primary:hover * {
   color: inherit !important;
+}
+
+/* Enhanced touch target size (WCAG AAA SC 2.5.5) */
+.icon-button-target::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 44px;
+  min-height: 44px;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 10;
 }

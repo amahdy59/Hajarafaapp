@@ -48,6 +48,7 @@ export function Home() {
               <Link
                 to="/products"
                 className="inline-flex items-center justify-center gap-2 bg-brand-terracotta text-white dark:text-zinc-950 hover:text-white dark:hover:text-white px-5 py-2.5 sm:px-7 sm:py-3 rounded-xl hover:bg-brand-terracotta-dark transition-all duration-300 hover:scale-[1.02] hover:shadow-lg active:scale-[0.97] text-xs sm:text-sm font-bold uppercase tracking-wider select-none mt-4 shadow-[0_4px_12px_rgba(196,98,45,0.3)] dark:shadow-[0_4px_12px_rgba(224,139,87,0.2)]"
+                aria-label={isRTL ? "تسوق جميع المنتجات الطبيعية" : "Explore all natural products"}
               >
                 {t.explore}
               </Link>
@@ -84,6 +85,7 @@ export function Home() {
                 <Link
                   to={`/category/${cat.slug}`}
                   className="inline-flex items-center gap-1.5 px-3 py-1 bg-card dark:bg-zinc-900/60 text-brand-terracotta border border-border hover:border-brand-terracotta rounded-full text-xs font-semibold shadow-sm hover:shadow-soft transition-all duration-300"
+                  aria-label={isRTL ? `عرض كل منتجات ${catName}` : `View all ${catName} products`}
                 >
                   <span>{isRTL ? "عرض الكل" : "View All"}</span>
                   <span className="rtl-flip">→</span>

@@ -116,7 +116,7 @@ export function Help() {
             <h3 className="text-brand-forest font-display text-sm sm:text-base">
               {t.needInstantHelp}
             </h3>
-            <p className="text-muted-foreground text-xs leading-relaxed">
+            <p className="text-muted-foreground text-xs leading-relaxed max-w-prose">
               {t.helpSupportHours}
             </p>
           </div>
@@ -183,7 +183,7 @@ export function Help() {
                           transition={{ duration: 0.2 }}
                           className="overflow-hidden"
                         >
-                          <div className="px-5 pb-5 pt-1 text-muted-foreground text-xs sm:text-sm leading-relaxed border-t border-border/20">
+                          <div className="px-5 pb-5 pt-1 text-muted-foreground text-xs sm:text-sm leading-relaxed border-t border-border/20 max-w-prose">
                             {isRTL ? faq.answerAr : faq.answerEn}
                           </div>
                         </motion.div>
@@ -238,7 +238,7 @@ export function Help() {
                           transition={{ duration: 0.2 }}
                           className="overflow-hidden"
                         >
-                          <div className="px-5 pb-5 pt-1 text-muted-foreground text-xs sm:text-sm leading-relaxed border-t border-border/20">
+                          <div className="px-5 pb-5 pt-1 text-muted-foreground text-xs sm:text-sm leading-relaxed border-t border-border/20 max-w-prose">
                             {isRTL ? faq.answerAr : faq.answerEn}
                           </div>
                         </motion.div>
@@ -311,7 +311,7 @@ export function Help() {
                                         transition={{ duration: 0.18 }}
                                         className="overflow-hidden"
                                       >
-                                        <div className="px-5 pb-4 pt-1 text-muted-foreground text-[11px] leading-relaxed border-t border-border/10">
+                                        <div className="px-5 pb-4 pt-1 text-muted-foreground text-[11px] leading-relaxed border-t border-border/10 max-w-prose">
                                           {isRTL ? faq.answerAr : faq.answerEn}
                                         </div>
                                       </motion.div>

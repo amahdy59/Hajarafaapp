@@ -29,7 +29,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       ref={ref}
       whileHover={{ scale: 1.08 }}
       whileTap={{ scale: 0.92 }}
-      className={`relative rounded-full flex items-center justify-center transition-colors ${sizeMap[size]} ${variantMap[variant]} ${className}`}
+      className={`relative rounded-full flex items-center justify-center transition-colors icon-button-target ${sizeMap[size]} ${variantMap[variant]} ${className}`}
       {...rest}
     >
       {children}
