@@ -5,6 +5,7 @@ import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
 import { Link, useNavigate } from "react-router";
 import { Button } from "./ui/Button";
+import { DELIVERY_NOTICE } from "../config/contact";
 
 
 const THRESHOLD = 500;
@@ -61,7 +62,7 @@ export function CartDrawer() {
               </div>
               <button
                 onClick={() => setCartOpen(false)}
-                className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-border transition-colors"
+                className="w-11 h-11 rounded-full bg-muted flex items-center justify-center hover:bg-border transition-colors"
                 aria-label="Close"
               >
                 <X size={16} className="text-foreground" />
@@ -77,7 +78,7 @@ export function CartDrawer() {
                   <p className="text-muted-foreground" style={{ fontSize: "0.875rem" }}>{t.cartEmptyHint}</p>
                   <button
                     onClick={() => setCartOpen(false)}
-                    className="mt-2 bg-brand-terracotta text-white px-6 py-2.5 rounded-xl hover:bg-brand-terracotta-dark transition-colors active:scale-95"
+                    className="mt-2 bg-brand-terracotta text-white px-6 py-2.5 rounded-xl hover:bg-brand-terracotta-dark transition-colors active:scale-95 min-h-11"
                     style={{ fontSize: "0.875rem" }}
                   >
                     {t.browseProducts}
@@ -107,25 +108,25 @@ export function CartDrawer() {
                           <div className="flex items-center gap-1.5">
                             <button
                               onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                              className="w-6 h-6 rounded-full bg-background border border-border flex items-center justify-center hover:border-brand-terracotta transition-colors"
-                              aria-label="Decrease"
+                              className="w-11 h-11 rounded-full bg-background border border-border flex items-center justify-center hover:border-brand-terracotta transition-colors"
+                              aria-label={`Decrease quantity for ${item.product.name}`}
                             >
-                              <Minus size={11} className="text-foreground" />
+                              <Minus size={13} className="text-foreground" />
                             </button>
-                            <span className="text-foreground w-5 text-center" style={{ fontSize: "0.875rem" }}>
+                            <span className="text-foreground min-w-6 text-center" style={{ fontSize: "0.875rem" }}>
                               {item.quantity}
                             </span>
                             <button
                               onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                              className="w-6 h-6 rounded-full bg-background border border-border flex items-center justify-center hover:border-brand-terracotta transition-colors"
-                              aria-label="Increase"
+                              className="w-11 h-11 rounded-full bg-background border border-border flex items-center justify-center hover:border-brand-terracotta transition-colors"
+                              aria-label={`Increase quantity for ${item.product.name}`}
                             >
-                              <Plus size={11} className="text-foreground" />
+                              <Plus size={13} className="text-foreground" />
                             </button>
                           </div>
                         </div>
                       </div>
-                      <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#FAF6F0] dark:bg-zinc-800/40 flex-shrink-0 flex items-center justify-center p-1">
+                      <div className="w-16 h-16 rounded-xl overflow-hidden product-media-surface flex-shrink-0 flex items-center justify-center p-1">
                         <img
                           src={item.product.image}
                           alt={item.product.name}
@@ -134,8 +135,8 @@ export function CartDrawer() {
                       </div>
                       <button
                         onClick={() => removeFromCart(item.product.id)}
-                        className="self-start text-muted-foreground hover:text-destructive transition-colors p-1 mt-0.5"
-                        aria-label="Remove"
+                        className="self-start text-muted-foreground hover:text-destructive transition-colors p-2 mt-0.5"
+                        aria-label={`Remove ${item.product.name} from cart`}
                       >
                         <Trash2 size={14} />
                       </button>
@@ -177,8 +178,8 @@ export function CartDrawer() {
                   <Truck size={14} className="text-brand-terracotta flex-shrink-0" />
                   <span className="pt-[0.5px]">
                     {locale === "ar"
-                      ? "التوصيل المتوقع: ٥ إلى ٧ أيام عمل"
-                      : "Estimated delivery: 5 to 7 working days"}
+                      ? DELIVERY_NOTICE.ar
+                      : DELIVERY_NOTICE.en}
                   </span>
                 </div>
 

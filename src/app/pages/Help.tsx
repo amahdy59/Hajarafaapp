@@ -1,8 +1,9 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo } from "react";
 import { ArrowLeft, CircleHelp, Search, ChevronDown, Phone, MessageCircle } from "lucide-react";
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
+import { CONTACT } from "../config/contact";
 
 interface FAQItem {
   id: string;
@@ -59,13 +60,6 @@ const mockFAQs: FAQItem[] = [
 export function Help() {
   const { t, isRTL } = useAppSettings();
   const [searchQuery, setSearchQuery] = useState("");
-  const searchInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (searchInputRef.current) {
-      searchInputRef.current.focus({ preventScroll: true });
-    }
-  }, []);
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [expandedCategory, setExpandedCategory] = useState<string | null>("shipping");
   const [openId, setOpenId] = useState<string | null>("q1");
@@ -121,10 +115,10 @@ export function Help() {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-stretch sm:items-center sm:justify-end">
-            <a href="tel:17309" className="inline-flex items-center justify-center gap-2 bg-brand-terracotta text-white px-4 py-3 rounded-xl hover:bg-brand-terracotta-dark transition-all text-xs font-semibold w-full sm:w-auto h-11">
+            <a href={`tel:${CONTACT.hotline}`} className="inline-flex items-center justify-center gap-2 bg-brand-terracotta text-white px-4 py-3 rounded-xl hover:bg-brand-terracotta-dark transition-all text-xs font-semibold w-full sm:w-auto h-11">
               <Phone size={14} /> {t.callSupport}
             </a>
-            <a href="https://wa.me/201020401400" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-[#128C7E] text-white px-4 py-3 rounded-xl hover:bg-[#0e7065] transition-all text-xs font-semibold w-full sm:w-auto h-11">
+            <a href={CONTACT.whatsappUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-brand-sage text-white px-4 py-3 rounded-xl hover:bg-brand-sage-dark transition-all text-xs font-semibold w-full sm:w-auto h-11">
               <MessageCircle size={14} /> {isRTL ? "واتساب" : "WhatsApp"}
             </a>
           </div>
@@ -134,8 +128,8 @@ export function Help() {
         <div className="relative">
           <Search size={18} className={`absolute ${isRTL ? "right-4" : "left-4"} top-1/2 -translate-y-1/2 text-muted-foreground`} />
           <input
-            ref={searchInputRef}
             type="text"
+            aria-label={t.searchFAQs}
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             placeholder={t.searchFAQs}
@@ -162,6 +156,8 @@ export function Help() {
                   <div key={faq.id} className="transition-colors">
                     <button
                       onClick={() => toggleFAQ(faq.id)}
+                      aria-expanded={isOpen}
+                      aria-controls={`faq-search-panel-${faq.id}`}
                       className="w-full px-5 py-4 flex items-center justify-between text-start hover:bg-muted/40 transition-colors"
                     >
                       <div className="space-y-1">
@@ -177,6 +173,7 @@ export function Help() {
                     <AnimatePresence initial={false}>
                       {isOpen && (
                         <motion.div
+                          id={`faq-search-panel-${faq.id}`}
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
@@ -203,6 +200,7 @@ export function Help() {
                 <button
                   key={cat.key}
                   onClick={() => setActiveCategory(cat.key)}
+                  aria-pressed={activeCategory === cat.key}
                   className={`px-4 py-2 rounded-xl whitespace-nowrap text-sm border flex-shrink-0 font-medium transition-all ${
                     activeCategory === cat.key
                       ? "bg-brand-terracotta text-white border-brand-terracotta shadow-sm"
@@ -222,6 +220,8 @@ export function Help() {
                   <div key={faq.id} className="transition-colors">
                     <button
                       onClick={() => toggleFAQ(faq.id)}
+                      aria-expanded={isOpen}
+                      aria-controls={`faq-desktop-panel-${faq.id}`}
                       className="w-full px-5 py-4 flex items-center justify-between text-start hover:bg-muted/40 transition-colors"
                     >
                       <span className="text-foreground font-medium text-sm sm:text-base">
@@ -232,6 +232,7 @@ export function Help() {
                     <AnimatePresence initial={false}>
                       {isOpen && (
                         <motion.div
+                          id={`faq-desktop-panel-${faq.id}`}
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
@@ -259,6 +260,8 @@ export function Help() {
                     <button
                       type="button"
                       onClick={() => setExpandedCategory(isCatExpanded ? null : cat.key)}
+                      aria-expanded={isCatExpanded}
+                      aria-controls={`faq-category-${cat.key}`}
                       className="w-full flex items-center justify-between gap-3 px-5 py-4 text-start bg-brand-cream-2 hover:bg-brand-peach/40 transition-colors cursor-pointer"
                     >
                       <div className="flex items-center gap-2.5">
@@ -279,6 +282,7 @@ export function Help() {
                     <AnimatePresence initial={false}>
                       {isCatExpanded && (
                         <motion.div
+                          id={`faq-category-${cat.key}`}
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
@@ -292,6 +296,8 @@ export function Help() {
                                 <div key={faq.id} className="transition-colors">
                                   <button
                                     onClick={() => toggleFAQ(faq.id)}
+                                    aria-expanded={isOpen}
+                                    aria-controls={`faq-mobile-panel-${faq.id}`}
                                     className="w-full px-5 py-3.5 flex items-center justify-between text-start hover:bg-muted/40 transition-colors"
                                   >
                                     <span className="text-foreground text-xs font-medium pr-3 rtl:pl-3 rtl:pr-0 leading-snug">
@@ -305,6 +311,7 @@ export function Help() {
                                   <AnimatePresence initial={false}>
                                     {isOpen && (
                                       <motion.div
+                                        id={`faq-mobile-panel-${faq.id}`}
                                         initial={{ height: 0, opacity: 0 }}
                                         animate={{ height: "auto", opacity: 1 }}
                                         exit={{ height: 0, opacity: 0 }}

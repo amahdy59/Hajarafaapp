@@ -7,6 +7,7 @@ import { useState } from "react";
 import { products } from "../data/products";
 import { ProductCard } from "../components/ProductCard";
 import { Button } from "../components/ui/Button";
+import { DELIVERY_NOTICE } from "../config/contact";
 
 
 const SHIPPING_THRESHOLD = 500;
@@ -109,14 +110,16 @@ export function Cart() {
                         <div className="flex items-center border border-border rounded-xl overflow-hidden">
                           <button
                             onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                            className="w-8 h-8 flex items-center justify-center hover:bg-muted transition-colors text-foreground"
+                            className="w-11 h-11 flex items-center justify-center hover:bg-muted transition-colors text-foreground"
+                            aria-label={`Decrease quantity for ${item.product.name}`}
                           >
                             <Minus size={13} />
                           </button>
-                          <span className="w-8 text-center text-foreground" style={{ fontSize: "0.875rem" }}>{item.quantity}</span>
+                          <span className="min-w-8 text-center text-foreground" style={{ fontSize: "0.875rem" }}>{item.quantity}</span>
                           <button
                             onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                            className="w-8 h-8 flex items-center justify-center hover:bg-muted transition-colors text-foreground"
+                            className="w-11 h-11 flex items-center justify-center hover:bg-muted transition-colors text-foreground"
+                            aria-label={`Increase quantity for ${item.product.name}`}
                           >
                             <Plus size={13} />
                           </button>
@@ -133,7 +136,7 @@ export function Cart() {
                         </div>
                       </div>
                     </div>
-                    <Link to={`/products/${item.product.id}`} className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-[#FAF6F0] dark:bg-zinc-800/40 flex-shrink-0 flex items-center justify-center p-2">
+                    <Link to={`/products/${item.product.id}`} className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden product-media-surface flex-shrink-0 flex items-center justify-center p-2">
                       <img src={item.product.image} alt={item.product.name} className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
                     </Link>
                   </motion.div>
@@ -159,6 +162,7 @@ export function Cart() {
                       <Tag size={14} className={`absolute ${isRTL ? "right-3" : "left-3"} top-1/2 -translate-y-1/2 text-muted-foreground`} />
                       <input
                         type="text"
+                        aria-label={t.couponCode}
                         placeholder={t.couponCode}
                         value={couponCode}
                         onChange={e => setCouponCode(e.target.value)}
@@ -169,7 +173,7 @@ export function Cart() {
                     <Button
                       onClick={applyCoupon}
                       size="sm"
-                      className="h-10 px-4 rounded-xl text-sm"
+                      className="h-11 px-4 rounded-xl text-sm"
                     >
                       {t.apply}
                     </Button>
@@ -219,8 +223,8 @@ export function Cart() {
                   <Truck size={14} className="text-brand-terracotta flex-shrink-0" />
                   <span className="pt-[0.5px]">
                     {locale === "ar"
-                      ? "التوصيل المتوقع: ٥ إلى ٧ أيام عمل"
-                      : "Estimated delivery: 5 to 7 working days"}
+                      ? DELIVERY_NOTICE.ar
+                      : DELIVERY_NOTICE.en}
                   </span>
                 </div>
 

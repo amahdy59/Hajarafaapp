@@ -255,7 +255,7 @@ export function ProductDetail() {
                 <div className="flex-1 sm:flex-initial flex items-center justify-between border border-border rounded-xl h-11 bg-card px-1 overflow-hidden">
                   <button
                     onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                    className="w-10 h-9 flex items-center justify-center hover:bg-muted rounded-lg transition-colors"
+                    className="w-11 h-11 flex items-center justify-center hover:bg-muted rounded-lg transition-colors"
                     aria-label="Decrease quantity"
                   >
                     <Minus size={14} className="text-foreground" />
@@ -263,7 +263,7 @@ export function ProductDetail() {
                   <span className="w-8 text-center text-foreground font-semibold text-sm select-none">{quantity}</span>
                   <button
                     onClick={() => setQuantity(q => q + 1)}
-                    className="w-10 h-9 flex items-center justify-center hover:bg-muted rounded-lg transition-colors"
+                    className="w-11 h-11 flex items-center justify-center hover:bg-muted rounded-lg transition-colors"
                     aria-label="Increase quantity"
                   >
                     <Plus size={14} className="text-foreground" />
@@ -334,7 +334,7 @@ export function ProductDetail() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="relative aspect-[4/3] sm:aspect-square bg-[#FAF6F0] dark:bg-zinc-800/40 rounded-3xl overflow-hidden max-h-[300px] sm:max-h-none flex items-center justify-center"
+              className="relative aspect-[4/3] sm:aspect-square product-media-surface rounded-3xl overflow-hidden max-h-[300px] sm:max-h-none flex items-center justify-center"
             >
               <img
                 src={product.images[activeImage] || product.image}
@@ -359,7 +359,7 @@ export function ProductDetail() {
                   <button
                     key={i}
                     onClick={() => setActiveImage(i)}
-                    className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-colors bg-[#FAF6F0] dark:bg-zinc-800/40 ${
+                    className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-colors product-media-surface ${
                       activeImage === i ? "border-brand-terracotta" : "border-transparent"
                     }`}
                   >

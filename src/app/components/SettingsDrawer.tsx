@@ -6,6 +6,12 @@ import { useAppSettings } from "../context/AppSettingsContext";
 import { IconButton } from "./ui/IconButton";
 import logoImg from "../../assets/logo.webp";
 
+interface DrawerProfile {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
 interface SettingsDrawerProps {
   open: boolean;
   onClose: () => void;
@@ -22,7 +28,8 @@ function Segmented<T extends string>({
           <button
             key={opt.value}
             onClick={() => onChange(opt.value)}
-            className={`px-3 py-1 rounded-full transition-all ${active ? "bg-brand-terracotta text-white" : "text-muted-foreground hover:text-foreground"}`}
+            aria-pressed={active}
+            className={`min-h-11 px-3.5 py-1 rounded-full transition-all ${active ? "bg-brand-terracotta text-white" : "text-muted-foreground hover:text-foreground"}`}
             style={{ fontSize: "12px", letterSpacing: "0.8px" }}
           >
             {opt.label}
@@ -52,7 +59,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
   const { theme, setTheme, locale, setLocale, t, isRTL } = useAppSettings();
 
   // Load profile dynamically when drawer is opened
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<DrawerProfile | null>(null);
   useEffect(() => {
     if (open) {
       const saved = localStorage.getItem("hajarafa.profile");
@@ -107,7 +114,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
   }, [open, onClose]);
 
   const account = [
-    { icon: User, label: t.yourAccount, to: "/account?tab=profile" },
+            { icon: User, label: t.yourAccount, to: "/account?tab=profile" },
     { icon: Package, label: t.yourOrders, to: "/account?tab=orders" },
     { icon: Heart, label: t.yourWishlist, to: "/account?tab=wishlist" },
   ];
@@ -141,7 +148,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           >
             <div className="sticky top-0 z-10 bg-card/95 backdrop-blur-xl border-b border-border px-4 py-3 flex items-center justify-between safe-area-pt">
               <Link to="/" onClick={onClose} className="flex items-center gap-2 select-none cursor-pointer">
-                <img src={logoImg} alt="HajArafa Logo" className="h-8 w-auto object-contain select-none pointer-events-none" />
+                <img src={logoImg} alt="Haj Arafa Logo" className="h-8 w-auto object-contain select-none pointer-events-none" />
               </Link>
               <IconButton onClick={onClose} aria-label="Close">
                 <X size={18} />

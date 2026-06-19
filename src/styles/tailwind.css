@@ -63,6 +63,7 @@
 
   html {
     font-size: 16px;
+    scroll-padding-top: 88px;
     transition: font-size 0.15s ease-out;
   }
   @media (min-width: 1024px) {
@@ -157,9 +158,10 @@
 
   /* Focus ring tuned to brand */
   :where(button, a, input, textarea, select):focus-visible {
-    outline: 2px solid var(--ring);
-    outline-offset: 2px;
+    outline: 3px solid var(--ring);
+    outline-offset: 3px;
     border-radius: 6px;
+    box-shadow: 0 0 0 5px color-mix(in oklab, var(--ring) 20%, transparent);
   }
 }
 
@@ -301,4 +303,35 @@
   transform: translate(-50%, -50%);
   cursor: pointer;
   z-index: 10;
+}
+
+.interactive-target {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.product-media-surface {
+  background-color: #FAF6F0;
+}
+
+.dark .product-media-surface {
+  background-color: color-mix(in oklab, var(--brand-beige) 72%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (forced-colors: active) {
+  :where(button, a, input, textarea, select):focus-visible {
+    outline: 3px solid CanvasText;
+    box-shadow: none;
+  }
 }

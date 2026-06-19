@@ -1,16 +1,13 @@
 import { Link } from "react-router";
 import { Mail, Phone, Facebook, Instagram, MessageCircle, ShieldCheck, Truck } from "lucide-react";
 import { useAppSettings } from "../context/AppSettingsContext";
+import { CONTACT, DELIVERY_NOTICE } from "../config/contact";
 
 export function Footer() {
   const { t, isRTL, locale } = useAppSettings();
 
   return (
     <footer className="hidden sm:block bg-[#14201A] dark:bg-[#070b09] text-[#FAF6F0] dark:text-[#EFECE6] border-t border-white/5 dark:border-white/10 pt-12 pb-24 sm:pb-12 mt-16 select-none relative overflow-hidden">
-      {/* Subtle organic background accent */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-brand-sage/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-brand-terracotta/5 rounded-full blur-3xl pointer-events-none" />
-
       {/* Artistic green paint brush stroke and leaves background (Left side) */}
       <svg 
         className="absolute left-0 bottom-0 w-[420px] h-[240px] text-brand-sage/10 dark:text-brand-sage/5 pointer-events-none z-0 transform -translate-x-12 translate-y-12 select-none" 
@@ -56,13 +53,13 @@ export function Footer() {
               : "Egyptian herbal heritage since 1970. Quality and purity in every natural product."}
           </p>
           <div className="flex items-center gap-3 pt-1">
-            <a href="https://www.facebook.com/hajarafaeg?mibextid=LQQJ4d" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#1877F2] text-[#FAF6F0] flex items-center justify-center transition-all" aria-label="Facebook">
+            <a href={CONTACT.facebookUrl} target="_blank" rel="noopener noreferrer" className="w-11 h-11 rounded-full bg-white/10 hover:bg-[#F4E7DA] hover:text-[#14201A] text-[#FAF6F0] flex items-center justify-center transition-all" aria-label="Facebook">
               <Facebook size={15} />
             </a>
-            <a href="https://www.instagram.com/hajarafa/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#E1306C] text-[#FAF6F0] flex items-center justify-center transition-all" aria-label="Instagram">
+            <a href={CONTACT.instagramUrl} target="_blank" rel="noopener noreferrer" className="w-11 h-11 rounded-full bg-white/10 hover:bg-[#F4E7DA] hover:text-[#14201A] text-[#FAF6F0] flex items-center justify-center transition-all" aria-label="Instagram">
               <Instagram size={15} />
             </a>
-            <a href="https://wa.me/201020401400" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#128C7E] text-[#FAF6F0] flex items-center justify-center transition-all" aria-label="WhatsApp">
+            <a href={CONTACT.whatsappUrl} target="_blank" rel="noopener noreferrer" className="w-11 h-11 rounded-full bg-white/10 hover:bg-[#F4E7DA] hover:text-[#14201A] text-[#FAF6F0] flex items-center justify-center transition-all" aria-label="WhatsApp">
               <MessageCircle size={15} />
             </a>
           </div>
@@ -108,10 +105,10 @@ export function Footer() {
           </h4>
           <div className="space-y-4 flex flex-col items-start">
             <a
-              href="https://wa.me/201020401400"
+              href={CONTACT.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 bg-[#128C7E] text-white hover:bg-[#0e7065] px-4.5 py-2.5 rounded-xl transition-all text-xs font-bold w-fit shadow-sm select-none"
+              className="inline-flex items-center justify-center gap-2 bg-[#F4E7DA] text-[#14201A] hover:bg-white px-4.5 py-2.5 rounded-xl transition-all text-xs font-bold w-fit shadow-sm select-none"
             >
               <MessageCircle size={16} />
               <span>{locale === "ar" ? "تواصل عبر واتساب" : "Chat on WhatsApp"}</span>
@@ -120,18 +117,18 @@ export function Footer() {
             <div className="text-xs text-[#FAF6F0] dark:text-[#EFECE6] space-y-2.5 w-full">
               <div className="flex items-center gap-2">
                 <Phone size={13} className="text-[#F4E7DA] flex-shrink-0" />
-                <span>{locale === "ar" ? "الخط الساخن: ١٧٣٠٩" : "Hotline: 17309"}</span>
+                <span>{locale === "ar" ? `الخط الساخن: ${CONTACT.hotline}` : `Hotline: ${CONTACT.hotline}`}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail size={13} className="text-[#F4E7DA] flex-shrink-0" />
-                <a href="mailto:Marketing@hajarafa.com" className="hover:underline">Marketing@hajarafa.com</a>
+                <a href={`mailto:${CONTACT.email}`} className="hover:underline">{CONTACT.email}</a>
               </div>
               <div className="flex items-center justify-center gap-2.5 bg-white/10 border border-white/15 px-3.5 py-2 rounded-xl w-fit text-[11px] font-semibold text-white select-none shadow-sm leading-none">
                 <Truck size={14} className="text-[#F4E7DA] flex-shrink-0" />
                 <span className="pt-[0.5px]">
                   {locale === "ar" 
-                    ? "التوصيل خلال ٥ إلى ٧ أيام" 
-                    : "Delivery: 5 to 7 working days"}
+                    ? DELIVERY_NOTICE.shortAr 
+                    : DELIVERY_NOTICE.shortEn}
                 </span>
               </div>
             </div>
@@ -156,23 +153,23 @@ export function Footer() {
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             {/* Visa Badge */}
-            <span className="px-2 rounded bg-white text-[#1a1f71] border border-white/10 font-bold text-[9px] uppercase tracking-wider select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Visa">
+            <span className="px-2 rounded bg-[#F4E7DA] text-[#14201A] border border-white/10 font-bold text-[9px] uppercase tracking-wider select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Visa">
               Visa
             </span>
             {/* MasterCard Badge */}
-            <span className="px-2 rounded bg-white text-[#be0c1b] border border-white/10 font-black text-[9px] uppercase tracking-wider select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Mastercard">
+            <span className="px-2 rounded bg-[#F4E7DA] text-[#14201A] border border-white/10 font-black text-[9px] uppercase tracking-wider select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Mastercard">
               MasterCard
             </span>
             {/* Meeza Badge */}
-            <span className="px-2 rounded bg-[#005c53] text-white border border-white/10 font-bold text-[9px] select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Meeza">
+            <span className="px-2 rounded bg-white/10 text-[#FAF6F0] border border-white/15 font-bold text-[9px] select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Meeza">
               {locale === "ar" ? "ميزة" : "Meeza"}
             </span>
             {/* Vodafone Cash Badge */}
-            <span className="px-2 rounded bg-[#bd0000] text-white border border-white/10 font-bold text-[8px] sm:text-[9px] select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Vodafone Cash">
+            <span className="px-2 rounded bg-white/10 text-[#FAF6F0] border border-white/15 font-bold text-[8px] sm:text-[9px] select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Vodafone Cash">
               {locale === "ar" ? "فودافون كاش" : "VF Cash"}
             </span>
             {/* COD Badge */}
-            <span className="px-2.5 rounded bg-zinc-800 text-white border border-white/10 font-semibold text-[9px] select-none h-6 flex items-center justify-center font-sans" title="Cash on Delivery">
+            <span className="px-2.5 rounded bg-white/10 text-[#FAF6F0] border border-white/15 font-semibold text-[9px] select-none h-6 flex items-center justify-center font-sans" title="Cash on Delivery">
               {locale === "ar" ? "الدفع عند الاستلام" : "COD"}
             </span>
           </div>

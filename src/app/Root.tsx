@@ -76,7 +76,7 @@ export function Root() {
           <div className="bg-card border-b border-border px-4 py-3.5 safe-area-pt">
             <div className="max-w-5xl mx-auto flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <img src={logoImg} alt="HajArafa" className="h-8 w-auto object-contain" />
+                <img src={logoImg} alt="Haj Arafa" className="h-8 w-auto object-contain" />
               </div>
               <span className="text-muted-foreground flex items-center gap-1" style={{ fontSize: "0.8rem" }}>
                 🔒 Secure Checkout

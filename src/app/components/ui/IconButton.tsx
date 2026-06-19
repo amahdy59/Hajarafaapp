@@ -12,9 +12,9 @@ interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const sizeMap: Record<Size, string> = {
-  sm: "w-9 h-9",
-  md: "w-10 h-10",
-  lg: "w-11 h-11",
+  sm: "w-11 h-11",
+  md: "w-11 h-11",
+  lg: "w-12 h-12",
  };
 
 const variantMap: Record<Variant, string> = {
@@ -27,9 +27,9 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
   ({ variant = "ghost", size = "md", badge, className = "", children, ...rest }, ref) => (
     <motion.button
       ref={ref}
-      whileHover={{ scale: 1.08 }}
-      whileTap={{ scale: 0.92 }}
-      className={`relative rounded-full flex items-center justify-center transition-colors icon-button-target ${sizeMap[size]} ${variantMap[variant]} ${className}`}
+      whileHover={rest.disabled ? undefined : { scale: 1.03 }}
+      whileTap={rest.disabled ? undefined : { scale: 0.97 }}
+      className={`relative rounded-full flex items-center justify-center transition-colors disabled:cursor-not-allowed disabled:opacity-60 icon-button-target ${sizeMap[size]} ${variantMap[variant]} ${className}`}
       {...rest}
     >
       {children}

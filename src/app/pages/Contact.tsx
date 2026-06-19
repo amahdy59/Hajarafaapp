@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { ArrowLeft, Mail, Phone, MessageSquare, Send, CheckCircle2, MessageCircle } from "lucide-react";
+import { ArrowLeft, Mail, Phone, Send, CheckCircle2, MessageCircle } from "lucide-react";
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
-import logoImg from "../../assets/logo.webp";
 import { Button } from "../components/ui/Button";
+import { CONTACT } from "../config/contact";
 
 
 export function Contact() {
@@ -84,16 +84,16 @@ export function Contact() {
               {/* Phone support */}
               <div className="space-y-1">
                 <span className="eyebrow text-[10px] block">{isRTL ? "الخط الساخن" : "Hotline"}</span>
-                <a href="tel:17309" className="text-foreground font-semibold hover:text-brand-terracotta hover:underline flex items-center gap-2 text-sm sm:text-base">
-                  <Phone size={14} className="text-brand-terracotta" /> 17309
+                <a href={`tel:${CONTACT.hotline}`} className="text-foreground font-semibold hover:text-brand-terracotta hover:underline flex items-center gap-2 text-sm sm:text-base">
+                  <Phone size={14} className="text-brand-terracotta" /> {CONTACT.hotline}
                 </a>
               </div>
 
               {/* Email Support */}
               <div className="space-y-1">
                 <span className="eyebrow text-[10px] block">{isRTL ? "البريد الإلكتروني" : "Email Support"}</span>
-                <a href="mailto:Marketing@hajarafa.com" className="text-foreground font-semibold hover:text-brand-terracotta hover:underline flex items-center gap-2 text-sm sm:text-base break-all">
-                  <Mail size={14} className="text-brand-terracotta" /> Marketing@hajarafa.com
+                <a href={`mailto:${CONTACT.email}`} className="text-foreground font-semibold hover:text-brand-terracotta hover:underline flex items-center gap-2 text-sm sm:text-base break-all">
+                  <Mail size={14} className="text-brand-terracotta" /> {CONTACT.email}
                 </a>
               </div>
 
@@ -101,10 +101,10 @@ export function Contact() {
               <div className="pt-2">
                 <span className="eyebrow text-[10px] block mb-2">{isRTL ? "تواصل معنا مباشرة" : "WhatsApp Support"}</span>
                 <a
-                  href="https://wa.me/201020401400"
+                  href={CONTACT.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2 bg-[#128C7E] text-white hover:bg-[#0e7065] px-4.5 py-2.5 rounded-xl transition-all text-xs font-semibold uppercase tracking-wider"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-brand-sage text-white hover:bg-brand-sage-dark px-4.5 py-2.5 rounded-xl transition-all text-xs font-semibold uppercase tracking-wider"
                 >
                   <MessageCircle size={14} /> {isRTL ? "دردشة واتساب" : "WhatsApp Chat"}
                 </a>
@@ -121,6 +121,8 @@ export function Contact() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0 }}
+                    role="status"
+                    aria-live="polite"
                     className="text-center py-10 space-y-4"
                   >
                     <div className="w-12 h-12 bg-green-100 dark:bg-green-950/30 rounded-full flex items-center justify-center mx-auto">
@@ -151,32 +153,41 @@ export function Contact() {
 
                     {/* Name */}
                     <div>
-                      <label className="block text-xs text-muted-foreground mb-1.5">{isRTL ? "الاسم بالكامل" : "Full Name"} *</label>
+                      <label htmlFor="contact-name" className="block text-xs text-muted-foreground mb-1.5">{isRTL ? "الاسم بالكامل" : "Full Name"} *</label>
                       <input
+                        id="contact-name"
                         type="text"
                         value={formData.name}
                         onChange={e => setFormData(p => ({ ...p, name: e.target.value }))}
+                        autoComplete="name"
+                        aria-invalid={Boolean(errors.name)}
+                        aria-describedby={errors.name ? "contact-name-error" : undefined}
                         className={`w-full px-4 py-2.5 border ${errors.name ? "border-destructive focus:border-destructive" : "border-border focus:border-brand-terracotta"} bg-background text-foreground rounded-xl text-sm outline-none transition-colors`}
                       />
-                      {errors.name && <span className="text-destructive text-xs mt-1 block">{errors.name}</span>}
+                      {errors.name && <span id="contact-name-error" className="text-destructive text-xs mt-1 block">{errors.name}</span>}
                     </div>
 
                     {/* Email */}
                     <div>
-                      <label className="block text-xs text-muted-foreground mb-1.5">{isRTL ? "البريد الإلكتروني" : "Email Address"} *</label>
+                      <label htmlFor="contact-email" className="block text-xs text-muted-foreground mb-1.5">{isRTL ? "البريد الإلكتروني" : "Email Address"} *</label>
                       <input
+                        id="contact-email"
                         type="email"
                         value={formData.email}
                         onChange={e => setFormData(p => ({ ...p, email: e.target.value }))}
+                        autoComplete="email"
+                        aria-invalid={Boolean(errors.email)}
+                        aria-describedby={errors.email ? "contact-email-error" : undefined}
                         className={`w-full px-4 py-2.5 border ${errors.email ? "border-destructive focus:border-destructive" : "border-border focus:border-brand-terracotta"} bg-background text-foreground rounded-xl text-sm outline-none transition-colors`}
                       />
-                      {errors.email && <span className="text-destructive text-xs mt-1 block">{errors.email}</span>}
+                      {errors.email && <span id="contact-email-error" className="text-destructive text-xs mt-1 block">{errors.email}</span>}
                     </div>
 
                     {/* Subject */}
                     <div>
-                      <label className="block text-xs text-muted-foreground mb-1.5">{isRTL ? "الموضوع (اختياري)" : "Subject (Optional)"}</label>
+                      <label htmlFor="contact-subject" className="block text-xs text-muted-foreground mb-1.5">{isRTL ? "الموضوع (اختياري)" : "Subject (Optional)"}</label>
                       <input
+                        id="contact-subject"
                         type="text"
                         value={formData.subject}
                         onChange={e => setFormData(p => ({ ...p, subject: e.target.value }))}
@@ -186,14 +197,17 @@ export function Contact() {
 
                     {/* Message */}
                     <div>
-                      <label className="block text-xs text-muted-foreground mb-1.5">{isRTL ? "الرسالة" : "Your Message"} *</label>
+                      <label htmlFor="contact-message" className="block text-xs text-muted-foreground mb-1.5">{isRTL ? "الرسالة" : "Your Message"} *</label>
                       <textarea
+                        id="contact-message"
                         value={formData.message}
                         rows={4}
                         onChange={e => setFormData(p => ({ ...p, message: e.target.value }))}
+                        aria-invalid={Boolean(errors.message)}
+                        aria-describedby={errors.message ? "contact-message-error" : undefined}
                         className={`w-full px-4 py-2.5 border ${errors.message ? "border-destructive focus:border-destructive" : "border-border focus:border-brand-terracotta"} bg-background text-foreground rounded-xl text-sm outline-none transition-colors resize-none`}
                       />
-                      {errors.message && <span className="text-destructive text-xs mt-1 block">{errors.message}</span>}
+                      {errors.message && <span id="contact-message-error" className="text-destructive text-xs mt-1 block">{errors.message}</span>}
                     </div>
 
                     {/* Submit Button */}

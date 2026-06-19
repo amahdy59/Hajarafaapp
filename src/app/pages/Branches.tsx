@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { useState } from "react";
 import { motion } from "motion/react";
+import { CONTACT } from "../config/contact";
 
 /* ─── Types ─── */
 interface Branch {
@@ -199,6 +200,7 @@ function RegionSection({
   index: number;
 }) {
   const [open, setOpen] = useState(true);
+  const sectionId = `branches-region-${index}`;
 
   return (
     <motion.div
@@ -211,6 +213,8 @@ function RegionSection({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls={sectionId}
         className="w-full flex items-center justify-between gap-3 px-5 py-4 text-start bg-brand-cream-2 hover:bg-brand-peach/40 transition-colors cursor-pointer"
       >
         <div className="flex items-center gap-2.5">
@@ -233,6 +237,7 @@ function RegionSection({
 
       {/* Branch list */}
       <motion.div
+        id={sectionId}
         initial={false}
         animate={{
           height: open ? "auto" : 0,
@@ -256,7 +261,8 @@ function RegionSection({
                 href={mapsLink(region.nameEn, branch)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-1.5 h-9 bg-brand-peach/60 dark:bg-brand-peach/30 border border-brand-terracotta/25 text-brand-terracotta-dark dark:text-brand-terracotta hover:bg-brand-terracotta hover:text-white dark:hover:bg-brand-terracotta dark:hover:text-zinc-950 transition-colors flex-shrink-0 text-xs font-semibold rounded-xl px-3.5 shadow-sm"
+                className="inline-flex items-center justify-center gap-1.5 h-11 bg-brand-peach/60 dark:bg-brand-peach/30 border border-brand-terracotta/25 text-brand-terracotta-dark dark:text-brand-terracotta hover:bg-brand-terracotta hover:text-white dark:hover:bg-brand-terracotta dark:hover:text-zinc-950 transition-colors flex-shrink-0 text-xs font-semibold rounded-xl px-3.5 shadow-sm"
+                aria-label={`${isRTL ? branch.nameAr : branch.nameEn} - ${isRTL ? "عرض على الخريطة" : "View on Google Maps"}`}
                 title={isRTL ? "عرض على الخريطة" : "View on Map"}
               >
                 <Map size={14} className="flex-shrink-0" />
@@ -310,12 +316,12 @@ export function Branches() {
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2.5 bg-brand-peach/40 dark:bg-zinc-800/40 border border-brand-terracotta/10 dark:border-white/5 p-3.5 px-4.5 rounded-2xl text-xs sm:text-sm font-medium w-fit shadow-sm mt-1">
             <span className="text-brand-forest font-semibold">{isRTL ? "للطلب والاستفسار (الخط الساخن):" : "For orders & inquiries (Hotline):"}</span>
             <div className="flex items-center gap-3.5 flex-wrap">
-              <a href="tel:17309" className="text-brand-terracotta-dark dark:text-brand-terracotta hover:underline font-bold font-mono flex items-center gap-1.5">
-                <Phone size={14} className="text-brand-terracotta" /> 17309
+              <a href={`tel:${CONTACT.hotline}`} className="text-brand-terracotta-dark dark:text-brand-terracotta hover:underline font-bold font-mono flex items-center gap-1.5">
+                <Phone size={14} className="text-brand-terracotta" /> {CONTACT.hotline}
               </a>
               <span className="text-brand-line dark:text-zinc-700 select-none">|</span>
-              <a href="https://wa.me/201020401400" target="_blank" rel="noopener noreferrer" className="text-[#0e7065] dark:text-[#55c7b9] hover:underline font-bold font-mono flex items-center gap-1.5">
-                <MessageCircle size={14} className="text-[#128C7E]" /> 01020401400
+              <a href={CONTACT.whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-brand-sage-dark dark:text-brand-sage hover:underline font-bold font-mono flex items-center gap-1.5">
+                <MessageCircle size={14} className="text-brand-sage-dark dark:text-brand-sage" /> {CONTACT.whatsappDisplay}
               </a>
             </div>
           </div>
@@ -363,6 +369,7 @@ export function Branches() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="px-5 py-2.5 text-brand-ink-soft hover:text-brand-terracotta text-sm leading-relaxed flex items-center justify-between gap-3"
+                        aria-label={`${isRTL ? item.ar : item.en} - ${isRTL ? "عرض على خرائط جوجل" : "View on Google Maps"}`}
                       >
                         <span>{isRTL ? item.ar : item.en}</span>
                         <ExternalLink size={13} className="text-brand-terracotta flex-shrink-0" />

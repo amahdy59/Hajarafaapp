@@ -102,7 +102,7 @@ export function About() {
               <span>{isRTL ? content.storyAr : content.storyEn}</span>
             </p>
           </div>
-          <div className="rounded-2xl overflow-hidden aspect-[4/3] border border-border bg-[#FAF6F0] p-3 flex items-center justify-center">
+          <div className="rounded-2xl overflow-hidden aspect-[4/3] border border-border product-media-surface p-3 flex items-center justify-center">
             <img 
               src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=500&auto=format&fit=crop" 
               alt="Herbal apothecary" 
