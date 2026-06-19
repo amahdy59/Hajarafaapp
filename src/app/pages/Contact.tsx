@@ -104,7 +104,7 @@ export function Contact() {
                   href={CONTACT.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2 bg-brand-sage text-white hover:bg-brand-sage-dark px-4.5 py-2.5 rounded-xl transition-all text-xs font-semibold uppercase tracking-wider"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-brand-forest text-white dark:text-zinc-950 hover:bg-brand-sage-dark px-4.5 py-2.5 rounded-xl transition-all text-xs font-semibold uppercase tracking-wider"
                 >
                   <MessageCircle size={14} /> {isRTL ? "دردشة واتساب" : "WhatsApp Chat"}
                 </a>

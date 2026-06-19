@@ -19,7 +19,7 @@ const sizeMap: Record<Size, string> = {
 
 const variantMap: Record<Variant, string> = {
   ghost: "text-brand-ink-soft hover:bg-muted",
-  solid: "bg-brand-sage text-white hover:bg-brand-sage-dark",
+  solid: "bg-brand-forest text-white dark:text-zinc-950 hover:bg-brand-sage-dark",
   outline: "border border-border text-brand-ink-soft hover:bg-muted",
 };
 

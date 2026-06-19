@@ -140,7 +140,7 @@ export function Checkout() {
               <ArrowLeft size={16} className="rtl-flip" />
               {step === "payment" ? t.back : t.shoppingCart}
             </button>
-            <span className="text-border">·</span>
+            <span className="text-muted-foreground">·</span>
             <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors" style={{ fontSize: "0.875rem" }}>
               {t.home}
             </Link>

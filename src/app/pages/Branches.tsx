@@ -319,7 +319,7 @@ export function Branches() {
               <a href={`tel:${CONTACT.hotline}`} className="text-brand-terracotta-dark dark:text-brand-terracotta hover:underline font-bold font-mono flex items-center gap-1.5">
                 <Phone size={14} className="text-brand-terracotta" /> {CONTACT.hotline}
               </a>
-              <span className="text-brand-line dark:text-zinc-700 select-none">|</span>
+              <span className="text-muted-foreground select-none">|</span>
               <a href={CONTACT.whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-brand-sage-dark dark:text-brand-sage hover:underline font-bold font-mono flex items-center gap-1.5">
                 <MessageCircle size={14} className="text-brand-sage-dark dark:text-brand-sage" /> {CONTACT.whatsappDisplay}
               </a>

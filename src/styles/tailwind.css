@@ -170,7 +170,7 @@
   --brand-sage: #8DA392;
   --brand-sage-dark: #3E4E41;
   --brand-forest: #334537;
-  --brand-terracotta: #8D3C14;
+  --brand-terracotta: #83340F;
   --brand-terracotta-dark: #73300E;
   --brand-peach: #F4E7DA;
   --brand-cream: #FBF7F1;
@@ -178,14 +178,14 @@
   --brand-beige: #EFEEEB;
   --brand-line: #D8CEC4;
   --brand-ink: #1B1C1A;
-  --brand-ink-soft: #554B43;
+  --brand-ink-soft: #53483F;
 
   --primary: var(--brand-terracotta);
   --primary-foreground: #FFFFFF;
   --ring: var(--brand-terracotta);
   --accent: var(--brand-peach);
   --accent-foreground: var(--brand-terracotta);
-  --destructive: #B43A2A;
+  --destructive: #8A1F16;
   --destructive-foreground: #FFFFFF;
   --chart-1: var(--brand-sage);
   --chart-2: var(--brand-forest);
@@ -226,25 +226,25 @@
 }
 
 .dark {
-  --brand-sage: #9DB287;
-  --brand-sage-dark: #C0D5C2;
+  --brand-sage: #ADC6A0;
+  --brand-sage-dark: #D3E4C9;
   --brand-forest: #C0D5C2;
-  --brand-terracotta: #E08B57;
-  --brand-terracotta-dark: #C4622D;
+  --brand-terracotta: #EAA06D;
+  --brand-terracotta-dark: #F0A978;
   --brand-peach: #3D2218;
   --brand-cream: #15191A;
   --brand-cream-2: #1F2422;
   --brand-beige: #232826;
   --brand-line: #2F3633;
   --brand-ink: #F1EFE8;
-  --brand-ink-soft: #A09890;
+  --brand-ink-soft: #BDB5AD;
 
   --primary: var(--brand-terracotta);
-  --primary-foreground: #FFFFFF;
+  --primary-foreground: #121617;
   --accent: var(--brand-peach);
   --accent-foreground: #FFCFB3;
-  --destructive: #E26B5C;
-  --destructive-foreground: #FFFFFF;
+  --destructive: #FFB7AA;
+  --destructive-foreground: #121617;
 
   --background: var(--brand-cream);
   --foreground: var(--brand-ink);
@@ -264,7 +264,7 @@
   --sidebar: var(--brand-cream-2);
   --sidebar-foreground: var(--brand-ink);
   --sidebar-primary: var(--brand-terracotta);
-  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-primary-foreground: #121617;
   --sidebar-accent: var(--brand-peach);
   --sidebar-accent-foreground: var(--brand-terracotta);
   --sidebar-border: var(--brand-line);
@@ -285,7 +285,7 @@
 }
 .dark .bg-brand-terracotta:hover,
 .dark .bg-primary:hover {
-  color: #FFFFFF !important;
+  color: #121617 !important;
 }
 .dark .bg-brand-terracotta:hover *,
 .dark .bg-primary:hover * {

@@ -1,5 +1,5 @@
 import { Suspense, useLayoutEffect, useEffect } from "react";
-import { Outlet, useLocation, useNavigationType, ScrollRestoration } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import { Toaster } from "sonner";
 import { Header } from "./components/Header";
 import { BottomNav } from "./components/BottomNav";
@@ -8,10 +8,16 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import logoImg from "../assets/logo.webp";
 import { Footer } from "./components/Footer";
 
-/* Prevent the browser from automatically restoring scroll positions.
-   We handle this ourselves via <ScrollRestoration /> + the useLayoutEffect below. */
+/* Prevent the browser and router from restoring previous page positions.
+   Every route visit should start at the top, matching ecommerce expectations. */
 if (typeof window !== "undefined") {
   window.history.scrollRestoration = "manual";
+}
+
+function scrollPageToTop() {
+  window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
 }
 
 const PageLoader = () => (
@@ -26,25 +32,21 @@ export function Root() {
   const hasCategoryRail = location.pathname === "/" || location.pathname.startsWith("/category/") || location.pathname === "/products";
   const mainPadding = hasCategoryRail ? "pt-16 sm:pt-[108px]" : "pt-16";
 
-  const navType = useNavigationType();
-
-  /* Aggressive scroll-to-top on every forward navigation.
-     For PUSH/REPLACE navigations, we force the scroll position to the top
-     multiple times to handle async lazy-loaded route mounts.
-     POP navigations are handled naturally by react-router's ScrollRestoration. */
+  /* Route changes should never inherit the previous page's scroll position.
+     Repeat the reset briefly to cover lazy routes and image/layout shifts. */
   useLayoutEffect(() => {
-    if (navType === "PUSH" || navType === "REPLACE") {
-      window.scrollTo(0, 0);
-      const timers = [
-        setTimeout(() => window.scrollTo(0, 0), 30),
-        setTimeout(() => window.scrollTo(0, 0), 80),
-        setTimeout(() => window.scrollTo(0, 0), 150),
-        setTimeout(() => window.scrollTo(0, 0), 300),
-        setTimeout(() => window.scrollTo(0, 0), 500),
-      ];
-      return () => timers.forEach(clearTimeout);
-    }
-  }, [location.pathname, navType]);
+    scrollPageToTop();
+    const animationFrame = requestAnimationFrame(scrollPageToTop);
+    const timers = [
+      setTimeout(scrollPageToTop, 50),
+      setTimeout(scrollPageToTop, 150),
+      setTimeout(scrollPageToTop, 350),
+    ];
+    return () => {
+      cancelAnimationFrame(animationFrame);
+      timers.forEach(clearTimeout);
+    };
+  }, [location.pathname, location.search]);
 
   /* Global listener to smoothly scroll the page to top if the user clicks
      a link pointing to the current path (e.g. Logo, active navigation items). */
@@ -106,7 +108,6 @@ export function Root() {
       <BottomNav />
 
       <Toaster position="top-center" closeButton />
-      <ScrollRestoration />
     </div>
   );
 }

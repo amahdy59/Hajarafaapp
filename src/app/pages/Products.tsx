@@ -139,7 +139,7 @@ export function FilterPanel({
               />
               <div className="flex items-center gap-0.5">
                 {[...Array(5)].map((_, i) => (
-                  <span key={i} className={`text-sm ${i < r ? "text-amber-400" : "text-border"}`}>★</span>
+                  <span key={i} className={`text-sm ${i < r ? "text-amber-400" : "text-muted-foreground"}`}>★</span>
                 ))}
                 <span className="text-xs text-muted-foreground ms-1">& up</span>
               </div>

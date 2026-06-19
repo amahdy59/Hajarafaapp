@@ -118,7 +118,7 @@ export function Help() {
             <a href={`tel:${CONTACT.hotline}`} className="inline-flex items-center justify-center gap-2 bg-brand-terracotta text-white px-4 py-3 rounded-xl hover:bg-brand-terracotta-dark transition-all text-xs font-semibold w-full sm:w-auto h-11">
               <Phone size={14} /> {t.callSupport}
             </a>
-            <a href={CONTACT.whatsappUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-brand-sage text-white px-4 py-3 rounded-xl hover:bg-brand-sage-dark transition-all text-xs font-semibold w-full sm:w-auto h-11">
+            <a href={CONTACT.whatsappUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-brand-forest text-white dark:text-zinc-950 px-4 py-3 rounded-xl hover:bg-brand-sage-dark transition-all text-xs font-semibold w-full sm:w-auto h-11">
               <MessageCircle size={14} /> {isRTL ? "واتساب" : "WhatsApp"}
             </a>
           </div>
