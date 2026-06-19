@@ -183,8 +183,49 @@ export function ProductDetail() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8 mb-8 sm:mb-12">
+          {/* Images */}
+          <div className="space-y-2.5 sm:space-y-3">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="relative aspect-[16/10] sm:aspect-square product-media-surface rounded-2xl sm:rounded-3xl overflow-hidden max-h-[180px] xs:max-h-[220px] sm:max-h-none flex items-center justify-center"
+            >
+              <img
+                src={product.images[activeImage] || product.image}
+                alt={product.name}
+                className="w-full h-full object-contain p-3 sm:p-6 mix-blend-multiply dark:mix-blend-normal"
+              />
+              {product.discount && (
+                <span className="absolute top-3 start-3 bg-brand-terracotta-dark dark:bg-brand-terracotta text-white dark:text-brand-cream px-2.5 py-0.5 rounded-full font-bold text-[10px] sm:text-xs">
+                  -{product.discount}%
+                </span>
+              )}
+              {product.isOrganic && (
+                <span className="absolute top-3 end-3 bg-brand-sage-dark text-white dark:text-brand-cream px-2.5 py-0.5 rounded-full flex items-center gap-1 font-bold text-[10px] sm:text-xs">
+                  <Leaf size={10} className="sm:w-3 sm:h-3" /> {t.organic}
+                </span>
+              )}
+            </motion.div>
+
+            {product.images.length > 1 && (
+              <div className="flex gap-2">
+                {product.images.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveImage(i)}
+                    className={`w-11 h-11 sm:w-16 sm:h-16 rounded-lg sm:rounded-xl overflow-hidden border-2 transition-colors product-media-surface ${
+                      activeImage === i ? "border-brand-terracotta" : "border-transparent"
+                    }`}
+                  >
+                    <img src={img} alt="" className="w-full h-full object-contain p-0.5 sm:p-1 mix-blend-multiply dark:mix-blend-normal" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
           {/* Product info */}
-          <div className="space-y-4 sm:space-y-5 order-2 lg:order-1">
+          <div className="space-y-4 sm:space-y-5">
             <div className="flex flex-col gap-1.5 sm:gap-2">
               <div className="flex items-center gap-2 mb-0.5 sm:mb-1 flex-wrap">
                 <Link
@@ -336,47 +377,6 @@ export function ProductDetail() {
             >
               <Share2 size={14} /> {t.shareThisProduct}
             </button>
-          </div>
-
-          {/* Images */}
-          <div className="space-y-2.5 sm:space-y-3 order-1 lg:order-2">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="relative aspect-[16/10] sm:aspect-square product-media-surface rounded-2xl sm:rounded-3xl overflow-hidden max-h-[180px] xs:max-h-[220px] sm:max-h-none flex items-center justify-center"
-            >
-              <img
-                src={product.images[activeImage] || product.image}
-                alt={product.name}
-                className="w-full h-full object-contain p-3 sm:p-6 mix-blend-multiply dark:mix-blend-normal"
-              />
-              {product.discount && (
-                <span className="absolute top-3 start-3 bg-brand-terracotta-dark dark:bg-brand-terracotta text-white dark:text-brand-cream px-2.5 py-0.5 rounded-full font-bold text-[10px] sm:text-xs">
-                  -{product.discount}%
-                </span>
-              )}
-              {product.isOrganic && (
-                <span className="absolute top-3 end-3 bg-brand-sage-dark text-white dark:text-brand-cream px-2.5 py-0.5 rounded-full flex items-center gap-1 font-bold text-[10px] sm:text-xs">
-                  <Leaf size={10} className="sm:w-3 sm:h-3" /> {t.organic}
-                </span>
-              )}
-            </motion.div>
-
-            {product.images.length > 1 && (
-              <div className="flex gap-2">
-                {product.images.map((img, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setActiveImage(i)}
-                    className={`w-11 h-11 sm:w-16 sm:h-16 rounded-lg sm:rounded-xl overflow-hidden border-2 transition-colors product-media-surface ${
-                      activeImage === i ? "border-brand-terracotta" : "border-transparent"
-                    }`}
-                  >
-                    <img src={img} alt="" className="w-full h-full object-contain p-0.5 sm:p-1 mix-blend-multiply dark:mix-blend-normal" />
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
         </div>
 

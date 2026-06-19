@@ -6,7 +6,7 @@ import { ProductCard } from "../components/ProductCard";
 import { ScrollRail } from "../components/ui/ScrollRail";
 import { useAppSettings } from "../context/AppSettingsContext";
 
-const HERO_IMG = "https://images.unsplash.com/photo-1758745464235-ccb8c1253074?w=1400&auto=format&fit=crop";
+const HERO_IMG = "https://images.unsplash.com/photo-1758745464235-ccb8c1253074?w=1200&auto=format&fit=crop&q=80";
 
 const categoryAccentColors: Record<string, string> = {
   "coffee-drinks": "var(--brand-terracotta)",
@@ -27,15 +27,21 @@ export function Home() {
 
         {/* Hero — hidden on mobile */}
         <section className="relative rounded-2xl overflow-hidden shadow-soft hidden sm:block" style={{ aspectRatio: "16/5", maxHeight: 240 }}>
-          <img src={HERO_IMG} alt={isRTL ? "خلفية صحية طبيعية لعشبة البابونج" : "Chamomile natural wellness background"} className="absolute inset-0 w-full h-full object-cover" />
+          <img 
+            src={HERO_IMG} 
+            alt={isRTL ? "خلفية صحية طبيعية لعشبة البابونج" : "Chamomile natural wellness background"} 
+            className="absolute inset-0 w-full h-full object-cover" 
+            loading="eager"
+            fetchPriority="high"
+          />
           <div className={`absolute inset-0 bg-gradient-to-${isRTL ? "l" : "r"} from-brand-ink/80 via-brand-ink/40 to-transparent`} />
           <div className="absolute inset-0 flex items-center p-4 sm:p-8">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="max-w-md backdrop-blur-[2px] p-5 sm:p-6 rounded-xl border border-white/10 shadow-lg select-none text-start"
-              style={{ backgroundColor: "rgba(27, 28, 26, 0.82)" }}
+              className="max-w-md p-5 sm:p-6 rounded-xl border border-white/10 shadow-lg select-none text-start"
+              style={{ backgroundColor: "rgba(27, 28, 26, 0.9)" }}
             >
               <h1
                 className="font-display text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]"
