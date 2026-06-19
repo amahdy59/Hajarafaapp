@@ -53,6 +53,14 @@ const getLocalizedWeight = (weight: string, isRTL: boolean) => {
   return toArabicDigits(localized);
 };
 
+const getSpecLabel = (weight: string, t: any) => {
+  const w = weight.toLowerCase();
+  if (w.includes("ml") || w.includes("l")) return t.volume;
+  if (w.includes("pack") || w.includes("pc")) return t.quantity;
+  if (w.includes("g") || w.includes("kg")) return t.weight;
+  return t.size;
+};
+
 export function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -215,33 +223,32 @@ export function ProductDetail() {
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-brand-peach rounded-xl px-4 h-11 flex items-center justify-between select-none">
+              <div className="border border-border/60 bg-brand-peach/10 rounded-xl px-4 h-11 flex items-center justify-between select-none">
                 <span className="text-muted-foreground text-xs font-semibold">
-                  {t.weightSize}
+                  {getSpecLabel(product.weight, t)}
                 </span>
-                <span className="text-foreground text-xs font-bold">{getLocalizedWeight(product.weight, isRTL)}</span>
+                <span className="text-brand-terracotta-dark dark:text-[#FFCFB3] text-xs font-bold">{getLocalizedWeight(product.weight, isRTL)}</span>
               </div>
-              <div className="bg-brand-peach rounded-xl px-4 h-11 flex items-center justify-between select-none">
+              <div className="border border-border/60 bg-brand-peach/10 rounded-xl px-4 h-11 flex items-center justify-between select-none">
                 <span className="text-muted-foreground text-xs font-semibold">
                   {t.origin}
                 </span>
-                <span className="text-foreground text-xs font-bold">{getLocalizedOrigin(product.origin, isRTL)}</span>
+                <span className="text-brand-terracotta-dark dark:text-[#FFCFB3] text-xs font-bold">{getLocalizedOrigin(product.origin, isRTL)}</span>
               </div>
             </div>
 
             {/* Benefits */}
             <div className="hidden sm:block">
-              <p className="text-muted-foreground mb-2" style={{ fontSize: "0.8rem" }}>
+              <p className="text-brand-ink-soft dark:text-brand-cream/80 text-xs font-semibold mb-2">
                 {t.keyBenefits}
               </p>
               <div className="flex flex-wrap gap-2">
                 {product.benefits.map(benefit => (
                   <span
                     key={benefit}
-                    className="inline-flex items-center gap-1 bg-brand-cream-2 text-brand-forest px-3 py-1.5 rounded-full"
-                    style={{ fontSize: "0.75rem" }}
+                    className="inline-flex items-center gap-1.5 bg-brand-sage/10 text-brand-forest dark:text-brand-sage-dark border border-brand-sage/20 px-3 py-1.5 rounded-full text-xs font-semibold"
                   >
-                    <Check size={10} /> {t[`benefit.${benefit}` as keyof typeof t] || benefit}
+                    <Check size={12} className="stroke-[3]" /> {t[`benefit.${benefit}` as keyof typeof t] || benefit}
                   </span>
                 ))}
               </div>
@@ -305,15 +312,15 @@ export function ProductDetail() {
             </div>
 
             {/* Guarantees */}
-            <div className="grid grid-cols-3 gap-2">
+            <div className="flex items-center justify-between gap-4 py-3 border-t border-b border-border/50 select-none mt-2 flex-wrap sm:flex-nowrap">
               {[
-                { icon: Truck, en: "Free shipping over LE 500", ar: "شحن مجاني فوق ٥٠٠ج.م" },
-                { icon: Shield, en: "Quality guaranteed", ar: "جودة مضمونة" },
+                { icon: Truck, en: "Free shipping over LE 500", ar: "شحن مجاني فوق ٥٠٠ ج.م" },
+                { icon: Shield, en: "Quality guaranteed", ar: "جودة مضمونة ١٠٠٪" },
                 { icon: RotateCcw, en: "30-day returns", ar: "إرجاع خلال ٣٠ يوماً" },
-              ].map(item => (
-                <div key={item.en} className="h-11 flex items-center justify-center gap-1.5 px-2 bg-brand-peach rounded-xl select-none">
-                  <item.icon size={14} className="text-brand-terracotta flex-shrink-0" />
-                  <span className="text-muted-foreground font-semibold text-[8.5px] xs:text-[9.5px] sm:text-[10px] leading-none truncate">
+              ].map((item, idx) => (
+                <div key={item.en} className="flex items-center gap-2 flex-1 justify-center min-w-[120px]">
+                  <item.icon size={16} className="text-brand-terracotta flex-shrink-0" />
+                  <span className="text-brand-ink-soft dark:text-brand-cream font-semibold text-xs leading-tight">
                     {isRTL ? item.ar : item.en}
                   </span>
                 </div>
