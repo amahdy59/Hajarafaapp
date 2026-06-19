@@ -155,7 +155,7 @@ export function ProductDetail() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-6">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pt-3 pb-6 sm:py-6">
         {/* Breadcrumb - Desktop only */}
         <nav className="hidden md:flex items-center gap-1.5 mb-6" style={{ fontSize: "0.8rem" }}>
           <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">{t.home}</Link>
@@ -170,7 +170,7 @@ export function ProductDetail() {
         </nav>
 
         {/* Breadcrumb - Mobile/Tablet only compact back button */}
-        <div className="md:hidden mb-4">
+        <div className="md:hidden mb-2.5">
           <Link 
             to={`/category/${parentSlug}`} 
             className="inline-flex items-center gap-1.5 text-brand-ink-soft hover:text-foreground transition-colors text-xs font-semibold py-1 px-2.5 bg-card border border-border rounded-xl"
@@ -182,29 +182,29 @@ export function ProductDetail() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-8 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8 mb-8 sm:mb-12">
           {/* Product info */}
-          <div className="space-y-5">
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2 mb-1 flex-wrap">
+          <div className="space-y-4 sm:space-y-5 order-2 lg:order-1">
+            <div className="flex flex-col gap-1.5 sm:gap-2">
+              <div className="flex items-center gap-2 mb-0.5 sm:mb-1 flex-wrap">
                 <Link
                   to={`/category/${parentSlug}`}
-                  className="bg-brand-terracotta/10 text-brand-terracotta-dark dark:text-[#FFCFB3] border border-brand-terracotta/20 px-2.5 py-0.5 rounded-full text-xs font-semibold"
+                  className="hidden md:inline-block bg-brand-terracotta/10 text-brand-terracotta-dark dark:text-[#FFCFB3] border border-brand-terracotta/20 px-2.5 py-0.5 rounded-full text-xs font-semibold"
                 >
                   {categoryName}
                 </Link>
                 {product.isBestSeller && (
-                  <span className="bg-brand-sage/10 text-brand-forest dark:text-brand-sage-dark border border-brand-sage/20 px-2.5 py-0.5 rounded-full text-xs font-semibold">
+                  <span className="bg-brand-sage/10 text-brand-forest dark:text-brand-sage-dark border border-brand-sage/20 px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold">
                     {t.bestSellers}
                   </span>
                 )}
                 {product.isNew && (
-                  <span className="bg-brand-sage/10 text-brand-forest dark:text-brand-sage-dark border border-brand-sage/20 px-2.5 py-0.5 rounded-full text-xs font-semibold">
+                  <span className="bg-brand-sage/10 text-brand-forest dark:text-brand-sage-dark border border-brand-sage/20 px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold">
                     {t.newArrivals}
                   </span>
                 )}
               </div>
-              <h1 className="text-foreground font-display font-bold leading-tight text-xl sm:text-2xl md:text-3xl">
+              <h1 className="text-foreground font-display font-bold leading-tight text-lg sm:text-2xl md:text-3xl">
                 {isRTL && product.nameAr ? product.nameAr : product.name}
               </h1>
               <div className="flex items-center mt-0.5">
@@ -339,25 +339,25 @@ export function ProductDetail() {
           </div>
 
           {/* Images */}
-          <div className="space-y-3">
+          <div className="space-y-2.5 sm:space-y-3 order-1 lg:order-2">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="relative aspect-[4/3] sm:aspect-square product-media-surface rounded-3xl overflow-hidden max-h-[300px] sm:max-h-none flex items-center justify-center"
+              className="relative aspect-[16/10] sm:aspect-square product-media-surface rounded-2xl sm:rounded-3xl overflow-hidden max-h-[180px] xs:max-h-[220px] sm:max-h-none flex items-center justify-center"
             >
               <img
                 src={product.images[activeImage] || product.image}
                 alt={product.name}
-                className="w-full h-full object-contain p-4 sm:p-6 mix-blend-multiply dark:mix-blend-normal"
+                className="w-full h-full object-contain p-3 sm:p-6 mix-blend-multiply dark:mix-blend-normal"
               />
               {product.discount && (
-                <span className="absolute top-4 start-4 bg-brand-terracotta-dark dark:bg-brand-terracotta text-white dark:text-brand-cream px-3 py-1 rounded-full font-bold" style={{ fontSize: "0.8rem" }}>
+                <span className="absolute top-3 start-3 bg-brand-terracotta-dark dark:bg-brand-terracotta text-white dark:text-brand-cream px-2.5 py-0.5 rounded-full font-bold text-[10px] sm:text-xs">
                   -{product.discount}%
                 </span>
               )}
               {product.isOrganic && (
-                <span className="absolute top-4 end-4 bg-brand-sage-dark text-white dark:text-brand-cream px-3 py-1 rounded-full flex items-center gap-1 font-bold" style={{ fontSize: "0.8rem" }}>
-                  <Leaf size={11} /> {t.organic}
+                <span className="absolute top-3 end-3 bg-brand-sage-dark text-white dark:text-brand-cream px-2.5 py-0.5 rounded-full flex items-center gap-1 font-bold text-[10px] sm:text-xs">
+                  <Leaf size={10} className="sm:w-3 sm:h-3" /> {t.organic}
                 </span>
               )}
             </motion.div>
@@ -368,11 +368,11 @@ export function ProductDetail() {
                   <button
                     key={i}
                     onClick={() => setActiveImage(i)}
-                    className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-colors product-media-surface ${
+                    className={`w-11 h-11 sm:w-16 sm:h-16 rounded-lg sm:rounded-xl overflow-hidden border-2 transition-colors product-media-surface ${
                       activeImage === i ? "border-brand-terracotta" : "border-transparent"
                     }`}
                   >
-                    <img src={img} alt="" className="w-full h-full object-contain p-1 mix-blend-multiply dark:mix-blend-normal" />
+                    <img src={img} alt="" className="w-full h-full object-contain p-0.5 sm:p-1 mix-blend-multiply dark:mix-blend-normal" />
                   </button>
                 ))}
               </div>
