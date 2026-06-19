@@ -79,9 +79,17 @@
     html { font-size: 19.5px; }
   }
 
-  html, body, #root {
+  html, body {
     max-width: 100%;
-    overflow-x: hidden;
+    overflow-x: clip;
+    width: 100%;
+  }
+
+  #root {
+    max-width: 100%;
+    min-height: 100%;
+    overflow-x: clip;
+    overflow-y: visible;
     width: 100%;
   }
 

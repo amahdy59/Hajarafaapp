@@ -16,8 +16,22 @@ if (typeof window !== "undefined") {
 
 function scrollPageToTop() {
   window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-  document.documentElement.scrollTop = 0;
-  document.body.scrollTop = 0;
+  const primaryScrollContainers = [
+    document.scrollingElement,
+    document.documentElement,
+    document.body,
+    document.getElementById("root"),
+  ];
+
+  primaryScrollContainers.forEach((element) => {
+    if (!element) return;
+    element.scrollTop = 0;
+    element.scrollLeft = 0;
+  });
+
+  document.querySelectorAll<HTMLElement>("*").forEach((element) => {
+    if (element.scrollTop > 0) element.scrollTop = 0;
+  });
 }
 
 const PageLoader = () => (
