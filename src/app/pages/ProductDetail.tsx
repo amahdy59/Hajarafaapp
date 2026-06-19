@@ -222,36 +222,38 @@ export function ProductDetail() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="border border-border/60 bg-brand-peach/10 rounded-xl px-4 h-11 flex items-center justify-between select-none">
-                <span className="text-muted-foreground text-xs font-semibold">
-                  {getSpecLabel(product.weight, t)}
-                </span>
-                <span className="text-brand-terracotta-dark dark:text-[#FFCFB3] text-xs font-bold">{getLocalizedWeight(product.weight, isRTL)}</span>
-              </div>
-              <div className="border border-border/60 bg-brand-peach/10 rounded-xl px-4 h-11 flex items-center justify-between select-none">
-                <span className="text-muted-foreground text-xs font-semibold">
-                  {t.origin}
-                </span>
-                <span className="text-brand-terracotta-dark dark:text-[#FFCFB3] text-xs font-bold">{getLocalizedOrigin(product.origin, isRTL)}</span>
+            {/* Minimalist Specs Row */}
+            <div className="flex items-center gap-3 text-xs font-semibold text-brand-ink-soft dark:text-brand-cream/80 select-none border-b border-border/40 pb-3.5">
+              <span 
+                className="bg-brand-peach/30 dark:bg-brand-sage/10 text-brand-terracotta-dark dark:text-brand-sage-dark border border-brand-line/40 dark:border-brand-sage/20 px-2 py-0.5 rounded-lg text-xs font-bold"
+                aria-label={`${getSpecLabel(product.weight, t)}: ${getLocalizedWeight(product.weight, isRTL)}`}
+              >
+                {getLocalizedWeight(product.weight, isRTL)}
+              </span>
+              <span className="text-muted-foreground/30 font-light" aria-hidden="true">|</span>
+              <div className="flex items-center gap-1.5 text-muted-foreground dark:text-brand-cream/60">
+                <span className="font-medium">{t.origin}:</span>
+                <span className="text-foreground dark:text-brand-cream font-bold">{getLocalizedOrigin(product.origin, isRTL)}</span>
               </div>
             </div>
 
-            {/* Benefits */}
-            <div className="hidden sm:block">
-              <p className="text-brand-ink-soft dark:text-brand-cream/80 text-xs font-semibold mb-2">
+            {/* Key Benefits */}
+            <div className="space-y-2.5 select-none">
+              <h2 className="text-brand-ink-soft dark:text-brand-cream/80 text-xs font-bold uppercase tracking-wider">
                 {t.keyBenefits}
-              </p>
-              <div className="flex flex-wrap gap-2">
+              </h2>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-xs font-medium text-brand-ink-soft dark:text-brand-cream/80" role="list">
                 {product.benefits.map(benefit => (
-                  <span
-                    key={benefit}
-                    className="inline-flex items-center gap-1.5 bg-brand-sage/10 text-brand-forest dark:text-brand-sage-dark border border-brand-sage/20 px-3 py-1.5 rounded-full text-xs font-semibold"
-                  >
-                    <Check size={12} className="stroke-[3]" /> {t[`benefit.${benefit}` as keyof typeof t] || benefit}
-                  </span>
+                  <li key={benefit} className="flex items-center gap-2">
+                    <span className="flex items-center justify-center w-4 h-4 rounded-full bg-brand-sage/20 dark:bg-brand-sage/30 text-brand-forest dark:text-brand-sage-dark flex-shrink-0" aria-hidden="true">
+                      <Check size={10} className="stroke-[3]" />
+                    </span>
+                    <span className="text-brand-ink/90 dark:text-brand-cream/90">
+                      {t[`benefit.${benefit}` as keyof typeof t] || benefit}
+                    </span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
 
             {/* Quantity + Add to Cart + Wishlist */}
