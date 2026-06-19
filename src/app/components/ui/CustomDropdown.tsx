@@ -89,7 +89,7 @@ export function CustomDropdown({ value, onChange, options, className = "" }: Cus
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.95 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className={`absolute z-30 w-full mt-1.5 bg-[#FAF6F0] dark:bg-zinc-900 border border-brand-terracotta/10 dark:border-white/10 rounded-2xl p-1.5 shadow-lg shadow-black/10 max-h-60 overflow-y-auto outline-none focus:outline-none flex flex-col gap-1 ${
+            className={`absolute z-30 w-full mt-1.5 bg-card border border-brand-terracotta/10 dark:border-white/10 rounded-2xl p-1.5 shadow-lg shadow-black/10 max-h-60 overflow-y-auto outline-none focus:outline-none flex flex-col gap-1 ${
               isRTL ? "right-0" : "left-0"
             }`}
           >

@@ -65,7 +65,8 @@ export function About() {
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            className="max-w-xl space-y-3.5 select-none flex flex-col items-center"
+            className="max-w-xl space-y-3.5 select-none flex flex-col items-center backdrop-blur-[2px] rounded-2xl border border-white/10 p-5 sm:p-6"
+            style={{ backgroundColor: "rgba(27, 28, 26, 0.78)" }}
           >
             <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 shadow-inner w-fit">
               <img src={logoImg} alt="Haj Arafa Logo" className="h-12 sm:h-14 w-auto object-contain select-none pointer-events-none" />
@@ -74,7 +75,7 @@ export function About() {
               <h1 className="text-white text-2xl sm:text-3xl font-display select-none">
                 {isRTL ? "عن حاج عرفة" : "About Haj Arafa"}
               </h1>
-              <p className="text-brand-peach font-medium text-xs sm:text-sm select-none">
+              <p className="text-[#F4E7DA] font-medium text-xs sm:text-sm select-none">
                 {isRTL ? content.subtitleAr : content.subtitleEn}
               </p>
             </div>
@@ -102,7 +103,7 @@ export function About() {
               <span>{isRTL ? content.storyAr : content.storyEn}</span>
             </p>
           </div>
-          <div className="rounded-2xl overflow-hidden aspect-[4/3] border border-border bg-[#FAF6F0] p-3 flex items-center justify-center">
+          <div className="rounded-2xl overflow-hidden aspect-[4/3] border border-border product-media-surface p-3 flex items-center justify-center">
             <img 
               src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=500&auto=format&fit=crop" 
               alt="Herbal apothecary" 

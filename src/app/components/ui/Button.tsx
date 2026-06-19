@@ -22,7 +22,7 @@ const variantMap: Record<ButtonVariant, string> = {
 };
 
 const sizeMap: Record<ButtonSize, string> = {
-  sm: "h-9 px-4 text-xs font-semibold rounded-lg",
+  sm: "h-11 px-4 text-xs font-semibold rounded-lg",
   md: "h-11 px-5 text-sm font-semibold rounded-xl",
   lg: "h-12 px-6 text-base font-bold rounded-xl",
 };
@@ -48,7 +48,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         whileTap={disabled || isLoading ? undefined : { scale: 0.98 }}
         disabled={disabled || isLoading}
-        className={`inline-flex items-center justify-center gap-2 transition-all duration-200 select-none cursor-pointer font-sans border-0 font-medium ${
+        aria-busy={isLoading || undefined}
+        aria-disabled={disabled || isLoading || undefined}
+        className={`inline-flex items-center justify-center gap-2 transition-all duration-200 select-none cursor-pointer disabled:cursor-not-allowed font-sans border-0 font-medium ${
           variantMap[variant]
         } ${sizeMap[size]} ${
           fullWidth ? "w-full" : ""
@@ -56,7 +58,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...rest}
       >
         {isLoading ? (
-          <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin flex-shrink-0" />
+          <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin flex-shrink-0" aria-hidden="true" />
         ) : (
           leftIcon
         )}

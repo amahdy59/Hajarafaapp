@@ -63,7 +63,7 @@ export function Header() {
           </div>
 
           <Link to="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center min-w-0 h-14 select-none cursor-pointer w-fit no-underline z-10">
-            <img src={logoImg} alt="HajArafa Logo" className="h-9 xs:h-12 sm:h-14 w-auto object-contain max-w-[42vw] sm:max-w-[220px] select-none" />
+            <img src={logoImg} alt="Haj Arafa Logo" className="h-9 xs:h-12 sm:h-14 w-auto object-contain max-w-[42vw] sm:max-w-[220px] select-none" />
           </Link>
 
           <div className="flex items-center gap-0.5 justify-end z-10 -me-2 sm:-me-2.5">

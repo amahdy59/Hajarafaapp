@@ -34,7 +34,8 @@ export function Home() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="max-w-md bg-black/20 backdrop-blur-[2px] p-5 sm:p-6 rounded-xl border border-white/5 shadow-lg select-none text-start"
+              className="max-w-md backdrop-blur-[2px] p-5 sm:p-6 rounded-xl border border-white/10 shadow-lg select-none text-start"
+              style={{ backgroundColor: "rgba(27, 28, 26, 0.82)" }}
             >
               <h1
                 className="font-display text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]"

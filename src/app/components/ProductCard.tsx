@@ -76,14 +76,14 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
               <Button
                 onClick={onAdd}
                 size="sm"
-                className="h-10 sm:h-11 text-xs font-semibold rounded-xl"
+                className="h-11 text-xs font-semibold rounded-xl"
                 leftIcon={<Plus size={13} className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
               >
                 {isRTL ? "أضف" : "Add"}
               </Button>
             </div>
           </div>
-          <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 rounded-xl overflow-hidden bg-[#FAF6F0] dark:bg-zinc-800/40 flex items-center justify-center border border-border/40 p-1 sm:p-1.5">
+          <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 rounded-xl overflow-hidden product-media-surface flex items-center justify-center border border-border/40 p-1 sm:p-1.5">
             <img 
               src={product.image} 
               alt={product.name} 
@@ -104,7 +104,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
       className="bg-card rounded-2xl border-0 sm:border border-border dark:border-zinc-700/60 overflow-hidden flex flex-col h-full hover:shadow-soft hover:border-brand-terracotta/40 transition-all duration-300 group"
     >
       <Link to={`/products/${product.id}`} className="flex flex-col flex-1">
-        <div className="relative aspect-[1.1] sm:aspect-square bg-[#FAF6F0] dark:bg-zinc-800/40 overflow-hidden flex items-center justify-center p-1 sm:p-1.5 border-b-0 sm:border-b border-border/20">
+        <div className="relative aspect-[1.1] sm:aspect-square product-media-surface overflow-hidden flex items-center justify-center p-1 sm:p-1.5 border-b-0 sm:border-b border-border/20">
           <img
             src={product.image}
             alt={product.name}
@@ -123,17 +123,11 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
 
           <motion.button
             onClick={onWish}
-            aria-label="Wishlist"
-            whileHover={{
-              scale: [1, 1.25, 1.12, 1.25, 1],
-              transition: {
-                duration: 0.7,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }
-            }}
-            whileTap={{ scale: 0.85 }}
-            className="absolute top-2.5 sm:top-3.5 end-2.5 sm:end-3.5 w-7 h-7 sm:w-8.5 sm:h-8.5 bg-card/90 backdrop-blur rounded-full flex items-center justify-center border border-border text-brand-ink-soft hover:text-brand-terracotta hover:border-brand-terracotta shadow-sm transition-colors duration-200 z-10"
+            aria-label={wishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
+            aria-pressed={wishlisted}
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
+            className="absolute top-2.5 sm:top-3.5 end-2.5 sm:end-3.5 w-11 h-11 bg-card/90 backdrop-blur rounded-full flex items-center justify-center border border-border text-brand-ink-soft hover:text-brand-terracotta hover:border-brand-terracotta shadow-sm transition-colors duration-200 z-10"
           >
             <motion.span
               animate={wishlisted ? { scale: [1, 1.35, 1] } : { scale: 1 }}
@@ -165,7 +159,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
               onClick={onAdd}
               size="sm"
               fullWidth
-              className="h-10 sm:h-11 text-xs font-semibold rounded-xl"
+              className="h-11 text-xs font-semibold rounded-xl"
               leftIcon={<Plus size={13} />}
             >
               {isRTL ? "أضف" : "Add"}

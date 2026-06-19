@@ -6,6 +6,7 @@ import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 import { Button } from "../components/ui/Button";
+import { DELIVERY_NOTICE } from "../config/contact";
 
 
 type Step = "shipping" | "payment" | "confirmation";
@@ -139,7 +140,7 @@ export function Checkout() {
               <ArrowLeft size={16} className="rtl-flip" />
               {step === "payment" ? t.back : t.shoppingCart}
             </button>
-            <span className="text-border">·</span>
+            <span className="text-muted-foreground">·</span>
             <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors" style={{ fontSize: "0.875rem" }}>
               {t.home}
             </Link>
@@ -241,49 +242,49 @@ export function Checkout() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className={labelCls} style={{ fontSize: "0.8rem" }}>{t.firstName} *</label>
-                        <input type="text" value={shippingData.firstName} onChange={e => updateShipping("firstName", e.target.value)} className={inputCls} placeholder={isRTL ? "محمد" : "John"} />
+                        <label htmlFor="checkout-first-name" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.firstName} *</label>
+                        <input id="checkout-first-name" type="text" value={shippingData.firstName} onChange={e => updateShipping("firstName", e.target.value)} className={inputCls} placeholder={isRTL ? "محمد" : "John"} autoComplete="given-name" required />
                       </div>
                       <div>
-                        <label className={labelCls} style={{ fontSize: "0.8rem" }}>{t.lastName} *</label>
-                        <input type="text" value={shippingData.lastName} onChange={e => updateShipping("lastName", e.target.value)} className={inputCls} placeholder={isRTL ? "علي" : "Doe"} />
+                        <label htmlFor="checkout-last-name" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.lastName} *</label>
+                        <input id="checkout-last-name" type="text" value={shippingData.lastName} onChange={e => updateShipping("lastName", e.target.value)} className={inputCls} placeholder={isRTL ? "علي" : "Doe"} autoComplete="family-name" required />
                       </div>
                     </div>
 
                     <div>
-                      <label className={labelCls} style={{ fontSize: "0.8rem" }}>{t.email} *</label>
-                      <input type="email" value={shippingData.email} onChange={e => updateShipping("email", e.target.value)} className={inputCls} placeholder="name@example.com" />
+                      <label htmlFor="checkout-email" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.email} *</label>
+                      <input id="checkout-email" type="email" value={shippingData.email} onChange={e => updateShipping("email", e.target.value)} className={inputCls} placeholder="name@example.com" autoComplete="email" required />
                     </div>
 
                     <div>
-                      <label className={labelCls} style={{ fontSize: "0.8rem" }}>{t.phone}</label>
-                      <input type="tel" value={shippingData.phone} onChange={e => updateShipping("phone", e.target.value)} className={inputCls} placeholder={isRTL ? "٠١٠٠٠٠٠٠٠٠٠" : "+20 100 000 0000"} />
+                      <label htmlFor="checkout-phone" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.phone}</label>
+                      <input id="checkout-phone" type="tel" value={shippingData.phone} onChange={e => updateShipping("phone", e.target.value)} className={inputCls} placeholder={isRTL ? "٠١٠٠٠٠٠٠٠٠٠" : "+20 100 000 0000"} autoComplete="tel" />
                     </div>
 
                     <div>
-                      <label className={labelCls} style={{ fontSize: "0.8rem" }}>{t.address} *</label>
-                      <input type="text" value={shippingData.address} onChange={e => updateShipping("address", e.target.value)} className={inputCls} placeholder={isRTL ? "١٢٣ شارع التحرير" : "123 Main Street, Apt 4B"} />
+                      <label htmlFor="checkout-address" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.address} *</label>
+                      <input id="checkout-address" type="text" value={shippingData.address} onChange={e => updateShipping("address", e.target.value)} className={inputCls} placeholder={isRTL ? "١٢٣ شارع التحرير" : "123 Main Street, Apt 4B"} autoComplete="street-address" required />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className={labelCls} style={{ fontSize: "0.8rem" }}>{t.city} *</label>
-                        <input type="text" value={shippingData.city} onChange={e => updateShipping("city", e.target.value)} className={inputCls} placeholder={isRTL ? "القاهرة" : "Cairo"} />
+                        <label htmlFor="checkout-city" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.city} *</label>
+                        <input id="checkout-city" type="text" value={shippingData.city} onChange={e => updateShipping("city", e.target.value)} className={inputCls} placeholder={isRTL ? "القاهرة" : "Cairo"} autoComplete="address-level2" required />
                       </div>
                       <div>
-                        <label className={labelCls} style={{ fontSize: "0.8rem" }}>{t.state}</label>
-                        <input type="text" value={shippingData.state} onChange={e => updateShipping("state", e.target.value)} className={inputCls} placeholder={isRTL ? "القاهرة" : "Cairo"} />
+                        <label htmlFor="checkout-state" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.state}</label>
+                        <input id="checkout-state" type="text" value={shippingData.state} onChange={e => updateShipping("state", e.target.value)} className={inputCls} placeholder={isRTL ? "القاهرة" : "Cairo"} autoComplete="address-level1" />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className={labelCls} style={{ fontSize: "0.8rem" }}>{t.zip} *</label>
-                        <input type="text" value={shippingData.zip} onChange={e => updateShipping("zip", e.target.value)} className={inputCls} placeholder="11511" />
+                        <label htmlFor="checkout-zip" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.zip} *</label>
+                        <input id="checkout-zip" type="text" value={shippingData.zip} onChange={e => updateShipping("zip", e.target.value)} className={inputCls} placeholder="11511" autoComplete="postal-code" required />
                       </div>
                       <div>
-                        <label className={labelCls} style={{ fontSize: "0.8rem" }}>{t.country}</label>
-                        <select value={shippingData.country} onChange={e => updateShipping("country", e.target.value)} className={inputCls}>
+                        <label htmlFor="checkout-country" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.country}</label>
+                        <select id="checkout-country" value={shippingData.country} onChange={e => updateShipping("country", e.target.value)} className={inputCls} autoComplete="country">
                           <option value="EG">{isRTL ? "مصر" : "Egypt"}</option>
                           <option value="SA">{isRTL ? "المملكة العربية السعودية" : "Saudi Arabia"}</option>
                           <option value="AE">{isRTL ? "الإمارات" : "UAE"}</option>
@@ -324,26 +325,30 @@ export function Checkout() {
                     </div>
 
                     <div>
-                      <label className={labelCls} style={{ fontSize: "0.8rem" }}>{t.cardNumber} *</label>
+                      <label htmlFor="checkout-card-number" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.cardNumber} *</label>
                       <input
+                        id="checkout-card-number"
                         type="text"
                         value={paymentData.cardNumber}
                         onChange={e => updatePayment("cardNumber", e.target.value.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim())}
                         className={inputCls}
                         placeholder="1234 5678 9012 3456"
+                        autoComplete="cc-number"
+                        inputMode="numeric"
                         maxLength={19}
                       />
                     </div>
 
                     <div>
-                      <label className={labelCls} style={{ fontSize: "0.8rem" }}>{t.cardName} *</label>
-                      <input type="text" value={paymentData.cardName} onChange={e => updatePayment("cardName", e.target.value)} className={inputCls} placeholder={isRTL ? "محمد علي" : "John Doe"} />
+                      <label htmlFor="checkout-card-name" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.cardName} *</label>
+                      <input id="checkout-card-name" type="text" value={paymentData.cardName} onChange={e => updatePayment("cardName", e.target.value)} className={inputCls} placeholder={isRTL ? "محمد علي" : "John Doe"} autoComplete="cc-name" />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className={labelCls} style={{ fontSize: "0.8rem" }}>{t.expiry} *</label>
+                        <label htmlFor="checkout-card-expiry" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.expiry} *</label>
                         <input
+                          id="checkout-card-expiry"
                           type="text"
                           value={paymentData.expiry}
                           onChange={e => {
@@ -352,12 +357,14 @@ export function Checkout() {
                           }}
                           className={inputCls}
                           placeholder="MM/YY"
+                          autoComplete="cc-exp"
+                          inputMode="numeric"
                           maxLength={5}
                         />
                       </div>
                       <div>
-                        <label className={labelCls} style={{ fontSize: "0.8rem" }}>{t.cvv} *</label>
-                        <input type="text" value={paymentData.cvv} onChange={e => updatePayment("cvv", e.target.value.replace(/\D/g, "").slice(0, 4))} className={inputCls} placeholder="123" maxLength={4} />
+                        <label htmlFor="checkout-card-cvv" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.cvv} *</label>
+                        <input id="checkout-card-cvv" type="text" value={paymentData.cvv} onChange={e => updatePayment("cvv", e.target.value.replace(/\D/g, "").slice(0, 4))} className={inputCls} placeholder="123" maxLength={4} autoComplete="cc-csc" inputMode="numeric" />
                       </div>
                     </div>
 
@@ -394,7 +401,7 @@ export function Checkout() {
               <div className="space-y-3 max-h-60 overflow-y-auto scrollbar-hide">
                 {items.map(item => (
                   <div key={item.product.id} className="flex items-center gap-3">
-                    <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-[#FAF6F0] dark:bg-zinc-800/40 flex-shrink-0 flex items-center justify-center p-1">
+                    <div className="relative w-12 h-12 rounded-xl overflow-hidden product-media-surface flex-shrink-0 flex items-center justify-center p-1">
                       <img src={item.product.image} alt={item.product.name} className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
                       <span className="absolute -top-1 -end-1 w-5 h-5 bg-brand-terracotta text-white rounded-full flex items-center justify-center" style={{ fontSize: "0.65rem" }}>
                         {item.quantity}
@@ -434,8 +441,8 @@ export function Checkout() {
                 <Truck size={14} className="text-brand-terracotta flex-shrink-0" />
                 <span>
                   {isRTL 
-                    ? "التوصيل المتوقع خلال ٥ إلى ٧ أيام عمل" 
-                    : "Estimated delivery: 5 to 7 working days"}
+                    ? DELIVERY_NOTICE.ar 
+                    : DELIVERY_NOTICE.en}
                 </span>
               </div>
             </div>
