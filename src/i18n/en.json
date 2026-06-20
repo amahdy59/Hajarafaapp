@@ -46,6 +46,8 @@
   "customerReviews": "What Our Customers Say",
   "free": "Free",
   "freeShipping": "Free shipping on orders over LE 500",
+  "freeShippingQualifiedTitle": "Congratulations, you unlocked free shipping",
+  "freeShippingQualifiedNote": "We'll cover the delivery fee on this order.",
   "away": "away",
   "subtotal": "Subtotal",
   "proceedToCheckout": "Proceed to Checkout",

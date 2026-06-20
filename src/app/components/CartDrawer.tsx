@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, Truck } from "lucide-react";
+import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, Sparkles, Truck } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
@@ -169,9 +169,17 @@ export function CartDrawer() {
                   </div>
                 )}
                 {totalPrice >= THRESHOLD && (
-                  <p className="text-center text-brand-sage-dark" style={{ fontSize: "0.8rem" }}>
-                    🎉 {t.freeShipping}
-                  </p>
+                  <div className="rounded-2xl border border-brand-sage/30 bg-brand-sage/10 px-4 py-3 text-center">
+                    <div className="flex items-center justify-center gap-2 text-brand-sage-dark">
+                      <Sparkles size={15} className="flex-shrink-0" />
+                      <p className="font-semibold" style={{ fontSize: "0.84rem" }}>
+                        {t.freeShippingQualifiedTitle}
+                      </p>
+                    </div>
+                    <p className="mt-1 text-muted-foreground" style={{ fontSize: "0.74rem" }}>
+                      {t.freeShippingQualifiedNote}
+                    </p>
+                  </div>
                 )}
 
                 <div className="flex items-center justify-center gap-2.5 text-[11px] text-brand-terracotta bg-brand-peach/40 dark:bg-zinc-800/60 border border-brand-terracotta/10 dark:border-white/5 py-2 px-3.5 rounded-xl font-medium select-none shadow-sm leading-none">

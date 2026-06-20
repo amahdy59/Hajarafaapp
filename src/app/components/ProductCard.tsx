@@ -142,7 +142,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
         <div className="px-2.5 sm:px-4 py-3 sm:py-3.5 flex flex-col flex-1">
           <div className="flex flex-col gap-1.5">
             <h3
-              className="text-foreground text-sm sm:text-base font-semibold line-clamp-2 leading-snug group-hover:text-brand-terracotta transition-colors"
+              className="text-foreground text-sm sm:text-base font-semibold line-clamp-2 leading-snug min-h-[2.4rem] sm:min-h-[2.75rem] group-hover:text-brand-terracotta transition-colors"
             >
               {isRTL && product.nameAr ? product.nameAr : product.name}
             </h3>

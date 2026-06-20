@@ -46,6 +46,8 @@
   "customerReviews": "آراء عملائنا",
   "free": "مجاني",
   "freeShipping": "شحن مجاني للطلبات فوق ٥٠٠ ج.م",
+  "freeShippingQualifiedTitle": "تهانينا، حصلت على شحن مجاني",
+  "freeShippingQualifiedNote": "سنتكفل برسوم التوصيل لهذا الطلب.",
   "away": "للشحن المجاني",
   "subtotal": "الإجمالي",
   "proceedToCheckout": "إتمام الشراء",

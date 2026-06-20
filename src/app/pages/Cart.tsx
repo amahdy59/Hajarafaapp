@@ -1,4 +1,4 @@
-import { ShoppingBag, Plus, Minus, Trash2, ArrowRight, Tag, Truck } from "lucide-react";
+import { ShoppingBag, Plus, Minus, Trash2, ArrowRight, Tag, Sparkles, Truck } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import { useCart } from "../context/CartContext";
 import { useAppSettings } from "../context/AppSettingsContext";
@@ -65,7 +65,7 @@ export function Cart() {
                 <div className="bg-brand-peach rounded-2xl p-4 border border-border/50">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-brand-terracotta" style={{ fontSize: "0.875rem" }}>
-                      🚚 {t.currency} {(SHIPPING_THRESHOLD - totalPrice).toFixed(2)} {t.away}
+                      {t.currency} {(SHIPPING_THRESHOLD - totalPrice).toFixed(2)} {t.away}
                     </span>
                   </div>
                   <div className="bg-white/50 rounded-full h-2 overflow-hidden">
@@ -74,6 +74,19 @@ export function Cart() {
                       style={{ width: `${Math.min((totalPrice / SHIPPING_THRESHOLD) * 100, 100)}%` }}
                     />
                   </div>
+                </div>
+              )}
+              {totalPrice >= SHIPPING_THRESHOLD && (
+                <div className="rounded-2xl border border-brand-sage/30 bg-brand-sage/10 p-4">
+                  <div className="flex items-center gap-2 text-brand-sage-dark">
+                    <Sparkles size={17} className="flex-shrink-0" />
+                    <span className="font-semibold" style={{ fontSize: "0.9rem" }}>
+                      {t.freeShippingQualifiedTitle}
+                    </span>
+                  </div>
+                  <p className="mt-1.5 text-muted-foreground" style={{ fontSize: "0.8rem" }}>
+                    {t.freeShippingQualifiedNote}
+                  </p>
                 </div>
               )}
 
@@ -150,9 +163,9 @@ export function Cart() {
                 <h2 className="text-foreground" style={{ fontSize: "1rem" }}>{t.orderSummary}</h2>
 
                 {/* Free delivery promo banner */}
-                <div className="bg-brand-peach/40 text-brand-terracotta text-xs font-semibold px-4.5 py-3 rounded-xl border border-brand-peach/30 flex items-center gap-2 select-none">
-                  <span>✨</span>
-                  <span>{t.freeShipping}</span>
+                <div className={`${shipping === 0 ? "bg-brand-sage/10 text-brand-sage-dark border-brand-sage/30" : "bg-brand-peach/40 text-brand-terracotta border-brand-peach/30"} text-xs font-semibold px-4.5 py-3 rounded-xl border flex items-center gap-2 select-none`}>
+                  <Sparkles size={14} className="flex-shrink-0" />
+                  <span>{shipping === 0 ? t.freeShippingQualifiedTitle : t.freeShipping}</span>
                 </div>
 
                 {/* Coupon */}
