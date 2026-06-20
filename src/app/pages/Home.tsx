@@ -6,7 +6,13 @@ import { ProductCard } from "../components/ProductCard";
 import { ScrollRail } from "../components/ui/ScrollRail";
 import { useAppSettings } from "../context/AppSettingsContext";
 
-const HERO_IMG = "https://images.unsplash.com/photo-1758745464235-ccb8c1253074?w=1200&auto=format&fit=crop&q=80";
+const HERO_IMAGES = [
+  {
+    src: "https://images.unsplash.com/photo-1758745464235-ccb8c1253074?w=1600&auto=format&fit=crop&q=82",
+    altEn: "Natural herbs, grains, and spices in woven baskets",
+    altAr: "أعشاب وحبوب وتوابل طبيعية في سلال منسوجة",
+  },
+];
 
 const categoryAccentColors: Record<string, string> = {
   "coffee-drinks": "var(--brand-terracotta)",
@@ -26,34 +32,44 @@ export function Home() {
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pt-1 pb-4 sm:py-6 flex flex-col gap-8 sm:gap-14">
 
         {/* Hero — hidden on mobile */}
-        <section className="relative rounded-2xl overflow-hidden shadow-soft hidden sm:block" style={{ aspectRatio: "16/5", maxHeight: 240 }}>
-          <img 
-            src={HERO_IMG} 
-            alt={isRTL ? "خلفية صحية طبيعية لعشبة البابونج" : "Chamomile natural wellness background"} 
-            className="absolute inset-0 w-full h-full object-cover" 
+        <section className="relative hidden sm:block overflow-hidden rounded-[1.75rem] border border-border/70 bg-brand-ink shadow-[0_18px_50px_rgba(20,32,26,0.16)] isolate" style={{ aspectRatio: "16/5", maxHeight: 250 }}>
+          <img
+            src={HERO_IMAGES[0].src}
+            alt={isRTL ? HERO_IMAGES[0].altAr : HERO_IMAGES[0].altEn}
+            className="absolute inset-0 h-full w-full object-cover object-center scale-[1.015]"
             loading="eager"
             fetchpriority="high"
           />
-          <div className={`absolute inset-0 ${isRTL ? "bg-gradient-to-l" : "bg-gradient-to-r"} from-brand-ink/90 via-brand-ink/55 to-brand-ink/5`} />
-          <div className="absolute inset-0 flex items-center p-4 sm:p-8">
+          <div className="absolute inset-0 bg-brand-ink/46" aria-hidden="true" />
+          <div
+            className={`absolute inset-0 ${
+              isRTL
+                ? "bg-[linear-gradient(270deg,rgba(13,21,17,0.92)_0%,rgba(13,21,17,0.74)_34%,rgba(13,21,17,0.46)_62%,rgba(13,21,17,0.20)_100%)]"
+                : "bg-[linear-gradient(90deg,rgba(13,21,17,0.92)_0%,rgba(13,21,17,0.74)_34%,rgba(13,21,17,0.46)_62%,rgba(13,21,17,0.20)_100%)]"
+            }`}
+            aria-hidden="true"
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(13,21,17,0.28)_0%,rgba(13,21,17,0.06)_42%,rgba(13,21,17,0.32)_100%)]" aria-hidden="true" />
+          <div className="absolute inset-0 rounded-[1.75rem] ring-1 ring-inset ring-white/18" aria-hidden="true" />
+          <div className="absolute inset-0 flex items-center p-5 sm:p-8 lg:p-10">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="max-w-md select-none text-start"
+              className={`${isRTL ? "me-auto" : ""} max-w-[34rem] select-none text-start`}
             >
               <h1
-                className="font-display text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]"
-                style={{ fontSize: "clamp(1.35rem, 3.5vw, 1.85rem)", lineHeight: 1.15, letterSpacing: "-0.5px" }}
+                className="font-display text-white drop-shadow-[0_2px_5px_rgba(0,0,0,0.72)]"
+                style={{ fontSize: "clamp(1.45rem, 3.8vw, 2.45rem)", lineHeight: 1.12, letterSpacing: "0" }}
               >
                 {t.heroHeadline}
               </h1>
-              <p className="text-white/85 mt-2 drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)] hidden md:block" style={{ fontSize: "0.85rem", lineHeight: 1.5, maxWidth: 360 }}>
+              <p className="text-white/92 mt-3 drop-shadow-[0_1px_4px_rgba(0,0,0,0.68)] hidden md:block" style={{ fontSize: "0.95rem", lineHeight: 1.55, maxWidth: 440 }}>
                 {t.heroSubline}
               </p>
               <Link
                 to="/products"
-                className="inline-flex items-center justify-center gap-2 bg-brand-terracotta text-white dark:text-zinc-950 hover:text-white dark:hover:text-white px-5 py-2.5 sm:px-7 sm:py-3 rounded-xl hover:bg-brand-terracotta-dark transition-all duration-300 hover:scale-[1.02] hover:shadow-lg active:scale-[0.97] text-xs sm:text-sm font-bold uppercase tracking-wider select-none mt-4 shadow-[0_4px_12px_rgba(196,98,45,0.3)] dark:shadow-[0_4px_12px_rgba(224,139,87,0.2)]"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl bg-[#933A10] px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-[0_10px_24px_rgba(147,58,16,0.35)] transition-all duration-300 hover:scale-[1.02] hover:bg-[#7A2E0C] hover:text-white hover:shadow-[0_14px_30px_rgba(147,58,16,0.42)] active:scale-[0.98] sm:px-7 sm:py-3 sm:text-sm"
                 aria-label={isRTL ? "تسوق جميع المنتجات الطبيعية" : "Explore all natural products"}
               >
                 {t.explore}
