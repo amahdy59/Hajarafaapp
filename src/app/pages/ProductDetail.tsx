@@ -264,66 +264,41 @@ export function ProductDetail() {
             </div>
 
             {/* Minimalist Specs Row */}
-            <div className="flex items-center gap-3 text-xs font-semibold text-brand-ink-soft dark:text-brand-cream/80 select-none border-b border-border/40 pb-3.5">
-              <span 
-                className="bg-brand-peach/30 dark:bg-brand-sage/10 text-brand-terracotta-dark dark:text-brand-sage-dark border border-brand-line/40 dark:border-brand-sage/20 px-2 py-0.5 rounded-lg text-xs font-bold"
+            <div className="flex flex-wrap items-center gap-3 border-b border-border/40 pb-3 text-xs font-semibold text-foreground select-none">
+              <span
+                className="rounded-lg border border-brand-line/60 bg-brand-peach/35 px-2 py-0.5 text-xs font-bold text-brand-terracotta-dark dark:border-brand-sage/35 dark:bg-brand-sage/10 dark:text-brand-sage-dark"
                 aria-label={`${getSpecLabel(product.weight, t)}: ${getLocalizedWeight(product.weight, isRTL)}`}
               >
                 {getLocalizedWeight(product.weight, isRTL)}
               </span>
-              <span className="text-muted-foreground/30 font-light" aria-hidden="true">|</span>
-              <div className="flex items-center gap-1.5 text-muted-foreground dark:text-brand-cream/60">
-                <span className="font-medium">{t.origin}:</span>
-                <span className="text-foreground dark:text-brand-cream font-bold">{getLocalizedOrigin(product.origin, isRTL)}</span>
+              <span className="text-border" aria-hidden="true">|</span>
+              <div className="flex min-w-0 items-center gap-1.5 text-foreground">
+                <span className="font-semibold text-foreground">{t.origin}:</span>
+                <span className="font-bold text-foreground">{getLocalizedOrigin(product.origin, isRTL)}</span>
               </div>
             </div>
 
-            {/* Key Benefits */}
-            <div className="space-y-2.5 select-none">
-              <h2 className="text-brand-ink-soft dark:text-brand-cream/80 text-xs font-bold uppercase tracking-wider">
-                {t.keyBenefits}
-              </h2>
-              <ul className="grid grid-cols-1 gap-2 text-sm font-medium sm:grid-cols-2" role="list">
-                {product.benefits.map(benefit => (
-                  <li
-                    key={benefit}
-                    className="flex min-h-9 items-center gap-2 rounded-xl bg-muted/45 px-2.5 text-foreground ring-1 ring-border/50 dark:bg-white/[0.045] dark:ring-white/10"
-                  >
-                    <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-brand-sage/22 text-brand-forest dark:bg-brand-sage/20 dark:text-brand-sage-dark" aria-hidden="true">
-                      <Check size={11} className="stroke-[3]" />
-                    </span>
-                    <span className="leading-snug">
-                      {t[`benefit.${benefit}` as keyof typeof t] || benefit}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
             {/* Quantity + Add to Cart + Wishlist */}
-            <div className="flex flex-col sm:flex-row gap-3 w-full">
-              {/* Row 1 (Mobile): Quantity Selector + Wishlist */}
+            <div className="flex flex-col gap-3 w-full sm:flex-row">
               <div className="flex gap-3 w-full sm:w-auto">
-                {/* Quantity selector */}
-                <div className="flex-1 sm:flex-initial flex items-center justify-between border border-border rounded-xl h-11 bg-card px-1 overflow-hidden">
+                <div className="flex h-11 flex-1 items-center justify-between overflow-hidden rounded-xl border border-border bg-card px-1 sm:flex-initial">
                   <button
                     onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                    className="w-11 h-11 flex items-center justify-center hover:bg-muted rounded-lg transition-colors"
+                    className="flex h-11 w-11 items-center justify-center rounded-lg transition-colors hover:bg-muted"
                     aria-label="Decrease quantity"
                   >
                     <Minus size={14} className="text-foreground" />
                   </button>
-                  <span className="w-8 text-center text-foreground font-semibold text-sm select-none">{quantity}</span>
+                  <span className="w-8 select-none text-center text-sm font-semibold text-foreground">{quantity}</span>
                   <button
                     onClick={() => setQuantity(q => q + 1)}
-                    className="w-11 h-11 flex items-center justify-center hover:bg-muted rounded-lg transition-colors"
+                    className="flex h-11 w-11 items-center justify-center rounded-lg transition-colors hover:bg-muted"
                     aria-label="Increase quantity"
                   >
                     <Plus size={14} className="text-foreground" />
                   </button>
                 </div>
 
-                {/* Wishlist Button - mobile only */}
                 <button
                   onClick={handleWishlist}
                   className={`sm:hidden w-11 h-11 rounded-xl border flex items-center justify-center transition-all ${
@@ -335,17 +310,18 @@ export function ProductDetail() {
                 </button>
               </div>
 
-              {/* Add to Cart button */}
-              <Button
-                onClick={handleAddToCart}
-                size="md"
-                className="w-full sm:flex-1 font-bold text-sm h-11"
-                leftIcon={<ShoppingCart size={16} />}
-              >
-                {t.addToCart}
-              </Button>
+              <div className="hidden sm:block sm:flex-1">
+                <Button
+                  onClick={handleAddToCart}
+                  size="md"
+                  fullWidth
+                  className="font-bold text-sm h-11"
+                  leftIcon={<ShoppingCart size={16} />}
+                >
+                  {t.addToCart}
+                </Button>
+              </div>
 
-              {/* Wishlist Button - desktop only */}
               <button
                 onClick={handleWishlist}
                 className={`hidden sm:flex w-11 h-11 rounded-xl border items-center justify-center transition-all flex-shrink-0 ${
@@ -357,8 +333,30 @@ export function ProductDetail() {
               </button>
             </div>
 
+            {/* Key Benefits */}
+            <div className="space-y-2 select-none">
+              <h2 className="text-brand-ink-soft dark:text-brand-cream/80 text-xs font-bold uppercase tracking-wider">
+                {t.keyBenefits}
+              </h2>
+              <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium" role="list">
+                {product.benefits.map(benefit => (
+                  <li
+                    key={benefit}
+                    className="inline-flex min-h-6 items-center gap-2 text-foreground"
+                  >
+                    <span className="flex h-[18px] w-[18px] flex-shrink-0 items-center justify-center rounded-full bg-brand-sage/25 text-brand-forest dark:bg-brand-sage/24 dark:text-brand-sage-dark" aria-hidden="true">
+                      <Check size={10} className="stroke-[3]" />
+                    </span>
+                    <span className="leading-snug">
+                      {t[`benefit.${benefit}` as keyof typeof t] || benefit}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
             {/* Guarantees */}
-            <div className="grid grid-cols-1 gap-2 border-y border-border/60 py-3 select-none sm:grid-cols-3">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-y border-border/60 py-2.5 select-none">
               {[
                 { icon: Truck, en: "Free shipping over LE 500", ar: "شحن مجاني فوق ٥٠٠ ج.م" },
                 { icon: Shield, en: "Quality guaranteed", ar: "جودة مضمونة ١٠٠٪" },
@@ -366,10 +364,10 @@ export function ProductDetail() {
               ].map((item) => (
                 <div
                   key={item.en}
-                  className="flex min-h-11 items-center gap-2 rounded-xl bg-muted/55 px-3 text-start ring-1 ring-border/60 dark:bg-white/[0.045] dark:ring-white/10"
+                  className="inline-flex min-h-7 items-center gap-1.5 text-start text-foreground"
                 >
-                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-brand-terracotta/12 text-brand-terracotta dark:bg-brand-terracotta/18 dark:text-[#F0A978]">
-                    <item.icon size={15} />
+                  <span className="flex h-[22px] w-[22px] flex-shrink-0 items-center justify-center rounded-full bg-brand-terracotta/12 text-brand-terracotta dark:bg-brand-terracotta/18 dark:text-[#F0A978]">
+                    <item.icon size={13} />
                   </span>
                   <span className="text-xs font-semibold leading-snug text-foreground">
                     {isRTL ? item.ar : item.en}
@@ -635,7 +633,27 @@ export function ProductDetail() {
           </section>
         )}
       </div>
-      <div className="h-20 sm:h-4" />
+      <div className="fixed inset-x-0 bottom-16 z-30 px-4 pb-2 sm:hidden pointer-events-none">
+        <div className="pointer-events-auto mx-auto flex max-w-md items-center gap-2 rounded-2xl border border-border bg-card/96 p-2 shadow-elev backdrop-blur">
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xs font-semibold text-foreground">
+              {isRTL && product.nameAr ? product.nameAr : product.name}
+            </p>
+            <p className="text-sm font-extrabold text-brand-terracotta">
+              {t.currency} {product.price.toFixed(2)}
+            </p>
+          </div>
+          <Button
+            onClick={handleAddToCart}
+            size="sm"
+            className="h-11 min-w-[8.75rem] rounded-xl text-sm font-bold"
+            leftIcon={<ShoppingCart size={16} />}
+          >
+            {t.addToCart}
+          </Button>
+        </div>
+      </div>
+      <div className="h-28 sm:h-4" />
     </div>
   );
 }
