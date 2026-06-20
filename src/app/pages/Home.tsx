@@ -34,14 +34,13 @@ export function Home() {
             loading="eager"
             fetchPriority="high"
           />
-          <div className={`absolute inset-0 bg-gradient-to-${isRTL ? "l" : "r"} from-brand-ink/80 via-brand-ink/40 to-transparent`} />
+          <div className={`absolute inset-0 ${isRTL ? "bg-gradient-to-l" : "bg-gradient-to-r"} from-brand-ink/90 via-brand-ink/55 to-brand-ink/5`} />
           <div className="absolute inset-0 flex items-center p-4 sm:p-8">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="max-w-md p-5 sm:p-6 rounded-xl border border-white/10 shadow-lg select-none text-start"
-              style={{ backgroundColor: "rgba(27, 28, 26, 0.9)" }}
+              className="max-w-md select-none text-start"
             >
               <h1
                 className="font-display text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]"
