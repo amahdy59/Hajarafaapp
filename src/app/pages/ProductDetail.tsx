@@ -283,13 +283,16 @@ export function ProductDetail() {
               <h2 className="text-brand-ink-soft dark:text-brand-cream/80 text-xs font-bold uppercase tracking-wider">
                 {t.keyBenefits}
               </h2>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-xs font-medium text-brand-ink-soft dark:text-brand-cream/80" role="list">
+              <ul className="grid grid-cols-1 gap-2 text-sm font-medium sm:grid-cols-2" role="list">
                 {product.benefits.map(benefit => (
-                  <li key={benefit} className="flex items-center gap-2">
-                    <span className="flex items-center justify-center w-4 h-4 rounded-full bg-brand-sage/20 dark:bg-brand-sage/30 text-brand-forest dark:text-brand-sage-dark flex-shrink-0" aria-hidden="true">
-                      <Check size={10} className="stroke-[3]" />
+                  <li
+                    key={benefit}
+                    className="flex min-h-9 items-center gap-2 rounded-xl bg-muted/45 px-2.5 text-foreground ring-1 ring-border/50 dark:bg-white/[0.045] dark:ring-white/10"
+                  >
+                    <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-brand-sage/22 text-brand-forest dark:bg-brand-sage/20 dark:text-brand-sage-dark" aria-hidden="true">
+                      <Check size={11} className="stroke-[3]" />
                     </span>
-                    <span className="text-brand-ink/90 dark:text-brand-cream/90">
+                    <span className="leading-snug">
                       {t[`benefit.${benefit}` as keyof typeof t] || benefit}
                     </span>
                   </li>
@@ -355,15 +358,20 @@ export function ProductDetail() {
             </div>
 
             {/* Guarantees */}
-            <div className="flex items-center justify-between gap-4 py-3 border-t border-b border-border/50 select-none mt-2 flex-wrap sm:flex-nowrap">
+            <div className="grid grid-cols-1 gap-2 border-y border-border/60 py-3 select-none sm:grid-cols-3">
               {[
                 { icon: Truck, en: "Free shipping over LE 500", ar: "شحن مجاني فوق ٥٠٠ ج.م" },
                 { icon: Shield, en: "Quality guaranteed", ar: "جودة مضمونة ١٠٠٪" },
                 { icon: RotateCcw, en: "30-day returns", ar: "إرجاع خلال ٣٠ يوماً" },
-              ].map((item, idx) => (
-                <div key={item.en} className="flex items-center gap-2 flex-1 justify-center min-w-[120px]">
-                  <item.icon size={16} className="text-brand-terracotta flex-shrink-0" />
-                  <span className="text-brand-ink-soft dark:text-brand-cream font-semibold text-xs leading-tight">
+              ].map((item) => (
+                <div
+                  key={item.en}
+                  className="flex min-h-11 items-center gap-2 rounded-xl bg-muted/55 px-3 text-start ring-1 ring-border/60 dark:bg-white/[0.045] dark:ring-white/10"
+                >
+                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-brand-terracotta/12 text-brand-terracotta dark:bg-brand-terracotta/18 dark:text-[#F0A978]">
+                    <item.icon size={15} />
+                  </span>
+                  <span className="text-xs font-semibold leading-snug text-foreground">
                     {isRTL ? item.ar : item.en}
                   </span>
                 </div>

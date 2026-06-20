@@ -195,23 +195,15 @@ export function Footer() {
           </section>
 
           <section className="col-span-12 lg:col-span-2">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 space-y-3">
-              <div className="flex items-start gap-3">
-                <Truck size={18} className="text-[#F4E7DA] mt-0.5" />
-                <div>
-                  <h4 className="text-sm font-bold text-white">{isArabic ? "التوصيل" : "Delivery"}</h4>
-                  <p className="mt-1 text-xs leading-5 text-[#EFECE6]/82">
+            <div className="h-full rounded-2xl border border-white/12 bg-white/[0.045] px-4 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+              <div className="flex h-full items-center gap-3 lg:items-start">
+                <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#F4E7DA]/12 text-[#F4E7DA]">
+                  <Truck size={18} />
+                </span>
+                <div className="min-w-0">
+                  <h4 className="text-sm font-bold leading-5 text-white">{isArabic ? "التوصيل" : "Delivery"}</h4>
+                  <p className="mt-1 text-sm leading-6 text-[#EFECE6]/88">
                     {isArabic ? DELIVERY_NOTICE.shortAr : DELIVERY_NOTICE.shortEn}
-                  </p>
-                </div>
-              </div>
-              <div className="h-px bg-white/10" />
-              <div className="flex items-start gap-3">
-                <ShieldCheck size={18} className="text-[#8DA392] mt-0.5" />
-                <div>
-                  <h4 className="text-sm font-bold text-white">{isArabic ? "دفع آمن" : "Secure Payment"}</h4>
-                  <p className="mt-1 text-xs leading-5 text-[#EFECE6]/82">
-                    {isArabic ? "خيارات دفع متعددة وموثوقة." : "Multiple trusted payment options."}
                   </p>
                 </div>
               </div>
