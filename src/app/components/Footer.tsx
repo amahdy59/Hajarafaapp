@@ -1,180 +1,243 @@
 import { Link } from "react-router";
-import { Mail, Phone, Facebook, Instagram, MessageCircle, ShieldCheck, Truck } from "lucide-react";
+import {
+  Banknote,
+  Facebook,
+  Instagram,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Phone,
+  ShieldCheck,
+  Truck,
+} from "lucide-react";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { CONTACT, DELIVERY_NOTICE } from "../config/contact";
 
-export function Footer() {
-  const { t, isRTL, locale } = useAppSettings();
+type PaymentMark = "visa" | "mastercard" | "meeza" | "vodafone" | "cod";
+
+function PaymentLogo({ type, label }: { type: PaymentMark; label: string }) {
+  const base =
+    "h-8 min-w-14 rounded-lg border border-white/12 bg-white text-[#14201A] px-2.5 flex items-center justify-center shadow-sm";
+
+  if (type === "visa") {
+    return (
+      <span className={`${base} font-black italic tracking-tight text-[#173B8F]`} aria-label={label} title={label}>
+        VISA
+      </span>
+    );
+  }
+
+  if (type === "mastercard") {
+    return (
+      <span className={`${base} gap-1.5`} aria-label={label} title={label}>
+        <span className="relative flex h-4 w-7 items-center">
+          <span className="absolute left-0 h-4 w-4 rounded-full bg-[#EA001B]" />
+          <span className="absolute right-0 h-4 w-4 rounded-full bg-[#FFB000] mix-blend-multiply" />
+        </span>
+        <span className="text-[9px] font-black uppercase tracking-tight">Mastercard</span>
+      </span>
+    );
+  }
+
+  if (type === "meeza") {
+    return (
+      <span className={`${base} gap-1.5`} aria-label={label} title={label}>
+        <span className="grid h-4 w-4 grid-cols-2 gap-0.5">
+          <span className="rounded-sm bg-[#E53935]" />
+          <span className="rounded-sm bg-[#1E88E5]" />
+          <span className="rounded-sm bg-[#43A047]" />
+          <span className="rounded-sm bg-[#FDD835]" />
+        </span>
+        <span className="text-[10px] font-black">Meeza</span>
+      </span>
+    );
+  }
+
+  if (type === "vodafone") {
+    return (
+      <span className={`${base} gap-1.5`} aria-label={label} title={label}>
+        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#E60000] text-[10px] font-black text-white">
+          V
+        </span>
+        <span className="text-[10px] font-black">Cash</span>
+      </span>
+    );
+  }
 
   return (
-    <footer className="hidden sm:block bg-[#14201A] dark:bg-[#070b09] text-[#FAF6F0] dark:text-[#EFECE6] border-t border-white/5 dark:border-white/10 pt-12 pb-24 sm:pb-12 mt-16 select-none relative overflow-hidden">
-      {/* Artistic green paint brush stroke and leaves background (Left side) */}
-      <svg 
-        className="absolute left-0 bottom-0 w-[420px] h-[240px] text-brand-sage/10 dark:text-brand-sage/5 pointer-events-none z-0 transform -translate-x-12 translate-y-12 select-none" 
-        viewBox="0 0 500 300" 
-        fill="currentColor" 
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M -50,180 C 100,100 220,280 380,140 C 420,105 480,120 520,150 C 440,240 280,310 -50,260 Z" opacity="0.5" />
-        <path d="M -50,220 C 80,140 180,290 320,180 C 350,155 420,160 480,210 C 380,290 220,320 -50,290 Z" opacity="0.3" />
-        <path d="M 120,80 Q 150,110 120,140 Q 90,110 120,80" transform="rotate(15 120 110)" opacity="0.6" />
-        <path d="M 220,110 Q 255,135 228,170 Q 200,145 220,110" transform="rotate(-25 220 140)" opacity="0.5" />
-        <path d="M 320,70 Q 345,95 325,120 Q 305,95 320,70" transform="rotate(40 320 95)" opacity="0.5" />
-      </svg>
+    <span className={`${base} gap-1.5 bg-[#F4E7DA]`} aria-label={label} title={label}>
+      <Banknote size={15} className="text-[#334537]" />
+      <span className="text-[10px] font-black uppercase">COD</span>
+    </span>
+  );
+}
 
-      {/* Organic leaf branch background (Right side) */}
-      <svg 
-        className="absolute right-0 top-0 w-[350px] h-[350px] text-brand-sage/12 dark:text-brand-sage/6 pointer-events-none z-0 transform translate-x-16 -translate-y-16 select-none rtl:left-0 rtl:right-auto rtl:-translate-x-16 rtl:translate-x-0" 
-        viewBox="0 0 200 200" 
-        fill="currentColor" 
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M 180,20 Q 110,60 50,150" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.5" />
-        <path d="M 140,42 Q 155,25 170,30 Q 158,48 140,42" opacity="0.7" />
-        <path d="M 115,63 Q 100,45 110,35 Q 128,48 115,63" opacity="0.7" />
-        <path d="M 100,78 Q 120,65 135,70 Q 122,88 100,78" opacity="0.7" />
-        <path d="M 82,98 Q 65,85 75,72 Q 92,90 82,98" opacity="0.7" />
-        <path d="M 70,116 Q 90,105 105,110 Q 92,128 70,116" opacity="0.7" />
-        <path d="M 58,135 Q 40,125 48,112 Q 68,128 58,135" opacity="0.7" />
-      </svg>
+export function Footer() {
+  const { locale } = useAppSettings();
+  const isArabic = locale === "ar";
 
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12 relative z-10">
-        
-        {/* Column 1: Brand & Heritage */}
-        <div className="space-y-3.5">
-          <Link to="/" className="inline-block select-none cursor-pointer">
-            <span className="font-display font-bold text-2xl tracking-wide text-[#F4E7DA] hover:text-white transition-colors">
-              {locale === "ar" ? "حاج عرفة" : "Haj Arafa"}
-            </span>
-          </Link>
-          <p className="text-[#FAF6F0] dark:text-[#EFECE6] text-xs sm:text-sm leading-relaxed max-w-sm">
-            {locale === "ar" 
-              ? "تراث الأعشاب المصرية منذ ١٩٧٠. جودة ونقاء في كل منتج طبيعي." 
-              : "Egyptian herbal heritage since 1970. Quality and purity in every natural product."}
-          </p>
-          <div className="flex items-center gap-3 pt-1">
-            <a href={CONTACT.facebookUrl} target="_blank" rel="noopener noreferrer" className="w-11 h-11 rounded-full bg-white/10 hover:bg-[#F4E7DA] hover:text-[#14201A] text-[#FAF6F0] flex items-center justify-center transition-all" aria-label="Facebook">
-              <Facebook size={15} />
-            </a>
-            <a href={CONTACT.instagramUrl} target="_blank" rel="noopener noreferrer" className="w-11 h-11 rounded-full bg-white/10 hover:bg-[#F4E7DA] hover:text-[#14201A] text-[#FAF6F0] flex items-center justify-center transition-all" aria-label="Instagram">
-              <Instagram size={15} />
-            </a>
-            <a href={CONTACT.whatsappUrl} target="_blank" rel="noopener noreferrer" className="w-11 h-11 rounded-full bg-white/10 hover:bg-[#F4E7DA] hover:text-[#14201A] text-[#FAF6F0] flex items-center justify-center transition-all" aria-label="WhatsApp">
-              <MessageCircle size={15} />
-            </a>
-          </div>
-        </div>
+  const careLinks = [
+    { to: "/about", label: isArabic ? "عن حاج عرفة" : "About Haj Arafa" },
+    { to: "/branches", label: isArabic ? "فروعنا" : "Our Branches" },
+    { to: "/contact", label: isArabic ? "اتصل بنا" : "Contact Us" },
+    { to: "/help", label: isArabic ? "الأسئلة الشائعة" : "FAQs & Support" },
+  ];
 
-        {/* Column 2: Customer Care (Useful Links) */}
-        <div className="space-y-3.5">
-          <h4 className="text-[#F4E7DA] font-display text-sm font-semibold tracking-wider uppercase border-b border-white/10 pb-2 w-fit">
-            {locale === "ar" ? "الدعم والخدمات" : "Customer Care"}
-          </h4>
-          <ul className="space-y-2 text-xs sm:text-sm">
-            <li>
-              <Link to="/about" className="text-[#FAF6F0] dark:text-[#EFECE6] hover:text-white transition-colors flex items-center gap-1.5 font-medium">
-                <span className="text-[10px] text-[#F4E7DA]/50">✦</span>
-                <span>{locale === "ar" ? "عن حاج عرفة" : "About Haj Arafa"}</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/branches" className="text-[#FAF6F0] dark:text-[#EFECE6] hover:text-white transition-colors flex items-center gap-1.5 font-medium">
-                <span className="text-[10px] text-[#F4E7DA]/50">✦</span>
-                <span>{locale === "ar" ? "فروعنا" : "Our Branches"}</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/contact" className="text-[#FAF6F0] dark:text-[#EFECE6] hover:text-white transition-colors flex items-center gap-1.5 font-medium">
-                <span className="text-[10px] text-[#F4E7DA]/50">✦</span>
-                <span>{locale === "ar" ? "اتصل بنا" : "Contact Us"}</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/help" className="text-[#FAF6F0] dark:text-[#EFECE6] hover:text-white transition-colors flex items-center gap-1.5 font-medium">
-                <span className="text-[10px] text-[#F4E7DA]/50">✦</span>
-                <span>{locale === "ar" ? "الأسئلة الشائعة" : "FAQs & Support"}</span>
-              </Link>
-            </li>
-          </ul>
-        </div>
+  const paymentLabels = {
+    visa: isArabic ? "فيزا" : "Visa",
+    mastercard: isArabic ? "ماستركارد" : "Mastercard",
+    meeza: isArabic ? "ميزة" : "Meeza",
+    vodafone: isArabic ? "فودافون كاش" : "Vodafone Cash",
+    cod: isArabic ? "الدفع عند الاستلام" : "Cash on Delivery",
+  };
 
-        {/* Column 3: WhatsApp Direct & Support */}
-        <div className="space-y-3.5">
-          <h4 className="text-[#F4E7DA] font-display text-sm font-semibold tracking-wider uppercase border-b border-white/10 pb-2 w-fit">
-            {locale === "ar" ? "الدعم المباشر" : "Direct Support"}
-          </h4>
-          <div className="space-y-4 flex flex-col items-start">
+  return (
+    <footer className="hidden sm:block bg-[#0D1511] text-[#FAF6F0] border-t border-white/10 mt-16 select-none relative overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_15%_0%,rgba(141,163,146,0.10),transparent_32%),radial-gradient(circle_at_85%_15%,rgba(244,231,218,0.07),transparent_28%)]" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#F4E7DA]/30 to-transparent" />
+
+      <div className="relative z-10 max-w-[1280px] mx-auto px-4 sm:px-6 py-12">
+        <div className="grid grid-cols-12 gap-8 lg:gap-10">
+          <section className="col-span-12 lg:col-span-4 space-y-5">
+            <Link to="/" className="inline-flex w-fit no-underline">
+              <span className="font-display font-bold text-3xl tracking-wide text-[#F4E7DA] hover:text-white transition-colors">
+                {isArabic ? "حاج عرفة" : "Haj Arafa"}
+              </span>
+            </Link>
+            <p className="max-w-sm text-sm leading-7 text-[#EFECE6]/86">
+              {isArabic
+                ? "تراث الأعشاب المصرية منذ 1970. جودة ونقاء في كل منتج طبيعي."
+                : "Egyptian herbal heritage since 1970. Quality and purity in every natural product."}
+            </p>
+            <div className="flex items-center gap-3">
+              <a
+                href={CONTACT.facebookUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="h-11 w-11 rounded-full bg-white/8 border border-white/10 text-[#FAF6F0] flex items-center justify-center hover:bg-[#F4E7DA] hover:text-[#14201A] transition-colors"
+                aria-label="Facebook"
+              >
+                <Facebook size={17} />
+              </a>
+              <a
+                href={CONTACT.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="h-11 w-11 rounded-full bg-white/8 border border-white/10 text-[#FAF6F0] flex items-center justify-center hover:bg-[#F4E7DA] hover:text-[#14201A] transition-colors"
+                aria-label="Instagram"
+              >
+                <Instagram size={17} />
+              </a>
+              <a
+                href={CONTACT.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="h-11 w-11 rounded-full bg-white/8 border border-white/10 text-[#FAF6F0] flex items-center justify-center hover:bg-[#F4E7DA] hover:text-[#14201A] transition-colors"
+                aria-label="WhatsApp"
+              >
+                <MessageCircle size={17} />
+              </a>
+            </div>
+          </section>
+
+          <nav className="col-span-6 lg:col-span-3" aria-label={isArabic ? "روابط خدمة العملاء" : "Customer care"}>
+            <h4 className="text-[#F4E7DA] font-display text-sm font-semibold uppercase tracking-[0.16em]">
+              {isArabic ? "خدمة العملاء" : "Customer Care"}
+            </h4>
+            <div className="mt-3 h-px w-28 bg-[#F4E7DA]/20" />
+            <ul className="mt-5 space-y-3.5">
+              {careLinks.map((link) => (
+                <li key={link.to}>
+                  <Link
+                    to={link.to}
+                    className="group inline-flex items-center gap-2.5 text-sm font-medium text-[#EFECE6]/88 hover:text-white transition-colors no-underline"
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#8DA392] transition-transform group-hover:scale-125" />
+                    <span>{link.label}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <section className="col-span-6 lg:col-span-3 space-y-5">
+            <div>
+              <h4 className="text-[#F4E7DA] font-display text-sm font-semibold uppercase tracking-[0.16em]">
+                {isArabic ? "الدعم المباشر" : "Direct Support"}
+              </h4>
+              <div className="mt-3 h-px w-28 bg-[#F4E7DA]/20" />
+            </div>
+
             <a
               href={CONTACT.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 bg-[#F4E7DA] text-[#14201A] hover:bg-white px-4.5 py-2.5 rounded-xl transition-all text-xs font-bold w-fit shadow-sm select-none"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#F4E7DA] px-5 text-sm font-bold text-[#14201A] hover:bg-white transition-colors shadow-sm no-underline"
             >
-              <MessageCircle size={16} />
-              <span>{locale === "ar" ? "تواصل عبر واتساب" : "Chat on WhatsApp"}</span>
+              <MessageCircle size={17} />
+              <span>{isArabic ? "تواصل عبر واتساب" : "Chat on WhatsApp"}</span>
             </a>
-            
-            <div className="text-xs text-[#FAF6F0] dark:text-[#EFECE6] space-y-2.5 w-full">
-              <div className="flex items-center gap-2">
-                <Phone size={13} className="text-[#F4E7DA] flex-shrink-0" />
-                <span>{locale === "ar" ? `الخط الساخن: ${CONTACT.hotline}` : `Hotline: ${CONTACT.hotline}`}</span>
+
+            <div className="space-y-3 text-sm text-[#EFECE6]/90">
+              <a href={`tel:${CONTACT.hotline}`} className="flex items-center gap-3 hover:text-white transition-colors no-underline">
+                <Phone size={16} className="text-[#F4E7DA]" />
+                <span>{isArabic ? `الخط الساخن: ${CONTACT.hotline}` : `Hotline: ${CONTACT.hotline}`}</span>
+              </a>
+              <a href={`mailto:${CONTACT.email}`} className="flex items-center gap-3 hover:text-white transition-colors no-underline">
+                <Mail size={16} className="text-[#F4E7DA]" />
+                <span className="break-all">{CONTACT.email}</span>
+              </a>
+              <Link to="/branches" className="flex items-center gap-3 hover:text-white transition-colors no-underline">
+                <MapPin size={16} className="text-[#F4E7DA]" />
+                <span>{isArabic ? "اعثر على أقرب فرع" : "Find your nearest branch"}</span>
+              </Link>
+            </div>
+          </section>
+
+          <section className="col-span-12 lg:col-span-2">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 space-y-3">
+              <div className="flex items-start gap-3">
+                <Truck size={18} className="text-[#F4E7DA] mt-0.5" />
+                <div>
+                  <h4 className="text-sm font-bold text-white">{isArabic ? "التوصيل" : "Delivery"}</h4>
+                  <p className="mt-1 text-xs leading-5 text-[#EFECE6]/82">
+                    {isArabic ? DELIVERY_NOTICE.shortAr : DELIVERY_NOTICE.shortEn}
+                  </p>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Mail size={13} className="text-[#F4E7DA] flex-shrink-0" />
-                <a href={`mailto:${CONTACT.email}`} className="hover:underline">{CONTACT.email}</a>
+              <div className="h-px bg-white/10" />
+              <div className="flex items-start gap-3">
+                <ShieldCheck size={18} className="text-[#8DA392] mt-0.5" />
+                <div>
+                  <h4 className="text-sm font-bold text-white">{isArabic ? "دفع آمن" : "Secure Payment"}</h4>
+                  <p className="mt-1 text-xs leading-5 text-[#EFECE6]/82">
+                    {isArabic ? "خيارات دفع متعددة وموثوقة." : "Multiple trusted payment options."}
+                  </p>
+                </div>
               </div>
-              <div className="flex items-center justify-center gap-2.5 bg-white/10 border border-white/15 px-3.5 py-2 rounded-xl w-fit text-[11px] font-semibold text-white select-none shadow-sm leading-none">
-                <Truck size={14} className="text-[#F4E7DA] flex-shrink-0" />
-                <span className="pt-[0.5px]">
-                  {locale === "ar" 
-                    ? DELIVERY_NOTICE.shortAr 
-                    : DELIVERY_NOTICE.shortEn}
-                </span>
-              </div>
+            </div>
+          </section>
+        </div>
+
+        <div className="mt-10 border-t border-white/10 pt-6 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+          <p className="text-xs text-[#EFECE6]/78">
+            © {new Date().getFullYear()} {isArabic ? "حاج عرفة. جميع الحقوق محفوظة." : "Haj Arafa. All rights reserved."}
+          </p>
+
+          <div className="flex flex-col gap-3 lg:items-end">
+            <div className="flex items-center gap-2 text-xs font-semibold text-[#EFECE6]/84">
+              <ShieldCheck size={15} className="text-[#8DA392]" />
+              <span>{isArabic ? "طرق الدفع المقبولة" : "Accepted payment methods"}</span>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <PaymentLogo type="visa" label={paymentLabels.visa} />
+              <PaymentLogo type="mastercard" label={paymentLabels.mastercard} />
+              <PaymentLogo type="meeza" label={paymentLabels.meeza} />
+              <PaymentLogo type="vodafone" label={paymentLabels.vodafone} />
+              <PaymentLogo type="cod" label={paymentLabels.cod} />
             </div>
           </div>
         </div>
-
-      </div>
-
-      {/* Bottom Copyright & Guarantee */}
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs relative z-10">
-        
-        <div className="text-[#FAF6F0]/90 dark:text-[#EFECE6]/90 text-center sm:text-start flex items-center justify-center sm:justify-start gap-1 flex-wrap select-none">
-          <span>© {new Date().getFullYear()}</span>
-          <span>{locale === "ar" ? "حاج عرفة. جميع الحقوق محفوظة." : "Haj Arafa. All rights reserved."}</span>
-        </div>
-
-        {/* Payment Badges & Guarantee */}
-        <div className="flex items-center gap-3.5 flex-wrap justify-center sm:justify-end">
-          <div className="flex items-center gap-1.5 text-[11px] text-[#FAF6F0]/90 dark:text-[#EFECE6]/90 font-medium">
-            <ShieldCheck size={15} className="text-[#8DA392] flex-shrink-0" />
-            <span>{locale === "ar" ? "دفع آمن ١٠٠٪:" : "100% Secure Payment:"}</span>
-          </div>
-          <div className="flex items-center gap-2 flex-wrap">
-            {/* Visa Badge */}
-            <span className="px-2 rounded bg-[#F4E7DA] text-[#14201A] border border-white/10 font-bold text-[9px] uppercase tracking-wider select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Visa">
-              Visa
-            </span>
-            {/* MasterCard Badge */}
-            <span className="px-2 rounded bg-[#F4E7DA] text-[#14201A] border border-white/10 font-black text-[9px] uppercase tracking-wider select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Mastercard">
-              MasterCard
-            </span>
-            {/* Meeza Badge */}
-            <span className="px-2 rounded bg-white/10 text-[#FAF6F0] border border-white/15 font-bold text-[9px] select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Meeza">
-              {locale === "ar" ? "ميزة" : "Meeza"}
-            </span>
-            {/* Vodafone Cash Badge */}
-            <span className="px-2 rounded bg-white/10 text-[#FAF6F0] border border-white/15 font-bold text-[8px] sm:text-[9px] select-none h-6 flex items-center justify-center shadow-sm font-sans" title="Vodafone Cash">
-              {locale === "ar" ? "فودافون كاش" : "VF Cash"}
-            </span>
-            {/* COD Badge */}
-            <span className="px-2.5 rounded bg-white/10 text-[#FAF6F0] border border-white/15 font-semibold text-[9px] select-none h-6 flex items-center justify-center font-sans" title="Cash on Delivery">
-              {locale === "ar" ? "الدفع عند الاستلام" : "COD"}
-            </span>
-          </div>
-        </div>
-
       </div>
     </footer>
   );

@@ -32,7 +32,7 @@ export function Home() {
             alt={isRTL ? "خلفية صحية طبيعية لعشبة البابونج" : "Chamomile natural wellness background"} 
             className="absolute inset-0 w-full h-full object-cover" 
             loading="eager"
-            fetchPriority="high"
+            fetchpriority="high"
           />
           <div className={`absolute inset-0 ${isRTL ? "bg-gradient-to-l" : "bg-gradient-to-r"} from-brand-ink/90 via-brand-ink/55 to-brand-ink/5`} />
           <div className="absolute inset-0 flex items-center p-4 sm:p-8">
