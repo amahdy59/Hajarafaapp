@@ -59,7 +59,7 @@ export function Home() {
               className={`${isRTL ? "me-auto" : ""} max-w-[34rem] select-none text-start`}
             >
               <h1
-                className="font-display text-white drop-shadow-[0_2px_5px_rgba(0,0,0,0.72)]"
+                className="font-display text-white drop-shadow-[0_2px_5px_rgba(0,0,0,0.72)] sm:whitespace-nowrap"
                 style={{ fontSize: "clamp(1.45rem, 3.8vw, 2.45rem)", lineHeight: 1.12, letterSpacing: "0" }}
               >
                 {t.heroHeadline}
