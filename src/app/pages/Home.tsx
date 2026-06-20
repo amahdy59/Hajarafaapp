@@ -69,7 +69,7 @@ export function Home() {
               </p>
               <Link
                 to="/products"
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl bg-[#933A10] px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-[0_10px_24px_rgba(147,58,16,0.35)] transition-all duration-300 hover:scale-[1.02] hover:bg-[#7A2E0C] hover:text-white hover:shadow-[0_14px_30px_rgba(147,58,16,0.42)] active:scale-[0.98] sm:px-7 sm:py-3 sm:text-sm"
+                className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl bg-[#933A10] px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-[0_10px_24px_rgba(147,58,16,0.35)] transition-all duration-300 hover:scale-[1.02] hover:bg-[#7A2E0C] hover:text-white hover:shadow-[0_14px_30px_rgba(147,58,16,0.42)] active:scale-[0.98] sm:px-7 sm:py-3 sm:text-sm"
                 aria-label={isRTL ? "تسوق جميع المنتجات الطبيعية" : "Explore all natural products"}
               >
                 {t.explore}
