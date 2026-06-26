@@ -32,7 +32,7 @@ export function Home() {
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pt-1 pb-4 sm:py-6 flex flex-col gap-8 sm:gap-14">
 
         {/* Hero — hidden on mobile */}
-        <section className="relative hidden sm:block overflow-hidden rounded-[1.75rem] border border-border/70 bg-brand-ink shadow-[0_18px_50px_rgba(20,32,26,0.16)] isolate" style={{ aspectRatio: "16/5", maxHeight: 250 }}>
+        <section className="relative hidden sm:block overflow-hidden rounded-[1.75rem] border border-border/70 bg-brand-ink shadow-[0_18px_50px_rgba(20,32,26,0.16)] isolate" style={{ aspectRatio: "16/5", maxHeight: 250 }} aria-labelledby="home-hero-title">
           <img
             src={HERO_IMAGES[0].src}
             alt={isRTL ? HERO_IMAGES[0].altAr : HERO_IMAGES[0].altEn}
@@ -59,6 +59,7 @@ export function Home() {
               className={`${isRTL ? "me-auto" : ""} max-w-[34rem] select-none text-start`}
             >
               <h1
+                id="home-hero-title"
                 className="font-display text-white drop-shadow-[0_2px_5px_rgba(0,0,0,0.72)] sm:whitespace-nowrap"
                 style={{ fontSize: "clamp(1.45rem, 3.8vw, 2.45rem)", lineHeight: 1.12, letterSpacing: "0" }}
               >

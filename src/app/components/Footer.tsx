@@ -20,7 +20,7 @@ function PaymentLogo({ type, label }: { type: PaymentMark; label: string }) {
 
   if (type === "visa") {
     return (
-      <span className={`${base} font-black italic tracking-tighter text-[#173B8F] text-[8px]`} aria-label={label} title={label}>
+      <span className={`${base} font-black italic tracking-tighter text-[#173B8F] text-[8px]`} role="img" aria-label={label} title={label}>
         VISA
       </span>
     );
@@ -28,7 +28,7 @@ function PaymentLogo({ type, label }: { type: PaymentMark; label: string }) {
 
   if (type === "mastercard") {
     return (
-      <span className={`${base} gap-1`} aria-label={label} title={label}>
+      <span className={`${base} gap-1`} role="img" aria-label={label} title={label}>
         <span className="relative flex h-2 w-3.5 items-center">
           <span className="absolute left-0 h-2 w-2 rounded-full bg-[#EA001B]" />
           <span className="absolute right-0 h-2 w-2 rounded-full bg-[#FFB000] mix-blend-multiply" />
@@ -40,7 +40,7 @@ function PaymentLogo({ type, label }: { type: PaymentMark; label: string }) {
 
   if (type === "meeza") {
     return (
-      <span className={`${base} gap-1`} aria-label={label} title={label}>
+      <span className={`${base} gap-1`} role="img" aria-label={label} title={label}>
         <span className="grid h-2.5 w-2.5 grid-cols-2 gap-0.5">
           <span className="rounded-[0.5px] bg-[#E53935]" />
           <span className="rounded-[0.5px] bg-[#1E88E5]" />
@@ -54,7 +54,7 @@ function PaymentLogo({ type, label }: { type: PaymentMark; label: string }) {
 
   if (type === "vodafone") {
     return (
-      <span className={`${base} gap-1`} aria-label={label} title={label}>
+      <span className={`${base} gap-1`} role="img" aria-label={label} title={label}>
         <span className="flex h-2.5 w-2.5 items-center justify-center rounded-full bg-[#E60000] text-[6px] font-black text-white leading-none">
           V
         </span>
@@ -64,7 +64,7 @@ function PaymentLogo({ type, label }: { type: PaymentMark; label: string }) {
   }
 
   return (
-    <span className={`${base} gap-1 bg-[#F4E7DA]/95 border-[#F4E7DA]/10 text-[#14201A]`} aria-label={label} title={label}>
+    <span className={`${base} gap-1 bg-[#F4E7DA]/95 border-[#F4E7DA]/10 text-[#14201A]`} role="img" aria-label={label} title={label}>
       <Banknote size={10} className="text-[#334537] flex-shrink-0" />
       <span className="text-[7.5px] font-black uppercase tracking-tight">COD</span>
     </span>
@@ -98,7 +98,7 @@ export function Footer() {
 
       {/* Top Delivery Notice Bar */}
       <div className="relative z-10 border-b border-white/5 bg-white/[0.01] py-3.5">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-center gap-2 text-xs text-[#EFECE6]/70 text-center select-none font-medium">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-center gap-2 text-xs text-[#FAF6F0] text-center select-none font-medium">
           <Truck size={14} className="text-brand-sage-dark dark:text-brand-sage flex-shrink-0" />
           <span>
             {isArabic ? DELIVERY_NOTICE.ar : DELIVERY_NOTICE.en}
@@ -110,13 +110,13 @@ export function Footer() {
         <div className="grid grid-cols-12 gap-8 lg:gap-10">
           
           {/* Column 1: Brand Info */}
-          <section className="col-span-12 md:col-span-5 space-y-4">
+          <section className="col-span-12 md:col-span-5 space-y-4" aria-labelledby="footer-brand-title">
             <Link to="/" className="inline-flex w-fit no-underline">
-              <span className="font-display font-bold text-2xl tracking-wide text-[#F4E7DA] hover:text-white transition-colors">
+              <span id="footer-brand-title" className="font-display font-bold text-2xl tracking-wide text-[#F4E7DA] hover:text-white transition-colors">
                 {isArabic ? "حاج عرفة" : "Haj Arafa"}
               </span>
             </Link>
-            <p className="max-w-sm text-xs leading-6 text-[#EFECE6]/60">
+            <p className="max-w-sm text-xs leading-6 text-[#FAF6F0]">
               {isArabic
                 ? "تراث الأعشاب المصرية منذ 1970. جودة ونقاء في كل منتج طبيعي."
                 : "Egyptian herbal heritage since 1970. Quality and purity in every natural product."}
@@ -126,8 +126,8 @@ export function Footer() {
                 href={CONTACT.facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="h-9 w-9 rounded-full bg-white/5 border border-white/5 text-[#FAF6F0] flex items-center justify-center hover:bg-[#F4E7DA] hover:text-[#14201A] transition-all duration-200"
-                aria-label="Facebook"
+                className="h-11 w-11 rounded-full bg-white/5 border border-white/5 text-[#FAF6F0] flex items-center justify-center hover:bg-[#F4E7DA] hover:text-[#14201A] transition-all duration-200"
+                aria-label="Facebook - opens in a new tab"
               >
                 <Facebook size={15} />
               </a>
@@ -135,8 +135,8 @@ export function Footer() {
                 href={CONTACT.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="h-9 w-9 rounded-full bg-white/5 border border-white/5 text-[#FAF6F0] flex items-center justify-center hover:bg-[#F4E7DA] hover:text-[#14201A] transition-all duration-200"
-                aria-label="Instagram"
+                className="h-11 w-11 rounded-full bg-white/5 border border-white/5 text-[#FAF6F0] flex items-center justify-center hover:bg-[#F4E7DA] hover:text-[#14201A] transition-all duration-200"
+                aria-label="Instagram - opens in a new tab"
               >
                 <Instagram size={15} />
               </a>
@@ -144,8 +144,8 @@ export function Footer() {
                 href={CONTACT.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="h-9 w-9 rounded-full bg-white/5 border border-white/5 text-[#FAF6F0] flex items-center justify-center hover:bg-[#F4E7DA] hover:text-[#14201A] transition-all duration-200"
-                aria-label="WhatsApp"
+                className="h-11 w-11 rounded-full bg-white/5 border border-white/5 text-[#FAF6F0] flex items-center justify-center hover:bg-[#F4E7DA] hover:text-[#14201A] transition-all duration-200"
+                aria-label="WhatsApp - opens in a new tab"
               >
                 <MessageCircle size={15} />
               </a>
@@ -154,7 +154,7 @@ export function Footer() {
 
           {/* Column 2: Customer Care Links */}
           <nav className="col-span-6 md:col-span-3 space-y-4" aria-label={isArabic ? "روابط خدمة العملاء" : "Customer care"}>
-            <h4 className="text-[11px] font-bold text-[#F4E7DA]/40 uppercase tracking-[0.2em]">
+            <h4 className="text-[11px] font-bold text-white uppercase tracking-[0.2em]">
               {isArabic ? "خدمة العملاء" : "Customer Care"}
             </h4>
             <ul className="space-y-3">
@@ -162,7 +162,7 @@ export function Footer() {
                 <li key={link.to}>
                   <Link
                     to={link.to}
-                    className="inline-block text-xs text-[#EFECE6]/70 hover:text-[#F4E7DA] hover:translate-x-1 duration-200 transition-all no-underline"
+                    className="inline-block text-xs text-[#FAF6F0] hover:text-[#F4E7DA] hover:translate-x-1 duration-200 transition-all no-underline"
                   >
                     {link.label}
                   </Link>
@@ -172,8 +172,8 @@ export function Footer() {
           </nav>
 
           {/* Column 3: Direct Support */}
-          <section className="col-span-6 md:col-span-4 space-y-4">
-            <h4 className="text-[11px] font-bold text-[#F4E7DA]/40 uppercase tracking-[0.2em]">
+          <section className="col-span-6 md:col-span-4 space-y-4" aria-labelledby="footer-support-title">
+            <h4 id="footer-support-title" className="text-[11px] font-bold text-white uppercase tracking-[0.2em]">
               {isArabic ? "الدعم المباشر" : "Direct Support"}
             </h4>
             
@@ -181,13 +181,14 @@ export function Footer() {
               href={CONTACT.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-[#F4E7DA]/20 bg-transparent px-4 text-xs font-bold text-[#F4E7DA] hover:bg-[#F4E7DA] hover:text-[#14201A] transition-all no-underline shadow-sm"
+              className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg border border-[#F4E7DA]/20 bg-transparent px-4 text-xs font-bold text-[#F4E7DA] hover:bg-[#F4E7DA] hover:text-[#14201A] transition-all no-underline shadow-sm"
+              aria-label="Chat on WhatsApp - opens in a new tab"
             >
               <MessageCircle size={15} />
               <span>{isArabic ? "تواصل عبر واتساب" : "Chat on WhatsApp"}</span>
             </a>
 
-            <div className="space-y-2.5 text-xs text-[#EFECE6]/60 pt-1">
+            <div className="space-y-2.5 text-xs text-[#FAF6F0] pt-1">
               <a href={`tel:${CONTACT.hotline}`} className="flex items-center gap-2.5 hover:text-white transition-colors no-underline">
                 <Phone size={14} className="text-[#F4E7DA]" />
                 <span>{isArabic ? `الخط الساخن: ${CONTACT.hotline}` : `Hotline: ${CONTACT.hotline}`}</span>
@@ -207,7 +208,7 @@ export function Footer() {
 
         {/* Bottom Section */}
         <div className="mt-12 border-t border-white/5 pt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between select-none">
-          <p className="text-[11px] text-[#EFECE6]/40 text-center sm:text-start">
+          <p className="text-[11px] text-[#FAF6F0] text-center sm:text-start">
             © {new Date().getFullYear()} {isArabic ? "حاج عرفة. جميع الحقوق محفوظة." : "Haj Arafa. All rights reserved."}
           </p>
 
