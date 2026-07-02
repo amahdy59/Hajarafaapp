@@ -25,11 +25,26 @@ export function CustomDropdown({
 }: CustomDropdownProps) {
   const { isRTL } = useAppSettings();
   const reactId = useId();
-  const listboxId = `dropdown-listbox-${reactId}`;
   const buttonId = `dropdown-button-${reactId}`;
+  const listboxId = `dropdown-listbox-${reactId}`;
   const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const selectedIndex = Math.max(
+    0,
+    options.findIndex((option) => option.value === value)
+  );
   const [isOpen, setIsOpen] = useState(false);
-  const selectedOption = options.find((option) => option.value === value) || options[0];
+  const [activeIndex, setActiveIndex] = useState(selectedIndex);
+  const selectedOption = options[selectedIndex] || options[0];
+
+  useEffect(() => {
+    optionRefs.current = optionRefs.current.slice(0, options.length);
+  }, [options.length]);
+
+  useEffect(() => {
+    setActiveIndex(selectedIndex);
+  }, [selectedIndex]);
 
   useEffect(() => {
     const handlePointerDown = (event: MouseEvent) => {
@@ -42,63 +57,130 @@ export function CustomDropdown({
     return () => document.removeEventListener("mousedown", handlePointerDown);
   }, []);
 
-  const handleSelect = (nextValue: string) => {
-    onChange(nextValue);
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    optionRefs.current[activeIndex]?.focus();
+  }, [activeIndex, isOpen]);
+
+  const closeMenu = (restoreFocus = false) => {
     setIsOpen(false);
+
+    if (restoreFocus) {
+      requestAnimationFrame(() => {
+        triggerRef.current?.focus();
+      });
+    }
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const currentIndex = options.findIndex((option) => option.value === value);
+  const openMenu = (startIndex = selectedIndex) => {
+    setActiveIndex(startIndex);
+    setIsOpen(true);
+  };
 
-    if (event.key === "Escape") {
-      setIsOpen(false);
+  const moveActiveIndex = (nextIndex: number) => {
+    const normalizedIndex = (nextIndex + options.length) % options.length;
+    setActiveIndex(normalizedIndex);
+  };
+
+  const commitSelection = (nextIndex: number) => {
+    const option = options[nextIndex];
+    if (!option) {
       return;
     }
 
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      setIsOpen((currentOpen) => !currentOpen);
-      return;
-    }
+    onChange(option.value);
+    closeMenu(true);
+  };
 
+  const handleTriggerKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === "ArrowDown") {
       event.preventDefault();
-      const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % options.length : 0;
-      onChange(options[nextIndex].value);
-      setIsOpen(true);
+      openMenu(selectedIndex);
       return;
     }
 
     if (event.key === "ArrowUp") {
       event.preventDefault();
-      const previousIndex =
-        currentIndex >= 0
-          ? (currentIndex - 1 + options.length) % options.length
-          : options.length - 1;
-      onChange(options[previousIndex].value);
-      setIsOpen(true);
+      openMenu(selectedIndex >= 0 ? selectedIndex : options.length - 1);
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      if (isOpen) {
+        closeMenu();
+      } else {
+        openMenu(selectedIndex);
+      }
+    }
+  };
+
+  const handleOptionKeyDown = (
+    event: React.KeyboardEvent<HTMLButtonElement>,
+    optionIndex: number
+  ) => {
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      moveActiveIndex(optionIndex + 1);
+      return;
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      moveActiveIndex(optionIndex - 1);
+      return;
+    }
+
+    if (event.key === "Home") {
+      event.preventDefault();
+      moveActiveIndex(0);
+      return;
+    }
+
+    if (event.key === "End") {
+      event.preventDefault();
+      moveActiveIndex(options.length - 1);
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      commitSelection(optionIndex);
+      return;
+    }
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeMenu(true);
     }
   };
 
   return (
-    <div
-      ref={containerRef}
-      className={`relative select-none ${className}`}
-      onKeyDown={handleKeyDown}
-    >
+    <div ref={containerRef} className={`relative select-none ${className}`}>
       <label htmlFor={buttonId} className="sr-only">
         {label}
       </label>
 
       <button
         id={buttonId}
+        ref={triggerRef}
         type="button"
         aria-label={label}
         aria-controls={listboxId}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         className="w-full inline-flex min-h-11 items-center justify-between rounded-xl border border-brand-terracotta/20 bg-brand-peach px-4 py-3 text-start text-sm font-semibold text-brand-terracotta shadow-sm transition-all duration-200 outline-none hover:border-brand-terracotta/40 active:scale-[0.98] focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 dark:bg-zinc-800/80 dark:text-brand-peach"
-        onClick={() => setIsOpen((currentOpen) => !currentOpen)}
+        onClick={() => {
+          if (isOpen) {
+            closeMenu();
+          } else {
+            openMenu(selectedIndex);
+          }
+        }}
+        onKeyDown={handleTriggerKeyDown}
       >
         <span className="truncate pe-3">{selectedOption?.label}</span>
         <ChevronDown
@@ -123,24 +205,35 @@ export function CustomDropdown({
               isRTL ? "right-0" : "left-0"
             }`}
           >
-            {options.map((option) => {
+            {options.map((option, optionIndex) => {
               const isSelected = option.value === value;
 
               return (
-                <li
-                  key={option.value}
-                  id={`${listboxId}-${option.value}`}
-                  role="option"
-                  aria-selected={isSelected}
-                  className={`flex cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-sm transition-all duration-150 ${
-                    isSelected
-                      ? "bg-brand-terracotta text-brand-cream shadow-sm dark:text-brand-ink"
-                      : "text-brand-terracotta-dark hover:bg-brand-peach/80 dark:text-brand-peach dark:hover:bg-white/5"
-                  }`}
-                  onClick={() => handleSelect(option.value)}
-                >
-                  <span className="truncate">{option.label}</span>
-                  {isSelected && <Check size={14} className="ms-2 flex-shrink-0" />}
+                <li key={option.value} role="presentation">
+                  <button
+                    id={`${listboxId}-${option.value}`}
+                    ref={(node) => {
+                      optionRefs.current[optionIndex] = node;
+                    }}
+                    type="button"
+                    role="option"
+                    aria-selected={isSelected}
+                    className={`flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-left text-sm transition-all duration-150 outline-none ${
+                      isSelected
+                        ? "bg-brand-terracotta text-brand-cream shadow-sm dark:text-brand-ink"
+                        : "text-brand-terracotta-dark hover:bg-brand-peach/80 dark:text-brand-peach dark:hover:bg-white/5"
+                    } ${
+                      activeIndex === optionIndex
+                        ? "ring-1 ring-brand-terracotta/30"
+                        : ""
+                    }`}
+                    onClick={() => commitSelection(optionIndex)}
+                    onFocus={() => setActiveIndex(optionIndex)}
+                    onKeyDown={(event) => handleOptionKeyDown(event, optionIndex)}
+                  >
+                    <span className="truncate">{option.label}</span>
+                    {isSelected && <Check size={14} className="ms-2 flex-shrink-0" />}
+                  </button>
                 </li>
               );
             })}
