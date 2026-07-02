@@ -15,23 +15,9 @@ if (typeof window !== "undefined") {
 }
 
 function scrollPageToTop() {
-  window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-  const primaryScrollContainers = [
-    document.scrollingElement,
-    document.documentElement,
-    document.body,
-    document.getElementById("root"),
-  ];
-
-  primaryScrollContainers.forEach((element) => {
-    if (!element) return;
-    element.scrollTop = 0;
-    element.scrollLeft = 0;
-  });
-
-  document.querySelectorAll<HTMLElement>("*").forEach((element) => {
-    if (element.scrollTop > 0) element.scrollTop = 0;
-  });
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
 }
 
 const PageLoader = () => (
@@ -44,21 +30,14 @@ export function Root() {
   const location = useLocation();
   const isCheckout = location.pathname === "/checkout";
   const hasCategoryRail = location.pathname === "/" || location.pathname.startsWith("/category/") || location.pathname === "/products";
-  const mainPadding = hasCategoryRail ? "pt-16 sm:pt-[108px]" : "pt-16";
+  const mainPadding = hasCategoryRail ? "pt-16 sm:pt-[124px]" : "pt-16";
 
-  /* Route changes should never inherit the previous page's scroll position.
-     Repeat the reset briefly to cover lazy routes and image/layout shifts. */
+  /* Route changes should never inherit the previous page's scroll position. */
   useLayoutEffect(() => {
     scrollPageToTop();
     const animationFrame = requestAnimationFrame(scrollPageToTop);
-    const timers = [
-      setTimeout(scrollPageToTop, 50),
-      setTimeout(scrollPageToTop, 150),
-      setTimeout(scrollPageToTop, 350),
-    ];
     return () => {
       cancelAnimationFrame(animationFrame);
-      timers.forEach(clearTimeout);
     };
   }, [location.pathname, location.search]);
 
@@ -75,7 +54,7 @@ export function Root() {
         if (url.origin === window.location.origin && url.pathname === window.location.pathname && !url.hash) {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }
-      } catch (err) {
+      } catch {
         // Ignore invalid URLs
       }
     };

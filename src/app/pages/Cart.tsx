@@ -8,6 +8,7 @@ import { products } from "../data/products";
 import { ProductCard } from "../components/ProductCard";
 import { Button } from "../components/ui/Button";
 import { DELIVERY_NOTICE } from "../config/contact";
+import { usePageMeta } from "../hooks/usePageMeta";
 
 
 const SHIPPING_THRESHOLD = 500;
@@ -25,6 +26,13 @@ export function Cart() {
   const shipping = totalPrice >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
   const finalTotal = totalPrice - discount + shipping;
   const suggestedProducts = products.filter(p => !items.find(i => i.product.id === p.id)).slice(0, 4);
+
+  usePageMeta({
+    description: isRTL
+      ? "راجع سلتك قبل الانتقال إلى الدفع مع ملخص أوضح للطلب."
+      : "Review your cart before checkout with a clearer order summary.",
+    title: isRTL ? "سلة التسوق | حاج عرفة" : "Shopping Cart | Haj Arafa",
+  });
 
   const applyCoupon = () => {
     if (couponCode.toUpperCase() === "NATURE10") setCouponApplied(true);

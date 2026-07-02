@@ -1,12 +1,11 @@
-import { Home, Store, Search, ShoppingBag, User } from "lucide-react";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Home, Search, ShoppingBag, User } from "lucide-react";
+import { Link, useLocation } from "react-router";
 import { useCart } from "../context/CartContext";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
 
 export function BottomNav() {
   const location = useLocation();
-  const navigate = useNavigate();
   const { totalItems, setCartOpen } = useCart();
   const { t } = useAppSettings();
 

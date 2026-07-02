@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { 
-  User, Package, Heart, Settings, ChevronRight, Bell, Shield, 
+  User, Package, Heart, ChevronRight, Bell, Shield, 
   CircleHelp, LogOut, Star, MapPin, CreditCard, Award, 
-  Plus, Trash2, X, Camera, Languages, Sun, Moon, Copy, Check, Info,
+  Plus, Trash2, X, Camera, Copy, Check, Info,
   Mail, Lock, Eye, EyeOff, Phone, Printer
 } from "lucide-react";
 import { Link, useSearchParams } from "react-router";
@@ -12,6 +12,7 @@ import { useAppSettings } from "../context/AppSettingsContext";
 import { toast } from "sonner";
 import { ProductCard } from "../components/ProductCard";
 import { Button } from "../components/ui/Button";
+import { usePageMeta } from "../hooks/usePageMeta";
 import logoImg from "../../assets/logo.webp";
 import sidrHoneyImg from "../../assets/sidr_honey.webp";
 import bbqSpicesImg from "../../assets/bbq_spices.webp";
@@ -231,34 +232,22 @@ function LeafletMap({ centerCoords, onLocationSelect, isRTL }: LeafletMapProps) 
 
 type Tab = "profile" | "orders" | "wishlist";
 
-function Segmented<T extends string>({
-  value, onChange, options,
-}: { value: T; onChange: (v: T) => void; options: { value: T; label: string }[] }) {
-  return (
-    <div className="inline-flex items-center bg-background border border-border rounded-full p-0.5">
-      {options.map(opt => {
-        const active = value === opt.value;
-        return (
-          <button
-            key={opt.value}
-            onClick={() => onChange(opt.value)}
-            className={`px-3 py-1 rounded-full transition-all ${active ? "bg-brand-terracotta text-white" : "text-muted-foreground hover:text-foreground"}`}
-            style={{ fontSize: "12px", letterSpacing: "0.8px" }}
-          >
-            {opt.label}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
 export function Account() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const tabParam = searchParams.get("tab") as Tab;
-  const [activeTab, setActiveTab] = useState<Tab>("profile");
+  const tabParam = searchParams.get("tab");
+  const activeTab: Tab =
+    tabParam === "profile" || tabParam === "orders" || tabParam === "wishlist"
+      ? tabParam
+      : "profile";
   const { items: wishlistItems } = useWishlist();
-  const { t, isRTL, locale, theme, setTheme, setLocale } = useAppSettings();
+  const { t, isRTL, locale } = useAppSettings();
+
+  usePageMeta({
+    description: isRTL
+      ? "منطقة حساب أوضح مع تنبيه أن بيانات الحساب الحالية مخزنة محلياً على هذا الجهاز."
+      : "A clearer account area with an explicit note that current account data is stored locally on this device.",
+    title: isRTL ? "حسابي | حاج عرفة" : "My Account | Haj Arafa",
+  });
 
   // Authentication State
   const [profile, setProfile] = useState<{
@@ -438,16 +427,7 @@ export function Account() {
     toast.success(isRTL ? "تم تسجيل الخروج بنجاح!" : "Signed out successfully!");
   };
 
-  useEffect(() => {
-    if (tabParam && ["profile", "orders", "wishlist"].includes(tabParam)) {
-      setActiveTab(tabParam);
-    } else {
-      setActiveTab("profile");
-    }
-  }, [tabParam]);
-
   const handleTabChange = (tab: Tab) => {
-    setActiveTab(tab);
     setSearchParams({ tab });
   };
 
@@ -1160,6 +1140,12 @@ export function Account() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-[1024px] mx-auto px-4 sm:px-6 py-6">
+        <h1 className="sr-only">{isRTL ? "حسابي" : "My Account"}</h1>
+        <p className="mb-4 rounded-2xl border border-brand-terracotta/20 bg-brand-peach/45 px-4 py-3 text-sm text-brand-ink-soft">
+          {isRTL
+            ? "هذه المنطقة ما زالت نموذجاً تجريبياً، وبيانات الحساب والطلبات الحالية محفوظة محلياً على هذا الجهاز فقط."
+            : "This area is still a demo, and the current account and order data are stored locally on this device only."}
+        </p>
         
         {/* Profile header (Minimal borderless transparent layout, no colored card) */}
         <div className="flex items-center gap-5 mb-8 pb-6 border-b border-border select-none">

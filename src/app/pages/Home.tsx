@@ -5,6 +5,7 @@ import { categories } from "../data/categories";
 import { ProductCard } from "../components/ProductCard";
 import { ScrollRail } from "../components/ui/ScrollRail";
 import { useAppSettings } from "../context/AppSettingsContext";
+import { usePageMeta } from "../hooks/usePageMeta";
 
 const HERO_IMAGES = [
   {
@@ -27,18 +28,25 @@ const categoryAccentColors: Record<string, string> = {
 export function Home() {
   const { t, isRTL } = useAppSettings();
 
+  usePageMeta({
+    description: isRTL
+      ? "تسوق منتجات حاج عرفة الطبيعية مع عرض أوضح على الهاتف وسطح المكتب."
+      : "Shop Haj Arafa natural products with a clearer mobile and desktop browsing experience.",
+    title: isRTL ? "حاج عرفة | منتجات طبيعية مختارة" : "Haj Arafa | Handpicked Natural Products",
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pt-1 pb-4 sm:py-6 flex flex-col gap-8 sm:gap-14">
 
         {/* Hero — hidden on mobile */}
-        <section className="relative hidden sm:block overflow-hidden rounded-[1.75rem] border border-border/70 bg-brand-ink shadow-[0_18px_50px_rgba(20,32,26,0.16)] isolate" style={{ aspectRatio: "16/5", maxHeight: 250 }} aria-labelledby="home-hero-title">
+        <section className="relative overflow-hidden rounded-[1.5rem] sm:rounded-[1.75rem] border border-border/70 bg-brand-ink shadow-[0_18px_50px_rgba(20,32,26,0.16)] isolate aspect-[5/3] sm:aspect-[16/5] max-h-[260px] sm:max-h-[250px]" aria-labelledby="home-hero-title">
           <img
             src={HERO_IMAGES[0].src}
             alt={isRTL ? HERO_IMAGES[0].altAr : HERO_IMAGES[0].altEn}
             className="absolute inset-0 h-full w-full object-cover object-center scale-[1.015]"
             loading="eager"
-            fetchpriority="high"
+            fetchPriority="high"
           />
           <div className="absolute inset-0 bg-brand-ink/46" aria-hidden="true" />
           <div
@@ -65,7 +73,7 @@ export function Home() {
               >
                 {t.heroHeadline}
               </h1>
-              <p className="text-white/92 mt-3 drop-shadow-[0_1px_4px_rgba(0,0,0,0.68)] hidden md:block" style={{ fontSize: "0.95rem", lineHeight: 1.55, maxWidth: 440 }}>
+              <p className="text-white/92 mt-3 drop-shadow-[0_1px_4px_rgba(0,0,0,0.68)]" style={{ fontSize: "0.9rem", lineHeight: 1.55, maxWidth: 440 }}>
                 {t.heroSubline}
               </p>
               <Link
@@ -80,7 +88,7 @@ export function Home() {
         </section>
 
         {/* 7 Categories Rails & Bento Placement */}
-        {categories.map((cat, idx) => {
+        {categories.map((cat) => {
           const items = getProductsByCategory(cat.slug).slice(0, 8);
           if (!items.length) return null;
           const catName = isRTL && cat.nameAr ? cat.nameAr : cat.name;
@@ -128,7 +136,7 @@ export function Home() {
         })}
 
         {/* Customer reviews */}
-        <section className="hidden sm:block bg-brand-cream-2 rounded-2xl p-6 sm:p-8 border border-border shadow-soft">
+        <section className="bg-brand-cream-2 rounded-2xl p-6 sm:p-8 border border-border shadow-soft">
           <h2 className="font-display text-brand-forest text-center mb-6 font-bold" style={{ fontSize: "clamp(1.25rem, 3.5vw, 1.5rem)" }}>
             {t.customerReviews}
           </h2>

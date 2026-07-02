@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
-import { X, Sun, Moon, Languages, User, Package, Heart, CircleHelp, Info, MapPin, Phone, ChevronRight, Settings } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { X, Sun, Moon, Languages, User, Package, Heart, CircleHelp, Info, MapPin, Phone, ChevronRight } from "lucide-react";
 import { Link } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { IconButton } from "./ui/IconButton";
 import logoImg from "../../assets/logo.webp";
+import { useDialogAccessibility } from "../hooks/useDialogAccessibility";
 
 interface DrawerProfile {
   firstName: string;
@@ -57,6 +58,7 @@ function Row({ icon: Icon, label, to, onClick }: { icon: typeof User; label: Rea
 
 export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
   const { theme, setTheme, locale, setLocale, t, isRTL } = useAppSettings();
+  const dialogRef = useRef<HTMLElement>(null);
 
   // Load profile dynamically when drawer is opened
   const [profile, setProfile] = useState<DrawerProfile | null>(null);
@@ -104,14 +106,11 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
     }
   }, [open, locale]);
 
-  useEffect(() => {
-    if (!open) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [open, onClose]);
+  useDialogAccessibility({
+    containerRef: dialogRef,
+    onClose,
+    open,
+  });
 
   const account = [
             { icon: User, label: t.yourAccount, to: "/account?tab=profile" },
@@ -137,9 +136,11 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
             className="fixed inset-0 bg-brand-ink/45 backdrop-blur-sm z-40"
           />
           <motion.aside
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-label={locale === "ar" ? "قائمة التنقل" : "Navigation Menu"}
+            tabIndex={-1}
             initial={{ x: isRTL ? "100%" : "-100%" }}
             animate={{ x: 0 }}
             exit={{ x: isRTL ? "100%" : "-100%" }}
@@ -150,7 +151,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
               <Link to="/" onClick={onClose} className="flex items-center gap-2 select-none cursor-pointer">
                 <img src={logoImg} alt="Haj Arafa Logo" className="h-8 w-auto object-contain select-none pointer-events-none" />
               </Link>
-              <IconButton onClick={onClose} aria-label="Close">
+              <IconButton onClick={onClose} aria-label={locale === "ar" ? "إغلاق" : "Close"}>
                 <X size={18} />
               </IconButton>
             </div>

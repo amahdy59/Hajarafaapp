@@ -1,5 +1,5 @@
 import { useState, useEffect, useLayoutEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router";
+import { useParams, Link } from "react-router";
 import { Heart, ShoppingCart, Share2, ChevronLeft, ChevronDown, Star, Plus, Minus, Leaf, Truck, Shield, RotateCcw, Check } from "lucide-react";
 import { getProductById, products } from "../data/products";
 import { categories, categoryMapping } from "../data/categories";
@@ -11,6 +11,7 @@ import { ProductCard } from "../components/ProductCard";
 import { toast } from "sonner";
 import { motion } from "motion/react";
 import { Button } from "../components/ui/Button";
+import { usePageMeta } from "../hooks/usePageMeta";
 
 
 const mockReviews = [
@@ -63,7 +64,6 @@ const getSpecLabel = (weight: string, t: any) => {
 
 export function ProductDetail() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const product = getProductById(id || "");
   const { addToCart } = useCart();
   const { isWishlisted, toggleWishlist } = useWishlist();
@@ -94,6 +94,23 @@ export function ProductDetail() {
     setAccordionOpen(prev => ({ ...prev, [section]: !prev[section] }));
   };
   const wishlisted = product ? isWishlisted(product.id) : false;
+
+  usePageMeta({
+    description: product
+      ? isRTL && product.nameAr
+        ? `تعرف على ${product.nameAr} من حاج عرفة مع تفاصيل وفوائد واستخدام أوضح.`
+        : `Explore ${product.name} from Haj Arafa with clearer details, benefits, and usage guidance.`
+      : isRTL
+        ? "تفاصيل المنتج غير متوفرة."
+        : "Product details are unavailable.",
+    title: product
+      ? isRTL && product.nameAr
+        ? `${product.nameAr} | حاج عرفة`
+        : `${product.name} | Haj Arafa`
+      : isRTL
+        ? "المنتج غير موجود | حاج عرفة"
+        : "Product Not Found | Haj Arafa",
+  });
 
   const parentSlug = product ? (categoryMapping[product.categorySlug] || product.categorySlug) : "";
   const parentCategory = categories.find(c => c.slug === parentSlug);

@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import logoImg from "../../assets/logo.webp";
 
 export function About() {
-  const { t, isRTL } = useAppSettings();
+  const { isRTL } = useAppSettings();
 
   // Localized copy
   const content = {

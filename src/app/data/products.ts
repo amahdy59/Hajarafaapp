@@ -55,8 +55,6 @@ export interface Product {
   isOrganic?: boolean;
 }
 
-const HAJ = "https://hajarafa.com/cdn/shop/files/";
-
 export const products: Product[] = [
   // Incense
   {
@@ -391,8 +389,8 @@ export const products: Product[] = [
 export const getProductById = (id: string) => products.find(p => p.id === id);
 export const getProductsByCategory = (slug: string) => {
   const subSlugs = Object.entries(categoryMapping)
-    .filter(([_, parent]) => parent === slug)
-    .map(([sub, _]) => sub);
+    .filter(([, parent]) => parent === slug)
+    .map(([sub]) => sub);
   const matchSlugs = subSlugs.length > 0 ? subSlugs : [slug];
   return products.filter(p => matchSlugs.includes(p.categorySlug));
 };

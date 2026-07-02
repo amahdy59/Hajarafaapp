@@ -26,8 +26,8 @@ function deriveBadge(p: Product, isRTL: boolean): { label: string; tone: BadgeTo
 }
 
 const badgeCls: Record<BadgeTone, string> = {
-  sage: "bg-brand-sage/10 !text-brand-forest dark:!text-brand-sage-dark border-brand-sage/20",
-  terracotta: "bg-brand-terracotta/10 !text-brand-terracotta-dark dark:!text-[#FFCFB3] border-brand-terracotta/20",
+  sage: "bg-brand-forest !text-brand-cream border-brand-forest",
+  terracotta: "bg-brand-terracotta !text-brand-cream border-brand-terracotta",
 };
 
 export const ProductCard = memo(function ProductCard({ product, view = "grid" }: ProductCardProps) {
@@ -104,17 +104,17 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
       className="bg-card rounded-2xl border-0 sm:border border-border dark:border-zinc-700/60 overflow-hidden flex flex-col h-full hover:shadow-soft hover:border-brand-terracotta/40 transition-all duration-300 group"
     >
       <Link to={`/products/${product.id}`} className="flex flex-col flex-1">
-        <div className="relative aspect-[1.1] sm:aspect-square product-media-surface overflow-hidden flex items-center justify-center p-1 sm:p-1.5 border-b-0 sm:border-b border-border/20">
+        <div className="relative isolate aspect-[1.1] sm:aspect-square product-media-surface overflow-hidden flex items-center justify-center p-1 sm:p-1.5 border-b-0 sm:border-b border-border/20">
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-contain p-2.5 sm:p-3 mix-blend-multiply dark:mix-blend-normal transition-transform duration-500 group-hover:-translate-y-1"
+            className="relative z-0 w-full h-full object-contain p-2.5 sm:p-3 mix-blend-multiply dark:mix-blend-normal transition-transform duration-500 group-hover:-translate-y-1"
             loading="lazy"
           />
 
           {badge && (
             <span
-              className={`absolute top-2.5 sm:top-3.5 start-2.5 sm:start-3.5 px-1.5 sm:px-2.5 py-0.5 rounded border ${badgeCls[badge.tone]} eyebrow shadow-sm hidden sm:inline-block`}
+              className={`absolute top-2.5 sm:top-3.5 start-2.5 sm:start-3.5 z-20 px-1.5 sm:px-2.5 py-0.5 rounded border ${badgeCls[badge.tone]} eyebrow shadow-sm hidden sm:inline-block pointer-events-none`}
               style={{ fontSize: "9px" }}
             >
               {badge.label}

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useRef } from "react";
 import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, Sparkles, Truck } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { useAppSettings } from "../context/AppSettingsContext";
@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Link, useNavigate } from "react-router";
 import { Button } from "./ui/Button";
 import { DELIVERY_NOTICE } from "../config/contact";
+import { useDialogAccessibility } from "../hooks/useDialogAccessibility";
 
 
 const THRESHOLD = 500;
@@ -14,16 +15,13 @@ export function CartDrawer() {
   const { items, isCartOpen, setCartOpen, updateQuantity, removeFromCart, totalPrice, totalItems } = useCart();
   const { t, isRTL, locale } = useAppSettings();
   const navigate = useNavigate();
+  const dialogRef = useRef<HTMLDivElement>(null);
 
-
-  useEffect(() => {
-    if (!isCartOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setCartOpen(false);
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isCartOpen, setCartOpen]);
+  useDialogAccessibility({
+    containerRef: dialogRef,
+    onClose: () => setCartOpen(false),
+    open: isCartOpen,
+  });
 
   const progressPct = Math.min((totalPrice / THRESHOLD) * 100, 100);
   const remaining = (THRESHOLD - totalPrice).toFixed(2);
@@ -40,9 +38,11 @@ export function CartDrawer() {
             onClick={() => setCartOpen(false)}
           />
           <motion.div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-label={isRTL ? "عربة التسوق" : "Shopping Cart"}
+            tabIndex={-1}
             initial={{ x: isRTL ? "-100%" : "100%" }}
             animate={{ x: 0 }}
             exit={{ x: isRTL ? "-100%" : "100%" }}
@@ -61,9 +61,10 @@ export function CartDrawer() {
                 )}
               </div>
               <button
+                type="button"
                 onClick={() => setCartOpen(false)}
                 className="w-11 h-11 rounded-full bg-muted flex items-center justify-center hover:bg-border transition-colors"
-                aria-label="Close"
+                aria-label={isRTL ? "إغلاق" : "Close"}
               >
                 <X size={16} className="text-foreground" />
               </button>
@@ -77,6 +78,7 @@ export function CartDrawer() {
                   <p className="text-foreground">{t.cartEmpty}</p>
                   <p className="text-muted-foreground" style={{ fontSize: "0.875rem" }}>{t.cartEmptyHint}</p>
                   <button
+                    type="button"
                     onClick={() => setCartOpen(false)}
                     className="mt-2 bg-brand-terracotta text-white px-6 py-2.5 rounded-xl hover:bg-brand-terracotta-dark transition-colors active:scale-95 min-h-11"
                     style={{ fontSize: "0.875rem" }}
@@ -107,6 +109,7 @@ export function CartDrawer() {
                           </span>
                           <div className="flex items-center gap-1.5">
                             <button
+                              type="button"
                               onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
                               className="w-11 h-11 rounded-full bg-background border border-border flex items-center justify-center hover:border-brand-terracotta transition-colors"
                               aria-label={`Decrease quantity for ${item.product.name}`}
@@ -117,6 +120,7 @@ export function CartDrawer() {
                               {item.quantity}
                             </span>
                             <button
+                              type="button"
                               onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
                               className="w-11 h-11 rounded-full bg-background border border-border flex items-center justify-center hover:border-brand-terracotta transition-colors"
                               aria-label={`Increase quantity for ${item.product.name}`}
@@ -134,6 +138,7 @@ export function CartDrawer() {
                         />
                       </div>
                       <button
+                        type="button"
                         onClick={() => removeFromCart(item.product.id)}
                         className="self-start text-muted-foreground hover:text-destructive transition-colors p-2 mt-0.5"
                         aria-label={`Remove ${item.product.name} from cart`}

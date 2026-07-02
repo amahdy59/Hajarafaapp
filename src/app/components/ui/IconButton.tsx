@@ -1,10 +1,25 @@
 import { ButtonHTMLAttributes, forwardRef, ReactNode } from "react";
 import { motion, AnimatePresence } from "motion/react";
 
+type NativeIconButtonProps = Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  | "onAnimationEnd"
+  | "onAnimationIteration"
+  | "onAnimationStart"
+  | "onDrag"
+  | "onDragEnd"
+  | "onDragEnter"
+  | "onDragExit"
+  | "onDragLeave"
+  | "onDragOver"
+  | "onDragStart"
+  | "onDrop"
+>;
+
 type Variant = "ghost" | "solid" | "outline";
 type Size = "sm" | "md" | "lg";
 
-interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface IconButtonProps extends NativeIconButtonProps {
   variant?: Variant;
   size?: Size;
   badge?: number;
