@@ -26,8 +26,8 @@ function deriveBadge(p: Product, isRTL: boolean): { label: string; tone: BadgeTo
 }
 
 const badgeCls: Record<BadgeTone, string> = {
-  sage: "bg-brand-forest/92 !text-brand-cream border-brand-sage/30 dark:bg-brand-sage-dark/90 dark:!text-brand-ink",
-  terracotta: "bg-brand-terracotta-dark/92 !text-brand-cream border-brand-terracotta/30 dark:bg-brand-terracotta/90 dark:!text-brand-cream",
+  sage: "bg-brand-forest !text-brand-cream border-brand-forest",
+  terracotta: "bg-brand-terracotta !text-brand-cream border-brand-terracotta",
 };
 
 export const ProductCard = memo(function ProductCard({ product, view = "grid" }: ProductCardProps) {
@@ -114,7 +114,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
 
           {badge && (
             <span
-              className={`absolute top-2.5 sm:top-3.5 start-2.5 sm:start-3.5 z-20 px-1.5 sm:px-2.5 py-0.5 rounded border ${badgeCls[badge.tone]} eyebrow shadow-sm backdrop-blur-md hidden sm:inline-block pointer-events-none`}
+              className={`absolute top-2.5 sm:top-3.5 start-2.5 sm:start-3.5 z-20 px-1.5 sm:px-2.5 py-0.5 rounded border ${badgeCls[badge.tone]} eyebrow shadow-sm hidden sm:inline-block pointer-events-none`}
               style={{ fontSize: "9px" }}
             >
               {badge.label}
