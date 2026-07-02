@@ -12,3 +12,5 @@ pnpm-debug.log*
 .idea/
 .vscode/
 .gemini/
+scratch/
+*.tsbuildinfo

@@ -7,16 +7,25 @@ import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 import { Button } from "../components/ui/Button";
 import { DELIVERY_NOTICE } from "../config/contact";
+import { usePageMeta } from "../hooks/usePageMeta";
 
 
 type Step = "shipping" | "payment" | "confirmation";
 
 export function Checkout() {
-  const { items, totalPrice, totalItems, clearCart } = useCart();
+  const { items, totalPrice, clearCart } = useCart();
   const { t, isRTL } = useAppSettings();
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>("shipping");
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const [orderNumber] = useState(() => `HJR-${Date.now().toString().slice(-6)}`);
+
+  usePageMeta({
+    description: isRTL
+      ? "خطوات دفع أوضح مع تنبيه صريح أن هذا التدفق ما زال عرضاً تجريبياً."
+      : "A clearer checkout flow with an explicit note that this payment experience is still a demo.",
+    title: isRTL ? "الدفع | حاج عرفة" : "Checkout | Haj Arafa",
+  });
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
@@ -178,6 +187,12 @@ export function Checkout() {
           })}
         </div>
 
+        <div className="mb-6 rounded-2xl border border-brand-terracotta/20 bg-brand-peach/50 px-4 py-3 text-sm text-brand-ink-soft">
+          {isRTL
+            ? "تنبيه: هذا مسار دفع تجريبي داخل الواجهة فقط. لا تتم معالجة أي دفعات حقيقية أو إنشاء طلبات فعلية بعد."
+            : "Note: this checkout is still a front-end demo. No real payments are processed and no live orders are created yet."}
+        </div>
+
         {step === "confirmation" ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -194,7 +209,7 @@ export function Checkout() {
             <div className="bg-brand-peach rounded-2xl p-4 mb-6 text-start space-y-3">
               <div className="flex justify-between" style={{ fontSize: "0.875rem" }}>
                 <span className="text-muted-foreground">{t.orderNumber}</span>
-                <span className="text-foreground">#HJR-{Date.now().toString().slice(-6)}</span>
+                <span className="text-foreground">#{orderNumber}</span>
               </div>
               <div className="flex justify-between" style={{ fontSize: "0.875rem" }}>
                 <span className="text-muted-foreground">{t.estimatedDelivery}</span>

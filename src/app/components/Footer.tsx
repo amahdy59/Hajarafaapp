@@ -91,7 +91,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="hidden sm:block bg-[#0D1511] text-[#FAF6F0] border-t border-white/10 mt-16 select-none relative overflow-hidden">
+    <footer className="bg-[#0D1511] text-[#FAF6F0] border-t border-white/10 mt-10 sm:mt-16 select-none relative overflow-hidden">
       {/* Background Gradients */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_15%_0%,rgba(141,163,146,0.10),transparent_32%),radial-gradient(circle_at_85%_15%,rgba(244,231,218,0.07),transparent_28%)]" />
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#F4E7DA]/30 to-transparent" />
