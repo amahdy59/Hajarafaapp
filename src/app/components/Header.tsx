@@ -46,7 +46,7 @@ export function Header() {
       <SettingsDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
 
       <header
-        className={`fixed top-0 inset-x-0 z-30 bg-background/90 backdrop-blur-xl transition-shadow safe-area-pt ${
+        className={`fixed top-0 inset-x-0 z-40 bg-background/90 backdrop-blur-xl transition-shadow safe-area-pt ${
           scrolled ? "shadow-soft border-b border-border" : "border-b border-transparent"
         }`}
       >
@@ -141,7 +141,7 @@ export function Header() {
 
         {/* Category Navigation Rail */}
         {(location.pathname === "/" || location.pathname.startsWith("/category/") || location.pathname === "/products") && (
-          <div className="hidden sm:block border-t border-border">
+          <div className="hidden sm:block relative z-10 border-t border-border bg-background/95 backdrop-blur-xl">
             <div className="max-w-[1280px] mx-auto overflow-x-auto scrollbar-hide py-2.5">
               <div className="flex gap-2 w-max px-4 sm:px-6">
                 <Link
