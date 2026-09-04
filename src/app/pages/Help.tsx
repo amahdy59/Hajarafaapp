@@ -3,7 +3,8 @@ import { ArrowLeft, CircleHelp, Search, ChevronDown, Phone, MessageCircle } from
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
-import { CONTACT } from "../config/contact";
+import { CONTACT, SHIPPING_CONFIG } from "../config/contact";
+import { usePageMeta } from "../hooks/usePageMeta";
 
 interface FAQItem {
   id: string;
@@ -20,8 +21,8 @@ const mockFAQs: FAQItem[] = [
     category: "shipping",
     questionEn: "What are the shipping charges?",
     questionAr: "ما هي تكاليف الشحن؟",
-    answerEn: "Shipping is free for orders over LE 500. For orders below LE 500, a flat rate of LE 30 applies across all major Egypt cities.",
-    answerAr: "الشحن مجاني للطلبات التي تزيد عن ٥٠٠ ج.م. للطلبات الأقل من ٥٠٠ ج.م، يتم تطبيق رسوم شحن ثابتة بقيمة ٣٠ ج.م في جميع المحافظات."
+    answerEn: `Shipping is free for orders over LE ${SHIPPING_CONFIG.freeThreshold}. For orders below LE ${SHIPPING_CONFIG.freeThreshold}, a flat rate of LE ${SHIPPING_CONFIG.flatRate} applies across all major Egypt cities.`,
+    answerAr: `الشحن مجاني للطلبات التي تزيد عن ${SHIPPING_CONFIG.freeThreshold} ج.م. للطلبات الأقل من ${SHIPPING_CONFIG.freeThreshold} ج.م، يتم تطبيق رسوم شحن ثابتة بقيمة ${SHIPPING_CONFIG.flatRate} ج.م في جميع المحافظات.`
   },
   {
     id: "q2",
@@ -59,6 +60,12 @@ const mockFAQs: FAQItem[] = [
 
 export function Help() {
   const { t, isRTL } = useAppSettings();
+
+  usePageMeta({
+    title: `${t.customerService} | ${isRTL ? "حاج عرفة" : "Haj Arafa"}`,
+    description: isRTL ? "مركز مساعدة وخدمة عملاء حاج عرفة - الأسئلة الشائعة، الشحن، وطرق التواصل" : "Haj Arafa customer service and help center - FAQs, shipping policies, and support contacts",
+  });
+
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [expandedCategory, setExpandedCategory] = useState<string | null>("shipping");

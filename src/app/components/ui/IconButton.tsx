@@ -50,17 +50,21 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       {children}
       <AnimatePresence mode="wait">
         {badge && badge > 0 ? (
-          <motion.span
-            key={badge}
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.5, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 20 }}
-            className="absolute -top-0.5 -end-0.5 min-w-[16px] h-4 px-1 bg-brand-terracotta text-white rounded-full flex items-center justify-center border border-background"
-            style={{ fontSize: "9px", letterSpacing: 0 }}
-          >
-            {badge > 99 ? "99+" : badge}
-          </motion.span>
+          <>
+            <motion.span
+              key={badge}
+              aria-hidden="true"
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.5, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 500, damping: 20 }}
+              className="absolute -top-0.5 -end-0.5 min-w-[16px] h-4 px-1 bg-brand-terracotta text-white dark:text-zinc-950 font-bold rounded-full flex items-center justify-center border border-background"
+              style={{ fontSize: "9px", letterSpacing: 0 }}
+            >
+              {badge > 99 ? "99+" : badge}
+            </motion.span>
+            <span className="sr-only"> ({badge > 99 ? "99+" : badge})</span>
+          </>
         ) : null}
       </AnimatePresence>
     </motion.button>

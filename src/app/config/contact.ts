@@ -14,3 +14,8 @@ export const DELIVERY_NOTICE = {
   shortEn: "Delivery: 5 to 7 working days",
   shortAr: "التوصيل خلال ٥ إلى ٧ أيام عمل",
 } as const;
+
+export const SHIPPING_CONFIG = {
+  flatRate: 49,
+  freeThreshold: 500,
+} as const;

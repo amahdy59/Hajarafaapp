@@ -7,6 +7,7 @@ import { CartDrawer } from "./components/CartDrawer";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import logoImg from "../assets/logo.webp";
 import { Footer } from "./components/Footer";
+import { useAppSettings } from "./context/AppSettingsContext";
 
 /* Prevent the browser and router from restoring previous page positions.
    Every route visit should start at the top, matching ecommerce expectations. */
@@ -28,6 +29,7 @@ const PageLoader = () => (
 
 export function Root() {
   const location = useLocation();
+  const { isRTL } = useAppSettings();
   const isCheckout = location.pathname === "/checkout";
   const hasCategoryRail = location.pathname === "/" || location.pathname.startsWith("/category/") || location.pathname === "/products";
   const mainPadding = hasCategoryRail ? "pt-16 sm:pt-[124px]" : "pt-16";
@@ -64,17 +66,24 @@ export function Root() {
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans w-full max-w-full overflow-x-hidden">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:start-4 focus:z-50 focus:px-4 focus:py-2.5 focus:bg-brand-terracotta focus:text-white dark:focus:text-brand-ink focus:rounded-xl focus:shadow-elev focus:outline-none focus:ring-2 focus:ring-ring font-semibold text-sm"
+      >
+        {isRTL ? "الانتقال إلى المحتوى الرئيسي" : "Skip to main content"}
+      </a>
+
       {!isCheckout && <Header />}
 
       {isCheckout ? (
-        <div className="pt-0 w-full max-w-full overflow-x-hidden">
+        <div id="main-content" tabIndex={-1} className="pt-0 w-full max-w-full overflow-x-hidden outline-none">
           <div className="bg-card border-b border-border px-4 py-3.5 safe-area-pt">
             <div className="max-w-5xl mx-auto flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <img src={logoImg} alt="Haj Arafa" className="h-8 w-auto object-contain" />
               </div>
               <span className="text-muted-foreground flex items-center gap-1" style={{ fontSize: "0.8rem" }}>
-                🔒 Secure Checkout
+                {isRTL ? "🔒 إتمام دفع آمن" : "🔒 Secure Checkout"}
               </span>
             </div>
           </div>
@@ -86,7 +95,7 @@ export function Root() {
         </div>
       ) : (
         <>
-          <main className={`${mainPadding} pb-24 sm:pb-8 w-full max-w-full overflow-x-hidden`}>
+          <main id="main-content" tabIndex={-1} className={`${mainPadding} pb-24 sm:pb-8 w-full max-w-full overflow-x-hidden outline-none`}>
             <ErrorBoundary>
               <Suspense fallback={<PageLoader />}>
                 <Outlet />

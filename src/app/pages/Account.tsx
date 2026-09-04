@@ -87,6 +87,11 @@ const statusTranslations: Record<string, { en: string; ar: string }> = {
 };
 
 
+export type Order = (typeof initialOrders)[number];
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type LeafletAny = any;
+
 interface LeafletMapProps {
   centerCoords: { lat: number; lng: number };
   onLocationSelect: (address: string, coords: { lat: number; lng: number }) => void;
@@ -95,8 +100,8 @@ interface LeafletMapProps {
 
 function LeafletMap({ centerCoords, onLocationSelect, isRTL }: LeafletMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<any>(null);
-  const markerRef = useRef<any>(null);
+  const mapInstanceRef = useRef<LeafletAny>(null);
+  const markerRef = useRef<LeafletAny>(null);
 
   // Use refs for callbacks and dynamic parameters to avoid recreation on change
   const onLocationSelectRef = useRef(onLocationSelect);
@@ -122,7 +127,7 @@ function LeafletMap({ centerCoords, onLocationSelect, isRTL }: LeafletMapProps) 
     }
 
     const initMap = () => {
-      const L = (window as any).L;
+      const L = (window as unknown as { L?: LeafletAny }).L;
       if (!L || !mapRef.current || mapInstanceRef.current) return;
 
       // Start with the initial coordinates
@@ -167,7 +172,7 @@ function LeafletMap({ centerCoords, onLocationSelect, isRTL }: LeafletMapProps) 
         }
       };
 
-      map.on("click", (e: any) => {
+      map.on("click", (e: LeafletAny) => {
         const { lat, lng } = e.latlng;
         marker.setLatLng([lat, lng]);
         reverseGeocode(lat, lng);
@@ -182,7 +187,7 @@ function LeafletMap({ centerCoords, onLocationSelect, isRTL }: LeafletMapProps) 
     };
 
     // Load Leaflet JS if not loaded
-    if (!(window as any).L) {
+    if (!(window as unknown as { L?: LeafletAny }).L) {
       if (!document.getElementById("leaflet-js")) {
         const script = document.createElement("script");
         script.id = "leaflet-js";
@@ -203,11 +208,12 @@ function LeafletMap({ centerCoords, onLocationSelect, isRTL }: LeafletMapProps) 
         markerRef.current = null;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Mount once!
 
   // Map Update Effect (Synchronizes coordinate changes from parent)
   useEffect(() => {
-    const L = (window as any).L;
+    const L = (window as unknown as { L?: LeafletAny }).L;
     if (!L || !mapInstanceRef.current || !markerRef.current) return;
 
     const currentLatLng = markerRef.current.getLatLng();
@@ -448,7 +454,7 @@ export function Account() {
   const [newCardCvv, setNewCardCvv] = useState("");
 
   // Detailed Order Modal States
-  const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isCopied, setIsCopied] = useState(false);
 
   const [addresses, setAddresses] = useState([
@@ -560,7 +566,7 @@ export function Account() {
     toast.success(isRTL ? "تم إلغاء الطلب بنجاح" : "Order cancelled successfully");
   };
 
-  const handlePrintReceipt = (order: any) => {
+  const handlePrintReceipt = (order: Order) => {
     const printWindow = window.open("", "_blank");
     if (!printWindow) {
       toast.error(isRTL ? "فشل فتح نافذة الطباعة" : "Failed to open print window");
@@ -568,7 +574,7 @@ export function Account() {
     }
 
     // Build items HTML
-    const itemsHtml = order.products.map((prod: any) => `
+    const itemsHtml = order.products.map((prod) => `
       <tr>
         <td style="padding: 10px; border-bottom: 1px solid rgba(0,0,0,0.06); font-family: inherit;">
           ${isRTL ? (prod.nameAr || prod.name) : prod.name}
@@ -2026,7 +2032,7 @@ export function Account() {
                   <h4 className="text-xs font-semibold uppercase text-brand-ink-soft select-none">
                     {isRTL ? "محتويات الشحنة" : "Shipment Items"}
                   </h4>
-                  {selectedOrder.products?.map((prod: any, i: number) => (
+                  {selectedOrder.products?.map((prod, i: number) => (
                     <div key={i} className="flex justify-between items-center gap-3 border-b border-border/40 pb-3">
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-12 bg-muted p-1 rounded-xl flex items-center justify-center flex-shrink-0 border border-border/30">

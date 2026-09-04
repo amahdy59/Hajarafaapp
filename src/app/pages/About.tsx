@@ -3,9 +3,17 @@ import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion } from "motion/react";
 import logoImg from "../../assets/logo.webp";
+import { usePageMeta } from "../hooks/usePageMeta";
 
 export function About() {
   const { isRTL } = useAppSettings();
+
+  usePageMeta({
+    title: isRTL ? "عن حاج عرفة | منذ ١٩٦٨" : "About Us | Haj Arafa Since 1968",
+    description: isRTL
+      ? "تعرف على قصة وتاريخ حاج عرفة منذ عام ١٩٦٨ - أجود الأعشاب الطبيعية والزيوت والعسل الأصلي في مصر."
+      : "Discover the heritage and story of Haj Arafa since 1968 - Egypt's leading natural food and botanical remedies brand.",
+  });
 
   // Localized copy
   const content = {
@@ -69,7 +77,7 @@ export function About() {
             style={{ backgroundColor: "rgba(27, 28, 26, 0.78)" }}
           >
             <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 shadow-inner w-fit">
-              <img src={logoImg} alt="Haj Arafa Logo" className="h-12 sm:h-14 w-auto object-contain select-none pointer-events-none" />
+              <img src={logoImg} alt={isRTL ? "شعار حاج عرفة" : "Haj Arafa Logo"} className="h-12 sm:h-14 w-auto object-contain select-none pointer-events-none" />
             </div>
             <div className="space-y-1">
               <h1 className="text-white text-2xl sm:text-3xl font-display select-none">
@@ -106,7 +114,7 @@ export function About() {
           <div className="rounded-2xl overflow-hidden aspect-[4/3] border border-border product-media-surface p-3 flex items-center justify-center">
             <img 
               src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=500&auto=format&fit=crop" 
-              alt="Herbal apothecary" 
+              alt={isRTL ? "صيدلية الأعشاب الطبيعية والزيوت" : "Herbal apothecary and natural remedies"} 
               className="w-full h-full object-cover rounded-xl"
             />
           </div>

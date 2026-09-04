@@ -30,7 +30,7 @@ function Segmented<T extends string>({
             key={opt.value}
             onClick={() => onChange(opt.value)}
             aria-pressed={active}
-            className={`min-h-11 px-3.5 py-1 rounded-full transition-all ${active ? "bg-brand-terracotta text-white" : "text-muted-foreground hover:text-foreground"}`}
+            className={`min-h-11 px-3.5 py-1 rounded-full transition-all ${active ? "bg-brand-terracotta text-white dark:text-zinc-950 font-bold" : "text-muted-foreground hover:text-foreground"}`}
             style={{ fontSize: "12px", letterSpacing: "0.8px" }}
           >
             {opt.label}
@@ -149,7 +149,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           >
             <div className="sticky top-0 z-10 bg-card/95 backdrop-blur-xl border-b border-border px-4 py-3 flex items-center justify-between safe-area-pt">
               <Link to="/" onClick={onClose} className="flex items-center gap-2 select-none cursor-pointer">
-                <img src={logoImg} alt="Haj Arafa Logo" className="h-8 w-auto object-contain select-none pointer-events-none" />
+                <img src={logoImg} alt={isRTL ? "شعار حاج عرفة" : "Haj Arafa Logo"} className="h-8 w-auto object-contain select-none pointer-events-none" />
               </Link>
               <IconButton onClick={onClose} aria-label={locale === "ar" ? "إغلاق" : "Close"}>
                 <X size={18} />

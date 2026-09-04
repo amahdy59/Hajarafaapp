@@ -12,8 +12,12 @@ export function StarRating({ rating, reviewCount, size = "sm", showCount = true 
   const textSize = size === "sm" ? "text-xs" : size === "md" ? "text-sm" : "text-base";
 
   return (
-    <div className="flex items-center gap-1">
-      <div className="flex items-center gap-0.5">
+    <div
+      role="img"
+      aria-label={`Rating: ${rating} out of 5 stars${reviewCount !== undefined ? `, based on ${reviewCount.toLocaleString()} reviews` : ""}`}
+      className="flex items-center gap-1"
+    >
+      <div className="flex items-center gap-0.5" aria-hidden="true">
         {[1, 2, 3, 4, 5].map(star => {
           const filled = star <= Math.floor(rating);
           const partial = !filled && star <= rating + 0.5;
@@ -21,7 +25,7 @@ export function StarRating({ rating, reviewCount, size = "sm", showCount = true 
             <span key={star} className="relative inline-block">
               <Star
                 size={starSize}
-                className="text-gray-200"
+                className="text-border dark:text-zinc-700"
                 fill="currentColor"
               />
               {(filled || partial) && (
@@ -31,7 +35,7 @@ export function StarRating({ rating, reviewCount, size = "sm", showCount = true 
                 >
                   <Star
                     size={starSize}
-                    className="text-amber-400"
+                    className="text-amber-500 dark:text-amber-400"
                     fill="currentColor"
                   />
                 </span>
@@ -41,7 +45,7 @@ export function StarRating({ rating, reviewCount, size = "sm", showCount = true 
         })}
       </div>
       {showCount && reviewCount !== undefined && (
-        <span className={`${textSize} text-gray-500`}>({reviewCount.toLocaleString()})</span>
+        <span className={`${textSize} text-muted-foreground font-medium`}>({reviewCount.toLocaleString()})</span>
       )}
     </div>
   );

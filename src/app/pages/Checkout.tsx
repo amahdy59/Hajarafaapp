@@ -6,7 +6,7 @@ import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 import { Button } from "../components/ui/Button";
-import { DELIVERY_NOTICE } from "../config/contact";
+import { DELIVERY_NOTICE, SHIPPING_CONFIG } from "../config/contact";
 import { usePageMeta } from "../hooks/usePageMeta";
 
 
@@ -19,6 +19,7 @@ export function Checkout() {
   const [step, setStep] = useState<Step>("shipping");
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [orderNumber] = useState(() => `HJR-${Date.now().toString().slice(-6)}`);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   usePageMeta({
     description: isRTL
@@ -33,7 +34,7 @@ export function Checkout() {
     document.body.scrollTop = 0;
   }, [step]);
 
-  const shipping = totalPrice >= 500 ? 0 : 49;
+  const shipping = totalPrice >= SHIPPING_CONFIG.freeThreshold ? 0 : SHIPPING_CONFIG.flatRate;
   const tax = totalPrice * 0.14;
   const total = totalPrice + shipping + tax;
 
@@ -46,45 +47,88 @@ export function Checkout() {
     cardNumber: "", cardName: "", expiry: "", cvv: "",
   });
 
-  const updateShipping = (field: string, value: string) =>
+  const updateShipping = (field: string, value: string) => {
     setShippingData(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors(prev => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
+    }
+  };
 
-  const updatePayment = (field: string, value: string) =>
+  const updatePayment = (field: string, value: string) => {
     setPaymentData(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors(prev => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
+    }
+  };
 
   const validateShipping = () => {
     const { firstName, lastName, email, address, city, zip } = shippingData;
-    if (!firstName.trim() || !lastName.trim() || !email.trim() || !address.trim() || !city.trim() || !zip.trim()) {
+    const newErrors: Record<string, string> = {};
+
+    if (!firstName.trim()) newErrors.firstName = isRTL ? "الاسم الأول مطلوب" : "First name is required";
+    if (!lastName.trim()) newErrors.lastName = isRTL ? "اسم العائلة مطلوب" : "Last name is required";
+    if (!email.trim()) {
+      newErrors.email = isRTL ? "البريد الإلكتروني مطلوب" : "Email address is required";
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        newErrors.email = isRTL ? "يرجى إدخال بريد إلكتروني صحيح" : "Please enter a valid email address";
+      }
+    }
+    if (!address.trim()) newErrors.address = isRTL ? "العنوان مطلوب" : "Address is required";
+    if (!city.trim()) newErrors.city = isRTL ? "المدينة مطلوبة" : "City is required";
+    if (!zip.trim()) newErrors.zip = isRTL ? "الرمز البريدي مطلوب" : "Postal code is required";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       toast.error(isRTL ? "يرجى ملء جميع الحقول المطلوبة (*)" : "Please fill in all required fields (*)");
       return false;
     }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      toast.error(isRTL ? "يرجى إدخال بريد إلكتروني صحيح" : "Please enter a valid email address");
-      return false;
-    }
+    setErrors({});
     return true;
   };
 
   const validatePayment = () => {
     const { cardNumber, cardName, expiry, cvv } = paymentData;
-    if (!cardNumber.trim() || !cardName.trim() || !expiry.trim() || !cvv.trim()) {
+    const newErrors: Record<string, string> = {};
+
+    const cleanCard = cardNumber.replace(/\s/g, "");
+    if (!cleanCard) {
+      newErrors.cardNumber = isRTL ? "رقم البطاقة مطلوب" : "Card number is required";
+    } else if (cleanCard.length < 15 || cleanCard.length > 16) {
+      newErrors.cardNumber = isRTL ? "يرجى إدخال رقم بطاقة صحيح (١٥-١٦ رقماً)" : "Please enter a valid card number (15-16 digits)";
+    }
+
+    if (!cardName.trim()) {
+      newErrors.cardName = isRTL ? "الاسم على البطاقة مطلوب" : "Cardholder name is required";
+    }
+
+    if (!expiry.trim()) {
+      newErrors.expiry = isRTL ? "تاريخ الانتهاء مطلوب" : "Expiry date is required";
+    } else if (!expiry.includes("/") || expiry.split("/")[0].length !== 2 || expiry.split("/")[1].length !== 2) {
+      newErrors.expiry = isRTL ? "يرجى إدخال تاريخ انتهاء صحيح (MM/YY)" : "Please enter a valid expiry date (MM/YY)";
+    }
+
+    if (!cvv.trim()) {
+      newErrors.cvv = isRTL ? "رمز CVV مطلوب" : "CVV is required";
+    } else if (cvv.length < 3 || cvv.length > 4) {
+      newErrors.cvv = isRTL ? "رمز أمان غير صحيح" : "Invalid CVV code";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       toast.error(isRTL ? "يرجى ملء جميع بيانات بطاقة الدفع (*)" : "Please fill in all payment card details (*)");
       return false;
     }
-    const cleanCard = cardNumber.replace(/\s/g, "");
-    if (cleanCard.length < 15 || cleanCard.length > 16) {
-      toast.error(isRTL ? "يرجى إدخال رقم بطاقة صحيح" : "Please enter a valid card number");
-      return false;
-    }
-    if (!expiry.includes("/") || expiry.split("/")[0].length !== 2 || expiry.split("/")[1].length !== 2) {
-      toast.error(isRTL ? "يرجى إدخال تاريخ انتهاء صحيح (MM/YY)" : "Please enter a valid expiry date (MM/YY)");
-      return false;
-    }
-    if (cvv.length < 3 || cvv.length > 4) {
-      toast.error(isRTL ? "يرجى إدخال رمز أمان صحيح (CVV)" : "Please enter a valid security code (CVV)");
-      return false;
-    }
+    setErrors({});
     return true;
   };
 
@@ -157,13 +201,13 @@ export function Checkout() {
         )}
 
         {/* Step indicators */}
-        <div className="flex items-center justify-center mb-8 gap-1">
+        <ol role="list" aria-label={isRTL ? "مراحل إتمام الطلب" : "Checkout steps"} className="flex items-center justify-center mb-8 gap-1">
           {steps.map((s, i) => {
             const currentIndex = steps.findIndex(x => x.id === step);
             const isDone = i < currentIndex;
             const isCurrent = s.id === step;
             return (
-              <div key={s.id} className="flex items-center">
+              <li key={s.id} aria-current={isCurrent ? "step" : undefined} className="flex items-center">
                 <div className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all ${
                   isCurrent ? "bg-brand-terracotta text-white" :
                   isDone ? "bg-brand-peach text-brand-terracotta" :
@@ -180,12 +224,12 @@ export function Checkout() {
                   </span>
                 </div>
                 {i < steps.length - 1 && (
-                  <div className={`w-8 h-0.5 mx-1 rounded-full ${isDone || isCurrent ? "bg-brand-terracotta" : "bg-border"}`} />
+                  <div aria-hidden="true" className={`w-8 h-0.5 mx-1 rounded-full ${isDone || isCurrent ? "bg-brand-terracotta" : "bg-border"}`} />
                 )}
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ol>
 
         <div className="mb-6 rounded-2xl border border-brand-terracotta/20 bg-brand-peach/50 px-4 py-3 text-sm text-brand-ink-soft">
           {isRTL
@@ -255,20 +299,56 @@ export function Checkout() {
                       <h2 className="text-foreground" style={{ fontSize: "1.1rem" }}>{t.shippingInfo}</h2>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label htmlFor="checkout-first-name" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.firstName} *</label>
-                        <input id="checkout-first-name" type="text" value={shippingData.firstName} onChange={e => updateShipping("firstName", e.target.value)} className={inputCls} placeholder={isRTL ? "محمد" : "John"} autoComplete="given-name" required />
+                        <input
+                          id="checkout-first-name"
+                          type="text"
+                          value={shippingData.firstName}
+                          onChange={e => updateShipping("firstName", e.target.value)}
+                          className={`${inputCls} ${errors.firstName ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
+                          placeholder={isRTL ? "محمد" : "John"}
+                          autoComplete="given-name"
+                          required
+                          aria-invalid={!!errors.firstName}
+                          aria-describedby={errors.firstName ? "err-first-name" : undefined}
+                        />
+                        {errors.firstName && <p id="err-first-name" role="alert" className="text-destructive text-xs mt-1">{errors.firstName}</p>}
                       </div>
                       <div>
                         <label htmlFor="checkout-last-name" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.lastName} *</label>
-                        <input id="checkout-last-name" type="text" value={shippingData.lastName} onChange={e => updateShipping("lastName", e.target.value)} className={inputCls} placeholder={isRTL ? "علي" : "Doe"} autoComplete="family-name" required />
+                        <input
+                          id="checkout-last-name"
+                          type="text"
+                          value={shippingData.lastName}
+                          onChange={e => updateShipping("lastName", e.target.value)}
+                          className={`${inputCls} ${errors.lastName ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
+                          placeholder={isRTL ? "علي" : "Doe"}
+                          autoComplete="family-name"
+                          required
+                          aria-invalid={!!errors.lastName}
+                          aria-describedby={errors.lastName ? "err-last-name" : undefined}
+                        />
+                        {errors.lastName && <p id="err-last-name" role="alert" className="text-destructive text-xs mt-1">{errors.lastName}</p>}
                       </div>
                     </div>
 
                     <div>
                       <label htmlFor="checkout-email" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.email} *</label>
-                      <input id="checkout-email" type="email" value={shippingData.email} onChange={e => updateShipping("email", e.target.value)} className={inputCls} placeholder="name@example.com" autoComplete="email" required />
+                      <input
+                        id="checkout-email"
+                        type="email"
+                        value={shippingData.email}
+                        onChange={e => updateShipping("email", e.target.value)}
+                        className={`${inputCls} ${errors.email ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
+                        placeholder="name@example.com"
+                        autoComplete="email"
+                        required
+                        aria-invalid={!!errors.email}
+                        aria-describedby={errors.email ? "err-email" : undefined}
+                      />
+                      {errors.email && <p id="err-email" role="alert" className="text-destructive text-xs mt-1">{errors.email}</p>}
                     </div>
 
                     <div>
@@ -278,13 +358,37 @@ export function Checkout() {
 
                     <div>
                       <label htmlFor="checkout-address" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.address} *</label>
-                      <input id="checkout-address" type="text" value={shippingData.address} onChange={e => updateShipping("address", e.target.value)} className={inputCls} placeholder={isRTL ? "١٢٣ شارع التحرير" : "123 Main Street, Apt 4B"} autoComplete="street-address" required />
+                      <input
+                        id="checkout-address"
+                        type="text"
+                        value={shippingData.address}
+                        onChange={e => updateShipping("address", e.target.value)}
+                        className={`${inputCls} ${errors.address ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
+                        placeholder={isRTL ? "١٢٣ شارع التحرير" : "123 Main Street, Apt 4B"}
+                        autoComplete="street-address"
+                        required
+                        aria-invalid={!!errors.address}
+                        aria-describedby={errors.address ? "err-address" : undefined}
+                      />
+                      {errors.address && <p id="err-address" role="alert" className="text-destructive text-xs mt-1">{errors.address}</p>}
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label htmlFor="checkout-city" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.city} *</label>
-                        <input id="checkout-city" type="text" value={shippingData.city} onChange={e => updateShipping("city", e.target.value)} className={inputCls} placeholder={isRTL ? "القاهرة" : "Cairo"} autoComplete="address-level2" required />
+                        <input
+                          id="checkout-city"
+                          type="text"
+                          value={shippingData.city}
+                          onChange={e => updateShipping("city", e.target.value)}
+                          className={`${inputCls} ${errors.city ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
+                          placeholder={isRTL ? "القاهرة" : "Cairo"}
+                          autoComplete="address-level2"
+                          required
+                          aria-invalid={!!errors.city}
+                          aria-describedby={errors.city ? "err-city" : undefined}
+                        />
+                        {errors.city && <p id="err-city" role="alert" className="text-destructive text-xs mt-1">{errors.city}</p>}
                       </div>
                       <div>
                         <label htmlFor="checkout-state" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.state}</label>
@@ -292,10 +396,22 @@ export function Checkout() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label htmlFor="checkout-zip" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.zip} *</label>
-                        <input id="checkout-zip" type="text" value={shippingData.zip} onChange={e => updateShipping("zip", e.target.value)} className={inputCls} placeholder="11511" autoComplete="postal-code" required />
+                        <input
+                          id="checkout-zip"
+                          type="text"
+                          value={shippingData.zip}
+                          onChange={e => updateShipping("zip", e.target.value)}
+                          className={`${inputCls} ${errors.zip ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
+                          placeholder="11511"
+                          autoComplete="postal-code"
+                          required
+                          aria-invalid={!!errors.zip}
+                          aria-describedby={errors.zip ? "err-zip" : undefined}
+                        />
+                        {errors.zip && <p id="err-zip" role="alert" className="text-destructive text-xs mt-1">{errors.zip}</p>}
                       </div>
                       <div>
                         <label htmlFor="checkout-country" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.country}</label>
@@ -346,20 +462,34 @@ export function Checkout() {
                         type="text"
                         value={paymentData.cardNumber}
                         onChange={e => updatePayment("cardNumber", e.target.value.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim())}
-                        className={inputCls}
+                        className={`${inputCls} ${errors.cardNumber ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
                         placeholder="1234 5678 9012 3456"
                         autoComplete="cc-number"
                         inputMode="numeric"
                         maxLength={19}
+                        aria-invalid={!!errors.cardNumber}
+                        aria-describedby={errors.cardNumber ? "err-card-number" : undefined}
                       />
+                      {errors.cardNumber && <p id="err-card-number" role="alert" className="text-destructive text-xs mt-1">{errors.cardNumber}</p>}
                     </div>
 
                     <div>
                       <label htmlFor="checkout-card-name" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.cardName} *</label>
-                      <input id="checkout-card-name" type="text" value={paymentData.cardName} onChange={e => updatePayment("cardName", e.target.value)} className={inputCls} placeholder={isRTL ? "محمد علي" : "John Doe"} autoComplete="cc-name" />
+                      <input
+                        id="checkout-card-name"
+                        type="text"
+                        value={paymentData.cardName}
+                        onChange={e => updatePayment("cardName", e.target.value)}
+                        className={`${inputCls} ${errors.cardName ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
+                        placeholder={isRTL ? "محمد علي" : "John Doe"}
+                        autoComplete="cc-name"
+                        aria-invalid={!!errors.cardName}
+                        aria-describedby={errors.cardName ? "err-card-name" : undefined}
+                      />
+                      {errors.cardName && <p id="err-card-name" role="alert" className="text-destructive text-xs mt-1">{errors.cardName}</p>}
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label htmlFor="checkout-card-expiry" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.expiry} *</label>
                         <input
@@ -370,16 +500,32 @@ export function Checkout() {
                             const val = e.target.value.replace(/\D/g, "").slice(0, 4);
                             updatePayment("expiry", val.length > 2 ? val.slice(0, 2) + "/" + val.slice(2) : val);
                           }}
-                          className={inputCls}
+                          className={`${inputCls} ${errors.expiry ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
                           placeholder="MM/YY"
                           autoComplete="cc-exp"
                           inputMode="numeric"
                           maxLength={5}
+                          aria-invalid={!!errors.expiry}
+                          aria-describedby={errors.expiry ? "err-expiry" : undefined}
                         />
+                        {errors.expiry && <p id="err-expiry" role="alert" className="text-destructive text-xs mt-1">{errors.expiry}</p>}
                       </div>
                       <div>
                         <label htmlFor="checkout-card-cvv" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.cvv} *</label>
-                        <input id="checkout-card-cvv" type="text" value={paymentData.cvv} onChange={e => updatePayment("cvv", e.target.value.replace(/\D/g, "").slice(0, 4))} className={inputCls} placeholder="123" maxLength={4} autoComplete="cc-csc" inputMode="numeric" />
+                        <input
+                          id="checkout-card-cvv"
+                          type="text"
+                          value={paymentData.cvv}
+                          onChange={e => updatePayment("cvv", e.target.value.replace(/\D/g, "").slice(0, 4))}
+                          className={`${inputCls} ${errors.cvv ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
+                          placeholder="123"
+                          maxLength={4}
+                          autoComplete="cc-csc"
+                          inputMode="numeric"
+                          aria-invalid={!!errors.cvv}
+                          aria-describedby={errors.cvv ? "err-cvv" : undefined}
+                        />
+                        {errors.cvv && <p id="err-cvv" role="alert" className="text-destructive text-xs mt-1">{errors.cvv}</p>}
                       </div>
                     </div>
 
@@ -414,23 +560,26 @@ export function Checkout() {
             <div className="bg-card rounded-3xl p-5 h-fit space-y-4 border border-border">
               <h3 className="text-foreground" style={{ fontSize: "1rem" }}>{t.orderSummary}</h3>
               <div className="space-y-3 max-h-60 overflow-y-auto scrollbar-hide">
-                {items.map(item => (
-                  <div key={item.product.id} className="flex items-center gap-3">
-                    <div className="relative w-12 h-12 rounded-xl overflow-hidden product-media-surface flex-shrink-0 flex items-center justify-center p-1">
-                      <img src={item.product.image} alt={item.product.name} className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
-                      <span className="absolute -top-1 -end-1 w-5 h-5 bg-brand-terracotta text-white rounded-full flex items-center justify-center" style={{ fontSize: "0.65rem" }}>
-                        {item.quantity}
+                {items.map(item => {
+                  const localizedName = isRTL && item.product.nameAr ? item.product.nameAr : item.product.name;
+                  return (
+                    <div key={item.product.id} className="flex items-center gap-3">
+                      <div className="relative w-12 h-12 rounded-xl overflow-hidden product-media-surface flex-shrink-0 flex items-center justify-center p-1">
+                        <img src={item.product.image} alt={localizedName} className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
+                        <span className="absolute -top-1 -end-1 w-5 h-5 bg-brand-terracotta text-white rounded-full flex items-center justify-center" style={{ fontSize: "0.65rem" }}>
+                          {item.quantity}
+                        </span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-foreground line-clamp-1" style={{ fontSize: "0.8rem" }}>{localizedName}</p>
+                        <p className="text-muted-foreground" style={{ fontSize: "0.72rem" }}>{item.product.weight}</p>
+                      </div>
+                      <span className="text-foreground" style={{ fontSize: "0.8rem" }}>
+                        {t.currency} {(item.product.price * item.quantity).toFixed(2)}
                       </span>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-foreground line-clamp-1" style={{ fontSize: "0.8rem" }}>{item.product.name}</p>
-                      <p className="text-muted-foreground" style={{ fontSize: "0.72rem" }}>{item.product.weight}</p>
-                    </div>
-                    <span className="text-foreground" style={{ fontSize: "0.8rem" }}>
-                      {t.currency} {(item.product.price * item.quantity).toFixed(2)}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
               <div className="border-t border-border pt-4 space-y-2" style={{ fontSize: "0.875rem" }}>
                 <div className="flex justify-between text-muted-foreground">
