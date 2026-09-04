@@ -1,6 +1,6 @@
 import { useState, useEffect, useLayoutEffect } from "react";
 import { useParams, Link } from "react-router";
-import { Heart, ShoppingCart, Share2, ChevronLeft, ChevronDown, Star, Plus, Minus, Leaf, Truck, Shield, RotateCcw, Check } from "lucide-react";
+import { Heart, ShoppingCart, Share2, ChevronLeft, ChevronDown, Star, Plus, Minus, Leaf, Truck, Shield, RotateCcw, Check, MessageCircle } from "lucide-react";
 import { getProductById, products } from "../data/products";
 import { categories, categoryMapping } from "../data/categories";
 import { useCart } from "../context/CartContext";
@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { motion } from "motion/react";
 import { Button } from "../components/ui/Button";
 import { usePageMeta } from "../hooks/usePageMeta";
+import { CONTACT } from "../config/contact";
 import logoImg from "../../assets/logo.webp";
 
 
@@ -95,6 +96,65 @@ export function ProductDetail() {
     setAccordionOpen(prev => ({ ...prev, [section]: !prev[section] }));
   };
   const wishlisted = product ? isWishlisted(product.id) : false;
+  const parentSlug = product ? (categoryMapping[product.categorySlug] || product.categorySlug) : "";
+  const parentCategory = categories.find(c => c.slug === parentSlug);
+  const categoryName = parentCategory
+    ? (isRTL && parentCategory.nameAr ? parentCategory.nameAr : parentCategory.name)
+    : (product ? product.category : "");
+
+  const siteUrl = "https://amahdy59.github.io/Hajarafaapp/";
+  const currentUrl = typeof window !== "undefined" ? window.location.href : `${siteUrl}#/products/${product?.id}`;
+  const catUrl = `${siteUrl}#/category/${parentSlug || product?.categorySlug}`;
+
+  const productSchema = product ? {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: isRTL && product.nameAr ? product.nameAr : product.name,
+    image: [product.image],
+    description: product.description,
+    sku: product.id,
+    brand: {
+      "@type": "Brand",
+      name: "Haj Arafa",
+    },
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "EGP",
+      price: product.price,
+      availability: "https://schema.org/InStock",
+      url: currentUrl,
+    },
+    aggregateRating: product.rating ? {
+      "@type": "AggregateRating",
+      ratingValue: product.rating,
+      reviewCount: product.reviewCount || 1,
+    } : undefined,
+  } : undefined;
+
+  const breadcrumbSchema = product ? {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: isRTL ? "الرئيسية" : "Home",
+        item: siteUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: categoryName,
+        item: catUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: isRTL && product.nameAr ? product.nameAr : product.name,
+        item: currentUrl,
+      },
+    ],
+  } : undefined;
 
   usePageMeta({
     description: product
@@ -111,37 +171,10 @@ export function ProductDetail() {
       : isRTL
         ? "المنتج غير موجود | حاج عرفة"
         : "Product Not Found | Haj Arafa",
-    structuredData: product ? {
-      "@context": "https://schema.org",
-      "@type": "Product",
-      name: isRTL && product.nameAr ? product.nameAr : product.name,
-      image: [product.image],
-      description: product.description,
-      sku: product.id,
-      brand: {
-        "@type": "Brand",
-        name: "Haj Arafa",
-      },
-      offers: {
-        "@type": "Offer",
-        priceCurrency: "EGP",
-        price: product.price,
-        availability: "https://schema.org/InStock",
-        url: typeof window !== "undefined" ? window.location.href : "https://amahdy59.github.io/Hajarafaapp/",
-      },
-      aggregateRating: product.rating ? {
-        "@type": "AggregateRating",
-        ratingValue: product.rating,
-        reviewCount: product.reviewCount || 1,
-      } : undefined,
-    } : undefined,
+    structuredData: product && productSchema && breadcrumbSchema
+      ? [productSchema, breadcrumbSchema]
+      : productSchema,
   });
-
-  const parentSlug = product ? (categoryMapping[product.categorySlug] || product.categorySlug) : "";
-  const parentCategory = categories.find(c => c.slug === parentSlug);
-  const categoryName = parentCategory
-    ? (isRTL && parentCategory.nameAr ? parentCategory.nameAr : parentCategory.name)
-    : (product ? product.category : "");
 
   if (!product) {
     return (
@@ -173,20 +206,37 @@ export function ProductDetail() {
     });
   };
 
-  const handleShare = () => {
+  const handleShare = async () => {
     const title = isRTL && product.nameAr ? product.nameAr : product.name;
     const shareData = {
       title,
       text: product.description,
       url: window.location.href,
     };
-    if (navigator.share) {
-      navigator.share(shareData).catch(() => {});
-    } else {
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share(shareData);
+        return;
+      } catch (err) {
+        if ((err as Error)?.name === "AbortError") return;
+      }
+    }
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
       navigator.clipboard.writeText(window.location.href)
-        .then(() => toast.success(t.productCopied))
+        .then(() => toast.success(t.shareSuccess || t.productCopied))
         .catch(() => toast.error(t.failedToCopyLink));
     }
+  };
+
+  const handleWhatsAppOrder = () => {
+    if (!product) return;
+    const pName = isRTL && product.nameAr ? product.nameAr : product.name;
+    const totalEGP = (product.price * quantity).toFixed(2);
+    const text = isRTL
+      ? `مرحباً حاج عرفة 🌿\nأود طلب المنتج التالي:\n• *المنتج:* ${pName}\n• *الرمز:* ${product.id}\n• *الكمية:* ${quantity}\n• *الإجمالي:* ${totalEGP} ج.م\n\nيرجى تأكيد الطلب وسأقوم بمشاركتكم العنوان وبيانات التوصيل.`
+      : `Hello Haj Arafa 🌿\nI would like to order:\n• *Product:* ${pName}\n• *SKU:* ${product.id}\n• *Quantity:* ${quantity}\n• *Total:* ${totalEGP} EGP\n\nPlease confirm availability and delivery details.`;
+    const url = `https://wa.me/${CONTACT.whatsappPhone}?text=${encodeURIComponent(text)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
   };
 
   const tabLabels = {
@@ -382,6 +432,17 @@ export function ProductDetail() {
                 <Heart size={18} className={wishlisted ? "fill-brand-terracotta text-brand-terracotta" : "text-muted-foreground"} />
               </button>
             </div>
+
+            {/* Quick Order via WhatsApp */}
+            <button
+              type="button"
+              onClick={handleWhatsAppOrder}
+              className="w-full flex items-center justify-center gap-2 h-11 rounded-xl bg-[#25D366]/12 hover:bg-[#25D366]/20 text-[#0d7337] dark:text-[#25D366] border border-[#25D366]/30 font-semibold text-xs sm:text-sm transition-all duration-200 active:scale-[0.99] cursor-pointer"
+              aria-label={t.orderViaWhatsApp}
+            >
+              <MessageCircle size={17} className="text-[#25D366] flex-shrink-0" />
+              <span>{t.orderViaWhatsApp}</span>
+            </button>
 
             {/* Key Benefits */}
             <div className="space-y-2 select-none">
@@ -725,10 +786,19 @@ export function ProductDetail() {
               {formatPrice(product.price)}
             </p>
           </div>
+          <button
+            type="button"
+            onClick={handleWhatsAppOrder}
+            className="w-11 h-11 rounded-xl bg-[#25D366]/15 hover:bg-[#25D366]/25 border border-[#25D366]/30 text-[#128C7E] dark:text-[#25D366] flex items-center justify-center flex-shrink-0 active:scale-95 transition-all cursor-pointer"
+            aria-label={t.orderViaWhatsApp}
+            title={t.orderViaWhatsApp}
+          >
+            <MessageCircle size={18} />
+          </button>
           <Button
             onClick={handleAddToCart}
             size="sm"
-            className="h-11 min-w-[8.75rem] rounded-xl text-sm font-bold"
+            className="h-11 min-w-[7.5rem] rounded-xl text-sm font-bold"
             leftIcon={<ShoppingCart size={16} />}
           >
             {t.addToCart}

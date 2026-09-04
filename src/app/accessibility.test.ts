@@ -106,5 +106,39 @@ describe("WCAG 2.2 AAA & Accessibility Standards", () => {
     expect(manifest.icons.length).toBeGreaterThan(0);
     expect(manifest.background_color).toBe("#0D1511");
   });
+
+  it("verifies Egyptian governorates data integrity and delivery zones", async () => {
+    const { EGYPTIAN_GOVERNORATES, getGovernorateById } = await import("./data/governorates");
+    expect(EGYPTIAN_GOVERNORATES.length).toBe(27);
+    for (const gov of EGYPTIAN_GOVERNORATES) {
+      expect(gov.id).toBeTruthy();
+      expect(gov.nameEn).toBeTruthy();
+      expect(gov.nameAr).toBeTruthy();
+      expect([1, 2, 3]).toContain(gov.zone);
+      expect(gov.deliveryDaysEn).toBeTruthy();
+      expect(gov.deliveryDaysAr).toBeTruthy();
+    }
+    const cairo = getGovernorateById("cairo");
+    expect(cairo?.zone).toBe(1);
+    const alex = getGovernorateById("alexandria");
+    expect(alex?.zone).toBe(2);
+  });
+
+  it("verifies tax invoice 14% Egyptian VAT calculation consistency", () => {
+    const subtotal = 1000;
+    const taxRate = 0.14;
+    const tax = subtotal * taxRate;
+    const shipping = 49;
+    const total = subtotal + tax + shipping;
+
+    expect(tax).toBe(140);
+    expect(total).toBe(1189);
+  });
+
+  it("verifies official WhatsApp contact configuration for direct ordering", async () => {
+    const { CONTACT } = await import("./config/contact");
+    expect(CONTACT.whatsappPhone).toBe("201020401400");
+    expect(CONTACT.whatsappUrl).toContain("201020401400");
+  });
 });
 

@@ -1,4 +1,4 @@
-import { ShoppingBag, Plus, Minus, Trash2, ArrowRight, Tag, Sparkles, Truck } from "lucide-react";
+import { ShoppingBag, Plus, Minus, Trash2, ArrowRight, Tag, Sparkles, Truck, MessageCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import { useCart } from "../context/CartContext";
 import { useAppSettings } from "../context/AppSettingsContext";
@@ -7,7 +7,7 @@ import { useState } from "react";
 import { products } from "../data/products";
 import { ProductCard } from "../components/ProductCard";
 import { Button } from "../components/ui/Button";
-import { DELIVERY_NOTICE, SHIPPING_CONFIG } from "../config/contact";
+import { DELIVERY_NOTICE, SHIPPING_CONFIG, CONTACT } from "../config/contact";
 import { usePageMeta } from "../hooks/usePageMeta";
 
 const SHIPPING_THRESHOLD = SHIPPING_CONFIG.freeThreshold;
@@ -35,6 +35,19 @@ export function Cart() {
 
   const applyCoupon = () => {
     if (couponCode.toUpperCase() === "NATURE10") setCouponApplied(true);
+  };
+
+  const handleWhatsAppCartOrder = () => {
+    if (items.length === 0) return;
+    const itemList = items.map(item => {
+      const name = isRTL && item.product.nameAr ? item.product.nameAr : item.product.name;
+      return `• ${item.quantity}× ${name} (${(item.product.price * item.quantity).toFixed(2)} ج.م)`;
+    }).join("\n");
+    const text = isRTL
+      ? `مرحباً حاج عرفة 🌿\nأود إتمام طلب السلة بالكامل:\n${itemList}\n\n• *الإجمالي:* ${finalTotal.toFixed(2)} ج.م\n\nيرجى تأكيد استلام الطلب لتزويدكم ببيانات العنوان ورقم الهاتف.`
+      : `Hello Haj Arafa 🌿\nI would like to order my entire cart:\n${itemList}\n\n• *Total:* ${finalTotal.toFixed(2)} EGP\n\nPlease confirm my order.`;
+    const url = `https://wa.me/${CONTACT.whatsappPhone}?text=${encodeURIComponent(text)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -269,6 +282,16 @@ export function Cart() {
                 >
                   {t.proceedToCheckout}
                 </Button>
+
+                <button
+                  type="button"
+                  onClick={handleWhatsAppCartOrder}
+                  className="w-full flex items-center justify-center gap-2 h-12 rounded-xl bg-[#25D366]/12 hover:bg-[#25D366]/22 text-[#0d7337] dark:text-[#25D366] border border-[#25D366]/30 font-bold text-sm transition-all duration-200 active:scale-[0.99] cursor-pointer"
+                  aria-label={t.orderCartViaWhatsApp}
+                >
+                  <MessageCircle size={18} className="text-[#25D366] flex-shrink-0" />
+                  <span>{t.orderCartViaWhatsApp}</span>
+                </button>
 
                 <div className="flex items-center justify-center gap-3 text-muted-foreground pt-1" style={{ fontSize: "0.75rem" }}>
                   <span>{t.secureCheckoutNote}</span>

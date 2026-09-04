@@ -16,6 +16,28 @@ export function Category() {
       : category.name
     : t.categoryNotFound;
 
+  const siteUrl = "https://amahdy59.github.io/Hajarafaapp/";
+  const currentUrl = typeof window !== "undefined" ? window.location.href : `${siteUrl}#/category/${slug}`;
+
+  const breadcrumbSchema = category ? {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: isRTL ? "الرئيسية" : "Home",
+        item: siteUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: categoryName,
+        item: currentUrl,
+      },
+    ],
+  } : undefined;
+
   usePageMeta({
     description: category
       ? isRTL
@@ -31,6 +53,7 @@ export function Category() {
       : isRTL
         ? "الفئة غير موجودة | حاج عرفة"
         : "Category Not Found | Haj Arafa",
+    structuredData: breadcrumbSchema,
   });
 
   if (!category) {

@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { ProductCard } from "../components/ProductCard";
 import { Button } from "../components/ui/Button";
 import { usePageMeta } from "../hooks/usePageMeta";
+import { InvoiceModal, type InvoiceData } from "../components/InvoiceModal";
 import logoImg from "../../assets/logo.webp";
 import sidrHoneyImg from "../../assets/sidr_honey.webp";
 import bbqSpicesImg from "../../assets/bbq_spices.webp";
@@ -455,6 +456,7 @@ export function Account() {
 
   // Detailed Order Modal States
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [taxInvoiceOrder, setTaxInvoiceOrder] = useState<Order | null>(null);
   const [isCopied, setIsCopied] = useState(false);
 
   const [addresses, setAddresses] = useState([
@@ -1142,6 +1144,26 @@ export function Account() {
       </div>
     );
   }
+
+  const accountInvoiceData: InvoiceData | null = taxInvoiceOrder ? {
+    orderNumber: taxInvoiceOrder.id,
+    date: isRTL ? taxInvoiceOrder.dateAr : taxInvoiceOrder.dateEn,
+    customerName: profile ? `${profile.firstName} ${profile.lastName}` : (isRTL ? "عميل حاج عرفة" : "Valued Customer"),
+    customerPhone: profile?.phone,
+    customerAddress: isRTL ? taxInvoiceOrder.deliveryAddressAr : taxInvoiceOrder.deliveryAddress,
+    paymentMethodTitle: isRTL ? "دفع مؤكد" : "Verified Payment",
+    items: taxInvoiceOrder.products.map(p => ({
+      name: p.name,
+      nameAr: p.nameAr,
+      quantity: p.quantity,
+      unitPrice: p.price,
+    })),
+    subtotal: taxInvoiceOrder.receipt.subtotal,
+    shipping: taxInvoiceOrder.receipt.shipping,
+    discount: taxInvoiceOrder.receipt.discount,
+    tax: taxInvoiceOrder.receipt.subtotal * 0.14,
+    total: taxInvoiceOrder.total,
+  } : null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -2110,6 +2132,14 @@ export function Account() {
 
               {/* Actions Footer (Render Cancel button if placed or processing) */}
               <div className="flex-shrink-0 mt-4 pt-4 border-t border-border/80 flex flex-col sm:flex-row gap-2 justify-end items-stretch sm:items-center select-none w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={() => setTaxInvoiceOrder(selectedOrder)}
+                  className="py-2.5 px-4 bg-brand-peach text-brand-terracotta hover:bg-brand-peach/80 text-xs rounded-xl font-bold uppercase transition-colors shadow-sm flex items-center justify-center gap-1.5 cursor-pointer border border-brand-terracotta/20"
+                >
+                  <Printer size={14} />
+                  {t.viewInvoice}
+                </button>
                 {selectedOrder.status === "delivered" && (
                   <button
                     onClick={() => handlePrintReceipt(selectedOrder)}
@@ -2151,6 +2181,14 @@ export function Account() {
         )}
       </AnimatePresence>
       <div className="h-20 sm:h-4" />
+
+      {accountInvoiceData && (
+        <InvoiceModal
+          open={!!taxInvoiceOrder}
+          onClose={() => setTaxInvoiceOrder(null)}
+          invoice={accountInvoiceData}
+        />
+      )}
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { CartDrawer } from "./components/CartDrawer";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import logoImg from "../assets/logo.webp";
 import { Footer } from "./components/Footer";
+import { OfflineBanner } from "./components/OfflineBanner";
 import { useAppSettings } from "./context/AppSettingsContext";
 
 /* Prevent the browser and router from restoring previous page positions.
@@ -66,6 +67,7 @@ export function Root() {
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans w-full max-w-full overflow-x-hidden">
+      <OfflineBanner />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:start-4 focus:z-50 focus:px-4 focus:py-2.5 focus:bg-brand-terracotta focus:text-white dark:focus:text-brand-ink focus:rounded-xl focus:shadow-elev focus:outline-none focus:ring-2 focus:ring-ring font-semibold text-sm"

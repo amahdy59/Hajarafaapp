@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
-import { ChevronLeft, Check, CreditCard, Truck, MapPin, Shield, ArrowLeft, Zap, Smartphone, Banknote, Copy } from "lucide-react";
+import { ChevronLeft, Check, CreditCard, Truck, MapPin, Shield, ArrowLeft, Zap, Smartphone, Banknote, Copy, Printer } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import { Button } from "../components/ui/Button";
 import { DELIVERY_NOTICE, SHIPPING_CONFIG } from "../config/contact";
 import { usePageMeta } from "../hooks/usePageMeta";
+import { EGYPTIAN_GOVERNORATES, getGovernorateById } from "../data/governorates";
+import { InvoiceModal, type InvoiceData } from "../components/InvoiceModal";
 
 type Step = "shipping" | "payment" | "confirmation";
 export type PaymentMethod = "card" | "instapay" | "vodafone" | "cod";
@@ -23,6 +25,7 @@ export function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [walletPhone, setWalletPhone] = useState("");
   const [instapayConfirmed, setInstapayConfirmed] = useState(false);
+  const [invoiceModalOpen, setInvoiceModalOpen] = useState(false);
 
   usePageMeta({
     description: isRTL
@@ -43,7 +46,7 @@ export function Checkout() {
 
   const [shippingData, setShippingData] = useState({
     firstName: "", lastName: "", email: "", phone: "",
-    address: "", city: "", state: "", zip: "", country: "EG",
+    address: "", city: "", governorate: "cairo", zip: "", country: "EG",
   });
 
   const [paymentData, setPaymentData] = useState({
@@ -73,7 +76,7 @@ export function Checkout() {
   };
 
   const validateShipping = () => {
-    const { firstName, lastName, email, address, city, zip } = shippingData;
+    const { firstName, lastName, email, address, city, governorate, zip } = shippingData;
     const newErrors: Record<string, string> = {};
 
     if (!firstName.trim()) newErrors.firstName = isRTL ? "الاسم الأول مطلوب" : "First name is required";
@@ -87,7 +90,8 @@ export function Checkout() {
       }
     }
     if (!address.trim()) newErrors.address = isRTL ? "العنوان مطلوب" : "Address is required";
-    if (!city.trim()) newErrors.city = isRTL ? "المدينة مطلوبة" : "City is required";
+    if (!city.trim()) newErrors.city = isRTL ? "المنطقة أو الحي مطلوبة" : "City or district is required";
+    if (!governorate.trim()) newErrors.governorate = isRTL ? "المحافظة مطلوبة" : "Governorate is required";
     if (!zip.trim()) newErrors.zip = isRTL ? "الرمز البريدي مطلوب" : "Postal code is required";
 
     if (Object.keys(newErrors).length > 0) {
@@ -174,6 +178,35 @@ export function Checkout() {
     "outline-none focus:border-brand-terracotta focus:ring-2 focus:ring-brand-terracotta/20 transition-all",
   ].join(" ");
   const labelCls = "block text-muted-foreground mb-1.5" as const;
+
+  const selectedGov = getGovernorateById(shippingData.governorate) || EGYPTIAN_GOVERNORATES[0];
+  const govName = isRTL ? selectedGov.nameAr : selectedGov.nameEn;
+  const deliveryDaysText = isRTL ? selectedGov.deliveryDaysAr : selectedGov.deliveryDaysEn;
+
+  const paymentTitle = 
+    paymentMethod === "card" ? t.payCard :
+    paymentMethod === "instapay" ? t.payInstaPay :
+    paymentMethod === "vodafone" ? t.payVodafoneCash : t.payCOD;
+
+  const invoiceData: InvoiceData = {
+    orderNumber,
+    date: new Date().toLocaleDateString(isRTL ? "ar-EG" : "en-US", { year: "numeric", month: "long", day: "numeric" }),
+    customerName: `${shippingData.firstName} ${shippingData.lastName}`.trim() || (isRTL ? "عميل حاج عرفة" : "Valued Customer"),
+    customerPhone: shippingData.phone || undefined,
+    customerAddress: `${shippingData.address}, ${shippingData.city}`,
+    governorate: govName,
+    paymentMethodTitle: paymentTitle,
+    items: items.map(item => ({
+      name: item.product.name,
+      nameAr: item.product.nameAr,
+      quantity: item.quantity,
+      unitPrice: item.product.price,
+    })),
+    subtotal: totalPrice,
+    shipping,
+    tax,
+    total,
+  };
 
   const steps = [
     { id: "shipping", label: t.shippingInfo, icon: MapPin },
@@ -287,7 +320,7 @@ export function Checkout() {
               </div>
               <div className="flex justify-between" style={{ fontSize: "0.875rem" }}>
                 <span className="text-muted-foreground">{t.estimatedDelivery}</span>
-                <span className="text-foreground">{t.businessDays}</span>
+                <span className="text-foreground font-semibold">{deliveryDaysText}</span>
               </div>
               <div className="flex justify-between border-t border-border/50 pt-3" style={{ fontSize: "0.875rem" }}>
                 <span className="text-muted-foreground">{t.totalPaid}</span>
@@ -295,6 +328,14 @@ export function Checkout() {
               </div>
             </div>
             <div className="space-y-3">
+              <button
+                type="button"
+                onClick={() => setInvoiceModalOpen(true)}
+                className="w-full flex items-center justify-center gap-2 border border-brand-terracotta text-brand-terracotta hover:bg-brand-peach/40 py-3 rounded-xl transition-colors font-bold text-sm cursor-pointer active:scale-[0.98]"
+              >
+                <Printer size={16} />
+                <span>{t.viewInvoice}</span>
+              </button>
               <Link
                 to="/products"
                 className="w-full block bg-brand-terracotta text-white py-3 rounded-xl hover:bg-brand-terracotta-dark transition-colors active:scale-[0.98]"
@@ -405,14 +446,33 @@ export function Checkout() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label htmlFor="checkout-city" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.city} *</label>
+                        <label htmlFor="checkout-governorate" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.governorate} *</label>
+                        <select
+                          id="checkout-governorate"
+                          value={shippingData.governorate}
+                          onChange={e => updateShipping("governorate", e.target.value)}
+                          className={`${inputCls} ${errors.governorate ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
+                          required
+                          aria-invalid={!!errors.governorate}
+                          aria-describedby={errors.governorate ? "err-gov" : undefined}
+                        >
+                          {EGYPTIAN_GOVERNORATES.map(gov => (
+                            <option key={gov.id} value={gov.id}>
+                              {isRTL ? gov.nameAr : gov.nameEn}
+                            </option>
+                          ))}
+                        </select>
+                        {errors.governorate && <p id="err-gov" role="alert" className="text-destructive text-xs mt-1">{errors.governorate}</p>}
+                      </div>
+                      <div>
+                        <label htmlFor="checkout-city" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.city} ({isRTL ? "المنطقة / الحي" : "District / Area"}) *</label>
                         <input
                           id="checkout-city"
                           type="text"
                           value={shippingData.city}
                           onChange={e => updateShipping("city", e.target.value)}
                           className={`${inputCls} ${errors.city ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
-                          placeholder={isRTL ? "القاهرة" : "Cairo"}
+                          placeholder={isRTL ? "المعادي / التجمع / سموحة" : "e.g. Maadi, Zamalek, Smouha"}
                           autoComplete="address-level2"
                           required
                           aria-invalid={!!errors.city}
@@ -420,10 +480,15 @@ export function Checkout() {
                         />
                         {errors.city && <p id="err-city" role="alert" className="text-destructive text-xs mt-1">{errors.city}</p>}
                       </div>
-                      <div>
-                        <label htmlFor="checkout-state" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.state}</label>
-                        <input id="checkout-state" type="text" value={shippingData.state} onChange={e => updateShipping("state", e.target.value)} className={inputCls} placeholder={isRTL ? "القاهرة" : "Cairo"} autoComplete="address-level1" />
-                      </div>
+                    </div>
+
+                    {/* Dynamic Real-Time Delivery Estimate Banner */}
+                    <div className="flex items-center gap-2.5 p-3.5 bg-brand-peach/40 dark:bg-zinc-800/40 rounded-2xl border border-brand-terracotta/20 text-xs text-brand-forest dark:text-brand-sage-dark font-medium">
+                      <Truck size={16} className="text-brand-terracotta flex-shrink-0" />
+                      <span>
+                        <strong className="text-brand-terracotta">{t.deliveryTimeframe}: </strong>
+                        {deliveryDaysText}
+                      </span>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -824,6 +889,12 @@ export function Checkout() {
         )}
       </div>
       <div className="h-20 sm:h-4" />
+
+      <InvoiceModal
+        open={invoiceModalOpen}
+        onClose={() => setInvoiceModalOpen(false)}
+        invoice={invoiceData}
+      />
     </div>
   );
 }
