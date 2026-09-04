@@ -91,4 +91,20 @@ describe("WCAG 2.2 AAA & Accessibility Standards", () => {
       expect(p.benefits.length).toBeGreaterThan(0);
     }
   });
+
+  it("verifies mobile viewport meta and safe-area compatibility in index.html", async () => {
+    const html = (await import("../../index.html?raw")).default;
+    expect(html).toContain('name="viewport"');
+    expect(html).toContain("width=device-width");
+    expect(html).toContain("viewport-fit=cover");
+  });
+
+  it("verifies PWA manifest content and configuration", async () => {
+    const manifestRaw = (await import("../../public/manifest.webmanifest?raw")).default;
+    const manifest = JSON.parse(manifestRaw);
+    expect(manifest.display).toBe("standalone");
+    expect(manifest.icons.length).toBeGreaterThan(0);
+    expect(manifest.background_color).toBe("#0D1511");
+  });
 });
+
