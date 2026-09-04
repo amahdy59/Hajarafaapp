@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
-import { X, Sun, Moon, Languages, User, Package, Heart, CircleHelp, Info, MapPin, Phone, ChevronRight } from "lucide-react";
+import { X, Sun, Moon, Languages, User, Package, Heart, CircleHelp, Info, MapPin, Phone, ChevronRight, Hash, Smartphone, Download, Check } from "lucide-react";
 import { Link } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
-import { useAppSettings } from "../context/AppSettingsContext";
+import { useAppSettings, NumeralSystem } from "../context/AppSettingsContext";
 import { IconButton } from "./ui/IconButton";
 import logoImg from "../../assets/logo.webp";
 import { useDialogAccessibility } from "../hooks/useDialogAccessibility";
@@ -11,6 +11,11 @@ interface DrawerProfile {
   firstName: string;
   lastName: string;
   email: string;
+}
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
 interface SettingsDrawerProps {
@@ -57,8 +62,39 @@ function Row({ icon: Icon, label, to, onClick }: { icon: typeof User; label: Rea
 }
 
 export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
-  const { theme, setTheme, locale, setLocale, t, isRTL } = useAppSettings();
+  const { theme, setTheme, locale, setLocale, numeralSystem, setNumeralSystem, t, isRTL } = useAppSettings();
   const dialogRef = useRef<HTMLElement>(null);
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(display-mode: standalone)").matches) {
+      setIsInstalled(true);
+    }
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setInstallPrompt(e as BeforeInstallPromptEvent);
+    };
+    window.addEventListener("beforeinstallprompt", handler);
+    window.addEventListener("appinstalled", () => {
+      setIsInstalled(true);
+      setInstallPrompt(null);
+    });
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
+
+  const handleInstall = async () => {
+    if (installPrompt) {
+      installPrompt.prompt();
+      const choice = await installPrompt.userChoice;
+      if (choice?.outcome === "accepted") {
+        setInstallPrompt(null);
+      }
+    } else {
+      alert(locale === "ar" ? "لتثبيت التطبيق، افتح قائمة المتصفح (مشاركة) واضغط 'إضافة إلى الشاشة الرئيسية'." : "To install the app, open your browser menu/share sheet and select 'Add to Home Screen'.");
+    }
+  };
 
   // Load profile dynamically when drawer is opened
   const [profile, setProfile] = useState<DrawerProfile | null>(null);
@@ -195,7 +231,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
                 </Link>
               )}
 
-              <div className="flex flex-col gap-2 lg:hidden">
+              <div className="flex flex-col gap-2">
                 <span className="eyebrow px-1">{t.settings}</span>
                 <div className="bg-muted/50 rounded-md overflow-hidden border border-border">
                   <div className="flex items-center justify-between px-4 py-3 border-b border-border">
@@ -209,7 +245,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
                       options={[{ value: "light", label: t.light }, { value: "dark", label: t.dark }]}
                     />
                   </div>
-                  <div className="flex items-center justify-between px-4 py-3">
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-border">
                     <span className="flex items-center gap-3 text-foreground">
                       <Languages size={18} className="text-brand-ink-soft" />
                       <span style={{ fontSize: "0.95rem" }}>{t.language}</span>
@@ -220,6 +256,46 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
                       options={[{ value: "en", label: "EN" }, { value: "ar", label: "ع" }]}
                     />
                   </div>
+                  <div className="flex items-center justify-between px-4 py-3">
+                    <span className="flex items-center gap-3 text-foreground">
+                      <Hash size={18} className="text-brand-ink-soft" />
+                      <span style={{ fontSize: "0.95rem" }}>{t.numeralSystem}</span>
+                    </span>
+                    <Segmented<NumeralSystem>
+                      value={numeralSystem}
+                      onChange={setNumeralSystem}
+                      options={[
+                        { value: "western", label: t.numeralsWestern },
+                        { value: "arabic-indic", label: t.numeralsArabicIndic },
+                      ]}
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-1 p-3.5 bg-muted/40 rounded-md border border-border flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-9 h-9 rounded-full bg-brand-peach flex items-center justify-center text-brand-terracotta flex-shrink-0">
+                      <Smartphone size={18} />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold text-foreground truncate">{t.installApp}</p>
+                      <p className="text-[11px] text-muted-foreground truncate">{t.installAppDescription}</p>
+                    </div>
+                  </div>
+                  {isInstalled ? (
+                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-moss bg-brand-moss/10 px-2.5 py-1 rounded-full flex-shrink-0">
+                      <Check size={13} />
+                      {t.appInstalled}
+                    </span>
+                  ) : (
+                    <button
+                      onClick={handleInstall}
+                      className="min-h-11 px-3 py-1.5 bg-brand-terracotta hover:bg-brand-terracotta-dark text-white rounded-md text-xs font-semibold flex items-center gap-1.5 transition-colors flex-shrink-0 shadow-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-terracotta cursor-pointer"
+                    >
+                      <Download size={13} />
+                      <span>{locale === "ar" ? "تثبيت" : "Install"}</span>
+                    </button>
+                  )}
                 </div>
               </div>
 

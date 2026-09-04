@@ -1,0 +1,20 @@
+{
+  "name": "Haj Arafa - Natural Boutique | حاج عرفة",
+  "short_name": "Haj Arafa",
+  "description": "Handcrafted herbs, honey, coffee, and botanical wellness from Egypt since 1968",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0D1511",
+  "theme_color": "#0D1511",
+  "categories": ["shopping", "lifestyle"],
+  "icons": [
+    {
+      "src": "./logo.webp",
+      "sizes": "192x192 512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ]
+}

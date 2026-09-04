@@ -64,6 +64,18 @@ export function Help() {
   usePageMeta({
     title: `${t.customerService} | ${isRTL ? "حاج عرفة" : "Haj Arafa"}`,
     description: isRTL ? "مركز مساعدة وخدمة عملاء حاج عرفة - الأسئلة الشائعة، الشحن، وطرق التواصل" : "Haj Arafa customer service and help center - FAQs, shipping policies, and support contacts",
+    structuredData: {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: mockFAQs.map(faq => ({
+        "@type": "Question",
+        name: isRTL ? faq.questionAr : faq.questionEn,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: isRTL ? faq.answerAr : faq.answerEn,
+        },
+      })),
+    },
   });
 
   const [searchQuery, setSearchQuery] = useState("");

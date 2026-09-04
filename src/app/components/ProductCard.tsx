@@ -8,7 +8,7 @@ import { useAppSettings } from "../context/AppSettingsContext";
 import { toast } from "sonner";
 import { motion } from "motion/react";
 import { Button } from "./ui/Button";
-
+import logoImg from "../../assets/logo.webp";
 
 interface ProductCardProps {
   product: Product;
@@ -33,7 +33,7 @@ const badgeCls: Record<BadgeTone, string> = {
 export const ProductCard = memo(function ProductCard({ product, view = "grid" }: ProductCardProps) {
   const { addToCart } = useCart();
   const { isWishlisted, toggleWishlist } = useWishlist();
-  const { t, isRTL } = useAppSettings();
+  const { t, isRTL, formatPrice } = useAppSettings();
   const wishlisted = isWishlisted(product.id);
   const badge = deriveBadge(product, isRTL);
   const productName = isRTL && product.nameAr ? product.nameAr : product.name;
@@ -42,7 +42,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
     e.preventDefault();
     e.stopPropagation();
     addToCart(product);
-    toast.success(`${productName} • ${t.currency} ${product.price.toFixed(2)}`);
+    toast.success(`${productName} • ${formatPrice(product.price)}`);
   };
 
   const onWish = (e: React.MouseEvent) => {
@@ -51,7 +51,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
     toggleWishlist(product);
   };
 
-  const price = `${product.priceFrom ? `${t.from} ` : ""}${t.currency} ${product.price.toFixed(2)}`;
+  const price = `${product.priceFrom ? `${t.from} ` : ""}${formatPrice(product.price)}`;
 
   if (view === "list") {
     return (
@@ -102,6 +102,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
             alt="" 
             className="w-[93%] h-[93%] object-contain mix-blend-multiply dark:mix-blend-normal transition-transform duration-500 group-hover:-translate-y-1" 
             loading="lazy" 
+            onError={(e) => { (e.currentTarget as HTMLImageElement).src = logoImg; }}
           />
         </Link>
       </motion.article>
@@ -128,6 +129,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
             alt=""
             className="relative z-0 w-full h-full object-contain p-2.5 sm:p-3 mix-blend-multiply dark:mix-blend-normal transition-transform duration-500 group-hover:-translate-y-1"
             loading="lazy"
+            onError={(e) => { (e.currentTarget as HTMLImageElement).src = logoImg; }}
           />
         </Link>
 

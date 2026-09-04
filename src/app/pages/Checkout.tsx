@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
-import { ChevronLeft, Check, CreditCard, Truck, MapPin, Shield, ArrowLeft } from "lucide-react";
+import { ChevronLeft, Check, CreditCard, Truck, MapPin, Shield, ArrowLeft, Zap, Smartphone, Banknote, Copy } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
@@ -9,17 +9,20 @@ import { Button } from "../components/ui/Button";
 import { DELIVERY_NOTICE, SHIPPING_CONFIG } from "../config/contact";
 import { usePageMeta } from "../hooks/usePageMeta";
 
-
 type Step = "shipping" | "payment" | "confirmation";
+export type PaymentMethod = "card" | "instapay" | "vodafone" | "cod";
 
 export function Checkout() {
   const { items, totalPrice, clearCart } = useCart();
-  const { t, isRTL } = useAppSettings();
+  const { t, isRTL, formatPrice } = useAppSettings();
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>("shipping");
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [orderNumber] = useState(() => `HJR-${Date.now().toString().slice(-6)}`);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
+  const [walletPhone, setWalletPhone] = useState("");
+  const [instapayConfirmed, setInstapayConfirmed] = useState(false);
 
   usePageMeta({
     description: isRTL
@@ -96,36 +99,54 @@ export function Checkout() {
     return true;
   };
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success(t.copied);
+  };
+
   const validatePayment = () => {
-    const { cardNumber, cardName, expiry, cvv } = paymentData;
     const newErrors: Record<string, string> = {};
 
-    const cleanCard = cardNumber.replace(/\s/g, "");
-    if (!cleanCard) {
-      newErrors.cardNumber = isRTL ? "رقم البطاقة مطلوب" : "Card number is required";
-    } else if (cleanCard.length < 15 || cleanCard.length > 16) {
-      newErrors.cardNumber = isRTL ? "يرجى إدخال رقم بطاقة صحيح (١٥-١٦ رقماً)" : "Please enter a valid card number (15-16 digits)";
-    }
+    if (paymentMethod === "card") {
+      const { cardNumber, cardName, expiry, cvv } = paymentData;
+      const cleanCard = cardNumber.replace(/\s/g, "");
+      if (!cleanCard) {
+        newErrors.cardNumber = isRTL ? "رقم البطاقة مطلوب" : "Card number is required";
+      } else if (cleanCard.length < 15 || cleanCard.length > 16) {
+        newErrors.cardNumber = isRTL ? "يرجى إدخال رقم بطاقة صحيح (١٥-١٦ رقماً)" : "Please enter a valid card number (15-16 digits)";
+      }
 
-    if (!cardName.trim()) {
-      newErrors.cardName = isRTL ? "الاسم على البطاقة مطلوب" : "Cardholder name is required";
-    }
+      if (!cardName.trim()) {
+        newErrors.cardName = isRTL ? "الاسم على البطاقة مطلوب" : "Cardholder name is required";
+      }
 
-    if (!expiry.trim()) {
-      newErrors.expiry = isRTL ? "تاريخ الانتهاء مطلوب" : "Expiry date is required";
-    } else if (!expiry.includes("/") || expiry.split("/")[0].length !== 2 || expiry.split("/")[1].length !== 2) {
-      newErrors.expiry = isRTL ? "يرجى إدخال تاريخ انتهاء صحيح (MM/YY)" : "Please enter a valid expiry date (MM/YY)";
-    }
+      if (!expiry.trim()) {
+        newErrors.expiry = isRTL ? "تاريخ الانتهاء مطلوب" : "Expiry date is required";
+      } else if (!expiry.includes("/") || expiry.split("/")[0].length !== 2 || expiry.split("/")[1].length !== 2) {
+        newErrors.expiry = isRTL ? "يرجى إدخال تاريخ انتهاء صحيح (MM/YY)" : "Please enter a valid expiry date (MM/YY)";
+      }
 
-    if (!cvv.trim()) {
-      newErrors.cvv = isRTL ? "رمز CVV مطلوب" : "CVV is required";
-    } else if (cvv.length < 3 || cvv.length > 4) {
-      newErrors.cvv = isRTL ? "رمز أمان غير صحيح" : "Invalid CVV code";
+      if (!cvv.trim()) {
+        newErrors.cvv = isRTL ? "رمز CVV مطلوب" : "CVV is required";
+      } else if (cvv.length < 3 || cvv.length > 4) {
+        newErrors.cvv = isRTL ? "رمز أمان غير صحيح" : "Invalid CVV code";
+      }
+    } else if (paymentMethod === "vodafone") {
+      const cleanPhone = walletPhone.trim().replace(/\D/g, "");
+      if (!cleanPhone) {
+        newErrors.walletPhone = isRTL ? "رقم محفظة فودافون كاش مطلوب" : "Wallet phone number is required";
+      } else if (cleanPhone.length !== 11) {
+        newErrors.walletPhone = isRTL ? "يرجى إدخال رقم محفظة صحيح (١١ رقماً)" : "Please enter a valid 11-digit mobile wallet number";
+      }
+    } else if (paymentMethod === "instapay") {
+      if (!instapayConfirmed) {
+        newErrors.instapay = isRTL ? "يرجى تأكيد إتمام التحويل عبر إنستاباي" : "Please confirm that you transferred the payment via InstaPay";
+      }
     }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      toast.error(isRTL ? "يرجى ملء جميع بيانات بطاقة الدفع (*)" : "Please fill in all payment card details (*)");
+      toast.error(isRTL ? "يرجى استكمال بيانات طريقة الدفع المختارة (*)" : "Please complete the selected payment details (*)");
       return false;
     }
     setErrors({});
@@ -253,7 +274,16 @@ export function Checkout() {
             <div className="bg-brand-peach rounded-2xl p-4 mb-6 text-start space-y-3">
               <div className="flex justify-between" style={{ fontSize: "0.875rem" }}>
                 <span className="text-muted-foreground">{t.orderNumber}</span>
-                <span className="text-foreground">#{orderNumber}</span>
+                <span className="text-foreground font-mono">#{orderNumber}</span>
+              </div>
+              <div className="flex justify-between" style={{ fontSize: "0.875rem" }}>
+                <span className="text-muted-foreground">{t.paymentMethod}</span>
+                <span className="text-foreground font-semibold">
+                  {paymentMethod === "card" && t.payCard}
+                  {paymentMethod === "instapay" && `${t.payInstaPay} (Ref: ${orderNumber})`}
+                  {paymentMethod === "vodafone" && `${t.payVodafoneCash} (${walletPhone || "0100 123 4567"})`}
+                  {paymentMethod === "cod" && t.payCOD}
+                </span>
               </div>
               <div className="flex justify-between" style={{ fontSize: "0.875rem" }}>
                 <span className="text-muted-foreground">{t.estimatedDelivery}</span>
@@ -261,7 +291,7 @@ export function Checkout() {
               </div>
               <div className="flex justify-between border-t border-border/50 pt-3" style={{ fontSize: "0.875rem" }}>
                 <span className="text-muted-foreground">{t.totalPaid}</span>
-                <span className="text-brand-terracotta">{t.currency} {total.toFixed(2)}</span>
+                <span className="text-brand-terracotta font-bold">{formatPrice(total)}</span>
               </div>
             </div>
             <div className="space-y-3">
@@ -456,78 +486,258 @@ export function Checkout() {
                     </div>
 
                     <div>
-                      <label htmlFor="checkout-card-number" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.cardNumber} *</label>
-                      <input
-                        id="checkout-card-number"
-                        type="text"
-                        value={paymentData.cardNumber}
-                        onChange={e => updatePayment("cardNumber", e.target.value.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim())}
-                        className={`${inputCls} ${errors.cardNumber ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
-                        placeholder="1234 5678 9012 3456"
-                        autoComplete="cc-number"
-                        inputMode="numeric"
-                        maxLength={19}
-                        aria-invalid={!!errors.cardNumber}
-                        aria-describedby={errors.cardNumber ? "err-card-number" : undefined}
-                      />
-                      {errors.cardNumber && <p id="err-card-number" role="alert" className="text-destructive text-xs mt-1">{errors.cardNumber}</p>}
-                    </div>
-
-                    <div>
-                      <label htmlFor="checkout-card-name" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.cardName} *</label>
-                      <input
-                        id="checkout-card-name"
-                        type="text"
-                        value={paymentData.cardName}
-                        onChange={e => updatePayment("cardName", e.target.value)}
-                        className={`${inputCls} ${errors.cardName ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
-                        placeholder={isRTL ? "محمد علي" : "John Doe"}
-                        autoComplete="cc-name"
-                        aria-invalid={!!errors.cardName}
-                        aria-describedby={errors.cardName ? "err-card-name" : undefined}
-                      />
-                      {errors.cardName && <p id="err-card-name" role="alert" className="text-destructive text-xs mt-1">{errors.cardName}</p>}
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label htmlFor="checkout-card-expiry" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.expiry} *</label>
-                        <input
-                          id="checkout-card-expiry"
-                          type="text"
-                          value={paymentData.expiry}
-                          onChange={e => {
-                            const val = e.target.value.replace(/\D/g, "").slice(0, 4);
-                            updatePayment("expiry", val.length > 2 ? val.slice(0, 2) + "/" + val.slice(2) : val);
-                          }}
-                          className={`${inputCls} ${errors.expiry ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
-                          placeholder="MM/YY"
-                          autoComplete="cc-exp"
-                          inputMode="numeric"
-                          maxLength={5}
-                          aria-invalid={!!errors.expiry}
-                          aria-describedby={errors.expiry ? "err-expiry" : undefined}
-                        />
-                        {errors.expiry && <p id="err-expiry" role="alert" className="text-destructive text-xs mt-1">{errors.expiry}</p>}
-                      </div>
-                      <div>
-                        <label htmlFor="checkout-card-cvv" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.cvv} *</label>
-                        <input
-                          id="checkout-card-cvv"
-                          type="text"
-                          value={paymentData.cvv}
-                          onChange={e => updatePayment("cvv", e.target.value.replace(/\D/g, "").slice(0, 4))}
-                          className={`${inputCls} ${errors.cvv ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
-                          placeholder="123"
-                          maxLength={4}
-                          autoComplete="cc-csc"
-                          inputMode="numeric"
-                          aria-invalid={!!errors.cvv}
-                          aria-describedby={errors.cvv ? "err-cvv" : undefined}
-                        />
-                        {errors.cvv && <p id="err-cvv" role="alert" className="text-destructive text-xs mt-1">{errors.cvv}</p>}
+                      <span className="block text-xs font-semibold text-muted-foreground mb-2">
+                        {t.paymentMethod}
+                      </span>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        {[
+                          { id: "card", title: t.payCard, desc: t.payCardDesc, icon: CreditCard },
+                          { id: "instapay", title: t.payInstaPay, desc: t.payInstaPayDesc, icon: Zap },
+                          { id: "vodafone", title: t.payVodafoneCash, desc: t.payVodafoneCashDesc, icon: Smartphone },
+                          { id: "cod", title: t.payCOD, desc: t.payCODDesc, icon: Banknote },
+                        ].map((m) => {
+                          const Icon = m.icon;
+                          const active = paymentMethod === m.id;
+                          return (
+                            <button
+                              key={m.id}
+                              type="button"
+                              onClick={() => {
+                                setPaymentMethod(m.id as PaymentMethod);
+                                setErrors({});
+                              }}
+                              className={`text-start p-3.5 rounded-2xl border transition-all flex items-start gap-3 cursor-pointer ${
+                                active
+                                  ? "border-brand-terracotta bg-brand-peach/30 shadow-soft"
+                                  : "border-border bg-card hover:bg-muted/40"
+                              }`}
+                            >
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                                active ? "bg-brand-terracotta text-white" : "bg-muted text-muted-foreground"
+                              }`}>
+                                <Icon size={16} />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <p className={`text-xs sm:text-sm font-bold ${active ? "text-brand-terracotta" : "text-foreground"}`}>
+                                  {m.title}
+                                </p>
+                                <p className="text-[11px] text-muted-foreground line-clamp-2 mt-0.5">
+                                  {m.desc}
+                                </p>
+                              </div>
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
+
+                    {paymentMethod === "card" && (
+                      <div className="space-y-4 pt-2">
+                        <div>
+                          <label htmlFor="checkout-card-number" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.cardNumber} *</label>
+                          <input
+                            id="checkout-card-number"
+                            type="text"
+                            value={paymentData.cardNumber}
+                            onChange={e => updatePayment("cardNumber", e.target.value.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim())}
+                            className={`${inputCls} ${errors.cardNumber ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
+                            placeholder="1234 5678 9012 3456"
+                            autoComplete="cc-number"
+                            inputMode="numeric"
+                            maxLength={19}
+                            aria-invalid={!!errors.cardNumber}
+                            aria-describedby={errors.cardNumber ? "err-card-number" : undefined}
+                          />
+                          {errors.cardNumber && <p id="err-card-number" role="alert" className="text-destructive text-xs mt-1">{errors.cardNumber}</p>}
+                        </div>
+
+                        <div>
+                          <label htmlFor="checkout-card-name" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.cardName} *</label>
+                          <input
+                            id="checkout-card-name"
+                            type="text"
+                            value={paymentData.cardName}
+                            onChange={e => updatePayment("cardName", e.target.value)}
+                            className={`${inputCls} ${errors.cardName ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
+                            placeholder={isRTL ? "محمد علي" : "John Doe"}
+                            autoComplete="cc-name"
+                            aria-invalid={!!errors.cardName}
+                            aria-describedby={errors.cardName ? "err-card-name" : undefined}
+                          />
+                          {errors.cardName && <p id="err-card-name" role="alert" className="text-destructive text-xs mt-1">{errors.cardName}</p>}
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div>
+                            <label htmlFor="checkout-card-expiry" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.expiry} *</label>
+                            <input
+                              id="checkout-card-expiry"
+                              type="text"
+                              value={paymentData.expiry}
+                              onChange={e => {
+                                const val = e.target.value.replace(/\D/g, "").slice(0, 4);
+                                updatePayment("expiry", val.length > 2 ? val.slice(0, 2) + "/" + val.slice(2) : val);
+                              }}
+                              className={`${inputCls} ${errors.expiry ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
+                              placeholder="MM/YY"
+                              autoComplete="cc-exp"
+                              inputMode="numeric"
+                              maxLength={5}
+                              aria-invalid={!!errors.expiry}
+                              aria-describedby={errors.expiry ? "err-expiry" : undefined}
+                            />
+                            {errors.expiry && <p id="err-expiry" role="alert" className="text-destructive text-xs mt-1">{errors.expiry}</p>}
+                          </div>
+                          <div>
+                            <label htmlFor="checkout-card-cvv" className={labelCls} style={{ fontSize: "0.8rem" }}>{t.cvv} *</label>
+                            <input
+                              id="checkout-card-cvv"
+                              type="text"
+                              value={paymentData.cvv}
+                              onChange={e => updatePayment("cvv", e.target.value.replace(/\D/g, "").slice(0, 4))}
+                              className={`${inputCls} ${errors.cvv ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
+                              placeholder="123"
+                              maxLength={4}
+                              autoComplete="cc-csc"
+                              inputMode="numeric"
+                              aria-invalid={!!errors.cvv}
+                              aria-describedby={errors.cvv ? "err-cvv" : undefined}
+                            />
+                            {errors.cvv && <p id="err-cvv" role="alert" className="text-destructive text-xs mt-1">{errors.cvv}</p>}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {paymentMethod === "instapay" && (
+                      <div className="space-y-4 pt-2">
+                        <div className="p-4 bg-muted/40 rounded-2xl border border-border space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-muted-foreground">{isRTL ? "عنوان الدفع اللحظي (IPA):" : "Instant Payment Address (IPA):"}</span>
+                            <div className="flex items-center gap-2">
+                              <code className="text-xs font-bold text-foreground bg-background px-2.5 py-1 rounded border border-border">{t.instaPayAddress}</code>
+                              <button
+                                type="button"
+                                onClick={() => copyToClipboard(t.instaPayAddress)}
+                                className="p-1.5 text-brand-terracotta hover:bg-brand-peach/50 rounded-md transition-colors cursor-pointer"
+                                aria-label={t.copyInstaPay}
+                              >
+                                <Copy size={15} />
+                              </button>
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-between border-t border-border pt-2.5">
+                            <span className="text-xs text-muted-foreground">{isRTL ? "رقم مرجع الطلب للتحويل:" : "Order Reference for transfer:"}</span>
+                            <div className="flex items-center gap-2">
+                              <code className="text-xs font-bold text-brand-terracotta bg-background px-2.5 py-1 rounded border border-border">#{orderNumber}</code>
+                              <button
+                                type="button"
+                                onClick={() => copyToClipboard(orderNumber)}
+                                className="p-1.5 text-brand-terracotta hover:bg-brand-peach/50 rounded-md transition-colors cursor-pointer"
+                                aria-label={isRTL ? "نسخ رقم الطلب" : "Copy order reference"}
+                              >
+                                <Copy size={15} />
+                              </button>
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-between border-t border-border pt-2.5">
+                            <span className="text-xs text-muted-foreground">{t.totalPaid}:</span>
+                            <span className="text-sm font-bold text-brand-moss-dark dark:text-brand-sage">{formatPrice(total)}</span>
+                          </div>
+                        </div>
+
+                        <label className="flex items-start gap-2.5 cursor-pointer select-none">
+                          <input
+                            type="checkbox"
+                            checked={instapayConfirmed}
+                            onChange={e => {
+                              setInstapayConfirmed(e.target.checked);
+                              if (errors.instapay) {
+                                setErrors(prev => {
+                                  const next = { ...prev };
+                                  delete next.instapay;
+                                  return next;
+                                });
+                              }
+                            }}
+                            className="mt-1 w-4 h-4 rounded border-border text-brand-terracotta focus:ring-brand-terracotta/20"
+                          />
+                          <span className="text-xs text-foreground leading-snug">
+                            {t.verifyTransfer} ({isRTL ? `تم تحويل ${formatPrice(total)} إلى ${t.instaPayAddress}` : `Transferred ${formatPrice(total)} to ${t.instaPayAddress}`})
+                          </span>
+                        </label>
+                        {errors.instapay && <p role="alert" className="text-destructive text-xs mt-1">{errors.instapay}</p>}
+                      </div>
+                    )}
+
+                    {paymentMethod === "vodafone" && (
+                      <div className="space-y-4 pt-2">
+                        <div className="p-4 bg-muted/40 rounded-2xl border border-border space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-muted-foreground">{isRTL ? "رقم محفظة حاج عرفة:" : "Haj Arafa Merchant Wallet:"}</span>
+                            <div className="flex items-center gap-2">
+                              <code className="text-xs font-bold text-foreground bg-background px-2.5 py-1 rounded border border-border">{t.walletNumber}</code>
+                              <button
+                                type="button"
+                                onClick={() => copyToClipboard("01001234567")}
+                                className="p-1.5 text-brand-terracotta hover:bg-brand-peach/50 rounded-md transition-colors cursor-pointer"
+                                aria-label={t.copyWalletNumber}
+                              >
+                                <Copy size={15} />
+                              </button>
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-between border-t border-border pt-2.5">
+                            <span className="text-xs text-muted-foreground">{t.totalPaid}:</span>
+                            <span className="text-sm font-bold text-brand-moss-dark dark:text-brand-sage">{formatPrice(total)}</span>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label htmlFor="checkout-wallet-phone" className={labelCls} style={{ fontSize: "0.8rem" }}>
+                            {isRTL ? "رقم محفظتك الذي تم التحويل منه *" : "Your Mobile Wallet Number *"}
+                          </label>
+                          <input
+                            id="checkout-wallet-phone"
+                            type="tel"
+                            value={walletPhone}
+                            onChange={e => {
+                              setWalletPhone(e.target.value);
+                              if (errors.walletPhone) {
+                                setErrors(prev => {
+                                  const next = { ...prev };
+                                  delete next.walletPhone;
+                                  return next;
+                                });
+                              }
+                            }}
+                            className={`${inputCls} ${errors.walletPhone ? "border-destructive focus:border-destructive focus:ring-destructive/20" : ""}`}
+                            placeholder="01012345678"
+                            autoComplete="tel"
+                            maxLength={11}
+                            aria-invalid={!!errors.walletPhone}
+                            aria-describedby={errors.walletPhone ? "err-wallet-phone" : undefined}
+                          />
+                          {errors.walletPhone && <p id="err-wallet-phone" role="alert" className="text-destructive text-xs mt-1">{errors.walletPhone}</p>}
+                        </div>
+                      </div>
+                    )}
+
+                    {paymentMethod === "cod" && (
+                      <div className="pt-2">
+                        <div className="p-4 bg-brand-peach/30 rounded-2xl border border-brand-terracotta/20 flex items-start gap-3">
+                          <Banknote size={20} className="text-brand-terracotta flex-shrink-0 mt-0.5" />
+                          <div className="space-y-1">
+                            <p className="text-xs sm:text-sm font-bold text-foreground">{t.payCOD}</p>
+                            <p className="text-xs text-muted-foreground leading-relaxed">
+                              {isRTL
+                                ? `ستقوم بدفع مبلغ إجمالي ${formatPrice(total)} نقداً لمندوب الشحن عند استلام الطلب بدون أي رسوم إضافية.`
+                                : `You will pay the exact total of ${formatPrice(total)} in cash directly to our courier upon delivery.`}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     <div className="flex gap-3">
                       <Button
@@ -548,7 +758,7 @@ export function Checkout() {
                         size="lg"
                         className="flex-1 text-sm sm:text-base"
                       >
-                        {t.placeOrder} · {t.currency} {total.toFixed(2)}
+                        {t.placeOrder} · {formatPrice(total)}
                       </Button>
                     </div>
                   </motion.div>
@@ -575,7 +785,7 @@ export function Checkout() {
                         <p className="text-muted-foreground" style={{ fontSize: "0.72rem" }}>{item.product.weight}</p>
                       </div>
                       <span className="text-foreground" style={{ fontSize: "0.8rem" }}>
-                        {t.currency} {(item.product.price * item.quantity).toFixed(2)}
+                        {formatPrice(item.product.price * item.quantity)}
                       </span>
                     </div>
                   );
@@ -584,19 +794,19 @@ export function Checkout() {
               <div className="border-t border-border pt-4 space-y-2" style={{ fontSize: "0.875rem" }}>
                 <div className="flex justify-between text-muted-foreground">
                   <span>{t.subtotal}</span>
-                  <span>{t.currency} {totalPrice.toFixed(2)}</span>
+                  <span>{formatPrice(totalPrice)}</span>
                 </div>
                 <div className="flex justify-between text-muted-foreground">
                   <span>{t.shipping}</span>
-                  <span>{shipping === 0 ? <span className="text-brand-sage-dark">{t.free}</span> : `${t.currency} ${shipping.toFixed(2)}`}</span>
+                  <span>{shipping === 0 ? <span className="text-brand-sage-dark">{t.free}</span> : formatPrice(shipping)}</span>
                 </div>
                 <div className="flex justify-between text-muted-foreground">
                   <span>{t.tax} (14%)</span>
-                  <span>{t.currency} {tax.toFixed(2)}</span>
+                  <span>{formatPrice(tax)}</span>
                 </div>
-                <div className="flex justify-between text-foreground border-t border-border pt-2">
+                <div className="flex justify-between text-foreground border-t border-border pt-2 font-bold">
                   <span>{t.total}</span>
-                  <span className="text-brand-terracotta">{t.currency} {total.toFixed(2)}</span>
+                  <span className="text-brand-terracotta">{formatPrice(total)}</span>
                 </div>
               </div>
 

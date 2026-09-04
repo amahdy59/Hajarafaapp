@@ -33,6 +33,29 @@ export function Home() {
       ? "تسوق منتجات حاج عرفة الطبيعية مع عرض أوضح على الهاتف وسطح المكتب."
       : "Shop Haj Arafa natural products with a clearer mobile and desktop browsing experience.",
     title: isRTL ? "حاج عرفة | منتجات طبيعية مختارة" : "Haj Arafa | Handpicked Natural Products",
+    structuredData: {
+      "@context": "https://schema.org",
+      "@type": "Store",
+      name: isRTL ? "حاج عرفة" : "Haj Arafa",
+      description: isRTL ? "متجر الأعشاب والعسل والبهارات الطبيعية الفاخرة منذ عام 1968" : "Finest natural herbs, honey, coffee, and spices since 1968",
+      url: "https://amahdy59.github.io/Hajarafaapp/",
+      telephone: "+20-100-123-4567",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Bab El Louk",
+        addressLocality: "Cairo",
+        addressCountry: "EG",
+      },
+      openingHoursSpecification: {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: [
+          "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+        ],
+        opens: "09:00",
+        closes: "23:00"
+      },
+      priceRange: "$$"
+    }
   });
 
   return (

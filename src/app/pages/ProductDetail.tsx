@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { motion } from "motion/react";
 import { Button } from "../components/ui/Button";
 import { usePageMeta } from "../hooks/usePageMeta";
+import logoImg from "../../assets/logo.webp";
 
 
 const mockReviews = [
@@ -67,7 +68,7 @@ export function ProductDetail() {
   const product = getProductById(id || "");
   const { addToCart } = useCart();
   const { isWishlisted, toggleWishlist } = useWishlist();
-  const { t, isRTL } = useAppSettings();
+  const { t, isRTL, formatPrice, formatNumber } = useAppSettings();
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
   const [activeTab, setActiveTab] = useState<"description" | "usage" | "reviews">("description");
@@ -110,6 +111,30 @@ export function ProductDetail() {
       : isRTL
         ? "المنتج غير موجود | حاج عرفة"
         : "Product Not Found | Haj Arafa",
+    structuredData: product ? {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: isRTL && product.nameAr ? product.nameAr : product.name,
+      image: [product.image],
+      description: product.description,
+      sku: product.id,
+      brand: {
+        "@type": "Brand",
+        name: "Haj Arafa",
+      },
+      offers: {
+        "@type": "Offer",
+        priceCurrency: "EGP",
+        price: product.price,
+        availability: "https://schema.org/InStock",
+        url: typeof window !== "undefined" ? window.location.href : "https://amahdy59.github.io/Hajarafaapp/",
+      },
+      aggregateRating: product.rating ? {
+        "@type": "AggregateRating",
+        ratingValue: product.rating,
+        reviewCount: product.reviewCount || 1,
+      } : undefined,
+    } : undefined,
   });
 
   const parentSlug = product ? (categoryMapping[product.categorySlug] || product.categorySlug) : "";
@@ -211,6 +236,7 @@ export function ProductDetail() {
                 src={product.images[activeImage] || product.image}
                 alt={isRTL && product.nameAr ? product.nameAr : product.name}
                 className="w-full h-full object-contain p-3 sm:p-6 mix-blend-multiply dark:mix-blend-normal"
+                onError={(e) => { (e.currentTarget as HTMLImageElement).src = logoImg; }}
               />
               {product.discount && (
                 <span className="absolute top-3 start-3 bg-brand-terracotta-dark dark:bg-brand-terracotta text-white dark:text-brand-cream px-2.5 py-0.5 rounded-full font-bold text-[10px] sm:text-xs">
@@ -236,7 +262,12 @@ export function ProductDetail() {
                       activeImage === i ? "border-brand-terracotta" : "border-transparent"
                     }`}
                   >
-                    <img src={img} alt="" className="w-full h-full object-contain p-0.5 sm:p-1 mix-blend-multiply dark:mix-blend-normal" />
+                    <img
+                      src={img}
+                      alt=""
+                      className="w-full h-full object-contain p-0.5 sm:p-1 mix-blend-multiply dark:mix-blend-normal"
+                      onError={(e) => { (e.currentTarget as HTMLImageElement).src = logoImg; }}
+                    />
                   </button>
                 ))}
               </div>
@@ -272,11 +303,11 @@ export function ProductDetail() {
               </div>
               <div className="flex items-baseline gap-2 mt-1">
                 <span className="text-brand-terracotta font-extrabold text-2xl sm:text-3xl leading-none">
-                  {t.currency} {product.price.toFixed(2)}
+                  {formatPrice(product.price)}
                 </span>
                 {product.originalPrice && (
                   <span className="text-muted-foreground line-through text-xs sm:text-sm">
-                    {t.currency} {product.originalPrice.toFixed(2)}
+                    {formatPrice(product.originalPrice)}
                   </span>
                 )}
               </div>
@@ -308,7 +339,7 @@ export function ProductDetail() {
                   >
                     <Minus size={14} className="text-foreground" />
                   </button>
-                  <span className="w-8 select-none text-center text-sm font-semibold text-foreground">{quantity}</span>
+                  <span className="w-8 select-none text-center text-sm font-semibold text-foreground">{formatNumber(quantity)}</span>
                   <button
                     onClick={() => setQuantity(q => q + 1)}
                     className="flex h-11 w-11 items-center justify-center rounded-lg transition-colors hover:bg-muted"
@@ -691,7 +722,7 @@ export function ProductDetail() {
               {isRTL && product.nameAr ? product.nameAr : product.name}
             </p>
             <p className="text-sm font-extrabold text-brand-terracotta">
-              {t.currency} {product.price.toFixed(2)}
+              {formatPrice(product.price)}
             </p>
           </div>
           <Button

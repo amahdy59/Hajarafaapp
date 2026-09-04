@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Search, ShoppingBag, Heart, Menu, X, Languages, Sun, Moon } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import { Search, ShoppingBag, Heart, Menu, X, Languages, Sun, Moon, History, TrendingUp, ArrowUpRight } from "lucide-react";
 import { Link, useNavigate, useLocation, useSearchParams } from "react-router";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
@@ -8,21 +8,37 @@ import { SettingsDrawer } from "./SettingsDrawer";
 import { IconButton } from "./ui/IconButton";
 import { motion, AnimatePresence } from "motion/react";
 import { categories } from "../data/categories";
+import { products } from "../data/products";
 import logoImg from "../../assets/logo.webp";
 
 export function Header() {
   const { totalItems, setCartOpen } = useCart();
   const { items: wishlistItems } = useWishlist();
-  const { theme, setTheme, locale, setLocale, t, isRTL } = useAppSettings();
+  const { theme, setTheme, locale, setLocale, formatPrice, t, isRTL } = useAppSettings();
   const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => { setSearchOpen(false); }, [location.pathname]);
+
+  useEffect(() => {
+    if (searchOpen) {
+      try {
+        const stored = localStorage.getItem("hajarafa.recent_searches");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) setRecentSearches(parsed.slice(0, 5));
+        }
+      } catch (e) {
+        console.error("Failed to parse recent searches", e);
+      }
+    }
+  }, [searchOpen]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -31,14 +47,51 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const q = searchQuery.trim();
-    if (q) {
+  const trendingSearches = locale === "ar"
+    ? ["عسل سدر", "زيت عنبر", "قهوة محوجة", "بخور صندل", "شاي أخضر"]
+    : ["Sidr Honey", "Amber Oil", "Cardamom Coffee", "Sandalwood Incense", "Green Tea"];
+
+  const queryClean = searchQuery.trim().toLowerCase();
+
+  const matchedProducts = useMemo(() => {
+    if (!queryClean) return [];
+    return products
+      .filter(p => {
+        const nameEn = p.name.toLowerCase();
+        const nameAr = (p.nameAr || "").toLowerCase();
+        const descEn = (p.description || "").toLowerCase();
+        const cat = p.categorySlug.toLowerCase();
+        return nameEn.includes(queryClean) || nameAr.includes(queryClean) || descEn.includes(queryClean) || cat.includes(queryClean);
+      })
+      .slice(0, 5);
+  }, [queryClean]);
+
+  const executeSearch = (rawQuery: string, redirect = true) => {
+    const q = rawQuery.trim();
+    if (!q) return;
+    try {
+      const existing = recentSearches.filter(s => s.toLowerCase() !== q.toLowerCase());
+      const updated = [q, ...existing].slice(0, 5);
+      setRecentSearches(updated);
+      localStorage.setItem("hajarafa.recent_searches", JSON.stringify(updated));
+    } catch (e) {
+      console.error("Failed to save recent search", e);
+    }
+    if (redirect) {
       navigate(`/products?q=${encodeURIComponent(q)}`);
       setSearchQuery("");
       setSearchOpen(false);
     }
+  };
+
+  const clearRecentSearches = () => {
+    setRecentSearches([]);
+    localStorage.removeItem("hajarafa.recent_searches");
+  };
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    executeSearch(searchQuery);
   };
 
   return (
@@ -200,7 +253,7 @@ export function Header() {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -12, opacity: 0 }}
               transition={{ duration: 0.18 }}
-              className="fixed top-0 inset-x-0 z-50 bg-background safe-area-pt shadow-soft"
+              className="fixed top-0 inset-x-0 z-50 bg-background/98 backdrop-blur-2xl safe-area-pt shadow-elev border-b border-border"
             >
               <form onSubmit={submit} className="px-4 sm:px-6 py-3 flex items-center gap-2 max-w-[1280px] mx-auto">
                 <div className="relative flex-1 flex items-center bg-input rounded-full border border-border focus-within:border-brand-sage transition-colors">
@@ -213,11 +266,126 @@ export function Header() {
                     className="w-full ps-11 pe-4 py-3 bg-transparent text-foreground placeholder:text-brand-ink-soft outline-none"
                     style={{ fontSize: "0.95rem" }}
                   />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery("")}
+                      aria-label={isRTL ? "مسح النص" : "Clear input"}
+                      className="me-3 p-1 rounded-full text-muted-foreground hover:text-foreground cursor-pointer"
+                    >
+                      <X size={15} />
+                    </button>
+                  )}
                 </div>
                 <IconButton type="button" onClick={() => setSearchOpen(false)} aria-label={isRTL ? "إغلاق البحث" : "Close search"}>
                   <X size={20} />
                 </IconButton>
               </form>
+
+              <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pb-4 pt-1 max-h-[70vh] overflow-y-auto">
+                {queryClean ? (
+                  <div>
+                    {matchedProducts.length > 0 ? (
+                      <div className="flex flex-col divide-y divide-border">
+                        <div className="py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                          {locale === "ar" ? "المنتجات المطابقة" : "Matching Products"}
+                        </div>
+                        {matchedProducts.map((p) => (
+                          <Link
+                            key={p.id}
+                            to={`/product/${p.id}`}
+                            onClick={() => {
+                              executeSearch(locale === "ar" && p.nameAr ? p.nameAr : p.name, false);
+                              setSearchOpen(false);
+                            }}
+                            className="flex items-center gap-3.5 py-2.5 px-2 hover:bg-muted/60 rounded-xl transition-colors group"
+                          >
+                            <img
+                              src={p.image}
+                              alt={isRTL && p.nameAr ? p.nameAr : p.name}
+                              className="w-12 h-12 rounded-lg object-cover bg-brand-peach/30 flex-shrink-0"
+                              onError={(e) => { (e.currentTarget as HTMLImageElement).src = logoImg; }}
+                            />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-semibold text-foreground truncate group-hover:text-brand-terracotta transition-colors">
+                                {isRTL && p.nameAr ? p.nameAr : p.name}
+                              </p>
+                              <p className="text-xs text-muted-foreground truncate">
+                                {p.weight || p.category}
+                              </p>
+                            </div>
+                            <div className="text-sm font-bold text-brand-moss-dark dark:text-brand-sage flex-shrink-0">
+                              {formatPrice(p.price)}
+                            </div>
+                          </Link>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => executeSearch(searchQuery)}
+                          className="w-full text-center py-3 text-xs font-semibold text-brand-terracotta hover:underline mt-2 flex items-center justify-center gap-1.5 cursor-pointer"
+                        >
+                          <span>{locale === "ar" ? `عرض كل النتائج لـ "${searchQuery}"` : `View all results for "${searchQuery}"`}</span>
+                          <ArrowUpRight size={14} className="rtl-flip" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="py-8 text-center text-muted-foreground text-sm">
+                        {t.noResultsFound}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-4 py-2">
+                    {recentSearches.length > 0 && (
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5">
+                            <History size={13} />
+                            {t.recentSearches}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={clearRecentSearches}
+                            className="text-[11px] text-muted-foreground hover:text-foreground font-medium cursor-pointer"
+                          >
+                            {t.clearRecent}
+                          </button>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {recentSearches.map((s) => (
+                            <button
+                              key={s}
+                              type="button"
+                              onClick={() => executeSearch(s)}
+                              className="px-3 py-1.5 rounded-full bg-muted hover:bg-muted/80 text-foreground text-xs font-medium transition-colors cursor-pointer"
+                            >
+                              {s}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    <div>
+                      <div className="flex items-center gap-1.5 mb-2 text-xs font-semibold text-muted-foreground">
+                        <TrendingUp size={13} className="text-brand-terracotta" />
+                        {t.trendingSearches}
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {trendingSearches.map((term) => (
+                          <button
+                            key={term}
+                            type="button"
+                            onClick={() => executeSearch(term)}
+                            className="px-3 py-1.5 rounded-full bg-brand-peach/40 hover:bg-brand-peach/70 text-foreground text-xs font-medium border border-brand-terracotta/20 transition-colors cursor-pointer"
+                          >
+                            {term}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </motion.div>
           </>
         )}
