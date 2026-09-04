@@ -63,7 +63,7 @@ export function Header() {
           </div>
 
           <Link to="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center min-w-0 h-14 select-none cursor-pointer w-fit no-underline z-10">
-            <img src={logoImg} alt="Haj Arafa Logo" className="h-9 xs:h-12 sm:h-14 w-auto object-contain max-w-[42vw] sm:max-w-[220px] select-none" />
+            <img src={logoImg} alt={isRTL ? "شعار حاج عرفة" : "Haj Arafa Logo"} className="h-9 xs:h-12 sm:h-14 w-auto object-contain max-w-[42vw] sm:max-w-[220px] select-none" />
           </Link>
 
           <div className="flex items-center gap-0.5 justify-end z-10 -me-2 sm:-me-2.5">
@@ -85,16 +85,10 @@ export function Header() {
                 </span>
               </div>
             </div>
-            
-            <div className="relative group hidden sm:block">
+
+            <div className="relative group">
               <IconButton 
-                onClick={() => {
-                  if (location.pathname === "/products") {
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  } else {
-                    navigate("/products");
-                  }
-                }} 
+                onClick={() => setSearchOpen(true)} 
                 aria-label={t.searchPlaceholder}
               >
                 <Search size={19} />
@@ -199,6 +193,9 @@ export function Header() {
               onClick={() => setSearchOpen(false)}
             />
             <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-label={t.search}
               initial={{ y: -12, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -12, opacity: 0 }}
@@ -217,7 +214,7 @@ export function Header() {
                     style={{ fontSize: "0.95rem" }}
                   />
                 </div>
-                <IconButton type="button" onClick={() => setSearchOpen(false)} aria-label="Close">
+                <IconButton type="button" onClick={() => setSearchOpen(false)} aria-label={isRTL ? "إغلاق البحث" : "Close search"}>
                   <X size={20} />
                 </IconButton>
               </form>

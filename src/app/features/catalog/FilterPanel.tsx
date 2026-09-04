@@ -52,9 +52,9 @@ export function FilterPanel({
             <button
               type="button"
               onClick={clearFilters}
-              className="text-sm text-brand-terracotta hover:underline flex items-center gap-1 font-bold"
+              className="text-sm text-brand-terracotta hover:underline flex items-center gap-1 font-bold min-h-[44px] px-2"
             >
-              <X size={12} /> {t.clearAll}
+              <X size={14} /> {t.clearAll}
             </button>
           )}
         </div>
@@ -63,14 +63,14 @@ export function FilterPanel({
       {showCategoryFilter && (
         <div>
           <h4 className="text-sm text-foreground/80 mb-2 font-bold">{t.shopByCategory}</h4>
-          <div className="space-y-1 sm:space-y-1.5">
+          <div className="space-y-1">
             {categories.map((category) => {
               const checked = selectedCategories.includes(category.slug);
 
               return (
                 <label
                   key={category.id}
-                  className="flex items-center gap-2.5 cursor-pointer group select-none text-sm text-foreground/80 font-medium focus-within:text-brand-terracotta"
+                  className="flex items-center gap-2.5 cursor-pointer group select-none text-sm text-foreground/80 font-medium focus-within:text-brand-terracotta min-h-[44px] py-1"
                 >
                   <input
                     type="checkbox"
@@ -80,13 +80,13 @@ export function FilterPanel({
                   />
                   <span
                     aria-hidden="true"
-                    className={`w-4.5 h-4.5 rounded border flex items-center justify-center transition-colors peer-focus:ring-2 peer-focus:ring-brand-terracotta/40 ${
+                    className={`w-5 h-5 rounded border flex items-center justify-center transition-colors peer-focus:ring-2 peer-focus:ring-brand-terracotta/40 ${
                       checked
                         ? "border-brand-terracotta bg-brand-terracotta"
                         : "border-border group-hover:border-brand-terracotta"
                     }`}
                   >
-                    {checked && <Check size={10} className="text-white" />}
+                    {checked && <Check size={12} className="text-white" />}
                   </span>
                   <span>{category.icon} {isRTL && category.nameAr ? category.nameAr : category.name}</span>
                 </label>
@@ -145,24 +145,25 @@ export function FilterPanel({
           max={maxPrice}
           value={priceRange[1]}
           onChange={(event) => setPriceRange([priceRange[0], Number(event.target.value)])}
-          className="w-full accent-brand-terracotta h-1"
+          className="w-full accent-brand-terracotta h-2"
         />
       </fieldset>
 
       <fieldset>
         <legend className="text-sm text-foreground/80 mb-2 font-bold">{t.minRating}</legend>
-        <div className="space-y-1 sm:space-y-1.5">
+        <div className="space-y-1">
           {[4, 3, 2].map((rating) => (
-            <label key={rating} className="flex items-center gap-2.5 cursor-pointer text-foreground/80 select-none text-sm">
+            <label key={rating} className="flex items-center gap-2.5 cursor-pointer text-foreground/80 select-none text-sm min-h-[44px] py-1">
               <input
                 type="radio"
+                name={`${panelId}-rating`}
                 checked={minRating === rating}
                 onChange={() => setMinRating(minRating === rating ? 0 : rating)}
                 className="accent-brand-terracotta w-4 h-4 cursor-pointer"
               />
               <div className="flex items-center gap-0.5">
                 {[...Array(5)].map((_, index) => (
-                  <span key={index} className={`text-sm ${index < rating ? "text-amber-400" : "text-muted-foreground"}`}>★</span>
+                  <span key={index} className={`text-sm ${index < rating ? "text-amber-500 dark:text-amber-400" : "text-muted-foreground"}`}>★</span>
                 ))}
                 <span className="text-xs text-muted-foreground ms-1">{isRTL ? "فأعلى" : "& up"}</span>
               </div>
@@ -171,9 +172,11 @@ export function FilterPanel({
         </div>
       </fieldset>
 
-      <label className="flex items-center gap-2.5 cursor-pointer select-none text-sm text-foreground/80 font-semibold focus-within:text-brand-terracotta">
+      <label className="flex items-center gap-2.5 cursor-pointer select-none text-sm text-foreground/80 font-semibold focus-within:text-brand-terracotta min-h-[44px] py-1">
         <input
           type="checkbox"
+          role="switch"
+          aria-checked={showOrganic}
           checked={showOrganic}
           onChange={() => setShowOrganic(!showOrganic)}
           className="sr-only peer"

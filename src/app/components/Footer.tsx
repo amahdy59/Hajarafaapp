@@ -118,8 +118,8 @@ export function Footer() {
             </Link>
             <p className="max-w-sm text-xs leading-6 text-[#FAF6F0]">
               {isArabic
-                ? "تراث الأعشاب المصرية منذ 1970. جودة ونقاء في كل منتج طبيعي."
-                : "Egyptian herbal heritage since 1970. Quality and purity in every natural product."}
+                ? "تراث الأعشاب المصرية منذ 1968. جودة ونقاء في كل منتج طبيعي."
+                : "Egyptian herbal heritage since 1968. Quality and purity in every natural product."}
             </p>
             <div className="flex items-center gap-2.5 pt-1">
               <a
@@ -162,7 +162,7 @@ export function Footer() {
                 <li key={link.to}>
                   <Link
                     to={link.to}
-                    className="inline-block text-xs text-[#FAF6F0] hover:text-[#F4E7DA] hover:translate-x-1 duration-200 transition-all no-underline"
+                    className="inline-block text-xs text-[#FAF6F0] hover:text-[#F4E7DA] hover:translate-x-1 rtl:hover:-translate-x-1 duration-200 transition-all no-underline"
                   >
                     {link.label}
                   </Link>

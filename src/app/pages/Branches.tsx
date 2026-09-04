@@ -1,9 +1,10 @@
-import { ArrowLeft, Clock, MapPin, ExternalLink, Map, Phone, MessageCircle } from "lucide-react";
+import { ArrowLeft, Clock, MapPin, ExternalLink, Map, Phone, MessageCircle, Search, X } from "lucide-react";
 import { Link } from "react-router";
 import { useAppSettings } from "../context/AppSettingsContext";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "motion/react";
 import { CONTACT } from "../config/contact";
+import { usePageMeta } from "../hooks/usePageMeta";
 
 /* ─── Types ─── */
 interface Branch {
@@ -279,8 +280,35 @@ function RegionSection({
 /* ─── Main Page ─── */
 export function Branches() {
   const { t, isRTL } = useAppSettings();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  usePageMeta({
+    title: `${t.branches} | ${isRTL ? "حاج عرفة" : "Haj Arafa"}`,
+    description: isRTL
+      ? "فروع ومنافذ بيع متجر حاج عرفة في جميع محافظات مصر - القاهرة، الجيزة، الإسكندرية والمزيد"
+      : "Haj Arafa store branches and retail locations across Egypt - Cairo, Giza, Alexandria and more",
+  });
 
   const totalBranches = regions.reduce((s, r) => s + r.branches.length, 0);
+
+  const filteredRegions = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return regions;
+    return regions
+      .map((region) => {
+        const matchesRegionName =
+          region.nameEn.toLowerCase().includes(q) ||
+          region.nameAr.toLowerCase().includes(q);
+        const matchingBranches = region.branches.filter(
+          (b) =>
+            matchesRegionName ||
+            b.nameEn.toLowerCase().includes(q) ||
+            b.nameAr.toLowerCase().includes(q)
+        );
+        return { ...region, branches: matchingBranches };
+      })
+      .filter((region) => region.branches.length > 0);
+  }, [searchQuery]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -327,11 +355,60 @@ export function Branches() {
           </div>
         </div>
 
+        {/* Branch search filter */}
+        <div className="relative">
+          <label htmlFor="branch-search-input" className="sr-only">
+            {isRTL ? "البحث في الفروع" : "Search branches"}
+          </label>
+          <Search
+            size={18}
+            className="absolute top-1/2 -translate-y-1/2 start-4 text-muted-foreground pointer-events-none"
+            aria-hidden="true"
+          />
+          <input
+            id="branch-search-input"
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={isRTL ? "ابحث عن فرع أو منطقة أو مدينة..." : "Search by branch, area, or city..."}
+            className="w-full bg-card border border-border rounded-xl ps-11 pe-12 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-brand-terracotta focus:ring-2 focus:ring-brand-terracotta/20 transition-all"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery("")}
+              className="absolute top-1/2 -translate-y-1/2 end-1.5 w-11 h-11 flex items-center justify-center text-muted-foreground hover:text-foreground rounded-lg transition-colors"
+              aria-label={isRTL ? "مسح البحث" : "Clear search"}
+            >
+              <X size={16} />
+            </button>
+          )}
+        </div>
+
         {/* ─── Region Sections ─── */}
         <div className="space-y-4 pt-2">
-          {regions.map((region, i) => (
-            <RegionSection key={region.nameEn} region={region} isRTL={isRTL} index={i} />
-          ))}
+          {filteredRegions.length > 0 ? (
+            filteredRegions.map((region, i) => (
+              <RegionSection key={region.nameEn} region={region} isRTL={isRTL} index={i} />
+            ))
+          ) : (
+            <div className="text-center py-12 bg-card rounded-2xl border border-border p-6 space-y-3">
+              <p className="text-4xl" role="img" aria-label={isRTL ? "بحث" : "Search"}>🔍</p>
+              <h3 className="text-foreground font-display font-medium text-base">
+                {isRTL ? "لم يتم العثور على فروع مطابقة" : "No matching branches found"}
+              </h3>
+              <p className="text-muted-foreground text-xs max-w-sm mx-auto">
+                {isRTL ? `لا توجد نتائج تطابق "${searchQuery}". جرب البحث باسم منطقة أخرى.` : `No branches match "${searchQuery}". Try searching for another area or city.`}
+              </p>
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className="inline-flex items-center justify-center min-h-[44px] px-4 py-2 rounded-xl bg-brand-terracotta/10 text-brand-terracotta font-medium text-xs hover:bg-brand-terracotta hover:text-white transition-colors"
+              >
+                {isRTL ? "إعادة تعيين البحث" : "Reset search"}
+              </button>
+            </div>
+          )}
         </div>
 
         {/* ─── Selling Spots ─── */}

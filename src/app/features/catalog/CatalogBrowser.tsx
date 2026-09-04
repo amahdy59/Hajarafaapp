@@ -183,10 +183,12 @@ export function CatalogBrowser({
                     <button
                       type="button"
                       onClick={() => setSearchQuery("")}
-                      className={`absolute ${isRTL ? "left-3" : "right-3"} top-1/2 -translate-y-1/2 w-5 h-5 bg-muted rounded-full flex items-center justify-center hover:bg-border transition-colors`}
+                      className={`absolute ${isRTL ? "left-1" : "right-1"} top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center hover:bg-muted/80 transition-colors`}
                       aria-label={isRTL ? "مسح البحث" : "Clear search"}
                     >
-                      <X size={11} className="text-muted-foreground" />
+                      <span className="w-5 h-5 bg-muted rounded-full flex items-center justify-center">
+                        <X size={11} className="text-muted-foreground" />
+                      </span>
                     </button>
                   )}
                 </div>
@@ -200,24 +202,24 @@ export function CatalogBrowser({
                     label={isRTL ? "ترتيب المنتجات" : "Sort products"}
                   />
 
-                  <div className="flex items-center gap-1 bg-brand-peach rounded-lg p-1 border border-brand-terracotta/10">
+                  <div className="flex items-center gap-1 bg-brand-peach rounded-lg p-0.5 border border-brand-terracotta/10">
                     <button
                       type="button"
                       onClick={() => setView("grid")}
-                      className={`p-1.5 rounded transition-all ${view === "grid" ? "bg-card shadow-sm text-brand-terracotta" : "text-brand-ink-soft hover:text-brand-terracotta"}`}
+                      className={`w-11 h-11 rounded-md flex items-center justify-center transition-all ${view === "grid" ? "bg-card shadow-sm text-brand-terracotta" : "text-brand-ink-soft hover:text-brand-terracotta"}`}
                       aria-pressed={view === "grid"}
                       aria-label={isRTL ? "عرض شبكي" : "Grid view"}
                     >
-                      <Grid3X3 size={15} />
+                      <Grid3X3 size={16} />
                     </button>
                     <button
                       type="button"
                       onClick={() => setView("list")}
-                      className={`p-1.5 rounded transition-all ${view === "list" ? "bg-card shadow-sm text-brand-terracotta" : "text-brand-ink-soft hover:text-brand-terracotta"}`}
+                      className={`w-11 h-11 rounded-md flex items-center justify-center transition-all ${view === "list" ? "bg-card shadow-sm text-brand-terracotta" : "text-brand-ink-soft hover:text-brand-terracotta"}`}
                       aria-pressed={view === "list"}
                       aria-label={isRTL ? "عرض قائمة" : "List view"}
                     >
-                      <List size={15} />
+                      <List size={16} />
                     </button>
                   </div>
                 </div>
@@ -242,10 +244,12 @@ export function CatalogBrowser({
                       <button
                         type="button"
                         onClick={() => setSearchQuery("")}
-                        className={`absolute ${isRTL ? "left-3" : "right-3"} top-1/2 -translate-y-1/2 w-5 h-5 bg-muted rounded-full flex items-center justify-center hover:bg-border transition-colors`}
+                        className={`absolute ${isRTL ? "left-1" : "right-1"} top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center hover:bg-muted/80 transition-colors`}
                         aria-label={isRTL ? "مسح البحث" : "Clear search"}
                       >
-                        <X size={11} className="text-muted-foreground" />
+                        <span className="w-5 h-5 bg-muted rounded-full flex items-center justify-center">
+                          <X size={11} className="text-muted-foreground" />
+                        </span>
                       </button>
                     )}
                   </div>
@@ -274,20 +278,20 @@ export function CatalogBrowser({
                     <button
                       type="button"
                       onClick={() => setView("grid")}
-                      className={`p-1.5 rounded transition-all ${view === "grid" ? "bg-card shadow-sm text-brand-terracotta" : "text-brand-ink-soft hover:text-brand-terracotta"}`}
+                      className={`min-w-[44px] min-h-[44px] rounded-md flex items-center justify-center transition-all ${view === "grid" ? "bg-card shadow-sm text-brand-terracotta" : "text-brand-ink-soft hover:text-brand-terracotta"}`}
                       aria-pressed={view === "grid"}
                       aria-label={isRTL ? "عرض شبكي" : "Grid view"}
                     >
-                      <Grid3X3 size={14} />
+                      <Grid3X3 size={16} />
                     </button>
                     <button
                       type="button"
                       onClick={() => setView("list")}
-                      className={`p-1.5 rounded transition-all ${view === "list" ? "bg-card shadow-sm text-brand-terracotta" : "text-brand-ink-soft hover:text-brand-terracotta"}`}
+                      className={`min-w-[44px] min-h-[44px] rounded-md flex items-center justify-center transition-all ${view === "list" ? "bg-card shadow-sm text-brand-terracotta" : "text-brand-ink-soft hover:text-brand-terracotta"}`}
                       aria-pressed={view === "list"}
                       aria-label={isRTL ? "عرض قائمة" : "List view"}
                     >
-                      <List size={14} />
+                      <List size={16} />
                     </button>
                   </div>
                 </div>
@@ -432,7 +436,7 @@ export function CatalogBrowser({
                   type="button"
                   onClick={() => setIsFilterOpen(false)}
                   aria-label={isRTL ? "إغلاق" : "Close"}
-                  className="p-1 text-muted-foreground hover:text-foreground transition-colors"
+                  className="w-11 h-11 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <X size={18} />
                 </button>

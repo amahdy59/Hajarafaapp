@@ -5,11 +5,8 @@ import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
 import { Link, useNavigate } from "react-router";
 import { Button } from "./ui/Button";
-import { DELIVERY_NOTICE } from "../config/contact";
+import { DELIVERY_NOTICE, SHIPPING_CONFIG } from "../config/contact";
 import { useDialogAccessibility } from "../hooks/useDialogAccessibility";
-
-
-const THRESHOLD = 500;
 
 export function CartDrawer() {
   const { items, isCartOpen, setCartOpen, updateQuantity, removeFromCart, totalPrice, totalItems } = useCart();
@@ -23,6 +20,7 @@ export function CartDrawer() {
     open: isCartOpen,
   });
 
+  const THRESHOLD = SHIPPING_CONFIG.freeThreshold;
   const progressPct = Math.min((totalPrice / THRESHOLD) * 100, 100);
   const remaining = (THRESHOLD - totalPrice).toFixed(2);
 
@@ -88,65 +86,68 @@ export function CartDrawer() {
                 </div>
               ) : (
                 <AnimatePresence>
-                  {items.map(item => (
-                    <motion.div
-                      key={item.product.id}
-                      layout
-                      initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: isRTL ? 20 : -20 }}
-                      transition={{ type: "spring", stiffness: 350, damping: 35 }}
-                      className="flex gap-3 bg-card rounded-2xl p-3 border border-border"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <p className="text-foreground line-clamp-2 mb-0.5" style={{ fontSize: "0.875rem" }}>
-                          {item.product.name}
-                        </p>
-                        <p className="text-muted-foreground" style={{ fontSize: "0.75rem" }}>{item.product.weight}</p>
-                        <div className="flex items-center justify-between mt-2">
-                          <span className="text-brand-terracotta" style={{ fontSize: "0.875rem" }}>
-                            {t.currency} {(item.product.price * item.quantity).toFixed(2)}
-                          </span>
-                          <div className="flex items-center gap-1.5">
-                            <button
-                              type="button"
-                              onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                              className="w-11 h-11 rounded-full bg-background border border-border flex items-center justify-center hover:border-brand-terracotta transition-colors"
-                              aria-label={`Decrease quantity for ${item.product.name}`}
-                            >
-                              <Minus size={13} className="text-foreground" />
-                            </button>
-                            <span className="text-foreground min-w-6 text-center" style={{ fontSize: "0.875rem" }}>
-                              {item.quantity}
+                  {items.map(item => {
+                    const itemName = isRTL && item.product.nameAr ? item.product.nameAr : item.product.name;
+                    return (
+                      <motion.div
+                        key={item.product.id}
+                        layout
+                        initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: isRTL ? 20 : -20 }}
+                        transition={{ type: "spring", stiffness: 350, damping: 35 }}
+                        className="flex gap-3 bg-card rounded-2xl p-3 border border-border"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <p className="text-foreground line-clamp-2 mb-0.5" style={{ fontSize: "0.875rem" }}>
+                            {itemName}
+                          </p>
+                          <p className="text-muted-foreground" style={{ fontSize: "0.75rem" }}>{item.product.weight}</p>
+                          <div className="flex items-center justify-between mt-2">
+                            <span className="text-brand-terracotta font-semibold" style={{ fontSize: "0.875rem" }}>
+                              {t.currency} {(item.product.price * item.quantity).toFixed(2)}
                             </span>
-                            <button
-                              type="button"
-                              onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                              className="w-11 h-11 rounded-full bg-background border border-border flex items-center justify-center hover:border-brand-terracotta transition-colors"
-                              aria-label={`Increase quantity for ${item.product.name}`}
-                            >
-                              <Plus size={13} className="text-foreground" />
-                            </button>
+                            <div className="flex items-center gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                                className="w-11 h-11 rounded-full bg-background border border-border flex items-center justify-center hover:border-brand-terracotta transition-colors"
+                                aria-label={isRTL ? `تقليل كمية ${itemName}` : `Decrease quantity for ${item.product.name}`}
+                              >
+                                <Minus size={13} className="text-foreground" />
+                              </button>
+                              <span className="text-foreground min-w-6 text-center font-medium" style={{ fontSize: "0.875rem" }}>
+                                {item.quantity}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                                className="w-11 h-11 rounded-full bg-background border border-border flex items-center justify-center hover:border-brand-terracotta transition-colors"
+                                aria-label={isRTL ? `زيادة كمية ${itemName}` : `Increase quantity for ${item.product.name}`}
+                              >
+                                <Plus size={13} className="text-foreground" />
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="w-16 h-16 rounded-xl overflow-hidden product-media-surface flex-shrink-0 flex items-center justify-center p-1">
-                        <img
-                          src={item.product.image}
-                          alt={item.product.name}
-                          className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal"
-                        />
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => removeFromCart(item.product.id)}
-                        className="self-start text-muted-foreground hover:text-destructive transition-colors p-2 mt-0.5"
-                        aria-label={`Remove ${item.product.name} from cart`}
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </motion.div>
-                  ))}
+                        <div className="w-16 h-16 rounded-xl overflow-hidden product-media-surface flex-shrink-0 flex items-center justify-center p-1">
+                          <img
+                            src={item.product.image}
+                            alt=""
+                            className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeFromCart(item.product.id)}
+                          className="self-start text-muted-foreground hover:text-destructive transition-colors p-2 mt-0.5"
+                          aria-label={isRTL ? `إزالة ${itemName} من السلة` : `Remove ${item.product.name} from cart`}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </motion.div>
+                    );
+                  })}
                 </AnimatePresence>
               )}
             </div>
@@ -161,13 +162,20 @@ export function CartDrawer() {
                       <span className="text-muted-foreground" style={{ fontSize: "0.8rem" }}>
                         {t.freeShipping}
                       </span>
-                      <span className="text-brand-terracotta" style={{ fontSize: "0.8rem" }}>
+                      <span className="text-brand-terracotta font-semibold" style={{ fontSize: "0.8rem" }}>
                         {t.currency} {remaining} {t.away}
                       </span>
                     </div>
-                    <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
+                    <div
+                      role="progressbar"
+                      aria-valuenow={Math.round(totalPrice)}
+                      aria-valuemin={0}
+                      aria-valuemax={THRESHOLD}
+                      aria-label={t.freeShipping}
+                      className="w-full bg-muted rounded-full h-2 overflow-hidden"
+                    >
                       <div
-                        className="bg-brand-terracotta h-1.5 rounded-full transition-all duration-500"
+                        className="bg-brand-terracotta h-2 rounded-full transition-all duration-500"
                         style={{ width: `${progressPct}%` }}
                       />
                     </div>

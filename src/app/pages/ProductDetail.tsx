@@ -5,7 +5,7 @@ import { getProductById, products } from "../data/products";
 import { categories, categoryMapping } from "../data/categories";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
-import { useAppSettings } from "../context/AppSettingsContext";
+import { useAppSettings, type Translations } from "../context/AppSettingsContext";
 import { StarRating } from "../components/StarRating";
 import { ProductCard } from "../components/ProductCard";
 import { toast } from "sonner";
@@ -54,7 +54,7 @@ const getLocalizedWeight = (weight: string, isRTL: boolean) => {
   return toArabicDigits(localized);
 };
 
-const getSpecLabel = (weight: string, t: any) => {
+const getSpecLabel = (weight: string, t: Translations) => {
   const w = weight.toLowerCase();
   if (w.includes("ml") || w.includes("l")) return t.volume;
   if (w.includes("pack") || w.includes("pc")) return t.quantity;
@@ -209,7 +209,7 @@ export function ProductDetail() {
             >
               <img
                 src={product.images[activeImage] || product.image}
-                alt={product.name}
+                alt={isRTL && product.nameAr ? product.nameAr : product.name}
                 className="w-full h-full object-contain p-3 sm:p-6 mix-blend-multiply dark:mix-blend-normal"
               />
               {product.discount && (
@@ -229,7 +229,9 @@ export function ProductDetail() {
                 {product.images.map((img, i) => (
                   <button
                     key={i}
+                    type="button"
                     onClick={() => setActiveImage(i)}
+                    aria-label={`${isRTL && product.nameAr ? product.nameAr : product.name} - ${i + 1}`}
                     className={`w-11 h-11 sm:w-16 sm:h-16 rounded-lg sm:rounded-xl overflow-hidden border-2 transition-colors product-media-surface ${
                       activeImage === i ? "border-brand-terracotta" : "border-transparent"
                     }`}
@@ -405,13 +407,18 @@ export function ProductDetail() {
 
         {/* Tabs - Desktop only */}
         <div className="hidden lg:block bg-card rounded-3xl overflow-hidden mb-10 border border-border">
-          <div className="flex border-b border-border">
+          <div role="tablist" aria-label={isRTL ? "تفاصيل المنتج" : "Product details"} className="flex border-b border-border">
             {(["description", "usage", "reviews"] as const).map(tab => (
               <button
                 key={tab}
+                role="tab"
+                id={`tab-${tab}`}
+                aria-controls={`panel-${tab}`}
+                aria-selected={activeTab === tab}
+                tabIndex={activeTab === tab ? 0 : -1}
                 onClick={() => setActiveTab(tab)}
-                className={`flex-1 py-4 transition-colors relative ${
-                  activeTab === tab ? "text-brand-terracotta" : "text-muted-foreground hover:text-foreground"
+                className={`flex-1 py-4 transition-colors relative min-h-[44px] ${
+                  activeTab === tab ? "text-brand-terracotta font-bold" : "text-muted-foreground hover:text-foreground"
                 }`}
                 style={{ fontSize: "0.875rem" }}
               >
@@ -424,7 +431,7 @@ export function ProductDetail() {
           </div>
           <div className="p-6">
             {activeTab === "description" && (
-              <div>
+              <div role="tabpanel" id="panel-description" aria-labelledby="tab-description">
                 <p className="text-muted-foreground leading-relaxed mb-4" style={{ fontSize: "0.9rem" }}>{product.description}</p>
                 <div className="grid grid-cols-2 gap-4" style={{ fontSize: "0.875rem" }}>
                   {[
@@ -442,7 +449,7 @@ export function ProductDetail() {
               </div>
             )}
             {activeTab === "usage" && (
-              <div>
+              <div role="tabpanel" id="panel-usage" aria-labelledby="tab-usage">
                 <h4 className="text-foreground mb-3">{t.howToUse}</h4>
                 <p className="text-muted-foreground leading-relaxed" style={{ fontSize: "0.875rem" }}>{product.usage}</p>
                 <div className="mt-4 bg-brand-peach border border-brand-terracotta/20 rounded-xl p-4">
@@ -453,7 +460,7 @@ export function ProductDetail() {
               </div>
             )}
             {activeTab === "reviews" && (
-              <div className="space-y-4">
+              <div role="tabpanel" id="panel-reviews" aria-labelledby="tab-reviews" className="space-y-4">
                 <div className="flex items-center gap-4 p-4 bg-brand-peach rounded-2xl">
                   <div className="text-center">
                     <p className="text-brand-terracotta" style={{ fontSize: "2.5rem", lineHeight: 1 }}>{product.rating}</p>
@@ -511,8 +518,12 @@ export function ProductDetail() {
           {/* Description Section */}
           <div className="bg-card rounded-2xl border border-border overflow-hidden">
             <button
+              type="button"
+              id="accordion-btn-description"
+              aria-expanded={accordionOpen.description}
+              aria-controls="accordion-panel-description"
               onClick={() => toggleAccordion("description")}
-              className="w-full flex items-center justify-between p-4 text-start font-semibold text-foreground text-sm sm:text-base"
+              className="w-full flex items-center justify-between p-4 text-start font-semibold text-foreground text-sm sm:text-base min-h-[44px]"
             >
               <span>{tabLabels.description}</span>
               <ChevronDown
@@ -523,7 +534,12 @@ export function ProductDetail() {
               />
             </button>
             {accordionOpen.description && (
-              <div className="px-4 pb-5 border-t border-border/50 pt-4">
+              <div
+                id="accordion-panel-description"
+                role="region"
+                aria-labelledby="accordion-btn-description"
+                className="px-4 pb-5 border-t border-border/50 pt-4"
+              >
                 <p className="text-muted-foreground leading-relaxed mb-4 text-sm sm:text-base">{product.description}</p>
                  <div className="flex flex-col gap-3 text-sm sm:text-base">
                    {[
@@ -545,8 +561,12 @@ export function ProductDetail() {
           {/* How to Use Section */}
           <div className="bg-card rounded-2xl border border-border overflow-hidden">
             <button
+              type="button"
+              id="accordion-btn-usage"
+              aria-expanded={accordionOpen.usage}
+              aria-controls="accordion-panel-usage"
               onClick={() => toggleAccordion("usage")}
-              className="w-full flex items-center justify-between p-4 text-start font-semibold text-foreground text-sm sm:text-base"
+              className="w-full flex items-center justify-between p-4 text-start font-semibold text-foreground text-sm sm:text-base min-h-[44px]"
             >
               <span>{tabLabels.usage}</span>
               <ChevronDown
@@ -557,7 +577,12 @@ export function ProductDetail() {
               />
             </button>
             {accordionOpen.usage && (
-              <div className="px-4 pb-5 border-t border-border/50 pt-4">
+              <div
+                id="accordion-panel-usage"
+                role="region"
+                aria-labelledby="accordion-btn-usage"
+                className="px-4 pb-5 border-t border-border/50 pt-4"
+              >
                 <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">{product.usage}</p>
                 <div className="mt-4 bg-brand-peach border border-brand-terracotta/20 rounded-xl p-4">
                   <p className="text-brand-terracotta text-xs sm:text-sm font-medium">
@@ -571,8 +596,12 @@ export function ProductDetail() {
           {/* Reviews Section */}
           <div className="bg-card rounded-2xl border border-border overflow-hidden">
             <button
+              type="button"
+              id="accordion-btn-reviews"
+              aria-expanded={accordionOpen.reviews}
+              aria-controls="accordion-panel-reviews"
               onClick={() => toggleAccordion("reviews")}
-              className="w-full flex items-center justify-between p-4 text-start font-semibold text-foreground text-sm sm:text-base"
+              className="w-full flex items-center justify-between p-4 text-start font-semibold text-foreground text-sm sm:text-base min-h-[44px]"
             >
               <span>{tabLabels.reviews}</span>
               <ChevronDown
@@ -583,7 +612,12 @@ export function ProductDetail() {
               />
             </button>
             {accordionOpen.reviews && (
-              <div className="px-4 pb-5 border-t border-border/50 pt-4 space-y-4">
+              <div
+                id="accordion-panel-reviews"
+                role="region"
+                aria-labelledby="accordion-btn-reviews"
+                className="px-4 pb-5 border-t border-border/50 pt-4 space-y-4"
+              >
                 <div className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-brand-peach rounded-2xl">
                   <div className="text-center w-full sm:w-auto">
                     <p className="text-brand-terracotta text-3xl font-extrabold" style={{ lineHeight: 1 }}>{product.rating}</p>
@@ -650,7 +684,7 @@ export function ProductDetail() {
           </section>
         )}
       </div>
-      <div className="fixed inset-x-0 bottom-16 z-30 px-4 pb-2 sm:hidden pointer-events-none">
+      <div className="fixed inset-x-0 bottom-[calc(4.25rem+env(safe-area-inset-bottom,0px))] z-30 px-4 pb-2 sm:hidden pointer-events-none">
         <div className="pointer-events-auto mx-auto flex max-w-md items-center gap-2 rounded-2xl border border-border bg-card/96 p-2 shadow-elev backdrop-blur">
           <div className="min-w-0 flex-1">
             <p className="truncate text-xs font-semibold text-foreground">
@@ -670,7 +704,7 @@ export function ProductDetail() {
           </Button>
         </div>
       </div>
-      <div className="h-28 sm:h-4" />
+      <div className="h-36 sm:h-4" />
     </div>
   );
 }

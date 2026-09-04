@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "motion/react";
 export function BottomNav() {
   const location = useLocation();
   const { totalItems, setCartOpen } = useCart();
-  const { t } = useAppSettings();
+  const { t, isRTL } = useAppSettings();
 
   const items = [
     { key: "home", icon: Home, label: t.home, to: "/" },
@@ -25,6 +25,7 @@ export function BottomNav() {
 
   return (
     <nav
+      aria-label={isRTL ? "التنقل السفلي" : "Bottom navigation"}
       className="fixed bottom-0 inset-x-0 z-30 bg-background/95 backdrop-blur-xl border-t border-border sm:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
@@ -33,7 +34,7 @@ export function BottomNav() {
           const Icon = item.icon;
           const active = activeKey === item.key;
           const inner = (
-            <div className="flex flex-col items-center justify-center gap-1 pt-1.5 pb-1 min-w-[46px] xs:min-w-[56px]">
+            <div className="flex flex-col items-center justify-center gap-1 pt-1.5 pb-1 min-w-[46px] xs:min-w-[56px] min-h-[48px]">
               <div className="relative h-7 w-12 flex items-center justify-center">
                 {active && (
                   <motion.div
@@ -44,18 +45,19 @@ export function BottomNav() {
                 )}
                 <Icon
                   size={18}
-                  className={`relative z-10 ${active ? "text-white" : "text-brand-ink-soft"}`}
+                  className={`relative z-10 ${active ? "text-white dark:text-zinc-950" : "text-brand-ink-soft"}`}
                   strokeWidth={active ? 2.2 : 1.8}
                 />
                 <AnimatePresence mode="wait">
                   {item.badge && item.badge > 0 ? (
                     <motion.span
                       key={item.badge}
+                      aria-hidden="true"
                       initial={{ scale: 0.5, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       exit={{ scale: 0.5, opacity: 0 }}
                       transition={{ type: "spring", stiffness: 500, damping: 20 }}
-                      className="absolute -top-0.5 end-1 min-w-[16px] h-4 px-1 bg-brand-terracotta text-white rounded-full flex items-center justify-center z-20 border border-background"
+                      className="absolute -top-0.5 end-1 min-w-[16px] h-4 px-1 bg-brand-terracotta text-white dark:text-zinc-950 font-bold rounded-full flex items-center justify-center z-20 border border-background"
                       style={{ fontSize: "9px" }}
                     >
                       {item.badge > 99 ? "99+" : item.badge}
@@ -64,10 +66,13 @@ export function BottomNav() {
                 </AnimatePresence>
               </div>
               <span
-                className={active ? "text-brand-forest" : "text-brand-ink-soft"}
+                className={active ? "text-brand-forest dark:text-brand-sage-dark font-semibold" : "text-brand-ink-soft"}
                 style={{ fontSize: "10.5px", letterSpacing: "0.6px" }}
               >
                 {item.label}
+                {item.badge && item.badge > 0 ? (
+                  <span className="sr-only"> ({item.badge})</span>
+                ) : null}
               </span>
             </div>
           );
@@ -75,11 +80,21 @@ export function BottomNav() {
           return (
             <li key={item.key} className="flex-1">
               {item.to && !item.onClick ? (
-                <Link to={item.to} className="flex justify-center w-full active:opacity-60 transition-opacity">
+                <Link
+                  to={item.to}
+                  aria-current={active ? "page" : undefined}
+                  className="flex justify-center w-full active:opacity-60 transition-opacity"
+                >
                   {inner}
                 </Link>
               ) : (
-                <button onClick={item.onClick} className="flex justify-center w-full active:opacity-60 transition-opacity">
+                <button
+                  type="button"
+                  onClick={item.onClick}
+                  aria-current={active ? "page" : undefined}
+                  aria-label={item.badge && item.badge > 0 ? `${item.label} (${item.badge})` : item.label}
+                  className="flex justify-center w-full active:opacity-60 transition-opacity"
+                >
                   {inner}
                 </button>
               )}

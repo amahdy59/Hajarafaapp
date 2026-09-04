@@ -5,10 +5,17 @@ import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "../components/ui/Button";
 import { CONTACT } from "../config/contact";
-
+import { usePageMeta } from "../hooks/usePageMeta";
 
 export function Contact() {
   const { t, isRTL } = useAppSettings();
+
+  usePageMeta({
+    title: `${t.contactUs} | ${isRTL ? "حاج عرفة" : "Haj Arafa"}`,
+    description: isRTL
+      ? "تواصل مع فريق خدمة عملاء حاج عرفة - الخط الساخن، واتساب، أو إرسال استفسار مباشر"
+      : "Contact Haj Arafa customer support - Hotline, WhatsApp, or send us a direct message",
+  });
 
   const [formData, setFormData] = useState({
     name: "",

@@ -27,14 +27,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const stored = localStorage.getItem("hajarafa.cart");
       const parsed = stored ? JSON.parse(stored) : [];
       if (Array.isArray(parsed)) {
-        return parsed.filter((item: any) => 
-          item && 
-          item.product && 
-          typeof item.product === "object" && 
-          item.product.id && 
-          typeof item.product.price === "number" &&
-          typeof item.quantity === "number"
-        );
+        return parsed.filter((item: unknown): item is CartItem => {
+          if (!item || typeof item !== "object") return false;
+          const candidate = item as Partial<CartItem>;
+          return Boolean(
+            candidate.product &&
+            typeof candidate.product === "object" &&
+            typeof candidate.product.id === "string" &&
+            typeof candidate.product.price === "number" &&
+            typeof candidate.quantity === "number"
+          );
+        });
       }
       return [];
     } catch (e) {

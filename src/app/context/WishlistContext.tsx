@@ -18,7 +18,11 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
       const stored = localStorage.getItem("hajarafa.wishlist");
       const parsed = stored ? JSON.parse(stored) : [];
       if (Array.isArray(parsed)) {
-        return parsed.filter((p: any) => p && typeof p === "object" && p.id && typeof p.price === "number");
+        return parsed.filter((p: unknown): p is Product => {
+          if (!p || typeof p !== "object") return false;
+          const candidate = p as Partial<Product>;
+          return typeof candidate.id === "string" && typeof candidate.price === "number";
+        });
       }
       return [];
     } catch (e) {
