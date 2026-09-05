@@ -111,6 +111,7 @@ export function Contact() {
                   href={CONTACT.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={isRTL ? "دردشة واتساب (يفتح في نافذة جديدة)" : "WhatsApp Chat (opens in a new tab)"}
                   className="w-full inline-flex items-center justify-center gap-2 bg-brand-forest text-white dark:text-zinc-950 hover:bg-brand-sage-dark px-4.5 py-2.5 rounded-xl transition-all text-xs font-semibold uppercase tracking-wider"
                 >
                   <MessageCircle size={14} /> {isRTL ? "دردشة واتساب" : "WhatsApp Chat"}
@@ -171,7 +172,7 @@ export function Contact() {
                         aria-describedby={errors.name ? "contact-name-error" : undefined}
                         className={`w-full px-4 py-2.5 border ${errors.name ? "border-destructive focus:border-destructive" : "border-border focus:border-brand-terracotta"} bg-background text-foreground rounded-xl text-sm outline-none transition-colors`}
                       />
-                      {errors.name && <span id="contact-name-error" className="text-destructive text-xs mt-1 block">{errors.name}</span>}
+                      {errors.name && <span id="contact-name-error" role="alert" className="text-destructive text-xs mt-1 block">{errors.name}</span>}
                     </div>
 
                     {/* Email */}
@@ -187,7 +188,7 @@ export function Contact() {
                         aria-describedby={errors.email ? "contact-email-error" : undefined}
                         className={`w-full px-4 py-2.5 border ${errors.email ? "border-destructive focus:border-destructive" : "border-border focus:border-brand-terracotta"} bg-background text-foreground rounded-xl text-sm outline-none transition-colors`}
                       />
-                      {errors.email && <span id="contact-email-error" className="text-destructive text-xs mt-1 block">{errors.email}</span>}
+                      {errors.email && <span id="contact-email-error" role="alert" className="text-destructive text-xs mt-1 block">{errors.email}</span>}
                     </div>
 
                     {/* Subject */}
@@ -214,7 +215,7 @@ export function Contact() {
                         aria-describedby={errors.message ? "contact-message-error" : undefined}
                         className={`w-full px-4 py-2.5 border ${errors.message ? "border-destructive focus:border-destructive" : "border-border focus:border-brand-terracotta"} bg-background text-foreground rounded-xl text-sm outline-none transition-colors resize-none`}
                       />
-                      {errors.message && <span id="contact-message-error" className="text-destructive text-xs mt-1 block">{errors.message}</span>}
+                      {errors.message && <span id="contact-message-error" role="alert" className="text-destructive text-xs mt-1 block">{errors.message}</span>}
                     </div>
 
                     {/* Submit Button */}

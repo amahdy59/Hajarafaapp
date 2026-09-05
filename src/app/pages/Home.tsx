@@ -64,7 +64,7 @@ export function Home() {
     <div className="min-h-screen bg-background">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pt-1 pb-4 sm:py-6 flex flex-col gap-8 sm:gap-14">
 
-        {/* Hero — hidden on mobile */}
+        {/* Hero Banner */}
         <section className="relative overflow-hidden rounded-[1.5rem] sm:rounded-[1.75rem] border border-border/70 bg-brand-ink shadow-[0_18px_50px_rgba(20,32,26,0.16)] isolate aspect-[5/3] sm:aspect-[16/5] max-h-[260px] sm:max-h-[250px]" aria-labelledby="home-hero-title">
           <img
             src={HERO_IMAGES[0].src}
@@ -191,7 +191,7 @@ export function Home() {
 
         {/* Customer reviews */}
         <section className="bg-brand-cream-2 rounded-2xl p-6 sm:p-8 border border-border shadow-soft">
-          <h2 className="font-display text-brand-forest text-center mb-6 font-bold" style={{ fontSize: "clamp(1.25rem, 3.5vw, 1.5rem)" }}>
+          <h2 className="font-display text-brand-forest dark:text-brand-sage-dark text-center mb-6 font-bold text-xl sm:text-2xl">
             {t.customerReviews}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
@@ -201,10 +201,10 @@ export function Home() {
               { name: "Emma L.", en: "The rose water is divine — my skin has never felt better.", ar: "ماء الورد رائع — بشرتي لم تشعر بأفضل من ذلك." },
             ].map((r, i) => (
               <div key={i} className="bg-card rounded-xl p-4 border border-border shadow-soft">
-                <p className="text-foreground italic mb-3 text-start" style={{ fontSize: "0.92rem", lineHeight: 1.55 }}>
+                <p className="text-foreground italic mb-3 text-start text-sm leading-relaxed">
                   "{isRTL ? r.ar : r.en}"
                 </p>
-                <p className="text-brand-forest text-start font-semibold" style={{ fontSize: "0.88rem" }}>{r.name}</p>
+                <p className="text-brand-forest dark:text-brand-sage-dark text-start font-semibold text-sm">{r.name}</p>
               </div>
             ))}
           </div>

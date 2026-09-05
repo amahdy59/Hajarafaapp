@@ -1,11 +1,11 @@
-import { useState, useEffect, useLayoutEffect } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { useParams, Link } from "react-router";
 import { Heart, ShoppingCart, Share2, ChevronLeft, ChevronDown, Star, Plus, Minus, Leaf, Truck, Shield, RotateCcw, Check, MessageCircle } from "lucide-react";
 import { getProductById, products } from "../data/products";
 import { categories, categoryMapping } from "../data/categories";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
-import { useAppSettings, type Translations } from "../context/AppSettingsContext";
+import { useAppSettings, toArabicIndic, type Translations } from "../context/AppSettingsContext";
 import { StarRating } from "../components/StarRating";
 import { ProductCard } from "../components/ProductCard";
 import { toast } from "sonner";
@@ -39,23 +39,12 @@ const getLocalizedOrigin = (origin: string, isRTL: boolean) => {
 
 const getLocalizedWeight = (weight: string, isRTL: boolean) => {
   if (!isRTL) return weight;
-  
-  const toArabicDigits = (str: string) => {
-    const englishDigits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-    const arabicDigits = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
-    return str.split("").map(char => {
-      const idx = englishDigits.indexOf(char);
-      return idx !== -1 ? arabicDigits[idx] : char;
-    }).join("");
-  };
-
   let localized = weight;
   localized = localized.replace(/\bg\b/gi, "جم");
   localized = localized.replace(/\bml\b/gi, "مل");
   localized = localized.replace(/\bl\b/gi, "لتر");
   localized = localized.replace(/Pack of (\d+)/gi, (_, num) => `عبوة من ${num}`);
-  
-  return toArabicDigits(localized);
+  return toArabicIndic(localized);
 };
 
 const getSpecLabel = (weight: string, t: Translations) => {
@@ -82,26 +71,38 @@ export function ProductDetail() {
     reviews: false,
   });
   const [showDesktopStickyBar, setShowDesktopStickyBar] = useState(false);
+  const buyBoxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          if (window.innerWidth >= 1024) {
-            setShowDesktopStickyBar(window.scrollY > 550);
-          } else {
-            setShowDesktopStickyBar(false);
-          }
-          ticking = false;
-        });
-        ticking = true;
+    const target = buyBoxRef.current;
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (window.innerWidth >= 1024) {
+          setShowDesktopStickyBar(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+        } else {
+          setShowDesktopStickyBar(false);
+        }
+      },
+      { threshold: 0, rootMargin: "-80px 0px 0px 0px" }
+    );
+
+    observer.observe(target);
+
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        setShowDesktopStickyBar(false);
       }
     };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [product?.id]);
 
   // Reset UI state when navigating between products.
   useEffect(() => {
@@ -409,7 +410,7 @@ export function ProductDetail() {
             </div>
 
             {/* Quantity + Add to Cart + Wishlist */}
-            <div className="flex flex-col gap-3 w-full sm:flex-row">
+            <div ref={buyBoxRef} className="flex flex-col gap-3 w-full sm:flex-row">
               <div className="flex gap-3 w-full sm:w-auto">
                 <div className="flex h-11 flex-1 items-center justify-between overflow-hidden rounded-xl border border-border bg-card px-1 sm:flex-initial">
                   <button

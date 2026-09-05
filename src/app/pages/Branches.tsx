@@ -263,7 +263,7 @@ function RegionSection({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-1.5 h-11 bg-brand-peach/60 dark:bg-brand-peach/30 border border-brand-terracotta/25 text-brand-terracotta-dark dark:text-brand-terracotta hover:bg-brand-terracotta hover:text-white dark:hover:bg-brand-terracotta dark:hover:text-zinc-950 transition-colors flex-shrink-0 text-xs font-semibold rounded-xl px-3.5 shadow-sm"
-                aria-label={`${isRTL ? branch.nameAr : branch.nameEn} - ${isRTL ? "عرض على الخريطة" : "View on Google Maps"}`}
+                aria-label={`${isRTL ? branch.nameAr : branch.nameEn} - ${isRTL ? "عرض على الخريطة (يفتح في نافذة جديدة)" : "View on Google Maps (opens in a new tab)"}`}
                 title={isRTL ? "عرض على الخريطة" : "View on Map"}
               >
                 <Map size={14} className="flex-shrink-0" />
@@ -348,7 +348,13 @@ export function Branches() {
                 <Phone size={14} className="text-brand-terracotta" /> {CONTACT.hotline}
               </a>
               <span className="text-muted-foreground select-none">|</span>
-              <a href={CONTACT.whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-brand-sage-dark dark:text-brand-sage hover:underline font-bold font-mono flex items-center gap-1.5">
+              <a
+                href={CONTACT.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={isRTL ? "تواصل عبر واتساب (يفتح في نافذة جديدة)" : "Contact on WhatsApp (opens in a new tab)"}
+                className="text-brand-sage-dark dark:text-brand-sage hover:underline font-bold font-mono flex items-center gap-1.5"
+              >
                 <MessageCircle size={14} className="text-brand-sage-dark dark:text-brand-sage" /> {CONTACT.whatsappDisplay}
               </a>
             </div>
@@ -446,7 +452,7 @@ export function Branches() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="px-5 py-2.5 text-brand-ink-soft hover:text-brand-terracotta text-sm leading-relaxed flex items-center justify-between gap-3"
-                        aria-label={`${isRTL ? item.ar : item.en} - ${isRTL ? "عرض على خرائط جوجل" : "View on Google Maps"}`}
+                        aria-label={`${isRTL ? item.ar : item.en} - ${isRTL ? "عرض على خرائط جوجل (يفتح في نافذة جديدة)" : "View on Google Maps (opens in a new tab)"}`}
                       >
                         <span>{isRTL ? item.ar : item.en}</span>
                         <ExternalLink size={13} className="text-brand-terracotta flex-shrink-0" />

@@ -20,6 +20,7 @@ export function Cart() {
 
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
+  const [couponError, setCouponError] = useState("");
 
   const discount = couponApplied ? totalPrice * 0.1 : 0;
   const shipping = totalPrice >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
@@ -34,7 +35,13 @@ export function Cart() {
   });
 
   const applyCoupon = () => {
-    if (couponCode.toUpperCase() === "NATURE10") setCouponApplied(true);
+    if (!couponCode.trim()) return;
+    if (couponCode.trim().toUpperCase() === "NATURE10") {
+      setCouponApplied(true);
+      setCouponError("");
+    } else {
+      setCouponError(isRTL ? "كود الخصم غير صحيح أو منتهي الصلاحية" : "Invalid or expired coupon code");
+    }
   };
 
   const handleWhatsAppCartOrder = () => {
@@ -55,9 +62,9 @@ export function Cart() {
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-6">
         <div className="flex items-center gap-3 mb-6">
           <ShoppingBag size={22} className="text-brand-terracotta" />
-          <h1 className="text-foreground" style={{ fontSize: "1.4rem" }}>{t.shoppingCart}</h1>
+          <h1 className="text-foreground text-2xl font-bold font-display">{t.shoppingCart}</h1>
           {totalItems > 0 && (
-            <span className="bg-brand-peach text-brand-terracotta px-3 py-1 rounded-full" style={{ fontSize: "0.875rem" }}>
+            <span className="bg-brand-peach text-brand-terracotta px-3 py-1 rounded-full text-sm font-semibold">
               {totalItems} {totalItems === 1 ? t.item : t.items}
             </span>
           )}
@@ -66,12 +73,11 @@ export function Cart() {
         {items.length === 0 ? (
           <div className="text-center py-24 bg-card rounded-3xl border border-border">
             <ShoppingBag size={56} className="text-border mx-auto mb-4" />
-            <h2 className="text-foreground mb-2">{t.cartEmpty}</h2>
-            <p className="text-muted-foreground mb-6" style={{ fontSize: "0.875rem" }}>{t.cartEmptyHint}</p>
+            <h2 className="text-foreground mb-2 text-xl font-bold font-display">{t.cartEmpty}</h2>
+            <p className="text-muted-foreground mb-6 text-sm">{t.cartEmptyHint}</p>
             <Link
               to="/products"
-              className="inline-flex items-center gap-2 bg-brand-terracotta text-white px-6 py-3 rounded-xl hover:bg-brand-terracotta-dark transition-colors active:scale-95"
-              style={{ fontSize: "0.875rem" }}
+              className="inline-flex items-center gap-2 bg-brand-terracotta text-white px-6 py-3 rounded-xl hover:bg-brand-terracotta-dark transition-colors active:scale-95 text-sm font-semibold"
             >
               {t.browseProducts} <ArrowRight size={16} className="rtl-flip" />
             </Link>
@@ -84,7 +90,7 @@ export function Cart() {
               {totalPrice < SHIPPING_THRESHOLD && (
                 <div className="bg-brand-peach rounded-2xl p-4 border border-border/50">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-brand-terracotta font-semibold" style={{ fontSize: "0.875rem" }}>
+                    <span className="text-brand-terracotta font-semibold text-sm">
                       {t.currency} {(SHIPPING_THRESHOLD - totalPrice).toFixed(2)} {t.away}
                     </span>
                   </div>
@@ -107,11 +113,11 @@ export function Cart() {
                 <div className="rounded-2xl border border-brand-sage/30 bg-brand-sage/10 p-4">
                   <div className="flex items-center gap-2 text-brand-sage-dark">
                     <Sparkles size={17} className="flex-shrink-0" />
-                    <span className="font-semibold" style={{ fontSize: "0.9rem" }}>
+                    <span className="font-semibold text-sm">
                       {t.freeShippingQualifiedTitle}
                     </span>
                   </div>
-                  <p className="mt-1.5 text-muted-foreground" style={{ fontSize: "0.8rem" }}>
+                  <p className="mt-1.5 text-muted-foreground text-xs">
                     {t.freeShippingQualifiedNote}
                   </p>
                 </div>
@@ -132,11 +138,11 @@ export function Cart() {
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex-1 min-w-0">
                             <Link to={`/products/${item.product.id}`}>
-                              <h3 className="text-foreground line-clamp-2 hover:text-brand-terracotta transition-colors font-semibold" style={{ fontSize: "0.9rem" }}>
+                              <h3 className="text-foreground line-clamp-2 hover:text-brand-terracotta transition-colors font-semibold text-sm">
                                 {itemName}
                               </h3>
                             </Link>
-                            <p className="text-muted-foreground mt-0.5" style={{ fontSize: "0.78rem" }}>
+                            <p className="text-muted-foreground mt-0.5 text-xs">
                               {item.product.weight} · {item.product.origin}
                             </p>
                           </div>
@@ -159,7 +165,7 @@ export function Cart() {
                             >
                               <Minus size={13} />
                             </button>
-                            <span className="min-w-8 text-center text-foreground font-medium" style={{ fontSize: "0.875rem" }}>{item.quantity}</span>
+                            <span className="min-w-8 text-center text-foreground font-medium text-sm">{item.quantity}</span>
                             <button
                               type="button"
                               onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
@@ -170,11 +176,11 @@ export function Cart() {
                             </button>
                           </div>
                           <div className="text-end">
-                            <p className="text-brand-terracotta font-semibold" style={{ fontSize: "0.9rem" }}>
+                            <p className="text-brand-terracotta font-semibold text-sm">
                               {t.currency} {(item.product.price * item.quantity).toFixed(2)}
                             </p>
                             {item.quantity > 1 && (
-                              <p className="text-muted-foreground" style={{ fontSize: "0.75rem" }}>
+                              <p className="text-muted-foreground text-xs">
                                 {t.currency} {item.product.price.toFixed(2)} {isRTL ? "للقطعة" : "each"}
                               </p>
                             )}
@@ -193,7 +199,7 @@ export function Cart() {
             {/* Order summary */}
             <div className="space-y-4">
               <div className="bg-card rounded-2xl p-5 space-y-4 border border-border">
-                <h2 className="text-foreground" style={{ fontSize: "1rem" }}>{t.orderSummary}</h2>
+                <h2 className="text-foreground text-base font-bold font-display">{t.orderSummary}</h2>
 
                 {/* Free delivery promo banner */}
                 <div className={`${shipping === 0 ? "bg-brand-sage/10 text-brand-sage-dark border-brand-sage/30" : "bg-brand-peach/40 text-brand-terracotta border-brand-peach/30"} text-xs font-semibold px-4.5 py-3 rounded-xl border flex items-center gap-2 select-none`}>
@@ -203,44 +209,54 @@ export function Cart() {
 
                 {/* Coupon */}
                 {!couponApplied ? (
-                  <div className="flex gap-2">
-                    <div className="relative flex-1">
-                      <Tag size={14} className={`absolute ${isRTL ? "right-3" : "left-3"} top-1/2 -translate-y-1/2 text-muted-foreground`} />
-                      <input
-                        type="text"
-                        aria-label={t.couponCode}
-                        placeholder={t.couponCode}
-                        value={couponCode}
-                        onChange={e => setCouponCode(e.target.value)}
-                        className={`w-full ${isRTL ? "pr-9 pl-3" : "pl-9 pr-3"} py-2.5 border border-border rounded-xl bg-background text-foreground outline-none focus:border-brand-terracotta transition-colors`}
-                        style={{ fontSize: "0.875rem" }}
-                      />
+                  <div className="space-y-1.5">
+                    <div className="flex gap-2">
+                      <div className="relative flex-1">
+                        <Tag size={14} className="absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                        <input
+                          type="text"
+                          aria-label={t.couponCode}
+                          placeholder={t.couponCode}
+                          value={couponCode}
+                          onChange={e => {
+                            setCouponCode(e.target.value);
+                            if (couponError) setCouponError("");
+                          }}
+                          aria-invalid={!!couponError}
+                          aria-describedby={couponError ? "coupon-error-msg" : undefined}
+                          className="w-full ps-9 pe-3 py-2.5 border border-border rounded-xl bg-background text-foreground outline-none focus:border-brand-terracotta transition-colors text-sm"
+                        />
+                      </div>
+                      <Button
+                        onClick={applyCoupon}
+                        size="sm"
+                        className="h-11 px-4 rounded-xl text-sm"
+                      >
+                        {t.apply}
+                      </Button>
                     </div>
-                    <Button
-                      onClick={applyCoupon}
-                      size="sm"
-                      className="h-11 px-4 rounded-xl text-sm"
-                    >
-                      {t.apply}
-                    </Button>
+                    {couponError && (
+                      <p id="coupon-error-msg" role="alert" className="text-xs text-destructive font-medium">
+                        {couponError}
+                      </p>
+                    )}
                   </div>
                 ) : (
                   <div className="flex items-center justify-between bg-brand-peach rounded-xl p-3">
-                    <span className="text-brand-terracotta" style={{ fontSize: "0.875rem" }}>
+                    <span className="text-brand-terracotta text-sm font-semibold">
                       ✓ NATURE10 — 10% {t.discount}
                     </span>
                     <button
                       onClick={() => { setCouponApplied(false); setCouponCode(""); }}
-                      className="text-muted-foreground hover:text-foreground transition-colors"
-                      style={{ fontSize: "0.75rem" }}
+                      className="text-muted-foreground hover:text-foreground transition-colors text-xs font-semibold"
                     >
                       {t.remove}
                     </button>
                   </div>
                 )}
-                <p className="text-muted-foreground" style={{ fontSize: "0.75rem" }}>{t.tryCode}</p>
+                <p className="text-muted-foreground text-xs">{t.tryCode}</p>
 
-                <div className="space-y-2 border-t border-border pt-4" style={{ fontSize: "0.875rem" }}>
+                <div className="space-y-2 border-t border-border pt-4 text-sm">
                   <div className="flex justify-between text-muted-foreground">
                     <span>{t.subtotal} ({totalItems} {totalItems === 1 ? t.item : t.items})</span>
                     <span>{t.currency} {totalPrice.toFixed(2)}</span>
@@ -255,11 +271,11 @@ export function Cart() {
                     <span>{t.shipping}</span>
                     <span>
                       {shipping === 0
-                        ? <span className="text-brand-sage-dark">{t.free}</span>
+                        ? <span className="text-brand-sage-dark font-medium">{t.free}</span>
                         : `${t.currency} ${shipping.toFixed(2)}`}
                     </span>
                   </div>
-                  <div className="flex justify-between text-foreground border-t border-border pt-2">
+                  <div className="flex justify-between text-foreground border-t border-border pt-2 font-bold">
                     <span>{t.total}</span>
                     <span className="text-brand-terracotta">{t.currency} {finalTotal.toFixed(2)}</span>
                   </div>
@@ -293,7 +309,7 @@ export function Cart() {
                   <span>{t.orderCartViaWhatsApp}</span>
                 </button>
 
-                <div className="flex items-center justify-center gap-3 text-muted-foreground pt-1" style={{ fontSize: "0.75rem" }}>
+                <div className="flex items-center justify-center gap-3 text-muted-foreground pt-1 text-xs">
                   <span>{t.secureCheckoutNote}</span>
                   <span>·</span>
                   <span>{t.returnsNote}</span>
@@ -306,7 +322,7 @@ export function Cart() {
         {/* Suggested products */}
         {suggestedProducts.length > 0 && (
           <section className="mt-10">
-            <h2 className="text-foreground mb-5" style={{ fontSize: "1.1rem" }}>{t.youMightAlsoLike}</h2>
+            <h2 className="text-foreground mb-5 text-lg font-bold font-display">{t.youMightAlsoLike}</h2>
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
               {suggestedProducts.map(p => (
                 <ProductCard key={p.id} product={p} />

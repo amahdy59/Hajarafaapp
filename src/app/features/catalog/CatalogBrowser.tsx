@@ -170,20 +170,20 @@ export function CatalogBrowser({
                   <label htmlFor="catalog-search-desktop" className="sr-only">
                     {isRTL ? "البحث في المنتجات" : "Search products"}
                   </label>
-                  <Search size={15} className={`absolute ${isRTL ? "right-3.5" : "left-3.5"} top-1/2 -translate-y-1/2 text-muted-foreground`} />
+                  <Search size={15} className="absolute start-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
                   <input
                     id="catalog-search-desktop"
                     type="search"
                     value={searchQuery}
                     onChange={(event) => setSearchQuery(event.target.value)}
                     placeholder={searchPlaceholder}
-                    className={`w-full h-11 ${isRTL ? "pr-10 pl-10" : "pl-10 pr-10"} bg-brand-peach/40 dark:bg-zinc-800/80 border border-brand-terracotta/20 rounded-xl text-foreground placeholder:text-muted-foreground outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all text-sm font-semibold`}
+                    className="w-full h-11 ps-10 pe-10 bg-brand-peach/40 dark:bg-zinc-800/80 border border-brand-terracotta/20 rounded-xl text-foreground placeholder:text-muted-foreground outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all text-sm font-semibold"
                   />
                   {searchQuery && (
                     <button
                       type="button"
                       onClick={() => setSearchQuery("")}
-                      className={`absolute ${isRTL ? "left-1" : "right-1"} top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center hover:bg-muted/80 transition-colors`}
+                      className="absolute end-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center hover:bg-muted/80 transition-colors"
                       aria-label={isRTL ? "مسح البحث" : "Clear search"}
                     >
                       <span className="w-5 h-5 bg-muted rounded-full flex items-center justify-center">
@@ -231,20 +231,20 @@ export function CatalogBrowser({
                     <label htmlFor="catalog-search-mobile" className="sr-only">
                       {isRTL ? "البحث في المنتجات" : "Search products"}
                     </label>
-                    <Search size={15} className={`absolute ${isRTL ? "right-3.5" : "left-3.5"} top-1/2 -translate-y-1/2 text-muted-foreground`} />
+                    <Search size={15} className="absolute start-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
                     <input
                       id="catalog-search-mobile"
                       type="search"
                       value={searchQuery}
                       onChange={(event) => setSearchQuery(event.target.value)}
                       placeholder={searchPlaceholder}
-                      className={`w-full h-11 ${isRTL ? "pr-10 pl-10" : "pl-10 pr-10"} bg-brand-peach/40 dark:bg-zinc-800/80 border border-brand-terracotta/20 rounded-xl text-foreground placeholder:text-muted-foreground outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all text-sm font-semibold`}
+                      className="w-full h-11 ps-10 pe-10 bg-brand-peach/40 dark:bg-zinc-800/80 border border-brand-terracotta/20 rounded-xl text-foreground placeholder:text-muted-foreground outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all text-sm font-semibold"
                     />
                     {searchQuery && (
                       <button
                         type="button"
                         onClick={() => setSearchQuery("")}
-                        className={`absolute ${isRTL ? "left-1" : "right-1"} top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center hover:bg-muted/80 transition-colors`}
+                        className="absolute end-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center hover:bg-muted/80 transition-colors"
                         aria-label={isRTL ? "مسح البحث" : "Clear search"}
                       >
                         <span className="w-5 h-5 bg-muted rounded-full flex items-center justify-center">
@@ -487,7 +487,7 @@ export function CatalogBrowser({
               animate={{ x: 0 }}
               exit={{ x: isRTL ? "100%" : "-100%" }}
               transition={{ type: "spring", damping: 32, stiffness: 320 }}
-              className={`fixed top-0 bottom-0 ${isRTL ? "right-0" : "left-0"} w-full lg:max-w-sm bg-card text-card-foreground z-50 overflow-y-auto shadow-elev flex flex-col`}
+              className="fixed top-0 bottom-0 start-0 w-full lg:max-w-sm bg-card text-card-foreground z-50 overflow-y-auto shadow-elev flex flex-col"
             >
               <div className="sticky top-0 z-10 bg-card/95 backdrop-blur-xl border-b border-border px-4 py-3 flex items-center justify-between safe-area-pt flex-shrink-0">
                 <h2 className="text-foreground font-display text-lg font-bold">{t.filters}</h2>

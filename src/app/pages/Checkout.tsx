@@ -35,7 +35,7 @@ export function Checkout() {
   });
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
+    window.scrollTo({ top: 0, behavior: "auto" });
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
   }, [step]);
@@ -725,13 +725,15 @@ export function Checkout() {
                                 });
                               }
                             }}
+                            aria-invalid={!!errors.instapay}
+                            aria-describedby={errors.instapay ? "err-instapay" : undefined}
                             className="mt-1 w-4 h-4 rounded border-border text-brand-terracotta focus:ring-brand-terracotta/20"
                           />
                           <span className="text-xs text-foreground leading-snug">
                             {t.verifyTransfer} ({isRTL ? `تم تحويل ${formatPrice(total)} إلى ${t.instaPayAddress}` : `Transferred ${formatPrice(total)} to ${t.instaPayAddress}`})
                           </span>
                         </label>
-                        {errors.instapay && <p role="alert" className="text-destructive text-xs mt-1">{errors.instapay}</p>}
+                        {errors.instapay && <p id="err-instapay" role="alert" className="text-destructive text-xs mt-1">{errors.instapay}</p>}
                       </div>
                     )}
 

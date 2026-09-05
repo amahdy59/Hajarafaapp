@@ -37,8 +37,8 @@ const mockFAQs: FAQItem[] = [
     category: "payments",
     questionEn: "What payment methods do you accept?",
     questionAr: "ما هي طرق الدفع المقبولة؟",
-    answerEn: "We accept Cash on Delivery (COD), Credit/Debit cards (Visa/Mastercard), and Fawry payments.",
-    answerAr: "نقبل الدفع نقداً عند الاستلام (COD)، بطاقات الائتمان/الخصم المباشر (فيزا/ماستركارد)، ومدفوعات فوري."
+    answerEn: "We accept Cash on Delivery (COD), Credit/Debit cards (Visa, Mastercard, Meeza), InstaPay instant transfer, and Mobile Wallets (Vodafone Cash, Orange Cash, Etisalat Cash, WE Pay).",
+    answerAr: "نقبل الدفع نقداً عند الاستلام (COD)، بطاقات الائتمان والخصم المباشر (فيزا، ماستركارد، وميزة)، والتحويل الفوري عبر إنستاباي (InstaPay)، والمحافظ الإلكترونية (فودافون كاش، أورنج كاش، اتصالات كاش، ووي باي)."
   },
   {
     id: "q4",
