@@ -42,9 +42,10 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
   ({ variant = "ghost", size = "md", badge, className = "", children, ...rest }, ref) => (
     <motion.button
       ref={ref}
-      whileHover={rest.disabled ? undefined : { scale: 1.03 }}
-      whileTap={rest.disabled ? undefined : { scale: 0.97 }}
-      className={`relative rounded-full flex items-center justify-center transition-colors disabled:cursor-not-allowed disabled:opacity-60 icon-button-target ${sizeMap[size]} ${variantMap[variant]} ${className}`}
+      whileHover={rest.disabled ? undefined : { scale: 1.05 }}
+      whileTap={rest.disabled ? undefined : { scale: 0.94 }}
+      transition={{ duration: 0.12 }}
+      className={`relative rounded-full flex items-center justify-center transition-colors disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-terracotta focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950 icon-button-target ${sizeMap[size]} ${variantMap[variant]} ${className}`}
       {...rest}
     >
       {children}
