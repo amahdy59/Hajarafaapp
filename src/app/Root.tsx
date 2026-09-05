@@ -1,6 +1,7 @@
 import { Suspense, useLayoutEffect, useEffect } from "react";
 import { Outlet, useLocation } from "react-router";
 import { Toaster } from "sonner";
+import { MotionConfig } from "motion/react";
 import { Header } from "./components/Header";
 import { BottomNav } from "./components/BottomNav";
 import { CartDrawer } from "./components/CartDrawer";
@@ -65,52 +66,54 @@ export function Root() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans w-full max-w-full overflow-x-hidden">
-      <OfflineBanner />
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:start-4 focus:z-50 focus:px-4 focus:py-2.5 focus:bg-brand-terracotta focus:text-white dark:focus:text-brand-ink focus:rounded-xl focus:shadow-elev focus:outline-none focus:ring-2 focus:ring-ring font-semibold text-sm"
-      >
-        {isRTL ? "الانتقال إلى المحتوى الرئيسي" : "Skip to main content"}
-      </a>
+    <MotionConfig reducedMotion="user">
+      <div className="min-h-screen bg-background text-foreground font-sans w-full max-w-full overflow-x-hidden">
+        <OfflineBanner />
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:start-4 focus:z-50 focus:px-4 focus:py-2.5 focus:bg-brand-terracotta focus:text-white dark:focus:text-brand-ink focus:rounded-xl focus:shadow-elev focus:outline-none focus:ring-2 focus:ring-ring font-semibold text-sm"
+        >
+          {isRTL ? "الانتقال إلى المحتوى الرئيسي" : "Skip to main content"}
+        </a>
 
-      {!isCheckout && <Header />}
+        {!isCheckout && <Header />}
 
-      {isCheckout ? (
-        <div id="main-content" tabIndex={-1} className="pt-0 w-full max-w-full overflow-x-hidden outline-none">
-          <div className="bg-card border-b border-border px-4 py-3.5 safe-area-pt">
-            <div className="max-w-5xl mx-auto flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <img src={logoImg} alt="Haj Arafa" className="h-8 w-auto object-contain" />
+        {isCheckout ? (
+          <div id="main-content" tabIndex={-1} className="pt-0 w-full max-w-full overflow-x-hidden outline-none">
+            <div className="bg-card border-b border-border px-4 py-3.5 safe-area-pt">
+              <div className="max-w-5xl mx-auto flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <img src={logoImg} alt="Haj Arafa" className="h-8 w-auto object-contain" />
+                </div>
+                <span className="text-muted-foreground flex items-center gap-1" style={{ fontSize: "0.8rem" }}>
+                  {isRTL ? "🔒 إتمام دفع آمن" : "🔒 Secure Checkout"}
+                </span>
               </div>
-              <span className="text-muted-foreground flex items-center gap-1" style={{ fontSize: "0.8rem" }}>
-                {isRTL ? "🔒 إتمام دفع آمن" : "🔒 Secure Checkout"}
-              </span>
             </div>
-          </div>
-          <ErrorBoundary>
-            <Suspense fallback={<PageLoader />}>
-              <Outlet />
-            </Suspense>
-          </ErrorBoundary>
-        </div>
-      ) : (
-        <>
-          <main id="main-content" tabIndex={-1} className={`${mainPadding} pb-24 sm:pb-8 w-full max-w-full overflow-x-hidden outline-none`}>
             <ErrorBoundary>
               <Suspense fallback={<PageLoader />}>
                 <Outlet />
               </Suspense>
             </ErrorBoundary>
-          </main>
-          <Footer />
-        </>
-      )}
+          </div>
+        ) : (
+          <>
+            <main id="main-content" tabIndex={-1} className={`${mainPadding} pb-24 sm:pb-8 w-full max-w-full overflow-x-hidden outline-none`}>
+              <ErrorBoundary>
+                <Suspense fallback={<PageLoader />}>
+                  <Outlet />
+                </Suspense>
+              </ErrorBoundary>
+            </main>
+            <Footer />
+          </>
+        )}
 
-      <CartDrawer />
-      <BottomNav />
+        <CartDrawer />
+        <BottomNav />
 
-      <Toaster position="top-center" closeButton />
-    </div>
+        <Toaster position="top-center" closeButton />
+      </div>
+    </MotionConfig>
   );
 }
