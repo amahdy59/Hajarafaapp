@@ -6,6 +6,7 @@ import { ProductCard } from "../components/ProductCard";
 import { ScrollRail } from "../components/ui/ScrollRail";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { usePageMeta } from "../hooks/usePageMeta";
+import { useRecentlyViewed } from "../hooks/useRecentlyViewed";
 
 const HERO_IMAGES = [
   {
@@ -27,6 +28,7 @@ const categoryAccentColors: Record<string, string> = {
 
 export function Home() {
   const { t, isRTL } = useAppSettings();
+  const { recentlyViewed } = useRecentlyViewed();
 
   usePageMeta({
     description: isRTL
@@ -160,6 +162,32 @@ export function Home() {
             </div>
           );
         })}
+
+        {/* Recently viewed products */}
+        {recentlyViewed.length > 0 && (
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between select-none">
+              <div className="flex items-center gap-3">
+                <div className="w-[3.5px] h-7 rounded-full bg-brand-terracotta" />
+                <div className="flex flex-col">
+                  <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider text-brand-terracotta/80">
+                    {isRTL ? "سجل التصفح" : "Browsing History"}
+                  </span>
+                  <h2 className="font-display text-brand-forest dark:text-brand-sage-dark text-sm sm:text-base font-bold leading-tight mt-0.5">
+                    {isRTL ? "شوهدت مؤخراً" : "Recently Viewed"}
+                  </h2>
+                </div>
+              </div>
+            </div>
+            <ScrollRail>
+              {recentlyViewed.map(p => (
+                <div key={p.id} className="flex-shrink-0 snap-start w-[calc(50vw-20px)] sm:w-56 p-0.5">
+                  <ProductCard product={p} />
+                </div>
+              ))}
+            </ScrollRail>
+          </div>
+        )}
 
         {/* Customer reviews */}
         <section className="bg-brand-cream-2 rounded-2xl p-6 sm:p-8 border border-border shadow-soft">

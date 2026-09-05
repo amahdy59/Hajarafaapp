@@ -298,6 +298,65 @@ export function CatalogBrowser({
               </div>
             </div>
 
+            {/* 1-Tap Quick Filter Presets */}
+            <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide py-1 mb-3">
+              <button
+                type="button"
+                onClick={() => setShowOrganic(prev => !prev)}
+                aria-pressed={showOrganic}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all flex-shrink-0 cursor-pointer ${
+                  showOrganic
+                    ? "bg-brand-forest text-white border-brand-forest shadow-sm"
+                    : "bg-card text-brand-ink-soft border-border hover:border-brand-sage"
+                }`}
+              >
+                <span>🌿</span>
+                <span>{isRTL ? "عضوي فقط" : "Organic Only"}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSort(prev => prev === "rating" ? "featured" : "rating")}
+                aria-pressed={sort === "rating"}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all flex-shrink-0 cursor-pointer ${
+                  sort === "rating"
+                    ? "bg-brand-terracotta text-white border-brand-terracotta shadow-sm"
+                    : "bg-card text-brand-ink-soft border-border hover:border-brand-terracotta"
+                }`}
+              >
+                <span>⭐</span>
+                <span>{isRTL ? "أعلى تقييماً" : "Top Rated"}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSort(prev => prev === "new" ? "featured" : "new")}
+                aria-pressed={sort === "new"}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all flex-shrink-0 cursor-pointer ${
+                  sort === "new"
+                    ? "bg-brand-terracotta text-white border-brand-terracotta shadow-sm"
+                    : "bg-card text-brand-ink-soft border-border hover:border-brand-terracotta"
+                }`}
+              >
+                <span>✨</span>
+                <span>{isRTL ? "وصل حديثاً" : "New Arrivals"}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setMinRating(prev => prev === 4 ? 0 : 4)}
+                aria-pressed={minRating === 4}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all flex-shrink-0 cursor-pointer ${
+                  minRating === 4
+                    ? "bg-amber-600 text-white border-amber-600 shadow-sm"
+                    : "bg-card text-brand-ink-soft border-border hover:border-amber-500"
+                }`}
+              >
+                <span>🏆</span>
+                <span>{isRTL ? "تقييم +4 نجوم" : "4+ Stars"}</span>
+              </button>
+            </div>
+
             {hasActiveFilters && (
               <div className="flex flex-wrap gap-2 mb-4">
                 <AnimatePresence>

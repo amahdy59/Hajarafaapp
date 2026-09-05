@@ -6,6 +6,7 @@ import { useAppSettings, NumeralSystem } from "../context/AppSettingsContext";
 import { IconButton } from "./ui/IconButton";
 import logoImg from "../../assets/logo.webp";
 import { useDialogAccessibility } from "../hooks/useDialogAccessibility";
+import { categories } from "../data/categories";
 
 interface DrawerProfile {
   firstName: string;
@@ -230,6 +231,48 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
                   <ChevronRight size={18} className="rtl-flip text-brand-terracotta" />
                 </Link>
               )}
+
+              {/* Product Categories Section */}
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between px-1">
+                  <span className="eyebrow">{isRTL ? "الأقسام والمنتجات" : "Browse Departments"}</span>
+                  <Link
+                    to="/products"
+                    onClick={onClose}
+                    className="text-[11px] font-bold text-brand-terracotta hover:underline"
+                  >
+                    {isRTL ? "عرض الكل" : "View All"}
+                  </Link>
+                </div>
+                <div className="bg-muted/50 rounded-2xl overflow-hidden border border-border divide-y divide-border">
+                  {categories.map(cat => {
+                    const catName = isRTL && cat.nameAr ? cat.nameAr : cat.name;
+                    return (
+                      <Link
+                        key={cat.id}
+                        to={`/category/${cat.slug}`}
+                        onClick={onClose}
+                        className="w-full flex items-center justify-between px-3.5 py-2.5 hover:bg-muted transition-colors text-foreground group"
+                      >
+                        <span className="flex items-center gap-3">
+                          <span className="w-8 h-8 rounded-xl bg-brand-peach/60 dark:bg-zinc-800 flex items-center justify-center text-sm flex-shrink-0 group-hover:scale-110 transition-transform">
+                            {cat.icon}
+                          </span>
+                          <span className="font-medium text-sm text-foreground group-hover:text-brand-terracotta transition-colors">
+                            {catName}
+                          </span>
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[11px] text-muted-foreground font-semibold px-2 py-0.5 rounded-full bg-background/80">
+                            {cat.count}
+                          </span>
+                          <ChevronRight size={15} className="text-brand-ink-soft rtl-flip" />
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
 
               <div className="flex flex-col gap-2">
                 <span className="eyebrow px-1">{t.settings}</span>

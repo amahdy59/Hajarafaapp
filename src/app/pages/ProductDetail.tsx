@@ -9,9 +9,11 @@ import { useAppSettings, type Translations } from "../context/AppSettingsContext
 import { StarRating } from "../components/StarRating";
 import { ProductCard } from "../components/ProductCard";
 import { toast } from "sonner";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { Button } from "../components/ui/Button";
+import { ScrollRail } from "../components/ui/ScrollRail";
 import { usePageMeta } from "../hooks/usePageMeta";
+import { useRecentlyViewed } from "../hooks/useRecentlyViewed";
 import { CONTACT } from "../config/contact";
 import logoImg from "../../assets/logo.webp";
 
@@ -70,6 +72,7 @@ export function ProductDetail() {
   const { addToCart } = useCart();
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { t, isRTL, formatPrice, formatNumber } = useAppSettings();
+  const { recentlyViewed } = useRecentlyViewed(product?.id);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
   const [activeTab, setActiveTab] = useState<"description" | "usage" | "reviews">("description");
@@ -78,6 +81,15 @@ export function ProductDetail() {
     usage: false,
     reviews: false,
   });
+  const [showDesktopStickyBar, setShowDesktopStickyBar] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowDesktopStickyBar(window.scrollY > 550);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Reset UI state when navigating between products.
   useEffect(() => {
@@ -781,6 +793,22 @@ export function ProductDetail() {
             </div>
           </section>
         )}
+
+        {/* Recently viewed products */}
+        {recentlyViewed.length > 0 && (
+          <section className="mb-10">
+            <h2 className="text-foreground mb-4 font-display font-bold" style={{ fontSize: "1.1rem" }}>
+              {isRTL ? "شوهدت مؤخراً" : "Recently Viewed"}
+            </h2>
+            <ScrollRail>
+              {recentlyViewed.map(p => (
+                <div key={p.id} className="flex-shrink-0 snap-start w-[calc(50vw-20px)] sm:w-56 p-0.5">
+                  <ProductCard product={p} />
+                </div>
+              ))}
+            </ScrollRail>
+          </section>
+        )}
       </div>
       <div className="fixed inset-x-0 bottom-[calc(4.25rem+env(safe-area-inset-bottom,0px))] z-30 px-4 pb-2 sm:hidden pointer-events-none">
         <div className="pointer-events-auto mx-auto flex max-w-md items-center gap-2 rounded-2xl border border-border bg-card/96 p-2 shadow-elev backdrop-blur">
@@ -811,6 +839,84 @@ export function ProductDetail() {
           </Button>
         </div>
       </div>
+
+      {/* Desktop Floating Sticky Purchase Bar */}
+      <AnimatePresence>
+        {showDesktopStickyBar && product && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 30 }}
+            transition={{ type: "spring", damping: 28, stiffness: 300 }}
+            className="fixed inset-x-0 bottom-6 z-30 px-6 hidden lg:block pointer-events-none"
+          >
+            <div className="pointer-events-auto mx-auto max-w-4xl flex items-center justify-between gap-4 rounded-2xl border border-border bg-card/96 p-3.5 shadow-elev backdrop-blur-xl">
+              <div className="flex items-center gap-3.5 min-w-0">
+                <img
+                  src={product.images[0] || product.image}
+                  alt=""
+                  width={48}
+                  height={48}
+                  className="w-12 h-12 rounded-xl object-contain product-media-surface p-1 border border-border/40 flex-shrink-0"
+                />
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-bold text-foreground">
+                    {isRTL && product.nameAr ? product.nameAr : product.name}
+                  </p>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="text-base font-extrabold text-brand-terracotta">
+                      {formatPrice(product.price)}
+                    </span>
+                    <span className="text-xs text-muted-foreground">·</span>
+                    <span className="text-xs text-muted-foreground">{product.weight}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 flex-shrink-0">
+                <div className="flex h-10 items-center justify-between rounded-xl border border-border bg-background px-1">
+                  <button
+                    onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                    className="flex h-9 w-9 items-center justify-center rounded-lg hover:bg-muted text-foreground cursor-pointer"
+                    aria-label="Decrease quantity"
+                  >
+                    <Minus size={13} />
+                  </button>
+                  <span className="w-8 select-none text-center text-xs font-bold text-foreground">
+                    {formatNumber(quantity)}
+                  </span>
+                  <button
+                    onClick={() => setQuantity(q => q + 1)}
+                    className="flex h-9 w-9 items-center justify-center rounded-lg hover:bg-muted text-foreground cursor-pointer"
+                    aria-label="Increase quantity"
+                  >
+                    <Plus size={13} />
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleWhatsAppOrder}
+                  className="h-10 px-3.5 rounded-xl bg-[#25D366]/12 hover:bg-[#25D366]/22 border border-[#25D366]/30 text-[#128C7E] dark:text-[#25D366] flex items-center gap-1.5 text-xs font-bold transition-all cursor-pointer"
+                  title={t.orderViaWhatsApp}
+                >
+                  <MessageCircle size={15} />
+                  <span>{t.orderViaWhatsApp}</span>
+                </button>
+
+                <Button
+                  onClick={handleAddToCart}
+                  size="sm"
+                  className="h-10 px-5 rounded-xl text-xs font-bold"
+                  leftIcon={<ShoppingCart size={15} />}
+                >
+                  {t.addToCart}
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className="h-36 sm:h-4" />
     </div>
   );

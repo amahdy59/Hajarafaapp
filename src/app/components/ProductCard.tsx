@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Heart, Plus, Leaf } from "lucide-react";
+import { Heart, Plus, Leaf, Minus } from "lucide-react";
 import { Link } from "react-router";
 import { Product } from "../data/products";
 import { useCart } from "../context/CartContext";
@@ -31,18 +31,36 @@ const badgeCls: Record<BadgeTone, string> = {
 };
 
 export const ProductCard = memo(function ProductCard({ product, view = "grid" }: ProductCardProps) {
-  const { addToCart } = useCart();
+  const { addToCart, items, updateQuantity, removeFromCart } = useCart();
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { t, isRTL, formatPrice } = useAppSettings();
   const wishlisted = isWishlisted(product.id);
   const badge = deriveBadge(product, isRTL);
   const productName = isRTL && product.nameAr ? product.nameAr : product.name;
+  const cartItem = items.find(i => i.product.id === product.id);
+  const quantityInCart = cartItem ? cartItem.quantity : 0;
 
   const onAdd = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     addToCart(product);
     toast.success(`${productName} • ${formatPrice(product.price)}`);
+  };
+
+  const onIncrement = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    updateQuantity(product.id, quantityInCart + 1);
+  };
+
+  const onDecrement = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (quantityInCart <= 1) {
+      removeFromCart(product.id);
+    } else {
+      updateQuantity(product.id, quantityInCart - 1);
+    }
   };
 
   const onWish = (e: React.MouseEvent) => {
@@ -60,7 +78,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
         animate={{ opacity: 1, y: 0 }}
         whileTap={{ scale: 0.995 }}
         transition={{ type: "spring", stiffness: 350, damping: 25 }}
-        className="bg-card rounded-2xl border-0 sm:border border-border dark:border-zinc-700/60 overflow-hidden hover:shadow-soft hover:border-brand-terracotta/40 transition-all duration-300 group flex gap-4 p-3 items-center"
+        className="bg-card rounded-2xl border-0 sm:border border-border dark:border-zinc-700/60 overflow-hidden hover:shadow-tactile hover:border-brand-terracotta/40 transition-all duration-300 group flex gap-4 p-3 items-center"
       >
         <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch py-1 px-1.5 sm:px-3">
           <div className="flex flex-col gap-1">
@@ -81,14 +99,38 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
           </div>
           <div className="flex items-center justify-between mt-2">
             <span className="text-brand-forest font-bold" style={{ fontSize: "1.05rem" }}>{price}</span>
-            <Button
-              onClick={onAdd}
-              size="sm"
-              className="h-11 min-w-[44px] text-xs font-semibold rounded-xl"
-              leftIcon={<Plus size={13} className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
-            >
-              {isRTL ? "أضف" : "Add"}
-            </Button>
+            {quantityInCart > 0 ? (
+              <div className="flex h-11 items-center justify-between rounded-xl border border-brand-terracotta bg-brand-peach/40 dark:bg-zinc-800 px-1 min-w-[100px] select-none shadow-sm">
+                <button
+                  type="button"
+                  onClick={onDecrement}
+                  className="flex h-11 w-8 items-center justify-center rounded-lg text-brand-terracotta hover:bg-brand-peach transition-colors cursor-pointer"
+                  aria-label={isRTL ? `إنقاص كمية ${productName}` : `Decrease quantity of ${product.name}`}
+                >
+                  <Minus size={13} />
+                </button>
+                <span className="font-bold text-xs text-brand-terracotta px-1">
+                  {quantityInCart}
+                </span>
+                <button
+                  type="button"
+                  onClick={onIncrement}
+                  className="flex h-11 w-8 items-center justify-center rounded-lg text-brand-terracotta hover:bg-brand-peach transition-colors cursor-pointer"
+                  aria-label={isRTL ? `زيادة كمية ${productName}` : `Increase quantity of ${product.name}`}
+                >
+                  <Plus size={13} />
+                </button>
+              </div>
+            ) : (
+              <Button
+                onClick={onAdd}
+                size="sm"
+                className="h-11 min-w-[44px] text-xs font-semibold rounded-xl"
+                leftIcon={<Plus size={13} className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+              >
+                {isRTL ? "أضف" : "Add"}
+              </Button>
+            )}
           </div>
         </div>
         <Link
@@ -118,7 +160,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
       animate={{ opacity: 1, y: 0 }}
       whileTap={{ scale: 0.99 }}
       transition={{ type: "spring", stiffness: 350, damping: 25 }}
-      className="bg-card rounded-2xl border-0 sm:border border-border dark:border-zinc-700/60 overflow-hidden flex flex-col h-full hover:shadow-soft hover:border-brand-terracotta/40 transition-all duration-300 group"
+      className="bg-card rounded-2xl border-0 sm:border border-border dark:border-zinc-700/60 overflow-hidden flex flex-col h-full hover:shadow-tactile hover:border-brand-terracotta/40 transition-all duration-300 group"
     >
       <div className="relative isolate aspect-[1.1] sm:aspect-square product-media-surface overflow-hidden flex items-center justify-center p-1 sm:p-1.5 border-b-0 sm:border-b border-border/20">
         <Link
@@ -141,8 +183,8 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
 
         {badge && (
           <span
-            className={`absolute top-2.5 sm:top-3.5 start-2.5 sm:start-3.5 z-20 px-1.5 sm:px-2.5 py-0.5 rounded border ${badgeCls[badge.tone]} eyebrow shadow-sm hidden sm:inline-block pointer-events-none`}
-            style={{ fontSize: "9px" }}
+            className={`absolute top-2.5 sm:top-3.5 start-2.5 sm:start-3.5 z-20 h-[22px] inline-flex items-center px-2 py-0.5 rounded-md border ${badgeCls[badge.tone]} eyebrow shadow-sm hidden sm:inline-flex pointer-events-none`}
+            style={{ fontSize: "9.5px" }}
           >
             {badge.label}
           </span>
@@ -189,15 +231,39 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
         </div>
 
         <div className="pt-3 sm:pt-3.5 mt-auto w-full">
-          <Button
-            onClick={onAdd}
-            size="sm"
-            fullWidth
-            className="h-11 min-h-[44px] text-xs font-semibold rounded-xl"
-            leftIcon={<Plus size={13} />}
-          >
-            {isRTL ? "أضف" : "Add"}
-          </Button>
+          {quantityInCart > 0 ? (
+            <div className="flex h-11 items-center justify-between overflow-hidden rounded-xl border border-brand-terracotta bg-brand-peach/40 dark:bg-zinc-800 px-1 w-full select-none shadow-sm">
+              <button
+                type="button"
+                onClick={onDecrement}
+                className="flex h-11 w-11 items-center justify-center rounded-lg text-brand-terracotta hover:bg-brand-peach transition-colors cursor-pointer"
+                aria-label={isRTL ? `إنقاص كمية ${productName}` : `Decrease quantity of ${product.name}`}
+              >
+                <Minus size={14} />
+              </button>
+              <span className="font-bold text-xs text-brand-terracotta-dark dark:text-brand-terracotta px-2">
+                {quantityInCart} {isRTL ? "في السلة" : "in cart"}
+              </span>
+              <button
+                type="button"
+                onClick={onIncrement}
+                className="flex h-11 w-11 items-center justify-center rounded-lg text-brand-terracotta hover:bg-brand-peach transition-colors cursor-pointer"
+                aria-label={isRTL ? `زيادة كمية ${productName}` : `Increase quantity of ${product.name}`}
+              >
+                <Plus size={14} />
+              </button>
+            </div>
+          ) : (
+            <Button
+              onClick={onAdd}
+              size="sm"
+              fullWidth
+              className="h-11 min-h-[44px] text-xs font-semibold rounded-xl"
+              leftIcon={<Plus size={13} />}
+            >
+              {isRTL ? "أضف" : "Add"}
+            </Button>
+          )}
         </div>
       </div>
     </motion.article>

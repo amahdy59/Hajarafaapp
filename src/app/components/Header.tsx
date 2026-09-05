@@ -21,6 +21,7 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [selectedCategoryScope, setSelectedCategoryScope] = useState<string>("all");
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -57,14 +58,16 @@ export function Header() {
     if (!queryClean) return [];
     return products
       .filter(p => {
+        const matchesScope = selectedCategoryScope === "all" || p.categorySlug === selectedCategoryScope;
+        if (!matchesScope) return false;
         const nameEn = p.name.toLowerCase();
         const nameAr = (p.nameAr || "").toLowerCase();
         const descEn = (p.description || "").toLowerCase();
         const cat = p.categorySlug.toLowerCase();
         return nameEn.includes(queryClean) || nameAr.includes(queryClean) || descEn.includes(queryClean) || cat.includes(queryClean);
       })
-      .slice(0, 5);
-  }, [queryClean]);
+      .slice(0, 6);
+  }, [queryClean, selectedCategoryScope]);
 
   const executeSearch = (rawQuery: string, redirect = true) => {
     const q = rawQuery.trim();
@@ -78,7 +81,8 @@ export function Header() {
       console.error("Failed to save recent search", e);
     }
     if (redirect) {
-      navigate(`/products?q=${encodeURIComponent(q)}`);
+      const catParam = selectedCategoryScope !== "all" ? `&category=${selectedCategoryScope}` : "";
+      navigate(`/products?q=${encodeURIComponent(q)}${catParam}`);
       setSearchQuery("");
       setSearchOpen(false);
     }
@@ -187,7 +191,7 @@ export function Header() {
         </div>
 
         {/* Category Navigation Rail */}
-        {(location.pathname === "/" || location.pathname.startsWith("/category/") || location.pathname === "/products") && (
+        {(location.pathname === "/" || location.pathname.startsWith("/category/") || location.pathname.startsWith("/products")) && (
           <div className="hidden sm:block relative z-10 border-t border-border bg-background/95 backdrop-blur-xl">
             <div className="max-w-[1280px] mx-auto overflow-x-auto scrollbar-hide py-2.5">
               <div className="flex gap-2 w-max px-4 sm:px-6">
@@ -282,6 +286,43 @@ export function Header() {
                 </IconButton>
               </form>
 
+              {/* Category Scope Chips */}
+              <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-2 border-b border-border/50 overflow-x-auto scrollbar-hide flex gap-1.5 items-center">
+                <span className="text-[11px] text-muted-foreground font-semibold pe-1 flex-shrink-0">
+                  {isRTL ? "في قسم:" : "In:"}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setSelectedCategoryScope("all")}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-all flex-shrink-0 cursor-pointer ${
+                    selectedCategoryScope === "all"
+                      ? "bg-brand-terracotta text-white shadow-sm"
+                      : "bg-muted text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {isRTL ? "الكل" : "All"}
+                </button>
+                {categories.map(cat => {
+                  const active = selectedCategoryScope === cat.slug;
+                  const name = isRTL && cat.nameAr ? cat.nameAr : cat.name;
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setSelectedCategoryScope(cat.slug)}
+                      className={`px-3 py-1 rounded-full text-xs font-semibold transition-all flex-shrink-0 flex items-center gap-1 cursor-pointer ${
+                        active
+                          ? "bg-brand-terracotta text-white shadow-sm"
+                          : "bg-muted text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <span>{cat.icon}</span>
+                      <span>{name}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
               <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pb-4 pt-1 max-h-[70vh] overflow-y-auto">
                 {queryClean ? (
                   <div>
@@ -293,7 +334,7 @@ export function Header() {
                         {matchedProducts.map((p) => (
                           <Link
                             key={p.id}
-                            to={`/product/${p.id}`}
+                            to={`/products/${p.id}`}
                             onClick={() => {
                               executeSearch(locale === "ar" && p.nameAr ? p.nameAr : p.name, false);
                               setSearchOpen(false);
@@ -303,6 +344,9 @@ export function Header() {
                             <img
                               src={p.image}
                               alt={isRTL && p.nameAr ? p.nameAr : p.name}
+                              width={48}
+                              height={48}
+                              decoding="async"
                               className="w-12 h-12 rounded-lg object-cover bg-brand-peach/30 flex-shrink-0"
                               onError={(e) => { (e.currentTarget as HTMLImageElement).src = logoImg; }}
                             />
@@ -314,8 +358,13 @@ export function Header() {
                                 {p.weight || p.category}
                               </p>
                             </div>
-                            <div className="text-sm font-bold text-brand-moss-dark dark:text-brand-sage flex-shrink-0">
-                              {formatPrice(p.price)}
+                            <div className="flex flex-col items-end flex-shrink-0">
+                              <span className="text-sm font-bold text-brand-terracotta">
+                                {formatPrice(p.price)}
+                              </span>
+                              <span className="text-[10px] text-brand-forest dark:text-brand-sage font-medium">
+                                {isRTL ? "متوفر" : "In Stock"}
+                              </span>
                             </div>
                           </Link>
                         ))}
