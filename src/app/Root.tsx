@@ -9,6 +9,7 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import logoImg from "../assets/logo.webp";
 import { Footer } from "./components/Footer";
 import { OfflineBanner } from "./components/OfflineBanner";
+import { PWAInstallBanner } from "./components/PWAInstallBanner";
 import { useAppSettings } from "./context/AppSettingsContext";
 
 /* Prevent the browser and router from restoring previous page positions.
@@ -111,6 +112,7 @@ export function Root() {
 
         <CartDrawer />
         <BottomNav />
+        <PWAInstallBanner />
 
         <Toaster position="top-center" closeButton />
       </div>

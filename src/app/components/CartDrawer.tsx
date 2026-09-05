@@ -1,11 +1,11 @@
 import { useRef } from "react";
-import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, Sparkles, Truck } from "lucide-react";
+import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, Sparkles, Truck, MessageCircle } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { motion, AnimatePresence } from "motion/react";
 import { Link, useNavigate } from "react-router";
 import { Button } from "./ui/Button";
-import { DELIVERY_NOTICE, SHIPPING_CONFIG } from "../config/contact";
+import { DELIVERY_NOTICE, SHIPPING_CONFIG, CONTACT } from "../config/contact";
 import { useDialogAccessibility } from "../hooks/useDialogAccessibility";
 
 export function CartDrawer() {
@@ -23,6 +23,19 @@ export function CartDrawer() {
   const THRESHOLD = SHIPPING_CONFIG.freeThreshold;
   const progressPct = Math.min((totalPrice / THRESHOLD) * 100, 100);
   const remaining = (THRESHOLD - totalPrice).toFixed(2);
+
+  const handleWhatsAppCartOrder = () => {
+    if (items.length === 0) return;
+    const itemList = items.map(item => {
+      const name = isRTL && item.product.nameAr ? item.product.nameAr : item.product.name;
+      return `• ${item.quantity}× ${name} (${(item.product.price * item.quantity).toFixed(2)} ج.م)`;
+    }).join("\n");
+    const text = isRTL
+      ? `مرحباً حاج عرفة 🌿\nأود إتمام طلب السلة:\n${itemList}\n\n• *المجموع:* ${totalPrice.toFixed(2)} ج.م\n\nيرجى تأكيد الطلب وتزويدي بالتفاصيل.`
+      : `Hello Haj Arafa 🌿\nI would like to order my cart items:\n${itemList}\n\n• *Total:* ${totalPrice.toFixed(2)} EGP\n\nPlease confirm my order.`;
+    const url = `https://wa.me/${CONTACT.whatsappPhone}?text=${encodeURIComponent(text)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
 
   return (
     <AnimatePresence>
@@ -67,6 +80,42 @@ export function CartDrawer() {
                 <X size={16} className="text-foreground" />
               </button>
             </div>
+
+            {/* Elevated Free Shipping Progress Meter */}
+            {items.length > 0 && (
+              <div className="px-5 py-3 bg-card/60 border-b border-border space-y-1.5">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground flex items-center gap-1 font-medium">
+                    <Truck size={13} className="text-brand-terracotta" />
+                    {totalPrice >= THRESHOLD ? (
+                      <span className="text-emerald-600 dark:text-emerald-400 font-bold">
+                        {isRTL ? "🎉 شحن مجاني لكافة المحافظات!" : "🎉 Free Express Shipping Unlocked!"}
+                      </span>
+                    ) : (
+                      <span>{t.freeShipping}</span>
+                    )}
+                  </span>
+                  {totalPrice < THRESHOLD && (
+                    <span className="text-brand-terracotta font-bold text-[11px]">
+                      {t.currency} {remaining} {t.away}
+                    </span>
+                  )}
+                </div>
+                <div
+                  role="progressbar"
+                  aria-valuenow={Math.round(totalPrice)}
+                  aria-valuemin={0}
+                  aria-valuemax={THRESHOLD}
+                  aria-label={t.freeShipping}
+                  className="w-full bg-muted rounded-full h-1.5 overflow-hidden"
+                >
+                  <div
+                    className="bg-brand-terracotta h-1.5 rounded-full transition-all duration-500"
+                    style={{ width: `${progressPct}%` }}
+                  />
+                </div>
+              </div>
+            )}
 
             {/* Items */}
             <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3">
@@ -222,6 +271,16 @@ export function CartDrawer() {
                 >
                   {t.proceedToCheckout}
                 </Button>
+
+                <button
+                  type="button"
+                  onClick={handleWhatsAppCartOrder}
+                  className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-emerald-500/30 bg-emerald-50/80 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 text-xs font-bold transition-all min-h-[44px] active:scale-[0.98] shadow-sm cursor-pointer"
+                  aria-label={isRTL ? "إرسال الطلب عبر واتساب (يفتح في نافذة جديدة)" : "Send order via WhatsApp (opens in a new tab)"}
+                >
+                  <MessageCircle size={15} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+                  <span>{isRTL ? "طلب سريع عبر واتساب" : "Quick Order via WhatsApp"}</span>
+                </button>
                 <Link
                   to="/cart"
                   onClick={() => setCartOpen(false)}

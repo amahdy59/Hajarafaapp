@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Link } from "react-router";
 import { motion } from "motion/react";
+import { Gift, Sparkles } from "lucide-react";
 import { getProductsByCategory } from "../data/products";
 import { categories } from "../data/categories";
 import { ProductCard } from "../components/ProductCard";
@@ -7,6 +9,7 @@ import { ScrollRail } from "../components/ui/ScrollRail";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { usePageMeta } from "../hooks/usePageMeta";
 import { useRecentlyViewed } from "../hooks/useRecentlyViewed";
+import { GiftHamperModal } from "../components/GiftHamperModal";
 
 const HERO_IMAGES = [
   {
@@ -29,6 +32,7 @@ const categoryAccentColors: Record<string, string> = {
 export function Home() {
   const { t, isRTL } = useAppSettings();
   const { recentlyViewed } = useRecentlyViewed();
+  const [showHamperModal, setShowHamperModal] = useState(false);
 
   usePageMeta({
     description: isRTL
@@ -193,6 +197,41 @@ export function Home() {
             </ScrollRail>
           </div>
         )}
+
+        {/* Egyptian Heritage Gift Hamper Banner */}
+        <section
+          aria-labelledby="gift-hamper-banner-title"
+          className="relative rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-amber-50 to-orange-50/50 dark:from-zinc-800/80 dark:to-zinc-900 border border-brand-terracotta/20 shadow-sm overflow-hidden"
+        >
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="max-w-xl text-center md:text-start space-y-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold text-brand-terracotta bg-brand-terracotta/10 border border-brand-terracotta/20">
+                <Sparkles size={12} />
+                {isRTL ? "صناديق هدايا التراث العشبي" : "Heritage Gift Collection"}
+              </span>
+              <h2 id="gift-hamper-banner-title" className="text-xl sm:text-2xl font-display font-bold text-foreground">
+                {isRTL ? "صمم صندوق هداياك العشبي الفاخر" : "Curate Your Artisan Herbal Gift Box"}
+              </h2>
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                {isRTL
+                  ? "اختر بين صناديق خشب الزيتون الفاخرة، العلب المخملية، أو خوص واحات سيوة، وانتقِ أجود الأعشاب والعسل مع بطاقة إهداء خاصة."
+                  : "Choose handcrafted olive wood, royal velvet, or Siwa palm wicker, and fill it with authentic raw honey, spices, and custom notes."}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowHamperModal(true)}
+              className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-brand-terracotta hover:bg-[#b04b25] active:scale-95 text-white font-bold text-xs sm:text-sm transition-all shadow-tactile min-h-[44px] cursor-pointer flex-shrink-0"
+              aria-label={isRTL ? "فتح نافذة تصميم صندوق الهدايا" : "Open gift hamper customizer"}
+            >
+              <Gift size={18} />
+              <span>{isRTL ? "صمم هديتك الآن" : "Customize Gift Hamper"}</span>
+            </button>
+          </div>
+        </section>
+
+        <GiftHamperModal open={showHamperModal} onClose={() => setShowHamperModal(false)} />
 
         {/* Customer reviews */}
         <section className="bg-brand-cream-2 rounded-2xl p-6 sm:p-8 border border-border shadow-soft">

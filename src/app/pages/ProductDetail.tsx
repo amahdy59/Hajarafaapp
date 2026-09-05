@@ -1,6 +1,6 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { useParams, Link } from "react-router";
-import { Heart, ShoppingCart, Share2, ChevronLeft, ChevronDown, Star, Plus, Minus, Leaf, Truck, Shield, RotateCcw, Check, MessageCircle } from "lucide-react";
+import { Heart, ShoppingCart, Share2, ChevronLeft, ChevronDown, Star, Plus, Minus, Leaf, Truck, Shield, RotateCcw, Check, MessageCircle, Thermometer, Clock, Utensils, Layers } from "lucide-react";
 import { getProductById, products } from "../data/products";
 import { categories, categoryMapping } from "../data/categories";
 import { useCart } from "../context/CartContext";
@@ -54,6 +54,88 @@ const getSpecLabel = (weight: string, t: Translations) => {
   if (w.includes("g") || w.includes("kg")) return t.weight;
   return t.size;
 };
+
+function ApothecaryUsageGuide({
+  usageText,
+  isRTL,
+  consultDoctorText,
+}: {
+  usageText: string;
+  isRTL: boolean;
+  consultDoctorText: string;
+}) {
+  const guideMetrics = [
+    {
+      icon: Thermometer,
+      title: isRTL ? "درجة الحرارة المثالية" : "Optimal Temperature",
+      value: isRTL ? "٨٥° - ٩٥° مئوية" : "85°C – 95°C",
+      hint: isRTL ? "ماء مغلي يُترك ليهدأ دقيقة" : "Boiling water rested 1 min",
+    },
+    {
+      icon: Clock,
+      title: isRTL ? "مدة الاستخلاص والنقع" : "Steeping Duration",
+      value: isRTL ? "٥ - ٧ دقائق" : "5 – 7 Minutes",
+      hint: isRTL ? "يُغطى لحفظ الزيوت الطيارة" : "Cover to retain aroma",
+    },
+    {
+      icon: Utensils,
+      title: isRTL ? "الجرعة الموصى بها" : "Suggested Serving",
+      value: isRTL ? "١ - ٢ ملعقة يومياً" : "1 – 2 Teaspoons",
+      hint: isRTL ? "صباحاً أو مساءً مع العسل" : "Morning/evening with honey",
+    },
+    {
+      icon: Shield,
+      title: isRTL ? "طريقة الحفظ المتوارثة" : "Apothecary Preservation",
+      value: isRTL ? "عبوة محكمة جافة" : "Airtight & Cool",
+      hint: isRTL ? "بعيداً عن الضوء والرطوبة" : "Away from direct light",
+    },
+  ];
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <h4 className="text-foreground font-bold mb-2 text-sm sm:text-base">
+          {isRTL ? "إرشادات الاستخدام وتوصيات العطارة" : "Traditional Usage & Apothecary Preparation"}
+        </h4>
+        <p className="text-muted-foreground leading-relaxed text-xs sm:text-sm">{usageText}</p>
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+        {guideMetrics.map((metric, idx) => {
+          const Icon = metric.icon;
+          return (
+            <div
+              key={idx}
+              className="p-3 rounded-2xl bg-brand-peach/40 dark:bg-zinc-800/60 border border-brand-terracotta/15 flex flex-col justify-between gap-1.5"
+            >
+              <div className="h-8 w-8 rounded-xl bg-brand-terracotta/10 text-brand-terracotta flex items-center justify-center flex-shrink-0">
+                <Icon size={16} />
+              </div>
+              <div>
+                <p className="text-[10px] text-muted-foreground font-medium leading-tight">{metric.title}</p>
+                <p className="text-xs font-bold text-foreground mt-0.5">{metric.value}</p>
+                <p className="text-[10px] text-muted-foreground/80 mt-0.5 leading-tight">{metric.hint}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="bg-brand-peach/60 dark:bg-zinc-800/80 border border-brand-terracotta/20 rounded-2xl p-3.5 flex items-start gap-2.5">
+        <span className="text-sm flex-shrink-0">🌿</span>
+        <p className="text-brand-terracotta text-xs leading-relaxed font-medium">
+          {isRTL
+            ? "نصيحة العطار: لتعزيز الامتصاص والنكهة، يُفضل تناوله دافئاً مع ملعقة من عسل السدر أو حبة البركة النقية."
+            : "Herbalist Tip: For enhanced absorption and aroma, enjoy warm with a spoonful of raw Sidr honey or pure black seed."}
+        </p>
+      </div>
+
+      <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3 text-xs text-amber-800 dark:text-amber-300">
+        ⚠️ {consultDoctorText}
+      </div>
+    </div>
+  );
+}
 
 export function ProductDetail() {
   const { id } = useParams();
@@ -263,6 +345,28 @@ export function ProductDetail() {
       : `Hello Haj Arafa 🌿\nI would like to order:\n• *Product:* ${pName}\n• *SKU:* ${product.id}\n• *Quantity:* ${quantity}\n• *Total:* ${totalEGP} EGP\n\nPlease confirm availability and delivery details.`;
     const url = `https://wa.me/${CONTACT.whatsappPhone}?text=${encodeURIComponent(text)}`;
     window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  const fallbackProduct = products[0]!;
+  const complementaryProduct = product
+    ? (products.find(p => p.id !== product.id && (p.category === product.category || p.isBestSeller)) ?? fallbackProduct)
+    : fallbackProduct;
+
+  const bundleDiscount = 0.08;
+  const bundleCombinedPrice = product ? product.price + complementaryProduct.price : 0;
+  const bundleDiscountedPrice = Math.round(bundleCombinedPrice * (1 - bundleDiscount));
+
+  const handleAddBundle = () => {
+    if (!product || !complementaryProduct) return;
+    addToCart(product);
+    addToCart(complementaryProduct);
+    const p1Name = isRTL && product.nameAr ? product.nameAr : product.name;
+    const p2Name = isRTL && complementaryProduct.nameAr ? complementaryProduct.nameAr : complementaryProduct.name;
+    toast.success(
+      isRTL
+        ? `🌿 تمت إضافة الباقة المتكاملة: ${p1Name} + ${p2Name}`
+        : `🌿 Complementary bundle added: ${p1Name} + ${p2Name}`
+    );
   };
 
   const tabLabels = {
@@ -529,6 +633,92 @@ export function ProductDetail() {
           </div>
         </div>
 
+        {/* Frequently Bought Together (Smart Bundle) */}
+        {complementaryProduct && (
+          <section
+            aria-labelledby="frequently-bought-title"
+            className="bg-card rounded-3xl p-5 sm:p-6 mb-8 border border-border/80 shadow-sm"
+          >
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-border">
+              <div className="flex items-center gap-2">
+                <span className="p-1.5 rounded-xl bg-brand-terracotta/10 text-brand-terracotta">
+                  <Layers size={18} />
+                </span>
+                <div>
+                  <h3 id="frequently-bought-title" className="text-sm sm:text-base font-bold text-foreground">
+                    {isRTL ? "اشترِ معاً ووفّر (باقة العطارة المتكاملة)" : "Frequently Bought Together (Pair & Save)"}
+                  </h3>
+                  <p className="text-[11px] sm:text-xs text-muted-foreground">
+                    {isRTL ? "مزيج طبيعي متوارث يُنصح به لتعزيز القيمة والفوائد الصحية" : "Authentic complementary pairing for maximum natural synergy"}
+                  </p>
+                </div>
+              </div>
+              <span className="self-start sm:self-auto text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-500/20 px-2.5 py-1 rounded-full">
+                {isRTL ? "وفر ٨٪ عند الشراء معاً" : "Save 8% on Bundle"}
+              </span>
+            </div>
+
+            <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-6">
+              <div className="flex items-center gap-3 sm:gap-4 overflow-x-auto pb-1">
+                {/* Product 1 */}
+                <div className="flex items-center gap-2.5 min-w-[130px] sm:min-w-[170px]">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-amber-50 dark:bg-zinc-800 border border-border p-1.5 flex items-center justify-center flex-shrink-0">
+                    <img src={product.image} alt="" className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-foreground line-clamp-1">{isRTL && product.nameAr ? product.nameAr : product.name}</p>
+                    <p className="text-xs text-brand-terracotta font-semibold mt-0.5">{formatPrice(product.price)}</p>
+                  </div>
+                </div>
+
+                <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground flex-shrink-0 text-sm font-bold">
+                  +
+                </div>
+
+                {/* Product 2 */}
+                <Link to={`/products/${complementaryProduct.id}`} className="flex items-center gap-2.5 min-w-[130px] sm:min-w-[170px] group no-underline">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-amber-50 dark:bg-zinc-800 border border-border p-1.5 flex items-center justify-center flex-shrink-0 group-hover:border-brand-terracotta transition-colors">
+                    <img src={complementaryProduct.image} alt="" className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-foreground line-clamp-1 group-hover:text-brand-terracotta transition-colors">
+                      {isRTL && complementaryProduct.nameAr ? complementaryProduct.nameAr : complementaryProduct.name}
+                    </p>
+                    <p className="text-xs text-brand-terracotta font-semibold mt-0.5">{formatPrice(complementaryProduct.price)}</p>
+                  </div>
+                </Link>
+              </div>
+
+              {/* Price & CTA */}
+              <div className="flex flex-row lg:flex-col items-center lg:items-end justify-between gap-3 pt-3 lg:pt-0 border-t lg:border-t-0 border-border">
+                <div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-lg sm:text-xl font-extrabold text-brand-forest dark:text-brand-sage-dark">
+                      {formatPrice(bundleDiscountedPrice)}
+                    </span>
+                    <span className="text-xs text-muted-foreground line-through">
+                      {formatPrice(bundleCombinedPrice)}
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground">
+                    {isRTL ? "سعر الباقة الإجمالي مع الخصم" : "Combined price with discount"}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleAddBundle}
+                  className="px-5 py-2.5 rounded-xl bg-brand-terracotta hover:bg-[#b04b25] active:scale-95 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-2 min-h-[44px] cursor-pointer"
+                  aria-label={isRTL ? "إضافة الباقة المتكاملة إلى السلة" : "Add complementary bundle to cart"}
+                >
+                  <ShoppingCart size={15} />
+                  <span>{isRTL ? "إضافة الباقة معاً" : "Add Both to Cart"}</span>
+                </button>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Tabs - Desktop only */}
         <div className="hidden lg:block bg-card rounded-3xl overflow-hidden mb-10 border border-border">
           <div role="tablist" aria-label={isRTL ? "تفاصيل المنتج" : "Product details"} className="flex border-b border-border">
@@ -574,13 +764,11 @@ export function ProductDetail() {
             )}
             {activeTab === "usage" && (
               <div role="tabpanel" id="panel-usage" aria-labelledby="tab-usage">
-                <h4 className="text-foreground mb-3">{t.howToUse}</h4>
-                <p className="text-muted-foreground leading-relaxed" style={{ fontSize: "0.875rem" }}>{product.usage}</p>
-                <div className="mt-4 bg-brand-peach border border-brand-terracotta/20 rounded-xl p-4">
-                  <p className="text-brand-terracotta" style={{ fontSize: "0.8rem" }}>
-                    ⚠️ {t.consultDoctor}
-                  </p>
-                </div>
+                <ApothecaryUsageGuide
+                  usageText={product.usage}
+                  isRTL={isRTL}
+                  consultDoctorText={t.consultDoctor}
+                />
               </div>
             )}
             {activeTab === "reviews" && (
@@ -707,12 +895,11 @@ export function ProductDetail() {
                 aria-labelledby="accordion-btn-usage"
                 className="px-4 pb-5 border-t border-border/50 pt-4"
               >
-                <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">{product.usage}</p>
-                <div className="mt-4 bg-brand-peach border border-brand-terracotta/20 rounded-xl p-4">
-                  <p className="text-brand-terracotta text-xs sm:text-sm font-medium">
-                    ⚠️ {t.consultDoctor}
-                  </p>
-                </div>
+                <ApothecaryUsageGuide
+                  usageText={product.usage}
+                  isRTL={isRTL}
+                  consultDoctorText={t.consultDoctor}
+                />
               </div>
             )}
           </div>
