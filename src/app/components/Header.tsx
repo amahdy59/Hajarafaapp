@@ -159,11 +159,8 @@ export function Header() {
               decoding="async"
               className="h-10 sm:h-12 w-auto object-contain select-none"
             />
-            <div className="hidden xl:flex flex-col text-start">
-              <span className="font-display font-extrabold text-base text-brand-forest dark:text-brand-sage-dark tracking-tight leading-tight">
-                {isRTL ? "حاج عرفة" : "Haj Arafa"}
-              </span>
-              <span className="text-[10px] text-brand-ink-soft dark:text-zinc-400 font-medium">
+            <div className="hidden xl:flex items-center">
+              <span className="text-xs text-brand-ink-soft dark:text-zinc-400 font-medium border-s border-border/80 ps-3.5 ms-1 leading-tight select-none">
                 {isRTL ? "العطارة والأغذية الطبيعية منذ 1968" : "Natural Apothecary Since 1968"}
               </span>
             </div>
