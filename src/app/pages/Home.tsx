@@ -67,6 +67,9 @@ export function Home() {
           <img
             src={HERO_IMAGES[0].src}
             alt={isRTL ? HERO_IMAGES[0].altAr : HERO_IMAGES[0].altEn}
+            width={1600}
+            height={500}
+            decoding="async"
             className="absolute inset-0 h-full w-full object-cover object-center scale-[1.015]"
             loading="eager"
             fetchPriority="high"

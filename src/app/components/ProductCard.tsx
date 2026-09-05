@@ -100,6 +100,9 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
           <img 
             src={product.image} 
             alt="" 
+            width={112}
+            height={112}
+            decoding="async"
             className="w-[93%] h-[93%] object-contain mix-blend-multiply dark:mix-blend-normal transition-transform duration-500 group-hover:-translate-y-1" 
             loading="lazy" 
             onError={(e) => { (e.currentTarget as HTMLImageElement).src = logoImg; }}
@@ -127,6 +130,9 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
           <img
             src={product.image}
             alt=""
+            width={300}
+            height={300}
+            decoding="async"
             className="relative z-0 w-full h-full object-contain p-2.5 sm:p-3 mix-blend-multiply dark:mix-blend-normal transition-transform duration-500 group-hover:-translate-y-1"
             loading="lazy"
             onError={(e) => { (e.currentTarget as HTMLImageElement).src = logoImg; }}

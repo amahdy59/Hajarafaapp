@@ -153,7 +153,7 @@ export function Footer() {
           </section>
 
           {/* Column 2: Customer Care Links */}
-          <nav className="col-span-6 md:col-span-3 space-y-4" aria-label={isArabic ? "روابط خدمة العملاء" : "Customer care"}>
+          <nav className="col-span-12 xs:col-span-6 md:col-span-3 space-y-4" aria-label={isArabic ? "روابط خدمة العملاء" : "Customer care"}>
             <h4 className="text-[11px] font-bold text-white uppercase tracking-[0.2em]">
               {isArabic ? "خدمة العملاء" : "Customer Care"}
             </h4>
@@ -172,7 +172,7 @@ export function Footer() {
           </nav>
 
           {/* Column 3: Direct Support */}
-          <section className="col-span-6 md:col-span-4 space-y-4" aria-labelledby="footer-support-title">
+          <section className="col-span-12 xs:col-span-6 md:col-span-4 space-y-4" aria-labelledby="footer-support-title">
             <h4 id="footer-support-title" className="text-[11px] font-bold text-white uppercase tracking-[0.2em]">
               {isArabic ? "الدعم المباشر" : "Direct Support"}
             </h4>

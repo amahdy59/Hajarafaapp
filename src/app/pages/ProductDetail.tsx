@@ -285,6 +285,9 @@ export function ProductDetail() {
               <img
                 src={product.images[activeImage] || product.image}
                 alt={isRTL && product.nameAr ? product.nameAr : product.name}
+                width={600}
+                height={600}
+                decoding="async"
                 className="w-full h-full object-contain p-3 sm:p-6 mix-blend-multiply dark:mix-blend-normal"
                 onError={(e) => { (e.currentTarget as HTMLImageElement).src = logoImg; }}
               />
@@ -315,6 +318,9 @@ export function ProductDetail() {
                     <img
                       src={img}
                       alt=""
+                      width={64}
+                      height={64}
+                      decoding="async"
                       className="w-full h-full object-contain p-0.5 sm:p-1 mix-blend-multiply dark:mix-blend-normal"
                       onError={(e) => { (e.currentTarget as HTMLImageElement).src = logoImg; }}
                     />

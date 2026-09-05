@@ -115,6 +115,10 @@ export function About() {
             <img 
               src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=500&auto=format&fit=crop" 
               alt={isRTL ? "صيدلية الأعشاب الطبيعية والزيوت" : "Herbal apothecary and natural remedies"} 
+              width={500}
+              height={375}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover rounded-xl"
             />
           </div>
