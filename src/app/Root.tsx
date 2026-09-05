@@ -42,7 +42,7 @@ export function Root() {
     return () => {
       cancelAnimationFrame(animationFrame);
     };
-  }, [location.pathname, location.search]);
+  }, [location.pathname]);
 
   /* Global listener to smoothly scroll the page to top if the user clicks
      a link pointing to the current path (e.g. Logo, active navigation items). */

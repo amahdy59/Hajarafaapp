@@ -6,7 +6,6 @@ import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { toast } from "sonner";
-import { motion } from "motion/react";
 import { Button } from "./ui/Button";
 import logoImg from "../../assets/logo.webp";
 
@@ -73,12 +72,8 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
 
   if (view === "list") {
     return (
-      <motion.article
-        initial={{ opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        whileTap={{ scale: 0.995 }}
-        transition={{ type: "spring", stiffness: 350, damping: 25 }}
-        className="bg-card rounded-2xl border-0 sm:border border-border dark:border-zinc-700/60 overflow-hidden hover:shadow-tactile hover:border-brand-terracotta/40 transition-all duration-300 group flex gap-4 p-3 items-center"
+      <article
+        className="bg-card rounded-2xl border-0 sm:border border-border dark:border-zinc-700/60 overflow-hidden hover:shadow-tactile hover:border-brand-terracotta/40 transition-all duration-200 group flex gap-4 p-3 items-center active:scale-[0.995]"
       >
         <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch py-1 px-1.5 sm:px-3">
           <div className="flex flex-col gap-1">
@@ -150,17 +145,13 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
             onError={(e) => { (e.currentTarget as HTMLImageElement).src = logoImg; }}
           />
         </Link>
-      </motion.article>
+      </article>
     );
   }
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 6 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileTap={{ scale: 0.99 }}
-      transition={{ type: "spring", stiffness: 350, damping: 25 }}
-      className="bg-card rounded-2xl border-0 sm:border border-border dark:border-zinc-700/60 overflow-hidden flex flex-col h-full hover:shadow-tactile hover:border-brand-terracotta/40 transition-all duration-300 group"
+    <article
+      className="bg-card rounded-2xl border-0 sm:border border-border dark:border-zinc-700/60 overflow-hidden flex flex-col h-full hover:shadow-tactile hover:border-brand-terracotta/40 transition-all duration-200 group active:scale-[0.99]"
     >
       <div className="relative isolate aspect-[1.1] sm:aspect-square product-media-surface overflow-hidden flex items-center justify-center p-1 sm:p-1.5 border-b-0 sm:border-b border-border/20">
         <Link
@@ -190,7 +181,8 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
           </span>
         )}
 
-        <motion.button
+        <button
+          type="button"
           onClick={onWish}
           aria-label={
             wishlisted
@@ -198,18 +190,14 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
               : (isRTL ? `إضافة ${productName} إلى قائمة الرغبات` : `Add ${product.name} to wishlist`)
           }
           aria-pressed={wishlisted}
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.96 }}
-          className="absolute top-2.5 sm:top-3.5 end-2.5 sm:end-3.5 w-11 h-11 bg-card/90 backdrop-blur rounded-full flex items-center justify-center border border-border text-brand-ink-soft hover:text-brand-terracotta hover:border-brand-terracotta shadow-sm transition-colors duration-200 z-20"
+          className="absolute top-2.5 sm:top-3.5 end-2.5 sm:end-3.5 w-11 h-11 bg-card/95 rounded-full flex items-center justify-center border border-border text-brand-ink-soft hover:text-brand-terracotta hover:border-brand-terracotta shadow-sm transition-all duration-200 hover:scale-105 active:scale-95 z-20 cursor-pointer"
         >
-          <motion.span
-            animate={wishlisted ? { scale: [1, 1.35, 1] } : { scale: 1 }}
-            transition={{ type: "spring", stiffness: 400, damping: 15 }}
-            className="flex items-center justify-center"
+          <span
+            className={`flex items-center justify-center transition-transform duration-200 ${wishlisted ? "scale-110" : "scale-100"}`}
           >
             <Heart className={`w-3.5 h-3.5 sm:w-[15px] sm:h-[15px] ${wishlisted ? "fill-brand-terracotta text-brand-terracotta" : ""}`} />
-          </motion.span>
-        </motion.button>
+          </span>
+        </button>
       </div>
 
       <div className="px-2.5 sm:px-4 py-3 sm:py-3.5 flex flex-col flex-1">
@@ -266,6 +254,6 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
           )}
         </div>
       </div>
-    </motion.article>
+    </article>
   );
 });

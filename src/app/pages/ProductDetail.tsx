@@ -84,8 +84,20 @@ export function ProductDetail() {
   const [showDesktopStickyBar, setShowDesktopStickyBar] = useState(false);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    let ticking = false;
     const handleScroll = () => {
-      setShowDesktopStickyBar(window.scrollY > 550);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (window.innerWidth >= 1024) {
+            setShowDesktopStickyBar(window.scrollY > 550);
+          } else {
+            setShowDesktopStickyBar(false);
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -850,7 +862,7 @@ export function ProductDetail() {
             transition={{ type: "spring", damping: 28, stiffness: 300 }}
             className="fixed inset-x-0 bottom-6 z-30 px-6 hidden lg:block pointer-events-none"
           >
-            <div className="pointer-events-auto mx-auto max-w-4xl flex items-center justify-between gap-4 rounded-2xl border border-border bg-card/96 p-3.5 shadow-elev backdrop-blur-xl">
+            <div className="pointer-events-auto mx-auto max-w-4xl flex items-center justify-between gap-4 rounded-2xl border border-border bg-card p-3.5 shadow-elev">
               <div className="flex items-center gap-3.5 min-w-0">
                 <img
                   src={product.images[0] || product.image}

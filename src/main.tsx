@@ -5,18 +5,18 @@ import "./styles/index.css";
 
 createRoot(document.getElementById("root")!).render(<App />);
 
-if ("serviceWorker" in navigator && import.meta.env.PROD) {
-  window.addEventListener("load", () => {
-    const swUrl = `${import.meta.env.BASE_URL}sw.js`;
-    navigator.serviceWorker
-      .register(swUrl)
-      .then((reg) => {
-        console.debug("Haj Arafa ServiceWorker registered:", reg.scope);
-      })
-      .catch((err) => {
-        console.debug("Haj Arafa ServiceWorker registration failed:", err);
-      });
+// Proactively unregister legacy service workers and clear caches to prevent stale bundles
+if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+  navigator.serviceWorker.getRegistrations().then((registrations) => {
+    for (const registration of registrations) {
+      registration.unregister();
+    }
   });
+  if (typeof caches !== "undefined") {
+    caches.keys().then((keys) => {
+      keys.forEach((key) => caches.delete(key));
+    });
+  }
 }
 
   
