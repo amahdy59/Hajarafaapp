@@ -13,7 +13,7 @@ function hexToRgb(hex: string): [number, number, number] {
 }
 
 function getLuminance(r: number, g: number, b: number): number {
-  const [rs, gs, bs] = [r, g, b].map(c => {
+  const [rs = 0, gs = 0, bs = 0] = [r, g, b].map(c => {
     const s = c / 255;
     return s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
   });

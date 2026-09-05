@@ -49,10 +49,13 @@ describe("Responsiveness & Mobile-First Review Suite", () => {
       const content = fs.readFileSync(file, "utf-8");
       let match;
       while ((match = widePixelRegex.exec(content)) !== null) {
-        const widthVal = parseInt(match[1], 10);
-        // Any fixed width >= 400px without responsive prefix causes mobile overflow on 360-390px screens
-        if (widthVal >= 400) {
-          violations.push({ file: path.relative(rootDir, file), match: match[0] });
+        const widthStr = match[1];
+        if (widthStr && match[0]) {
+          const widthVal = parseInt(widthStr, 10);
+          // Any fixed width >= 400px without responsive prefix causes mobile overflow on 360-390px screens
+          if (widthVal >= 400) {
+            violations.push({ file: path.relative(rootDir, file), match: match[0] });
+          }
         }
       }
     }

@@ -80,6 +80,7 @@ export function ProductDetail() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
+        if (!entry) return;
         if (window.innerWidth >= 1024) {
           setShowDesktopStickyBar(!entry.isIntersecting && entry.boundingClientRect.top < 0);
         } else {

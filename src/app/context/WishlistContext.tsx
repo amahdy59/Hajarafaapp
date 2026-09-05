@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, useMemo } from "react";
+import { toast } from "sonner";
 import { Product } from "../data/products";
 
 interface WishlistContextType {
@@ -48,11 +49,27 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
   }, [items]);
 
   const toggleWishlist = useCallback((product: Product) => {
-    setItems(prev => {
-      if (prev.find(p => p.id === product.id)) {
-        return prev.filter(p => p.id !== product.id);
+    setItems((prev) => {
+      const exists = prev.some((p) => p.id === product.id);
+      if (exists) {
+        toast.info(product.nameAr || product.name, {
+          description: "Removed from wishlist / تمت الإزالة من قائمة الرغبات",
+          action: {
+            label: "Undo / تراجع",
+            onClick: () => setItems((current) => (current.some((p) => p.id === product.id) ? current : [...current, product])),
+          },
+        });
+        return prev.filter((p) => p.id !== product.id);
+      } else {
+        toast.success(product.nameAr || product.name, {
+          description: "Added to wishlist / تمت الإضافة إلى قائمة الرغبات",
+          action: {
+            label: "Undo / تراجع",
+            onClick: () => setItems((current) => current.filter((p) => p.id !== product.id)),
+          },
+        });
+        return [...prev, product];
       }
-      return [...prev, product];
     });
   }, []);
 

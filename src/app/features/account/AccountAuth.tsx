@@ -29,7 +29,7 @@ export function AccountAuth({ onAuthenticated }: AccountAuthProps) {
       return;
     }
     const user: UserProfile = {
-      firstName: authEmail.split("@")[0],
+      firstName: authEmail.split("@")[0] || "Customer",
       lastName: "Customer",
       email: authEmail,
       phone: "+20 100 123 4567",

@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { getProductById, type Product } from "../data/products";
 
-const STORAGE_KEY = "hajarafa.recently_viewed";
-const MAX_ITEMS = 8;
+export const STORAGE_KEY = "hajarafa.recently_viewed";
+export const MAX_ITEMS = 8;
 
 export function useRecentlyViewed(currentProductId?: string) {
   const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);

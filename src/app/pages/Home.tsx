@@ -65,17 +65,20 @@ export function Home() {
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pt-1 pb-4 sm:py-6 flex flex-col gap-8 sm:gap-14">
 
         {/* Hero Banner */}
-        <section className="relative overflow-hidden rounded-[1.5rem] sm:rounded-[1.75rem] border border-border/70 bg-brand-ink shadow-[0_18px_50px_rgba(20,32,26,0.16)] isolate aspect-[5/3] sm:aspect-[16/5] max-h-[260px] sm:max-h-[250px]" aria-labelledby="home-hero-title">
-          <img
-            src={HERO_IMAGES[0].src}
-            alt={isRTL ? HERO_IMAGES[0].altAr : HERO_IMAGES[0].altEn}
-            width={1600}
-            height={500}
-            decoding="async"
-            className="absolute inset-0 h-full w-full object-cover object-center scale-[1.015]"
-            loading="eager"
-            fetchPriority="high"
-          />
+        {(() => {
+          const heroImage = HERO_IMAGES[0]!;
+          return (
+            <section className="relative overflow-hidden rounded-[1.5rem] sm:rounded-[1.75rem] border border-border/70 bg-brand-ink shadow-[0_18px_50px_rgba(20,32,26,0.16)] isolate aspect-[5/3] sm:aspect-[16/5] max-h-[260px] sm:max-h-[250px]" aria-labelledby="home-hero-title">
+              <img
+                src={heroImage.src}
+                alt={isRTL ? heroImage.altAr : heroImage.altEn}
+                width={1600}
+                height={500}
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover object-center scale-[1.015]"
+                loading="eager"
+                fetchPriority="high"
+              />
           <div className="absolute inset-0 bg-brand-ink/46" aria-hidden="true" />
           <div
             className={`absolute inset-0 ${
@@ -114,6 +117,8 @@ export function Home() {
             </motion.div>
           </div>
         </section>
+          );
+        })()}
 
         {/* 7 Categories Rails & Bento Placement */}
         {categories.map((cat) => {

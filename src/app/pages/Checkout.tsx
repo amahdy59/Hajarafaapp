@@ -126,8 +126,13 @@ export function Checkout() {
 
       if (!expiry.trim()) {
         newErrors.expiry = isRTL ? "تاريخ الانتهاء مطلوب" : "Expiry date is required";
-      } else if (!expiry.includes("/") || expiry.split("/")[0].length !== 2 || expiry.split("/")[1].length !== 2) {
-        newErrors.expiry = isRTL ? "يرجى إدخال تاريخ انتهاء صحيح (MM/YY)" : "Please enter a valid expiry date (MM/YY)";
+      } else {
+        const expiryParts = expiry.split("/");
+        const monthPart = expiryParts[0];
+        const yearPart = expiryParts[1];
+        if (!expiry.includes("/") || !monthPart || !yearPart || monthPart.length !== 2 || yearPart.length !== 2) {
+          newErrors.expiry = isRTL ? "يرجى إدخال تاريخ انتهاء صحيح (MM/YY)" : "Please enter a valid expiry date (MM/YY)";
+        }
       }
 
       if (!cvv.trim()) {
@@ -179,7 +184,8 @@ export function Checkout() {
   ].join(" ");
   const labelCls = "block text-muted-foreground mb-1.5" as const;
 
-  const selectedGov = getGovernorateById(shippingData.governorate) || EGYPTIAN_GOVERNORATES[0];
+  const defaultGov = EGYPTIAN_GOVERNORATES[0]!;
+  const selectedGov = getGovernorateById(shippingData.governorate) || defaultGov;
   const govName = isRTL ? selectedGov.nameAr : selectedGov.nameEn;
   const deliveryDaysText = isRTL ? selectedGov.deliveryDaysAr : selectedGov.deliveryDaysEn;
 
