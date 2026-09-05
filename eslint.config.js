@@ -30,5 +30,13 @@ export default tseslint.config(
       "react-hooks/purity": "off",
       "react-hooks/set-state-in-effect": "off",
     },
+  },
+  {
+    files: ["scripts/**/*.{js,mjs}"],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
   }
 );
