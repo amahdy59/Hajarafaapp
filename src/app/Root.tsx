@@ -32,8 +32,7 @@ export function Root() {
   const location = useLocation();
   const { isRTL } = useAppSettings();
   const isCheckout = location.pathname === "/checkout";
-  const hasCategoryRail = location.pathname === "/" || location.pathname.startsWith("/category/") || location.pathname.startsWith("/products");
-  const mainPadding = hasCategoryRail ? "pt-16 sm:pt-[124px]" : "pt-16";
+  const mainPadding = "pt-16 sm:pt-[118px]";
 
   /* Route changes should never inherit the previous page's scroll position. */
   useLayoutEffect(() => {

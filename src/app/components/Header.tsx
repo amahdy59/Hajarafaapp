@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
-import { Search, ShoppingBag, Heart, Menu, X, Languages, Sun, Moon, History, TrendingUp, ArrowUpRight } from "lucide-react";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { Search, ShoppingBag, Heart, Menu, X, Languages, Sun, Moon, History, TrendingUp, ArrowUpRight, MapPin } from "lucide-react";
 import { Link, useNavigate, useLocation, useSearchParams } from "react-router";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
@@ -12,7 +12,7 @@ import { products } from "../data/products";
 import logoImg from "../../assets/logo.webp";
 
 export function Header() {
-  const { totalItems, setCartOpen } = useCart();
+  const { totalItems, totalPrice, setCartOpen } = useCart();
   const { items: wishlistItems } = useWishlist();
   const { theme, setTheme, locale, setLocale, formatPrice, t, isRTL } = useAppSettings();
   const [searchParams] = useSearchParams();
@@ -20,26 +20,39 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
+  const desktopSearchRef = useRef<HTMLDivElement>(null);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [selectedCategoryScope, setSelectedCategoryScope] = useState<string>("all");
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => { setSearchOpen(false); }, [location.pathname]);
+  useEffect(() => {
+    setSearchOpen(false);
+    setDesktopSearchOpen(false);
+  }, [location.pathname]);
 
   useEffect(() => {
-    if (searchOpen) {
-      try {
-        const stored = localStorage.getItem("hajarafa.recent_searches");
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed)) setRecentSearches(parsed.slice(0, 5));
-        }
-      } catch (e) {
-        console.error("Failed to parse recent searches", e);
+    try {
+      const stored = localStorage.getItem("hajarafa.recent_searches");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) setRecentSearches(parsed.slice(0, 5));
       }
+    } catch (e) {
+      console.error("Failed to parse recent searches", e);
     }
-  }, [searchOpen]);
+  }, [searchOpen, desktopSearchOpen]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (desktopSearchRef.current && !desktopSearchRef.current.contains(e.target as Node)) {
+        setDesktopSearchOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -103,140 +116,327 @@ export function Header() {
       <SettingsDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
 
       <header
-        className={`fixed top-0 inset-x-0 z-40 bg-background/90 backdrop-blur-xl transition-shadow safe-area-pt ${
-          scrolled ? "shadow-soft border-b border-border" : "border-b border-transparent"
+        className={`fixed top-0 inset-x-0 z-40 bg-background/95 transition-shadow safe-area-pt border-b ${
+          scrolled ? "shadow-soft border-border" : "border-border/60"
         }`}
       >
-        <div className="relative h-16 px-4 sm:px-6 max-w-[1280px] mx-auto flex items-center justify-between gap-2">
-          <div className="flex items-center justify-start z-10 -ms-2 sm:-ms-2.5">
-            <div className="relative group">
-              <IconButton onClick={() => setMenuOpen(true)} aria-label={t.menu}>
-                <Menu size={20} />
-              </IconButton>
-              <span className="absolute top-full mt-1.5 start-0 scale-90 opacity-0 pointer-events-none group-hover:scale-100 group-hover:opacity-100 transition-all duration-150 ease-out bg-brand-ink/95 dark:bg-zinc-800 text-white dark:text-zinc-100 text-[10px] sm:text-[10.5px] font-medium py-1 px-2.5 rounded-md whitespace-nowrap shadow-elev z-50 border border-white/5">
-                {t.menu}
-              </span>
-            </div>
+        <div className="relative h-16 sm:h-[68px] px-4 sm:px-6 max-w-[1280px] mx-auto flex items-center justify-between gap-3 sm:gap-6">
+          {/* Mobile Start: Menu toggle button */}
+          <div className="flex items-center justify-start z-10 -ms-2 lg:hidden">
+            <IconButton onClick={() => setMenuOpen(true)} aria-label={t.menu}>
+              <Menu size={20} />
+            </IconButton>
           </div>
 
-          <Link to="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center min-w-0 h-14 select-none cursor-pointer w-fit no-underline z-10">
-            <img src={logoImg} alt={isRTL ? "شعار حاج عرفة" : "Haj Arafa Logo"} width={140} height={48} decoding="async" className="h-9 xs:h-12 sm:h-14 w-auto object-contain max-w-[42vw] sm:max-w-[220px] select-none" />
+          {/* Logo & Apothecary Heritage Tagline */}
+          <Link
+            to="/"
+            className="flex items-center gap-3 select-none no-underline z-10 flex-shrink-0 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 lg:static lg:translate-x-0 lg:translate-y-0"
+          >
+            <img
+              src={logoImg}
+              alt={isRTL ? "شعار حاج عرفة" : "Haj Arafa Logo"}
+              width={140}
+              height={48}
+              decoding="async"
+              className="h-10 sm:h-12 w-auto object-contain select-none"
+            />
+            <div className="hidden xl:flex flex-col text-start">
+              <span className="font-display font-extrabold text-base text-brand-forest dark:text-brand-sage-dark tracking-tight leading-tight">
+                {isRTL ? "حاج عرفة" : "Haj Arafa"}
+              </span>
+              <span className="text-[10px] text-brand-ink-soft dark:text-zinc-400 font-medium">
+                {isRTL ? "العطارة والأغذية الطبيعية منذ 1968" : "Natural Apothecary Since 1968"}
+              </span>
+            </div>
           </Link>
 
-          <div className="flex items-center gap-0.5 justify-end z-10 -me-2 sm:-me-2.5">
-            <div className="hidden lg:flex items-center gap-0.5 me-2 border-e border-border pe-2">
-              <div className="relative group">
-                <IconButton onClick={() => setLocale(locale === "en" ? "ar" : "en")} aria-label={t.language}>
-                  <Languages size={19} />
-                </IconButton>
-                <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 scale-90 opacity-0 pointer-events-none group-hover:scale-100 group-hover:opacity-100 transition-all duration-150 ease-out bg-brand-ink/95 dark:bg-zinc-800 text-white dark:text-zinc-100 text-[10px] sm:text-[10.5px] font-medium py-1 px-2.5 rounded-md whitespace-nowrap shadow-elev z-50 border border-white/5">
-                  {locale === "en" ? "العربية" : "English"}
-                </span>
+          {/* Prominent Desktop Search Bar with Category Scopes */}
+          <div className="hidden lg:flex flex-1 max-w-xl mx-2 relative z-20" ref={desktopSearchRef}>
+            <form onSubmit={submit} className="relative w-full flex items-center">
+              <div className="relative w-full flex items-center rounded-2xl bg-card border border-border focus-within:border-brand-terracotta focus-within:ring-2 focus-within:ring-brand-terracotta/20 shadow-sm transition-all overflow-hidden h-11">
+                <label htmlFor="desktop-category-scope" className="sr-only">
+                  {isRTL ? "تحديد القسم" : "Select Category"}
+                </label>
+                <select
+                  id="desktop-category-scope"
+                  value={selectedCategoryScope}
+                  onChange={(e) => setSelectedCategoryScope(e.target.value)}
+                  className="h-full bg-brand-peach/40 dark:bg-zinc-800 text-foreground text-xs font-semibold px-2.5 border-e border-border outline-none cursor-pointer hover:bg-brand-peach/60 transition-colors"
+                  aria-label={isRTL ? "تحديد القسم" : "Select Category"}
+                >
+                  <option value="all">{isRTL ? "جميع الأقسام" : "All Departments"}</option>
+                  {categories.map(c => (
+                    <option key={c.id} value={c.slug}>{isRTL && c.nameAr ? c.nameAr : c.name}</option>
+                  ))}
+                </select>
+
+                <label htmlFor="desktop-header-search" className="sr-only">
+                  {t.searchPlaceholder}
+                </label>
+                <input
+                  id="desktop-header-search"
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setDesktopSearchOpen(true);
+                  }}
+                  onFocus={() => setDesktopSearchOpen(true)}
+                  placeholder={isRTL ? "ابحث عن عسل، قهوة، بهارات، زيوت طبيعية..." : "Search honey, coffee, spices, natural oils..."}
+                  className="flex-1 h-full px-3.5 bg-transparent text-foreground placeholder:text-muted-foreground text-xs font-medium outline-none"
+                />
+
+                <button
+                  type="submit"
+                  className="h-full px-4 bg-brand-terracotta hover:bg-brand-terracotta-dark text-white flex items-center justify-center transition-colors cursor-pointer"
+                  aria-label={t.search}
+                >
+                  <Search size={16} />
+                </button>
               </div>
-              <div className="relative group">
-                <IconButton onClick={() => setTheme(theme === "light" ? "dark" : "light")} aria-label={t.theme}>
-                  {theme === "light" ? <Moon size={19} /> : <Sun size={19} />}
-                </IconButton>
-                <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 scale-90 opacity-0 pointer-events-none group-hover:scale-100 group-hover:opacity-100 transition-all duration-150 ease-out bg-brand-ink/95 dark:bg-zinc-800 text-white dark:text-zinc-100 text-[10px] sm:text-[10.5px] font-medium py-1 px-2.5 rounded-md whitespace-nowrap shadow-elev z-50 border border-white/5">
-                  {theme === "light" ? (isRTL ? "المظهر الداكن" : "Dark Mode") : (isRTL ? "المظهر الفاتح" : "Light Mode")}
-                </span>
+            </form>
+
+            {/* Desktop Autocomplete Preview Dropdown */}
+            {desktopSearchOpen && (queryClean || recentSearches.length > 0) && (
+              <div className="absolute top-full mt-2 inset-x-0 bg-card border border-border rounded-2xl shadow-elev p-3 z-50 max-h-[420px] overflow-y-auto">
+                {queryClean ? (
+                  <div>
+                    <div className="flex items-center justify-between pb-2 mb-2 border-b border-border/60 px-1">
+                      <span className="text-[11px] font-bold text-muted-foreground uppercase">
+                        {isRTL ? "المنتجات المطابقة" : "Matching Products"}
+                      </span>
+                      <span className="text-[11px] text-brand-terracotta font-semibold">
+                        {matchedProducts.length} {isRTL ? "نتائج" : "results"}
+                      </span>
+                    </div>
+
+                    {matchedProducts.length > 0 ? (
+                      <div className="space-y-1">
+                        {matchedProducts.map((p) => (
+                          <Link
+                            key={p.id}
+                            to={`/products/${p.id}`}
+                            onClick={() => {
+                              executeSearch(locale === "ar" && p.nameAr ? p.nameAr : p.name, false);
+                              setDesktopSearchOpen(false);
+                            }}
+                            className="flex items-center justify-between p-2 rounded-xl hover:bg-muted/70 transition-colors group text-foreground no-underline"
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <img
+                                src={p.image}
+                                alt={isRTL && p.nameAr ? p.nameAr : p.name}
+                                width={44}
+                                height={44}
+                                decoding="async"
+                                className="w-11 h-11 rounded-lg object-contain bg-brand-peach/30 p-1 flex-shrink-0"
+                                onError={(e) => { (e.currentTarget as HTMLImageElement).src = logoImg; }}
+                              />
+                              <div className="min-w-0">
+                                <p className="text-xs font-semibold text-foreground group-hover:text-brand-terracotta transition-colors truncate">
+                                  {locale === "ar" && p.nameAr ? p.nameAr : p.name}
+                                </p>
+                                <p className="text-[10.5px] text-muted-foreground">
+                                  {p.weight || p.category}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex flex-col items-end flex-shrink-0 ms-2">
+                              <span className="text-xs font-bold text-brand-terracotta">
+                                {formatPrice(p.price)}
+                              </span>
+                              <span className="text-[9.5px] text-brand-forest dark:text-brand-sage font-medium">
+                                {isRTL ? "متوفر" : "In Stock"}
+                              </span>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="p-4 text-center text-muted-foreground text-xs">
+                        {isRTL ? "لا توجد منتجات مطابقة" : "No products found"}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div>
+                    {recentSearches.length > 0 && (
+                      <div className="mb-3">
+                        <div className="flex items-center justify-between pb-1.5 mb-1 px-1">
+                          <span className="text-[11px] font-bold text-muted-foreground flex items-center gap-1.5">
+                            <History size={12} /> {t.recentSearches}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={clearRecentSearches}
+                            className="text-[10px] text-brand-terracotta hover:underline font-semibold cursor-pointer"
+                          >
+                            {isRTL ? "مسح" : "Clear"}
+                          </button>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {recentSearches.map((s, idx) => (
+                            <button
+                              key={idx}
+                              type="button"
+                              onClick={() => {
+                                executeSearch(s);
+                                setDesktopSearchOpen(false);
+                              }}
+                              className="px-2.5 py-1 bg-muted hover:bg-brand-peach/60 rounded-lg text-xs text-foreground transition-colors cursor-pointer"
+                            >
+                              {s}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div>
+                      <span className="text-[11px] font-bold text-muted-foreground flex items-center gap-1.5 px-1 mb-1.5">
+                        <TrendingUp size={12} /> {isRTL ? "الأكثر بحثاً" : "Trending Searches"}
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {trendingSearches.map((term, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => {
+                              executeSearch(term);
+                              setDesktopSearchOpen(false);
+                            }}
+                            className="px-2.5 py-1 bg-brand-peach/40 dark:bg-zinc-800 hover:bg-brand-peach text-brand-terracotta rounded-lg text-xs font-semibold transition-colors cursor-pointer"
+                          >
+                            {term}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
+            )}
+          </div>
+
+          {/* End Utility Items */}
+          <div className="flex items-center gap-1 sm:gap-2 justify-end z-10 -me-2 sm:-me-0">
+            {/* Desktop Branches Link */}
+            <Link
+              to="/branches"
+              className="hidden xl:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-brand-ink-soft hover:text-brand-terracotta rounded-xl hover:bg-muted transition-colors select-none"
+            >
+              <MapPin size={15} />
+              <span>{isRTL ? "فروعنا" : "Branches"}</span>
+            </Link>
+
+            {/* Desktop Language & Theme Toggles */}
+            <div className="hidden lg:flex items-center gap-0.5 border-e border-border pe-2">
+              <IconButton onClick={() => setLocale(locale === "en" ? "ar" : "en")} aria-label={t.language}>
+                <Languages size={18} />
+              </IconButton>
+              <IconButton onClick={() => setTheme(theme === "light" ? "dark" : "light")} aria-label={t.theme}>
+                {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
+              </IconButton>
             </div>
 
-            <div className="relative group">
-              <IconButton 
-                onClick={() => setSearchOpen(true)} 
-                aria-label={t.searchPlaceholder}
-              >
+            {/* Mobile Search Button (< lg) */}
+            <div className="lg:hidden">
+              <IconButton onClick={() => setSearchOpen(true)} aria-label={t.searchPlaceholder}>
                 <Search size={19} />
               </IconButton>
-              <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 scale-90 opacity-0 pointer-events-none group-hover:scale-100 group-hover:opacity-100 transition-all duration-150 ease-out bg-brand-ink/95 dark:bg-zinc-800 text-white dark:text-zinc-100 text-[10px] sm:text-[10.5px] font-medium py-1 px-2.5 rounded-md whitespace-nowrap shadow-elev z-50 border border-white/5">
-                {t.search}
-              </span>
             </div>
 
-            <div className="relative group">
-              <IconButton
-                onClick={() => {
-                  if (location.pathname === "/account" && searchParams.get("tab") === "wishlist") {
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  } else {
-                    navigate("/account?tab=wishlist");
-                  }
-                }}
-                aria-label={t.favourites}
-                badge={wishlistItems.length}
-                className="flex"
-              >
-                <Heart size={19} />
-              </IconButton>
-              <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 scale-90 opacity-0 pointer-events-none group-hover:scale-100 group-hover:opacity-100 transition-all duration-150 ease-out bg-brand-ink/95 dark:bg-zinc-800 text-white dark:text-zinc-100 text-[10px] sm:text-[10.5px] font-medium py-1 px-2.5 rounded-md whitespace-nowrap shadow-elev z-50 border border-white/5">
-                {t.favourites}
-              </span>
-            </div>
+            {/* Wishlist Button */}
+            <IconButton
+              onClick={() => {
+                if (location.pathname === "/account" && searchParams.get("tab") === "wishlist") {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                } else {
+                  navigate("/account?tab=wishlist");
+                }
+              }}
+              aria-label={t.favourites}
+              badge={wishlistItems.length}
+            >
+              <Heart size={19} />
+            </IconButton>
 
-            <div className="relative group hidden sm:block">
-              <IconButton 
-                onClick={() => setCartOpen(true)} 
-                aria-label={t.cart} 
-                badge={totalItems}
-              >
+            {/* Cart Button: Full Price Pill on Desktop, Icon on Mobile */}
+            <button
+              type="button"
+              onClick={() => setCartOpen(true)}
+              className="hidden sm:inline-flex items-center gap-2.5 h-10 px-3.5 rounded-xl bg-brand-terracotta hover:bg-brand-terracotta-dark text-white transition-all shadow-sm active:scale-95 cursor-pointer select-none font-semibold text-xs"
+              aria-label={t.cart}
+            >
+              <div className="relative flex items-center justify-center">
+                <ShoppingBag size={17} />
+                {totalItems > 0 && (
+                  <span className="absolute -top-2 -end-2 bg-white text-brand-terracotta text-[9.5px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
+                    {totalItems}
+                  </span>
+                )}
+              </div>
+              <span className="font-bold tracking-tight">
+                {formatPrice(totalPrice)}
+              </span>
+            </button>
+            <div className="sm:hidden">
+              <IconButton onClick={() => setCartOpen(true)} aria-label={t.cart} badge={totalItems}>
                 <ShoppingBag size={19} />
               </IconButton>
-              <span className="absolute top-full mt-1.5 end-0 scale-90 opacity-0 pointer-events-none group-hover:scale-100 group-hover:opacity-100 transition-all duration-150 ease-out bg-brand-ink/95 dark:bg-zinc-800 text-white dark:text-zinc-100 text-[10px] sm:text-[10.5px] font-medium py-1 px-2.5 rounded-md whitespace-nowrap shadow-elev z-50 border border-white/5">
-                {t.cart}
-              </span>
             </div>
           </div>
         </div>
 
-        {/* Category Navigation Rail */}
-        {(location.pathname === "/" || location.pathname.startsWith("/category/") || location.pathname.startsWith("/products")) && (
-          <div className="hidden sm:block relative z-10 border-t border-border bg-background/95 backdrop-blur-xl">
-            <div className="max-w-[1280px] mx-auto overflow-x-auto scrollbar-hide py-2.5">
-              <div className="flex gap-2 w-max px-4 sm:px-6">
-                <Link
-                  to="/products"
-                  className={`group flex items-center gap-2 px-3.5 py-1.5 bg-card rounded-full border transition-all duration-300 hover:shadow-soft flex-shrink-0 select-none ${
-                    location.pathname === "/products" && !searchParams.get("category")
-                      ? "border-brand-terracotta bg-brand-peach/30"
-                      : "border-border hover:border-brand-sage"
-                  }`}
-                >
-                  <div className="w-5.5 h-5.5 rounded-full bg-brand-peach flex items-center justify-center text-[10px] flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                    📦
-                  </div>
-                  <span className={`text-[10px] sm:text-xs font-semibold ${location.pathname === "/products" && !searchParams.get("category") ? "text-brand-terracotta-dark dark:text-brand-terracotta font-bold" : "text-foreground"}`}>
-                    {isRTL ? "الكل" : "All Products"}
-                  </span>
-                </Link>
-                {categories.map(cat => {
-                  const catName = isRTL && cat.nameAr ? cat.nameAr : cat.name;
-                  const active = location.pathname === `/category/${cat.slug}` ||
-                                 (location.pathname === "/products" && searchParams.get("category") === cat.slug);
-                  return (
-                    <Link
-                      key={cat.id}
-                      to={`/category/${cat.slug}`}
-                      className={`group flex items-center gap-2 px-3.5 py-1.5 bg-card rounded-full border transition-all duration-300 hover:shadow-soft flex-shrink-0 select-none ${
-                        active
-                          ? "border-brand-terracotta bg-brand-peach/30"
-                          : "border-border hover:border-brand-sage"
-                      }`}
-                    >
-                      <div className="w-5.5 h-5.5 rounded-full bg-brand-peach flex items-center justify-center text-[10px] flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                        {cat.icon}
-                      </div>
-                      <span className={`text-[10px] sm:text-xs font-semibold ${active ? "text-brand-terracotta-dark dark:text-brand-terracotta font-bold" : "text-foreground"}`}>
-                        {catName}
-                      </span>
-                    </Link>
-                  );
-                })}
-              </div>
+        {/* Desktop Category Navigation Rail (Permanent across storefront on desktop) */}
+        <div className="hidden sm:block relative z-10 border-t border-border bg-background/95">
+          <div className="max-w-[1280px] mx-auto px-4 sm:px-6 flex items-center justify-between">
+            <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide py-2">
+              <Link
+                to="/products"
+                className={`group flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all select-none flex-shrink-0 ${
+                  location.pathname === "/products" && !searchParams.get("category")
+                    ? "bg-brand-terracotta text-white shadow-sm"
+                    : "text-foreground hover:bg-muted"
+                }`}
+              >
+                <span>📦</span>
+                <span>{isRTL ? "جميع المنتجات" : "All Products"}</span>
+              </Link>
+
+              {categories.map(cat => {
+                const catName = isRTL && cat.nameAr ? cat.nameAr : cat.name;
+                const active = location.pathname === `/category/${cat.slug}` ||
+                               (location.pathname === "/products" && searchParams.get("category") === cat.slug);
+                return (
+                  <Link
+                    key={cat.id}
+                    to={`/category/${cat.slug}`}
+                    className={`group flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all select-none flex-shrink-0 ${
+                      active
+                        ? "bg-brand-terracotta text-white shadow-sm"
+                        : "text-foreground hover:bg-muted"
+                    }`}
+                  >
+                    <span>{cat.icon}</span>
+                    <span>{catName}</span>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Desktop Quick Nav Links on the End */}
+            <div className="hidden lg:flex items-center gap-4 text-xs font-semibold text-brand-ink-soft ps-4 border-s border-border flex-shrink-0">
+              <Link to="/about" className="hover:text-brand-terracotta transition-colors">
+                {isRTL ? "عن حاج عرفة" : "About Us"}
+              </Link>
+              <Link to="/contact" className="hover:text-brand-terracotta transition-colors">
+                {isRTL ? "تواصل معنا" : "Contact"}
+              </Link>
             </div>
           </div>
-        )}
+        </div>
       </header>
 
       <AnimatePresence>
