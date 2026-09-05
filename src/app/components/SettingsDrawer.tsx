@@ -284,22 +284,22 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
                     onClose();
                     setLoyaltyModalOpen(true);
                   }}
-                  className="w-full p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-brand-moss/10 to-amber-500/10 border border-amber-500/30 flex items-center justify-between text-start cursor-pointer hover:border-amber-500/60 transition-all"
+                  className="w-full p-3.5 rounded-2xl bg-amber-500/10 dark:bg-amber-950/20 border border-amber-500/30 flex items-center justify-between text-start cursor-pointer hover:border-amber-500/60 transition-all min-h-[44px]"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-xl bg-amber-400 text-brand-moss-dark flex-shrink-0">
+                    <div className="p-2 rounded-xl bg-amber-400 text-[#16261C] flex-shrink-0">
                       <Award size={18} />
                     </div>
                     <div>
                       <p className="text-xs font-bold text-foreground">
                         {isRTL ? "نادي عرفة للأعشاب" : "Haj Arafa Herbal Club"}
                       </p>
-                      <p className="text-[11px] text-muted-foreground mt-0.5">
+                      <p className="text-[11px] text-stone-700 dark:text-stone-300 mt-0.5 font-medium">
                         {isRTL ? `رصيدك: ${formatNumber(points)} نقطة (${tier.nameAr})` : `Balance: ${formatNumber(points)} pts (${tier.nameEn})`}
                       </p>
                     </div>
                   </div>
-                  <ChevronRight size={16} className="text-brand-ink-soft rtl-flip flex-shrink-0" />
+                  <ChevronRight size={16} className="text-brand-ink-soft dark:text-brand-sage rtl-flip flex-shrink-0" />
                 </button>
 
                 <button
@@ -308,22 +308,22 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
                     onClose();
                     setQuizOpen(true);
                   }}
-                  className="w-full p-3.5 rounded-2xl bg-brand-moss/10 border border-brand-moss/20 flex items-center justify-between text-start cursor-pointer hover:bg-brand-moss/15 transition-all"
+                  className="w-full p-3.5 rounded-2xl bg-[#223829]/10 dark:bg-[#ADC6A0]/15 border border-[#223829]/25 dark:border-[#ADC6A0]/30 flex items-center justify-between text-start cursor-pointer hover:bg-[#223829]/15 dark:hover:bg-[#ADC6A0]/25 transition-all min-h-[44px]"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-xl bg-brand-moss text-white flex-shrink-0">
+                    <div className="p-2 rounded-xl bg-[#223829] dark:bg-[#ADC6A0] text-white dark:text-zinc-950 flex-shrink-0">
                       <Sparkles size={18} />
                     </div>
                     <div>
                       <p className="text-xs font-bold text-foreground">
                         {isRTL ? "مستشارك العشبي الذكي" : "Apothecary Wellness Advisor"}
                       </p>
-                      <p className="text-[11px] text-muted-foreground mt-0.5">
+                      <p className="text-[11px] text-stone-700 dark:text-stone-300 mt-0.5 font-medium">
                         {isRTL ? "استشارة تفاعلية لتحديد وصفتك المخصصة" : "Interactive personalized remedy quiz"}
                       </p>
                     </div>
                   </div>
-                  <ChevronRight size={16} className="text-brand-ink-soft rtl-flip flex-shrink-0" />
+                  <ChevronRight size={16} className="text-brand-ink-soft dark:text-brand-sage rtl-flip flex-shrink-0" />
                 </button>
               </div>
 

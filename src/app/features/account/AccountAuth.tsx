@@ -97,7 +97,7 @@ export function AccountAuth({ onAuthenticated }: AccountAuthProps) {
           <h2 className="text-brand-forest dark:text-brand-sage-dark text-xl sm:text-2xl font-display font-bold">
             {isRTL ? "مرحباً بك في حاج عرفة" : "Welcome to Haj Arafa"}
           </h2>
-          <p className="text-brand-ink-soft dark:text-zinc-400 text-xs mt-1">
+          <p className="text-brand-ink-soft dark:text-zinc-300 text-xs mt-1">
             {isRTL ? "أنشئ حساباً أو سجل دخولك لإتمام عملية الشراء" : "Sign in or register to manage your natural boutique account"}
           </p>
         </div>
@@ -112,7 +112,7 @@ export function AccountAuth({ onAuthenticated }: AccountAuthProps) {
             className={`flex-1 py-2.5 rounded-xl text-xs font-bold uppercase transition-all duration-300 relative z-10 cursor-pointer ${
               authTab === "signin" 
                 ? "bg-brand-terracotta text-white shadow-soft" 
-                : "text-brand-ink-soft dark:text-zinc-400 hover:text-brand-forest dark:hover:text-white"
+                : "text-brand-ink-soft dark:text-zinc-300 hover:text-brand-forest dark:hover:text-white"
             }`}
           >
             {isRTL ? "تسجيل الدخول" : "Sign In"}
@@ -125,7 +125,7 @@ export function AccountAuth({ onAuthenticated }: AccountAuthProps) {
             className={`flex-1 py-2.5 rounded-xl text-xs font-bold uppercase transition-all duration-300 relative z-10 cursor-pointer ${
               authTab === "signup" 
                 ? "bg-brand-terracotta text-white shadow-soft" 
-                : "text-brand-ink-soft dark:text-zinc-400 hover:text-brand-forest dark:hover:text-white"
+                : "text-brand-ink-soft dark:text-zinc-300 hover:text-brand-forest dark:hover:text-white"
             }`}
           >
             {isRTL ? "حساب جديد" : "Sign Up"}
@@ -146,7 +146,7 @@ export function AccountAuth({ onAuthenticated }: AccountAuthProps) {
             >
               {/* Floating Email Field */}
               <div className="relative group">
-                <div className="absolute start-4 top-1/2 -translate-y-1/2 text-brand-ink-soft/75 dark:text-zinc-400 group-focus-within:text-brand-terracotta transition-colors z-10">
+                <div className="absolute start-4 top-1/2 -translate-y-1/2 text-brand-ink-soft/75 dark:text-zinc-300 group-focus-within:text-brand-terracotta transition-colors z-10">
                   <Mail size={16} />
                 </div>
                 <input
@@ -171,7 +171,7 @@ export function AccountAuth({ onAuthenticated }: AccountAuthProps) {
 
               {/* Floating Password Field */}
               <div className="relative group">
-                <div className="absolute start-4 top-1/2 -translate-y-1/2 text-brand-ink-soft/75 dark:text-zinc-400 group-focus-within:text-brand-terracotta transition-colors z-10">
+                <div className="absolute start-4 top-1/2 -translate-y-1/2 text-brand-ink-soft/75 dark:text-zinc-300 group-focus-within:text-brand-terracotta transition-colors z-10">
                   <Lock size={16} />
                 </div>
                 <input
@@ -195,7 +195,7 @@ export function AccountAuth({ onAuthenticated }: AccountAuthProps) {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute end-4 top-1/2 -translate-y-1/2 text-brand-ink-soft/60 dark:text-zinc-400 hover:text-brand-terracotta transition-colors z-10 p-1"
+                  className="absolute end-4 top-1/2 -translate-y-1/2 text-brand-ink-soft/60 dark:text-zinc-300 hover:text-brand-terracotta transition-colors z-10 p-1"
                   aria-label={showPassword ? (isRTL ? "إخفاء كلمة المرور" : "Hide password") : (isRTL ? "إظهار كلمة المرور" : "Show password")}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -236,7 +236,7 @@ export function AccountAuth({ onAuthenticated }: AccountAuthProps) {
             >
               {/* Full Name */}
               <div className="relative group">
-                <div className="absolute start-4 top-1/2 -translate-y-1/2 text-brand-ink-soft/75 dark:text-zinc-400 group-focus-within:text-brand-terracotta transition-colors z-10">
+                <div className="absolute start-4 top-1/2 -translate-y-1/2 text-brand-ink-soft/75 dark:text-zinc-300 group-focus-within:text-brand-terracotta transition-colors z-10">
                   <Mail size={16} />
                 </div>
                 <input
@@ -261,7 +261,7 @@ export function AccountAuth({ onAuthenticated }: AccountAuthProps) {
 
               {/* Floating Email */}
               <div className="relative group">
-                <div className="absolute start-4 top-1/2 -translate-y-1/2 text-brand-ink-soft/75 dark:text-zinc-400 group-focus-within:text-brand-terracotta transition-colors z-10">
+                <div className="absolute start-4 top-1/2 -translate-y-1/2 text-brand-ink-soft/75 dark:text-zinc-300 group-focus-within:text-brand-terracotta transition-colors z-10">
                   <Mail size={16} />
                 </div>
                 <input
@@ -286,7 +286,7 @@ export function AccountAuth({ onAuthenticated }: AccountAuthProps) {
 
               {/* Floating Phone (Optional) */}
               <div className="relative group">
-                <div className="absolute start-4 top-1/2 -translate-y-1/2 text-brand-ink-soft/75 dark:text-zinc-400 group-focus-within:text-brand-terracotta transition-colors z-10">
+                <div className="absolute start-4 top-1/2 -translate-y-1/2 text-brand-ink-soft/75 dark:text-zinc-300 group-focus-within:text-brand-terracotta transition-colors z-10">
                   <Phone size={16} />
                 </div>
                 <input
@@ -310,7 +310,7 @@ export function AccountAuth({ onAuthenticated }: AccountAuthProps) {
 
               {/* Floating Password */}
               <div className="relative group">
-                <div className="absolute start-4 top-1/2 -translate-y-1/2 text-brand-ink-soft/75 dark:text-zinc-400 group-focus-within:text-brand-terracotta transition-colors z-10">
+                <div className="absolute start-4 top-1/2 -translate-y-1/2 text-brand-ink-soft/75 dark:text-zinc-300 group-focus-within:text-brand-terracotta transition-colors z-10">
                   <Lock size={16} />
                 </div>
                 <input
@@ -334,7 +334,7 @@ export function AccountAuth({ onAuthenticated }: AccountAuthProps) {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute end-4 top-1/2 -translate-y-1/2 text-brand-ink-soft/60 dark:text-zinc-400 hover:text-brand-terracotta transition-colors z-10 p-1"
+                  className="absolute end-4 top-1/2 -translate-y-1/2 text-brand-ink-soft/60 dark:text-zinc-300 hover:text-brand-terracotta transition-colors z-10 p-1"
                   aria-label={showPassword ? (isRTL ? "إخفاء كلمة المرور" : "Hide password") : (isRTL ? "إظهار كلمة المرور" : "Show password")}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -356,7 +356,7 @@ export function AccountAuth({ onAuthenticated }: AccountAuthProps) {
         {/* Social Logins Divider */}
         <div className="relative my-6 flex items-center justify-center select-none">
           <div className="border-t border-border/70 w-full absolute" />
-          <span className="relative z-10 bg-card px-3 text-[10px] uppercase font-bold text-brand-ink-soft dark:text-zinc-400 tracking-wider">
+          <span className="relative z-10 bg-card px-3 text-[10px] uppercase font-bold text-brand-ink-soft dark:text-zinc-300 tracking-wider">
             {isRTL ? "أو الاستمرار بواسطة" : "Or continue with"}
           </span>
         </div>

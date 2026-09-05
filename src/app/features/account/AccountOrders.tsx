@@ -461,7 +461,7 @@ export function AccountOrders({ orders, onCancelOrder, onSelectTaxInvoice }: Acc
                           {isRTL ? "طريقة الدفع" : "Payment Method"}
                         </p>
                         <div className="flex items-center gap-2 mt-1">
-                          <CreditCard size={15} className="text-brand-ink-soft dark:text-zinc-400" />
+                          <CreditCard size={15} className="text-brand-ink-soft dark:text-zinc-300" />
                           <span className="font-mono text-foreground font-medium">Visa **** 4242</span>
                         </div>
                         <p className="text-[10px] text-muted-foreground mt-1 select-none">

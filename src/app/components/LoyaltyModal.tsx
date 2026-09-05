@@ -56,11 +56,11 @@ export function LoyaltyModal() {
             className="relative w-full max-w-lg bg-card rounded-3xl border border-border shadow-elevated z-10 overflow-hidden flex flex-col max-h-[90vh]"
           >
             {/* Header Banner */}
-            <div className="relative bg-gradient-to-r from-brand-moss-dark to-brand-moss p-6 text-white">
+            <div className="relative bg-[#16261C] bg-gradient-to-r from-[#16261C] via-[#223829] to-[#16261C] p-6 text-white shadow-sm border-b border-white/10">
               <button
                 type="button"
                 onClick={() => setLoyaltyModalOpen(false)}
-                className="absolute top-4 end-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
+                className="absolute top-4 end-4 p-2 rounded-full bg-white/15 hover:bg-white/25 text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer border border-white/25 focus-visible:ring-2 focus-visible:ring-white"
                 aria-label={isRTL ? "إغلاق نافذة نقاط عرفة" : "Close loyalty modal"}
               >
                 <X size={18} />
@@ -68,24 +68,24 @@ export function LoyaltyModal() {
 
               <div className="flex items-center gap-2 mb-2">
                 <Award className="text-amber-300" size={24} />
-                <span className="text-xs font-bold uppercase tracking-wider text-amber-200">
+                <span className="text-xs font-bold uppercase tracking-wider text-amber-200 bg-white/15 px-2.5 py-0.5 rounded-full border border-white/20">
                   {isRTL ? "نادي عرفة للأعشاب" : "Haj Arafa Herbal Club"}
                 </span>
               </div>
 
-              <h2 id="loyalty-modal-title" className="text-2xl font-bold font-serif">
+              <h2 id="loyalty-modal-title" className="text-2xl font-bold font-serif text-white">
                 {isRTL ? "نقاطك ومكافآتك العشبية" : "Your Loyalty & Rewards"}
               </h2>
-              <p className="text-sm text-white/80 mt-1">
+              <p className="text-sm text-stone-200 mt-1 leading-relaxed">
                 {isRTL
                   ? "اجمع النقاط مع كل طلب واستبدلها بخصومات حقيقية ومنتجات حصرية"
                   : "Earn points with every botanical order and redeem them for real discounts"}
               </p>
 
               {/* Points Card Highlight */}
-              <div className="mt-5 p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-between">
+              <div className="mt-5 p-4 rounded-2xl bg-white/15 backdrop-blur-md border border-white/25 flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-amber-200 font-medium">
+                  <p className="text-xs text-amber-200 font-bold">
                     {isRTL ? "رصيدك الحالي" : "Current Balance"}
                   </p>
                   <p className="text-3xl font-extrabold tracking-tight mt-0.5 text-white">
@@ -93,10 +93,10 @@ export function LoyaltyModal() {
                   </p>
                 </div>
                 <div className="text-end">
-                  <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-amber-400 text-brand-moss-dark shadow-sm">
+                  <span className="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-amber-400 text-[#16261C] shadow-sm">
                     {isRTL ? tier.nameAr : tier.nameEn}
                   </span>
-                  <p className="text-xs text-white/90 mt-1 font-medium">
+                  <p className="text-xs text-white mt-1 font-semibold">
                     {isRTL ? `تعادل خصم ${formatPrice(discountValEgp)}` : `Value: ${formatPrice(discountValEgp)}`}
                   </p>
                 </div>
@@ -266,7 +266,7 @@ export function LoyaltyModal() {
               <button
                 type="button"
                 onClick={() => setLoyaltyModalOpen(false)}
-                className="px-6 py-2.5 rounded-xl bg-brand-moss text-white hover:bg-brand-moss-dark text-sm font-bold transition-all min-h-[44px] min-w-[100px] active:scale-[0.98] cursor-pointer"
+                className="px-6 py-2.5 rounded-xl bg-[#223829] hover:bg-[#16261C] dark:bg-[#ADC6A0] dark:hover:bg-[#C0D5C2] text-white dark:text-zinc-950 text-sm font-bold transition-all min-h-[44px] min-w-[100px] active:scale-[0.98] cursor-pointer shadow-sm focus-visible:ring-2 focus-visible:ring-[#223829]"
               >
                 {isRTL ? "تم، شكراً" : "Got it"}
               </button>

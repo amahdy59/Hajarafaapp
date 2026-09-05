@@ -46,6 +46,8 @@
   --color-brand-sage: var(--brand-sage);
   --color-brand-sage-dark: var(--brand-sage-dark);
   --color-brand-forest: var(--brand-forest);
+  --color-brand-moss: var(--brand-moss);
+  --color-brand-moss-dark: var(--brand-moss-dark);
   --color-brand-terracotta: var(--brand-terracotta);
   --color-brand-terracotta-dark: var(--brand-terracotta-dark);
   --color-brand-peach: var(--brand-peach);
@@ -165,6 +167,13 @@
     color: var(--brand-ink-soft);
   }
 
+  /* Accessible input placeholder text (WCAG AAA >= 7:1) */
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--muted-foreground);
+    opacity: 0.95;
+  }
+
   /* Focus ring tuned to brand */
   :where(button, a, input, textarea, select):focus-visible {
     outline: 3px solid var(--ring);
@@ -179,6 +188,8 @@
   --brand-sage: #8DA392;
   --brand-sage-dark: #3E4E41;
   --brand-forest: #334537;
+  --brand-moss: #223829;
+  --brand-moss-dark: #16261C;
   --brand-terracotta: #83340F;
   --brand-terracotta-dark: #73300E;
   --brand-peach: #F4E7DA;
@@ -239,6 +250,8 @@
   --brand-sage: #ADC6A0;
   --brand-sage-dark: #D3E4C9;
   --brand-forest: #C0D5C2;
+  --brand-moss: #385942;
+  --brand-moss-dark: #1A2E21;
   --brand-terracotta: #EAA06D;
   --brand-terracotta-dark: #F0A978;
   --brand-peach: #3D2218;

@@ -201,7 +201,7 @@ export function Home() {
         {/* Interactive Apothecary Wellness Advisor Banner */}
         <section
           aria-labelledby="apothecary-quiz-banner-title"
-          className="relative rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-brand-moss-dark/95 via-brand-moss to-brand-moss-dark text-white shadow-soft overflow-hidden"
+          className="relative rounded-3xl p-6 sm:p-8 bg-[#16261C] bg-gradient-to-br from-[#16261C] via-[#223829] to-[#16261C] text-white shadow-soft overflow-hidden border border-white/10"
         >
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="max-w-xl text-center md:text-start space-y-2">
@@ -212,7 +212,7 @@ export function Home() {
               <h2 id="apothecary-quiz-banner-title" className="text-xl sm:text-2xl font-serif font-bold text-white">
                 {isRTL ? "حائر في اختيار العشبة أو التركيبة المناسبة؟" : "Unsure Which Herbal Remedy Fits You?"}
               </h2>
-              <p className="text-xs sm:text-sm text-white/80 leading-relaxed">
+              <p className="text-xs sm:text-sm text-stone-200 leading-relaxed">
                 {isRTL
                   ? "أجب عن ٣ أسئلة سريعة لنحدد لك برنامجاً عشبياً مخصصاً مع توصيات الجرعات وطرق التحضير المتوارثة وخصم ١٥٪ على باقتك."
                   : "Answer 3 quick wellness questions to receive a tailored herbal regimen, usage rituals, and 15% off your custom bundle."}
@@ -222,7 +222,7 @@ export function Home() {
             <button
               type="button"
               onClick={() => setQuizOpen(true)}
-              className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 active:scale-95 text-brand-moss-dark font-extrabold text-xs sm:text-sm transition-all shadow-md min-h-[44px] cursor-pointer flex-shrink-0"
+              className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 active:scale-95 text-[#16261C] font-extrabold text-xs sm:text-sm transition-all shadow-md min-h-[44px] cursor-pointer flex-shrink-0 focus-visible:ring-2 focus-visible:ring-white"
               aria-label={isRTL ? "بدء استشارة المستشار العشبي" : "Start apothecary consultation"}
             >
               <Sparkles size={18} />

@@ -139,16 +139,16 @@ export function ApothecaryQuizModal({
             className="relative w-full max-w-xl bg-card rounded-3xl border border-border shadow-elevated z-10 overflow-hidden flex flex-col max-h-[92vh]"
           >
             {/* Top Bar */}
-            <div className="bg-gradient-to-r from-brand-moss-dark to-brand-moss text-white p-5 flex items-center justify-between relative">
-              <div className="flex items-center gap-2">
-                <div className="p-2 rounded-xl bg-white/10 text-amber-300">
+            <div className="bg-[#16261C] bg-gradient-to-r from-[#16261C] via-[#223829] to-[#16261C] text-white p-5 flex items-center justify-between relative shadow-sm border-b border-white/10">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-white/15 text-amber-300 border border-white/20">
                   <Sparkles size={20} />
                 </div>
                 <div>
                   <span className="text-[11px] font-bold text-amber-200 tracking-wider uppercase block">
                     {isRTL ? "استشارة تفاعلية فورية" : "Interactive Clinical Consultation"}
                   </span>
-                  <h2 id="quiz-modal-title" className="text-lg font-bold font-serif">
+                  <h2 id="quiz-modal-title" className="text-lg font-bold font-serif text-white">
                     {isRTL ? "مستشارك العشبي الذكي" : "Apothecary Wellness Advisor"}
                   </h2>
                 </div>
@@ -157,7 +157,7 @@ export function ApothecaryQuizModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
+                className="p-2 rounded-full bg-white/15 hover:bg-white/25 text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer border border-white/25 focus-visible:ring-2 focus-visible:ring-white"
                 aria-label={isRTL ? "إغلاق المستشار العشبي" : "Close apothecary advisor"}
               >
                 <X size={18} />
@@ -166,14 +166,21 @@ export function ApothecaryQuizModal({
 
             {/* Step Progress Bar */}
             {step !== "result" && (
-              <div className="px-6 pt-4 pb-2 bg-muted/20 border-b border-border flex items-center justify-between text-xs text-muted-foreground">
-                <span className="font-semibold text-foreground">
+              <div
+                role="progressbar"
+                aria-label={isRTL ? "تقدم الاستشارة العشبية" : "Apothecary consultation progress"}
+                aria-valuenow={step}
+                aria-valuemin={1}
+                aria-valuemax={3}
+                className="px-6 py-3 bg-stone-100/80 dark:bg-stone-900/60 border-b border-border flex items-center justify-between text-xs"
+              >
+                <span className="font-bold text-foreground">
                   {isRTL ? `الخطوة ${step} من ٣` : `Step ${step} of 3`}
                 </span>
-                <div className="flex items-center gap-1.5">
-                  <div className={`h-2 w-8 rounded-full transition-colors ${step >= 1 ? "bg-brand-moss" : "bg-muted"}`} />
-                  <div className={`h-2 w-8 rounded-full transition-colors ${step >= 2 ? "bg-brand-moss" : "bg-muted"}`} />
-                  <div className={`h-2 w-8 rounded-full transition-colors ${step >= 3 ? "bg-brand-moss" : "bg-muted"}`} />
+                <div className="flex items-center gap-2">
+                  <div className={`h-2.5 w-10 rounded-full transition-colors ${step >= 1 ? "bg-[#223829] dark:bg-[#ADC6A0]" : "bg-stone-300 dark:bg-stone-700"}`} />
+                  <div className={`h-2.5 w-10 rounded-full transition-colors ${step >= 2 ? "bg-[#223829] dark:bg-[#ADC6A0]" : "bg-stone-300 dark:bg-stone-700"}`} />
+                  <div className={`h-2.5 w-10 rounded-full transition-colors ${step >= 3 ? "bg-[#223829] dark:bg-[#ADC6A0]" : "bg-stone-300 dark:bg-stone-700"}`} />
                 </div>
               </div>
             )}
@@ -185,7 +192,7 @@ export function ApothecaryQuizModal({
                   <h3 className="text-base font-bold text-foreground">
                     {isRTL ? "ما هو هدفك الصحي أو العطاري الرئيسي اليوم؟" : "What is your primary wellness goal today?"}
                   </h3>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="text-xs text-stone-700 dark:text-stone-300 font-medium mt-1 leading-relaxed">
                     {isRTL
                       ? "سنختار لك أعشاباً وخلاصات تم اختبار فعاليتها المتوارثة لأكثر من ٧ عقود."
                       : "We will tailor botanical formulas proven across 7+ decades of apothecary wisdom."}
@@ -233,16 +240,20 @@ export function ApothecaryQuizModal({
                       <button
                         key={option.id}
                         type="button"
+                        role="radio"
+                        aria-checked={isSelected}
                         onClick={() => setAnswers(prev => ({ ...prev, goal: option.id as QuizAnswers["goal"] }))}
-                        className={`w-full p-3.5 rounded-2xl border text-start transition-all flex items-center gap-3.5 cursor-pointer ${
+                        className={`w-full p-4 rounded-2xl border-2 text-start transition-all flex items-center gap-3.5 cursor-pointer ${
                           isSelected
-                            ? "border-brand-moss bg-brand-moss/10 shadow-sm ring-1 ring-brand-moss"
-                            : "border-border hover:bg-muted/40"
+                            ? "border-[#223829] dark:border-[#ADC6A0] bg-[#223829]/10 dark:bg-[#ADC6A0]/15 shadow-sm ring-1 ring-[#223829] dark:ring-[#ADC6A0]"
+                            : "border-border hover:border-stone-400 dark:hover:border-stone-600 hover:bg-muted/40"
                         }`}
                       >
                         <div
                           className={`p-2.5 rounded-xl flex-shrink-0 ${
-                            isSelected ? "bg-brand-moss text-white" : "bg-muted text-muted-foreground"
+                            isSelected
+                              ? "bg-[#223829] text-white dark:bg-[#ADC6A0] dark:text-zinc-950 font-bold"
+                              : "bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300"
                           }`}
                         >
                           <Icon size={20} />
@@ -251,13 +262,15 @@ export function ApothecaryQuizModal({
                           <p className="text-sm font-bold text-foreground">
                             {isRTL ? option.titleAr : option.titleEn}
                           </p>
-                          <p className="text-xs text-muted-foreground mt-0.5">
+                          <p className="text-xs text-stone-700 dark:text-stone-300 font-medium mt-0.5">
                             {isRTL ? option.descAr : option.descEn}
                           </p>
                         </div>
                         <div
-                          className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 ${
-                            isSelected ? "border-brand-moss bg-brand-moss text-white" : "border-muted-foreground/40"
+                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                            isSelected
+                              ? "border-[#223829] bg-[#223829] text-white dark:border-[#ADC6A0] dark:bg-[#ADC6A0] dark:text-zinc-950"
+                              : "border-stone-400 dark:border-stone-500 bg-background"
                           }`}
                         >
                           {isSelected && <Check size={12} strokeWidth={3} />}
@@ -276,7 +289,7 @@ export function ApothecaryQuizModal({
                   <h3 className="text-base font-bold text-foreground">
                     {isRTL ? "كيف تفضل تناول وصفتك العشبية؟" : "What form of botanical regimen do you prefer?"}
                   </h3>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="text-xs text-stone-700 dark:text-stone-300 font-medium mt-1 leading-relaxed">
                     {isRTL
                       ? "لكل شخص طقسه المفضل في الاستمتاع بفوائد الطبيعة."
                       : "Choose the herbal ritual that fits effortlessly into your lifestyle."}
@@ -312,24 +325,28 @@ export function ApothecaryQuizModal({
                       <button
                         key={option.id}
                         type="button"
+                        role="radio"
+                        aria-checked={isSelected}
                         onClick={() => setAnswers(prev => ({ ...prev, format: option.id as QuizAnswers["format"] }))}
-                        className={`w-full p-3.5 rounded-2xl border text-start transition-all flex items-center gap-3.5 cursor-pointer ${
+                        className={`w-full p-4 rounded-2xl border-2 text-start transition-all flex items-center gap-3.5 cursor-pointer ${
                           isSelected
-                            ? "border-brand-moss bg-brand-moss/10 shadow-sm ring-1 ring-brand-moss"
-                            : "border-border hover:bg-muted/40"
+                            ? "border-[#223829] dark:border-[#ADC6A0] bg-[#223829]/10 dark:bg-[#ADC6A0]/15 shadow-sm ring-1 ring-[#223829] dark:ring-[#ADC6A0]"
+                            : "border-border hover:border-stone-400 dark:hover:border-stone-600 hover:bg-muted/40"
                         }`}
                       >
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-bold text-foreground">
                             {isRTL ? option.titleAr : option.titleEn}
                           </p>
-                          <p className="text-xs text-muted-foreground mt-0.5">
+                          <p className="text-xs text-stone-700 dark:text-stone-300 font-medium mt-0.5">
                             {isRTL ? option.descAr : option.descEn}
                           </p>
                         </div>
                         <div
-                          className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 ${
-                            isSelected ? "border-brand-moss bg-brand-moss text-white" : "border-muted-foreground/40"
+                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                            isSelected
+                              ? "border-[#223829] bg-[#223829] text-white dark:border-[#ADC6A0] dark:bg-[#ADC6A0] dark:text-zinc-950"
+                              : "border-stone-400 dark:border-stone-500 bg-background"
                           }`}
                         >
                           {isSelected && <Check size={12} strokeWidth={3} />}
@@ -348,7 +365,7 @@ export function ApothecaryQuizModal({
                   <h3 className="text-base font-bold text-foreground">
                     {isRTL ? "هل لديك أية تفضيلات أو محاذير محددة؟" : "Any special preferences or dietary guidelines?"}
                   </h3>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="text-xs text-stone-700 dark:text-stone-300 font-medium mt-1 leading-relaxed">
                     {isRTL
                       ? "نراعي أعلى معايير السلامة والتوافق مع نظامك الغذائي."
                       : "We prioritize clean labels and 100% botanical safety standards."}
@@ -384,24 +401,28 @@ export function ApothecaryQuizModal({
                       <button
                         key={option.id}
                         type="button"
+                        role="radio"
+                        aria-checked={isSelected}
                         onClick={() => setAnswers(prev => ({ ...prev, lifestyle: option.id as QuizAnswers["lifestyle"] }))}
-                        className={`w-full p-3.5 rounded-2xl border text-start transition-all flex items-center gap-3.5 cursor-pointer ${
+                        className={`w-full p-4 rounded-2xl border-2 text-start transition-all flex items-center gap-3.5 cursor-pointer ${
                           isSelected
-                            ? "border-brand-moss bg-brand-moss/10 shadow-sm ring-1 ring-brand-moss"
-                            : "border-border hover:bg-muted/40"
+                            ? "border-[#223829] dark:border-[#ADC6A0] bg-[#223829]/10 dark:bg-[#ADC6A0]/15 shadow-sm ring-1 ring-[#223829] dark:ring-[#ADC6A0]"
+                            : "border-border hover:border-stone-400 dark:hover:border-stone-600 hover:bg-muted/40"
                         }`}
                       >
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-bold text-foreground">
                             {isRTL ? option.titleAr : option.titleEn}
                           </p>
-                          <p className="text-xs text-muted-foreground mt-0.5">
+                          <p className="text-xs text-stone-700 dark:text-stone-300 font-medium mt-0.5">
                             {isRTL ? option.descAr : option.descEn}
                           </p>
                         </div>
                         <div
-                          className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 ${
-                            isSelected ? "border-brand-moss bg-brand-moss text-white" : "border-muted-foreground/40"
+                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                            isSelected
+                              ? "border-[#223829] bg-[#223829] text-white dark:border-[#ADC6A0] dark:bg-[#ADC6A0] dark:text-zinc-950"
+                              : "border-stone-400 dark:border-stone-500 bg-background"
                           }`}
                         >
                           {isSelected && <Check size={12} strokeWidth={3} />}
@@ -417,14 +438,14 @@ export function ApothecaryQuizModal({
             {step === "result" && (
               <div className="p-6 overflow-y-auto space-y-5 flex-1">
                 {/* Result Title & Wisdom Advice */}
-                <div className="p-4 rounded-2xl bg-brand-moss/10 border border-brand-moss/30 space-y-2">
-                  <div className="flex items-center gap-2 text-brand-moss">
+                <div className="p-4 rounded-2xl bg-brand-moss/10 dark:bg-brand-moss/20 border border-brand-moss/30 space-y-2">
+                  <div className="flex items-center gap-2 text-brand-forest dark:text-brand-sage font-bold">
                     <ShieldCheck size={20} />
                     <h3 className="text-sm font-bold">
                       {isRTL ? recommendation.titleAr : recommendation.titleEn}
                     </h3>
                   </div>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
+                  <p className="text-xs text-stone-700 dark:text-stone-300 leading-relaxed font-medium">
                     {isRTL ? recommendation.adviceAr : recommendation.adviceEn}
                   </p>
                 </div>
@@ -435,7 +456,7 @@ export function ApothecaryQuizModal({
                     <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                       {isRTL ? "مكونات الروتين المخصص (٣ منتجات)" : "Curated Formula Products (3 Items)"}
                     </h4>
-                    <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full">
+                    <span className="text-xs font-bold text-emerald-900 dark:text-emerald-200 bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700 px-2.5 py-1 rounded-full">
                       {isRTL ? "خصم ١٥٪ على المجموعة" : "15% Bundle Savings"}
                     </span>
                   </div>
@@ -456,7 +477,7 @@ export function ApothecaryQuizModal({
                           <div className="flex-1 min-w-0">
                             <p className="text-xs font-bold text-foreground truncate">{name}</p>
                             <p className="text-[11px] text-muted-foreground">{p.weight}</p>
-                            <span className="text-xs font-bold text-brand-terracotta mt-0.5 block">
+                            <span className="text-xs font-bold text-brand-terracotta dark:text-[#EAA06D] mt-0.5 block">
                               {formatPrice(p.price)}
                             </span>
                           </div>
@@ -473,7 +494,7 @@ export function ApothecaryQuizModal({
                       {isRTL ? "السعر الإجمالي للباقة:" : "Total Regimen Price:"}
                     </span>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-lg font-bold text-brand-terracotta">
+                      <span className="text-lg font-bold text-brand-terracotta dark:text-[#EAA06D]">
                         {formatPrice(discountedTotal)}
                       </span>
                       <span className="text-xs line-through text-muted-foreground">
@@ -485,7 +506,7 @@ export function ApothecaryQuizModal({
                   <button
                     type="button"
                     onClick={handleAddBundleToCart}
-                    className="flex items-center gap-2 bg-brand-moss hover:bg-brand-moss-dark text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 min-h-[44px] cursor-pointer"
+                    className="flex items-center gap-2 bg-[#223829] hover:bg-[#16261C] dark:bg-[#ADC6A0] dark:hover:bg-[#C0D5C2] text-white dark:text-zinc-950 px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 min-h-[44px] cursor-pointer"
                   >
                     <ShoppingBag size={16} />
                     <span>{isRTL ? "إضافة الباقة للسلة" : "Add Bundle to Cart"}</span>
@@ -500,7 +521,7 @@ export function ApothecaryQuizModal({
                 <button
                   type="button"
                   onClick={resetQuiz}
-                  className="text-xs font-medium text-muted-foreground hover:text-foreground underline cursor-pointer"
+                  className="text-xs font-bold text-brand-forest dark:text-brand-sage hover:underline cursor-pointer min-h-[44px] flex items-center"
                 >
                   {isRTL ? "إعادة الاستشارة من جديد" : "Retake questionnaire"}
                 </button>
@@ -509,10 +530,10 @@ export function ApothecaryQuizModal({
                   type="button"
                   disabled={step === 1}
                   onClick={() => setStep(prev => (prev === 2 ? 1 : prev === 3 ? 2 : 1))}
-                  className={`flex items-center gap-1 text-xs font-semibold px-3 py-2 rounded-xl transition-colors min-h-[44px] ${
+                  className={`flex items-center gap-1 text-xs px-4 py-2.5 rounded-xl transition-colors min-h-[44px] ${
                     step === 1
-                      ? "opacity-30 cursor-not-allowed text-muted-foreground"
-                      : "text-foreground hover:bg-muted cursor-pointer"
+                      ? "text-stone-400 dark:text-stone-600 bg-stone-100 dark:bg-stone-800/40 border border-stone-200 dark:border-stone-800/60 cursor-not-allowed font-semibold"
+                      : "text-foreground bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 border border-stone-300 dark:border-stone-700 font-bold cursor-pointer"
                   }`}
                 >
                   {isRTL ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
@@ -528,7 +549,7 @@ export function ApothecaryQuizModal({
                     else if (step === 2) setStep(3);
                     else if (step === 3) setStep("result");
                   }}
-                  className="flex items-center gap-1.5 bg-brand-moss hover:bg-brand-moss-dark text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm active:scale-95 min-h-[44px] cursor-pointer"
+                  className="flex items-center gap-1.5 bg-[#223829] hover:bg-[#16261C] dark:bg-[#ADC6A0] dark:hover:bg-[#C0D5C2] text-white dark:text-zinc-950 px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 min-h-[44px] cursor-pointer focus-visible:ring-2 focus-visible:ring-[#223829]"
                 >
                   <span>{step === 3 ? (isRTL ? "عرض وصفتي العشبية" : "Reveal My Regimen") : (isRTL ? "التالي" : "Next")}</span>
                   {isRTL ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
