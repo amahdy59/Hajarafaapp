@@ -24,6 +24,22 @@ function logSummary(markdown) {
   }
 }
 
+async function fetchWithRetry(url, options = {}, retries = 3) {
+  const defaultHeaders = {
+    'User-Agent': 'HajArafa-Deployment-Checker/1.0 (Automated CI/CD)',
+    ...(options.headers || {}),
+  };
+  for (let i = 1; i <= retries; i++) {
+    try {
+      const res = await fetch(url, { ...options, headers: defaultHeaders });
+      return res;
+    } catch (err) {
+      if (i === retries) throw err;
+      await sleep(1000);
+    }
+  }
+}
+
 async function verifyDeployment() {
   console.log(`\n🌿 Starting Live Deployment Health Check for: ${BASE_URL}`);
   
@@ -33,7 +49,7 @@ async function verifyDeployment() {
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
     try {
       console.log(`[Attempt ${attempt}/${MAX_RETRIES}] Probing ${BASE_URL}...`);
-      const res = await fetch(`${BASE_URL}?cache_bust=${Date.now()}`);
+      const res = await fetchWithRetry(`${BASE_URL}?cache_bust=${Date.now()}`);
       if (res.ok) {
         mainRes = res;
         htmlText = await res.text();
@@ -87,12 +103,12 @@ async function verifyDeployment() {
   for (const assetPath of directAssets) {
     const assetUrl = 'https://amahdy59.github.io' + assetPath;
     try {
-      const res = await fetch(assetUrl, { method: 'HEAD' });
-      if (res.ok) {
-        console.log(`  ✓ [HTTP 200] ${assetPath.split('/').pop()}`);
+      const res = await fetchWithRetry(assetUrl, { method: 'GET' });
+      if (res && res.ok) {
+        console.log(`  ✓ [HTTP ${res.status}] ${assetPath.split('/').pop()}`);
         verifiedAssets.push({ path: assetPath, status: res.status });
       } else {
-        console.error(`  ❌ [HTTP ${res.status}] ${assetUrl}`);
+        console.error(`  ❌ [HTTP ${res ? res.status : 'Unknown'}] ${assetUrl}`);
         assetFailures++;
       }
     } catch (e) {
@@ -107,7 +123,7 @@ async function verifyDeployment() {
   if (mainScriptMatch && mainScriptMatch[1]) {
     const mainScriptUrl = 'https://amahdy59.github.io/Hajarafaapp/' + mainScriptMatch[1];
     try {
-      const scriptText = await (await fetch(mainScriptUrl)).text();
+      const scriptText = await (await fetchWithRetry(mainScriptUrl)).text();
       const chunkRegex = /"assets\/([a-zA-Z0-9_-]+\.js)"/g;
       let chunkMatch;
       while ((chunkMatch = chunkRegex.exec(scriptText)) !== null) {
@@ -123,12 +139,12 @@ async function verifyDeployment() {
   for (const chunk of lazyChunks) {
     const chunkUrl = 'https://amahdy59.github.io/Hajarafaapp/assets/' + chunk;
     try {
-      const res = await fetch(chunkUrl, { method: 'HEAD' });
-      if (res.ok) {
-        console.log(`  ✓ [HTTP 200 Chunk] ${chunk}`);
+      const res = await fetchWithRetry(chunkUrl, { method: 'GET' });
+      if (res && res.ok) {
+        console.log(`  ✓ [HTTP ${res.status} Chunk] ${chunk}`);
         verifiedAssets.push({ path: chunk, status: res.status });
       } else {
-        console.error(`  ❌ [HTTP ${res.status} Chunk] ${chunkUrl}`);
+        console.error(`  ❌ [HTTP ${res ? res.status : 'Unknown'} Chunk] ${chunkUrl}`);
         assetFailures++;
       }
     } catch (e) {
@@ -141,9 +157,9 @@ async function verifyDeployment() {
   const fallbackUrl = BASE_URL + '404.html';
   let spaFallbackOk = false;
   try {
-    const spaRes = await fetch(fallbackUrl);
-    spaFallbackOk = spaRes.ok;
-    console.log(`\n📄 SPA Routing Fallback (404.html): HTTP ${spaRes.status} (${spaFallbackOk ? 'PASSED' : 'FAILED'})`);
+    const spaRes = await fetchWithRetry(fallbackUrl);
+    spaFallbackOk = spaRes && spaRes.ok;
+    console.log(`\n📄 SPA Routing Fallback (404.html): HTTP ${spaRes ? spaRes.status : 'Failed'} (${spaFallbackOk ? 'PASSED' : 'FAILED'})`);
   } catch (e) {
     console.warn(`  ⚠️ SPA Fallback check error: ${e.message}`);
   }
