@@ -140,5 +140,39 @@ describe("WCAG 2.2 AAA & Accessibility Standards", () => {
     expect(CONTACT.whatsappPhone).toBe("201020401400");
     expect(CONTACT.whatsappUrl).toContain("201020401400");
   });
+
+  it("verifies external links include screen-reader accessible new-tab indicators", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const branchesPath = path.resolve(__dirname, "pages/Branches.tsx");
+    const contactPath = path.resolve(__dirname, "pages/Contact.tsx");
+    const footerPath = path.resolve(__dirname, "components/Footer.tsx");
+
+    const branchesContent = fs.readFileSync(branchesPath, "utf-8");
+    const contactContent = fs.readFileSync(contactPath, "utf-8");
+    const footerContent = fs.readFileSync(footerPath, "utf-8");
+
+    // Must announce new window / tab opening to assistive tech
+    expect(branchesContent).toContain("opens in a new tab");
+    expect(branchesContent).toContain("يفتح في نافذة جديدة");
+    expect(contactContent).toContain("opens in a new tab");
+    expect(footerContent).toContain("aria-label");
+  });
+
+  it("verifies interactive forms employ role='alert' for immediate validation feedback", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const checkoutPath = path.resolve(__dirname, "pages/Checkout.tsx");
+    const contactPath = path.resolve(__dirname, "pages/Contact.tsx");
+    const cartPath = path.resolve(__dirname, "pages/Cart.tsx");
+
+    const checkoutContent = fs.readFileSync(checkoutPath, "utf-8");
+    const contactContent = fs.readFileSync(contactPath, "utf-8");
+    const cartContent = fs.readFileSync(cartPath, "utf-8");
+
+    expect(checkoutContent).toContain('role="alert"');
+    expect(contactContent).toContain('role="alert"');
+    expect(cartContent).toContain('role="alert"');
+  });
 });
 

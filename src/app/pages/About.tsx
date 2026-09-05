@@ -94,7 +94,10 @@ export function About() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-12">
         {/* Navigation */}
         <div>
-          <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-brand-terracotta text-sm transition-colors">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-brand-terracotta text-sm transition-colors min-h-[44px] px-2 py-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-terracotta"
+          >
             <ArrowLeft size={16} className="rtl-flip" />
             {isRTL ? "العودة للرئيسية" : "Back to Home"}
           </Link>

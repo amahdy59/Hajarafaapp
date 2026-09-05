@@ -28,7 +28,7 @@ export function NotFound() {
         </p>
         <Link
           to="/"
-          className="inline-flex items-center justify-center gap-2 bg-brand-terracotta text-white px-6 py-3 rounded-xl hover:bg-brand-terracotta-dark transition-colors font-medium text-sm shadow-sm"
+          className="inline-flex items-center justify-center gap-2 bg-brand-terracotta text-white px-6 py-3 rounded-xl hover:bg-brand-terracotta-dark transition-colors font-medium text-sm shadow-sm min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-terracotta focus-visible:ring-offset-2"
         >
           <ArrowLeft size={16} className="rtl-flip" />
           <span>{t.backToHome}</span>

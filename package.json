@@ -9,7 +9,11 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit"
+    "test:a11y": "vitest run src/app/accessibility.test.ts",
+    "test:code-review": "vitest run src/app/codeReview.test.ts",
+    "test:responsive": "vitest run src/app/responsiveness.test.ts",
+    "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit",
+    "review": "npm run typecheck && npm run lint && npm run test:code-review && npm run test:a11y && npm run test:responsive"
   },
   "dependencies": {
     "lucide-react": "0.487.0",

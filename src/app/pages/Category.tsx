@@ -62,7 +62,10 @@ export function Category() {
         <div className="text-center">
           <p className="text-4xl mb-4" role="img" aria-label={isRTL ? "نبتة" : "Plant"}>🌿</p>
           <h1 className="text-foreground mb-2 font-display">{t.categoryNotFound}</h1>
-          <Link to="/products" className="text-brand-terracotta hover:underline">
+          <Link
+            to="/products"
+            className="inline-flex items-center justify-center text-brand-terracotta hover:underline min-h-[44px] px-4 py-2 font-medium text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-terracotta rounded-lg"
+          >
             {t.browseAllProducts}
           </Link>
         </div>
