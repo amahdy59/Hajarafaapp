@@ -14,6 +14,7 @@
     "test:perf": "vitest run src/app/performance.test.ts",
     "test:responsive": "vitest run src/app/responsiveness.test.ts",
     "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit",
+    "test:deploy": "node scripts/verify-deployment.mjs",
     "review": "npm run typecheck && npm run lint && npm run test:code-review && npm run test:a11y && npm run test:responsive && npm run test:perf"
   },
   "dependencies": {
