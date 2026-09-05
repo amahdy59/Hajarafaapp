@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { motion } from "motion/react";
-import { Gift, Sparkles } from "lucide-react";
+import { Gift, Sparkles, Leaf } from "lucide-react";
 import { getProductsByCategory } from "../data/products";
 import { categories } from "../data/categories";
 import { ProductCard } from "../components/ProductCard";
@@ -30,7 +30,7 @@ const categoryAccentColors: Record<string, string> = {
 };
 
 export function Home() {
-  const { t, isRTL } = useAppSettings();
+  const { t, isRTL, setQuizOpen } = useAppSettings();
   const { recentlyViewed } = useRecentlyViewed();
   const [showHamperModal, setShowHamperModal] = useState(false);
 
@@ -197,6 +197,39 @@ export function Home() {
             </ScrollRail>
           </div>
         )}
+
+        {/* Interactive Apothecary Wellness Advisor Banner */}
+        <section
+          aria-labelledby="apothecary-quiz-banner-title"
+          className="relative rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-brand-moss-dark/95 via-brand-moss to-brand-moss-dark text-white shadow-soft overflow-hidden"
+        >
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="max-w-xl text-center md:text-start space-y-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold text-amber-300 bg-white/10 border border-white/20">
+                <Leaf size={14} />
+                {isRTL ? "مستشارك العشبي التفاعلي" : "Interactive Apothecary Consultation"}
+              </span>
+              <h2 id="apothecary-quiz-banner-title" className="text-xl sm:text-2xl font-serif font-bold text-white">
+                {isRTL ? "حائر في اختيار العشبة أو التركيبة المناسبة؟" : "Unsure Which Herbal Remedy Fits You?"}
+              </h2>
+              <p className="text-xs sm:text-sm text-white/80 leading-relaxed">
+                {isRTL
+                  ? "أجب عن ٣ أسئلة سريعة لنحدد لك برنامجاً عشبياً مخصصاً مع توصيات الجرعات وطرق التحضير المتوارثة وخصم ١٥٪ على باقتك."
+                  : "Answer 3 quick wellness questions to receive a tailored herbal regimen, usage rituals, and 15% off your custom bundle."}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setQuizOpen(true)}
+              className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 active:scale-95 text-brand-moss-dark font-extrabold text-xs sm:text-sm transition-all shadow-md min-h-[44px] cursor-pointer flex-shrink-0"
+              aria-label={isRTL ? "بدء استشارة المستشار العشبي" : "Start apothecary consultation"}
+            >
+              <Sparkles size={18} />
+              <span>{isRTL ? "ابدأ استشارتك العشبية الآن" : "Start Herbal Consultation"}</span>
+            </button>
+          </div>
+        </section>
 
         {/* Egyptian Heritage Gift Hamper Banner */}
         <section

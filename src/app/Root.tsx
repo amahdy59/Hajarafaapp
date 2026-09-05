@@ -10,6 +10,8 @@ import logoImg from "../assets/logo.webp";
 import { Footer } from "./components/Footer";
 import { OfflineBanner } from "./components/OfflineBanner";
 import { PWAInstallBanner } from "./components/PWAInstallBanner";
+import { LoyaltyModal } from "./components/LoyaltyModal";
+import { ApothecaryQuizModal } from "./components/ApothecaryQuizModal";
 import { useAppSettings } from "./context/AppSettingsContext";
 
 /* Prevent the browser and router from restoring previous page positions.
@@ -32,7 +34,7 @@ const PageLoader = () => (
 
 export function Root() {
   const location = useLocation();
-  const { isRTL } = useAppSettings();
+  const { isRTL, isQuizOpen, setQuizOpen } = useAppSettings();
   const isCheckout = location.pathname === "/checkout";
   const mainPadding = "pt-16 sm:pt-[118px]";
 
@@ -113,6 +115,8 @@ export function Root() {
         <CartDrawer />
         <BottomNav />
         <PWAInstallBanner />
+        <LoyaltyModal />
+        <ApothecaryQuizModal isOpen={isQuizOpen} onClose={() => setQuizOpen(false)} />
 
         <Toaster position="top-center" closeButton />
       </div>

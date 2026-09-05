@@ -3,15 +3,18 @@ import { router } from "./routes";
 import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";
 import { AppSettingsProvider } from "./context/AppSettingsContext";
+import { LoyaltyProvider } from "./context/LoyaltyContext";
 
 export default function App() {
   return (
     <AppSettingsProvider>
-      <CartProvider>
-        <WishlistProvider>
-          <RouterProvider router={router} />
-        </WishlistProvider>
-      </CartProvider>
+      <LoyaltyProvider>
+        <CartProvider>
+          <WishlistProvider>
+            <RouterProvider router={router} />
+          </WishlistProvider>
+        </CartProvider>
+      </LoyaltyProvider>
     </AppSettingsProvider>
   );
 }

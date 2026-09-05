@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
-import { ChevronLeft, Check, CreditCard, Truck, MapPin, Shield, ArrowLeft, Zap, Smartphone, Banknote, Copy, Printer } from "lucide-react";
+import { ChevronLeft, Check, CreditCard, Truck, MapPin, Shield, ArrowLeft, Zap, Smartphone, Banknote, Copy, Printer, Award } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { useAppSettings } from "../context/AppSettingsContext";
+import { useLoyalty, POINTS_VALUE_IN_EGP } from "../context/LoyaltyContext";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 import { Button } from "../components/ui/Button";
@@ -16,7 +17,8 @@ export type PaymentMethod = "card" | "instapay" | "vodafone" | "cod";
 
 export function Checkout() {
   const { items, totalPrice, clearCart } = useCart();
-  const { t, isRTL, formatPrice } = useAppSettings();
+  const { t, isRTL, locale, formatPrice, formatNumber } = useAppSettings();
+  const { points, redeemPoints, pointsToDiscountEgp, addPoints, calcEarnablePoints } = useLoyalty();
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>("shipping");
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
@@ -26,6 +28,30 @@ export function Checkout() {
   const [walletPhone, setWalletPhone] = useState("");
   const [instapayConfirmed, setInstapayConfirmed] = useState(false);
   const [invoiceModalOpen, setInvoiceModalOpen] = useState(false);
+  const [useLoyaltyPoints, setUseLoyaltyPoints] = useState(false);
+
+  const [shippingData, setShippingData] = useState({
+    firstName: "", lastName: "", email: "", phone: "",
+    address: "", city: "", governorate: "cairo", zip: "", country: "EG",
+  });
+
+  const isGCCCountry = ["SA", "AE", "KW"].includes(shippingData.country);
+  const GCC_SHIPPING_FLAT_RATE = 250;
+  const GCC_FREE_THRESHOLD = 1500;
+
+  const shipping = isGCCCountry
+    ? (totalPrice >= GCC_FREE_THRESHOLD ? 0 : GCC_SHIPPING_FLAT_RATE)
+    : (totalPrice >= SHIPPING_CONFIG.freeThreshold ? 0 : SHIPPING_CONFIG.flatRate);
+
+  const maxLoyaltyDiscountEgp = pointsToDiscountEgp(points);
+  const appliedLoyaltyDiscountEgp = useLoyaltyPoints ? Math.min(maxLoyaltyDiscountEgp, totalPrice) : 0;
+  const pointsToDeduct = useLoyaltyPoints
+    ? Math.min(points, Math.ceil(appliedLoyaltyDiscountEgp / POINTS_VALUE_IN_EGP))
+    : 0;
+  const discountedSubtotal = Math.max(0, totalPrice - appliedLoyaltyDiscountEgp);
+  const tax = discountedSubtotal * 0.14;
+  const total = discountedSubtotal + shipping + tax;
+  const earnablePoints = calcEarnablePoints(discountedSubtotal);
 
   usePageMeta({
     description: isRTL
@@ -39,15 +65,6 @@ export function Checkout() {
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
   }, [step]);
-
-  const shipping = totalPrice >= SHIPPING_CONFIG.freeThreshold ? 0 : SHIPPING_CONFIG.flatRate;
-  const tax = totalPrice * 0.14;
-  const total = totalPrice + shipping + tax;
-
-  const [shippingData, setShippingData] = useState({
-    firstName: "", lastName: "", email: "", phone: "",
-    address: "", city: "", governorate: "cairo", zip: "", country: "EG",
-  });
 
   const [paymentData, setPaymentData] = useState({
     cardNumber: "", cardName: "", expiry: "", cvv: "",
@@ -172,10 +189,26 @@ export function Checkout() {
     if (!validatePayment()) return;
     setIsPlacingOrder(true);
     await new Promise(r => setTimeout(r, 1500));
+
+    if (useLoyaltyPoints && pointsToDeduct > 0) {
+      redeemPoints(
+        pointsToDeduct,
+        `استبدال ${pointsToDeduct} نقطة في الطلب #${orderNumber}`,
+        `Redeemed ${pointsToDeduct} pts on order #${orderNumber}`
+      );
+    }
+    if (earnablePoints > 0) {
+      addPoints(
+        earnablePoints,
+        `مكافأة الشراء للطلب #${orderNumber} (+${earnablePoints} نقطة)`,
+        `Order #${orderNumber} purchase reward (+${earnablePoints} pts)`
+      );
+    }
+
     clearCart();
     setStep("confirmation");
     setIsPlacingOrder(false);
-    toast.success(isRTL ? "تم تأكيد طلبك! 🎉" : "Order placed successfully! 🎉");
+    toast.success(isRTL ? "تم تأكيد طلبك بنجاح! 🎉" : "Order placed successfully! 🎉");
   };
 
   const inputCls = [
@@ -209,6 +242,7 @@ export function Checkout() {
       unitPrice: item.product.price,
     })),
     subtotal: totalPrice,
+    discount: appliedLoyaltyDiscountEgp > 0 ? appliedLoyaltyDiscountEgp : undefined,
     shipping,
     tax,
     total,
@@ -864,11 +898,61 @@ export function Checkout() {
                   );
                 })}
               </div>
+
+              {/* Haj Arafa Loyalty Redemption Block */}
+              {points > 0 && (
+                <div className="border border-amber-500/30 bg-amber-50/60 dark:bg-amber-950/20 rounded-2xl p-3.5 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Award size={18} className="text-amber-500 flex-shrink-0" />
+                      <div>
+                        <p className="text-xs font-bold text-foreground">
+                          {isRTL ? "استبدال نقاط عرفة" : "Redeem Haj Arafa Points"}
+                        </p>
+                        <p className="text-[11px] text-muted-foreground">
+                          {isRTL
+                            ? `لديك ${formatNumber(points)} نقطة (تساوي ${formatPrice(maxLoyaltyDiscountEgp)})`
+                            : `You have ${formatNumber(points)} pts (worth ${formatPrice(maxLoyaltyDiscountEgp)})`}
+                        </p>
+                      </div>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={useLoyaltyPoints}
+                        onChange={(e) => setUseLoyaltyPoints(e.target.checked)}
+                        className="sr-only peer"
+                        aria-label={isRTL ? "تفعيل خصم نقاط عرفة" : "Apply loyalty points discount"}
+                      />
+                      <div className="w-9 h-5 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500" />
+                    </label>
+                  </div>
+
+                  <div className="pt-1.5 border-t border-amber-500/20 flex items-center justify-between text-[11px]">
+                    <span className="text-muted-foreground">
+                      {isRTL ? "مكافأة هذا الطلب:" : "Earned with this order:"}
+                    </span>
+                    <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                      +{formatNumber(earnablePoints)} {isRTL ? "نقطة" : "pts"}
+                    </span>
+                  </div>
+                </div>
+              )}
+
               <div className="border-t border-border pt-4 space-y-2" style={{ fontSize: "0.875rem" }}>
                 <div className="flex justify-between text-muted-foreground">
                   <span>{t.subtotal}</span>
                   <span>{formatPrice(totalPrice)}</span>
                 </div>
+                {appliedLoyaltyDiscountEgp > 0 && (
+                  <div className="flex justify-between text-brand-terracotta font-semibold">
+                    <span className="flex items-center gap-1">
+                      <Award size={14} />
+                      <span>{isRTL ? "خصم نقاط عرفة" : "Loyalty Discount"}</span>
+                    </span>
+                    <span>-{formatPrice(appliedLoyaltyDiscountEgp)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-muted-foreground">
                   <span>{t.shipping}</span>
                   <span>{shipping === 0 ? <span className="text-brand-sage-dark">{t.free}</span> : formatPrice(shipping)}</span>
@@ -887,9 +971,9 @@ export function Checkout() {
               <div className="flex items-center gap-2.5 bg-brand-peach/40 dark:bg-zinc-800/40 border border-brand-terracotta/10 dark:border-white/5 py-2.5 px-3.5 rounded-xl text-[11px] font-semibold text-brand-forest dark:text-[#EFECE6] select-none shadow-sm leading-none justify-center">
                 <Truck size={14} className="text-brand-terracotta flex-shrink-0" />
                 <span>
-                  {isRTL 
-                    ? DELIVERY_NOTICE.ar 
-                    : DELIVERY_NOTICE.en}
+                  {isGCCCountry
+                    ? (isRTL ? "شحن دولي سريع عبر DHL/Aramex للخليج خلال ٣-٥ أيام عمل" : "Express GCC courier delivery (3-5 business days)")
+                    : (locale === "ar" ? DELIVERY_NOTICE.ar : DELIVERY_NOTICE.en)}
                 </span>
               </div>
             </div>

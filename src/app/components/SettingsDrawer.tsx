@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { X, Sun, Moon, Languages, User, Package, Heart, CircleHelp, Info, MapPin, Phone, ChevronRight, Hash, Smartphone, Download, Check } from "lucide-react";
+import { X, Sun, Moon, Languages, User, Package, Heart, CircleHelp, Info, MapPin, Phone, ChevronRight, Hash, Smartphone, Download, Check, Award, Sparkles } from "lucide-react";
 import { Link } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
-import { useAppSettings, NumeralSystem } from "../context/AppSettingsContext";
+import { useAppSettings, NumeralSystem, Currency } from "../context/AppSettingsContext";
+import { useLoyalty } from "../context/LoyaltyContext";
 import { IconButton } from "./ui/IconButton";
 import logoImg from "../../assets/logo.webp";
 import { useDialogAccessibility } from "../hooks/useDialogAccessibility";
@@ -63,7 +64,8 @@ function Row({ icon: Icon, label, to, onClick }: { icon: typeof User; label: Rea
 }
 
 export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
-  const { theme, setTheme, locale, setLocale, numeralSystem, setNumeralSystem, t, isRTL } = useAppSettings();
+  const { theme, setTheme, locale, setLocale, numeralSystem, setNumeralSystem, currency, setCurrency, currencyInfo, formatNumber, setQuizOpen, t, isRTL } = useAppSettings();
+  const { points, tier, setLoyaltyModalOpen } = useLoyalty();
   const dialogRef = useRef<HTMLElement>(null);
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
@@ -274,6 +276,57 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
                 </div>
               </div>
 
+              {/* Loyalty & Apothecary Quick Cards */}
+              <div className="space-y-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    setLoyaltyModalOpen(true);
+                  }}
+                  className="w-full p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-brand-moss/10 to-amber-500/10 border border-amber-500/30 flex items-center justify-between text-start cursor-pointer hover:border-amber-500/60 transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-xl bg-amber-400 text-brand-moss-dark flex-shrink-0">
+                      <Award size={18} />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-foreground">
+                        {isRTL ? "نادي عرفة للأعشاب" : "Haj Arafa Herbal Club"}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground mt-0.5">
+                        {isRTL ? `رصيدك: ${formatNumber(points)} نقطة (${tier.nameAr})` : `Balance: ${formatNumber(points)} pts (${tier.nameEn})`}
+                      </p>
+                    </div>
+                  </div>
+                  <ChevronRight size={16} className="text-brand-ink-soft rtl-flip flex-shrink-0" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    setQuizOpen(true);
+                  }}
+                  className="w-full p-3.5 rounded-2xl bg-brand-moss/10 border border-brand-moss/20 flex items-center justify-between text-start cursor-pointer hover:bg-brand-moss/15 transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-xl bg-brand-moss text-white flex-shrink-0">
+                      <Sparkles size={18} />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-foreground">
+                        {isRTL ? "مستشارك العشبي الذكي" : "Apothecary Wellness Advisor"}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground mt-0.5">
+                        {isRTL ? "استشارة تفاعلية لتحديد وصفتك المخصصة" : "Interactive personalized remedy quiz"}
+                      </p>
+                    </div>
+                  </div>
+                  <ChevronRight size={16} className="text-brand-ink-soft rtl-flip flex-shrink-0" />
+                </button>
+              </div>
+
               <div className="flex flex-col gap-2">
                 <span className="eyebrow px-1">{t.settings}</span>
                 <div className="bg-muted/50 rounded-md overflow-hidden border border-border">
@@ -299,7 +352,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
                       options={[{ value: "en", label: "EN" }, { value: "ar", label: "ع" }]}
                     />
                   </div>
-                  <div className="flex items-center justify-between px-4 py-3">
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-border">
                     <span className="flex items-center gap-3 text-foreground">
                       <Hash size={18} className="text-brand-ink-soft" />
                       <span style={{ fontSize: "0.95rem" }}>{t.numeralSystem}</span>
@@ -310,6 +363,22 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
                       options={[
                         { value: "western", label: t.numeralsWestern },
                         { value: "arabic-indic", label: t.numeralsArabicIndic },
+                      ]}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between px-4 py-3">
+                    <span className="flex items-center gap-3 text-foreground">
+                      <span className="text-base">{currencyInfo.flag}</span>
+                      <span style={{ fontSize: "0.95rem" }}>{isRTL ? "العملة" : "Currency"}</span>
+                    </span>
+                    <Segmented<Currency>
+                      value={currency}
+                      onChange={setCurrency}
+                      options={[
+                        { value: "EGP", label: "EGP" },
+                        { value: "SAR", label: "SAR" },
+                        { value: "AED", label: "AED" },
+                        { value: "KWD", label: "KWD" },
                       ]}
                     />
                   </div>

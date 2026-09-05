@@ -1,20 +1,23 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { Search, ShoppingBag, Heart, Menu, X, Languages, Sun, Moon, History, TrendingUp, ArrowUpRight, MapPin, ChevronDown, Check } from "lucide-react";
+import { Search, ShoppingBag, Heart, Menu, X, Languages, Sun, Moon, History, TrendingUp, ArrowUpRight, MapPin, ChevronDown, Check, Mic, Sparkles, Award } from "lucide-react";
 import { Link, useNavigate, useLocation, useSearchParams } from "react-router";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
-import { useAppSettings } from "../context/AppSettingsContext";
+import { useAppSettings, CURRENCIES, Currency } from "../context/AppSettingsContext";
+import { useLoyalty } from "../context/LoyaltyContext";
 import { SettingsDrawer } from "./SettingsDrawer";
 import { IconButton } from "./ui/IconButton";
 import { motion, AnimatePresence } from "motion/react";
 import { categories } from "../data/categories";
 import { products } from "../data/products";
 import logoImg from "../../assets/logo.webp";
+import { toast } from "sonner";
 
 export function Header() {
   const { totalItems, totalPrice, setCartOpen } = useCart();
   const { items: wishlistItems } = useWishlist();
-  const { theme, setTheme, locale, setLocale, formatPrice, t, isRTL } = useAppSettings();
+  const { theme, setTheme, locale, setLocale, formatPrice, formatNumber, currency, setCurrency, currencyInfo, setQuizOpen, t, isRTL } = useAppSettings();
+  const { points, setLoyaltyModalOpen } = useLoyalty();
   const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [scrolled, setScrolled] = useState(false);
@@ -22,8 +25,11 @@ export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
   const [scopeDropdownOpen, setScopeDropdownOpen] = useState(false);
+  const [currencyDropdownOpen, setCurrencyDropdownOpen] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const desktopSearchRef = useRef<HTMLDivElement>(null);
   const scopeDropdownRef = useRef<HTMLDivElement>(null);
+  const currencyDropdownRef = useRef<HTMLDivElement>(null);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [selectedCategoryScope, setSelectedCategoryScope] = useState<string>("all");
   const navigate = useNavigate();
@@ -56,11 +62,15 @@ export function Header() {
       if (scopeDropdownRef.current && !scopeDropdownRef.current.contains(target)) {
         setScopeDropdownOpen(false);
       }
+      if (currencyDropdownRef.current && !currencyDropdownRef.current.contains(target)) {
+        setCurrencyDropdownOpen(false);
+      }
     };
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setDesktopSearchOpen(false);
         setScopeDropdownOpen(false);
+        setCurrencyDropdownOpen(false);
         setSearchOpen(false);
       }
     };
@@ -71,6 +81,101 @@ export function Header() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+
+  const handleVoiceSearch = () => {
+    interface SpeechRecognitionResultItem {
+      transcript: string;
+    }
+
+    interface SpeechRecognitionResultList {
+      [index: number]: {
+        [index: number]: SpeechRecognitionResultItem;
+      };
+    }
+
+    interface SpeechRecognitionEventLike {
+      results?: SpeechRecognitionResultList;
+    }
+
+    interface SpeechRecognitionErrorEventLike {
+      error?: string;
+    }
+
+    interface ISpeechRecognition {
+      lang: string;
+      interimResults: boolean;
+      maxAlternatives: number;
+      onstart: (() => void) | null;
+      onresult: ((event: SpeechRecognitionEventLike) => void) | null;
+      onerror: ((event: SpeechRecognitionErrorEventLike) => void) | null;
+      onend: (() => void) | null;
+      start: () => void;
+      stop: () => void;
+    }
+
+    type SpeechRecognitionConstructor = new () => ISpeechRecognition;
+
+    interface WindowWithSpeech {
+      SpeechRecognition?: SpeechRecognitionConstructor;
+      webkitSpeechRecognition?: SpeechRecognitionConstructor;
+    }
+
+    const speechWindow = window as unknown as WindowWithSpeech;
+    const SpeechRecognition = speechWindow.SpeechRecognition || speechWindow.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      toast.info(
+        locale === "ar"
+          ? "البحث الصوتي غير مدعوم في متصفحك الحالي. يرجى تجربة Chrome أو Edge."
+          : "Voice search is not supported in this browser. Please use Chrome or Edge."
+      );
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = locale === "ar" ? "ar-EG" : "en-US";
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onstart = () => {
+        setIsListening(true);
+      };
+
+      recognition.onresult = (event: SpeechRecognitionEventLike) => {
+        const transcript = event.results?.[0]?.[0]?.transcript;
+        if (transcript) {
+          setSearchQuery(transcript);
+          setDesktopSearchOpen(true);
+          executeSearch(transcript, false);
+          toast.success(
+            locale === "ar"
+              ? `تم التعرف على الصوت: "${transcript}"`
+              : `Recognized voice: "${transcript}"`
+          );
+        }
+      };
+
+      recognition.onerror = (e: SpeechRecognitionErrorEventLike) => {
+        setIsListening(false);
+        if (e.error !== "no-speech") {
+          toast.error(
+            locale === "ar"
+              ? "تعذر سماع الصوت، تأكد من إذن الميكروفون وحاول مجدداً."
+              : "Could not capture voice. Check microphone permissions and try again."
+          );
+        }
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognition.start();
+    } catch {
+      setIsListening(false);
+    }
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -287,6 +392,23 @@ export function Header() {
                   </button>
                 )}
 
+                <button
+                  type="button"
+                  onClick={handleVoiceSearch}
+                  aria-label={
+                    isListening
+                      ? (isRTL ? "جاري الاستماع لصوتك..." : "Listening to your voice...")
+                      : (isRTL ? "البحث الصوتي باللهجة المصرية والعربية" : "Voice search in Arabic or English")
+                  }
+                  className={`p-1.5 me-1.5 rounded-full cursor-pointer transition-all flex items-center justify-center min-h-[32px] min-w-[32px] ${
+                    isListening
+                      ? "text-red-600 bg-red-100 dark:bg-red-950/60 animate-pulse ring-2 ring-red-400"
+                      : "text-muted-foreground hover:text-brand-terracotta hover:bg-muted"
+                  }`}
+                >
+                  <Mic size={16} />
+                </button>
+
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.96 }}
@@ -431,6 +553,83 @@ export function Header() {
 
           {/* End Utility Items */}
           <div className="flex items-center gap-1.5 sm:gap-2 justify-end z-10 -me-1 sm:-me-0">
+            {/* Loyalty Points Pill */}
+            <motion.button
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+              type="button"
+              onClick={() => setLoyaltyModalOpen(true)}
+              aria-label={isRTL ? `رصيد نقاط عرفة: ${formatNumber(points)} نقطة` : `Haj Arafa Points: ${formatNumber(points)}`}
+              className="hidden md:inline-flex items-center gap-1.5 h-10 px-3 rounded-full bg-gradient-to-r from-amber-500/10 to-brand-moss/10 dark:from-amber-400/10 dark:to-brand-moss/20 border border-amber-500/30 hover:border-amber-500/60 text-foreground transition-all cursor-pointer select-none text-xs font-bold"
+            >
+              <Award size={15} className="text-amber-500 flex-shrink-0" />
+              <span className="text-brand-moss dark:text-amber-400 font-extrabold">{formatNumber(points)}</span>
+              <span className="text-[11px] text-muted-foreground font-medium">{isRTL ? "نقطة" : "pts"}</span>
+            </motion.button>
+
+            {/* GCC Multi-Currency Dropdown */}
+            <div className="relative hidden sm:block" ref={currencyDropdownRef}>
+              <button
+                type="button"
+                onClick={() => setCurrencyDropdownOpen(prev => !prev)}
+                aria-expanded={currencyDropdownOpen}
+                aria-haspopup="listbox"
+                aria-label={isRTL ? "تغيير العملة والدولة" : "Change currency & region"}
+                className="h-10 px-2.5 rounded-full flex items-center gap-1.5 text-foreground hover:bg-muted text-xs font-bold transition-colors cursor-pointer border border-border/70"
+              >
+                <span className="text-sm">{currencyInfo.flag}</span>
+                <span className="text-[11px] tracking-wide">{currency}</span>
+                <ChevronDown size={12} className={`text-muted-foreground transition-transform ${currencyDropdownOpen ? "rotate-180" : ""}`} />
+              </button>
+
+              <AnimatePresence>
+                {currencyDropdownOpen && (
+                  <motion.div
+                    role="listbox"
+                    initial={{ opacity: 0, y: 6, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute top-full mt-2 end-0 bg-card border border-border rounded-2xl shadow-elev p-1.5 z-50 min-w-[170px]"
+                  >
+                    {(Object.keys(CURRENCIES) as Currency[]).map(curKey => {
+                      const cur = CURRENCIES[curKey];
+                      const isCurActive = curKey === currency;
+                      return (
+                        <button
+                          key={curKey}
+                          type="button"
+                          role="option"
+                          aria-selected={isCurActive}
+                          onClick={() => {
+                            setCurrency(curKey);
+                            setCurrencyDropdownOpen(false);
+                            toast.success(
+                              isRTL
+                                ? `تم التحويل إلى ${cur.countryNameAr} (${cur.symbolAr})`
+                                : `Currency switched to ${cur.countryNameEn} (${cur.symbolEn})`
+                            );
+                          }}
+                          className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer text-start ${
+                            isCurActive ? "bg-brand-moss text-white shadow-sm" : "text-foreground hover:bg-muted"
+                          }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <span>{cur.flag}</span>
+                            <span>{isRTL ? cur.countryNameAr : cur.countryNameEn}</span>
+                            <span className={`text-[10px] ${isCurActive ? "text-white/80" : "text-muted-foreground"}`}>
+                              ({curKey})
+                            </span>
+                          </span>
+                          {isCurActive && <Check size={14} className="flex-shrink-0" />}
+                        </button>
+                      );
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             {/* Desktop Branches Link */}
             <Link
               to="/branches"
@@ -570,7 +769,15 @@ export function Header() {
             </div>
 
             {/* Desktop Quick Nav Links on the End */}
-            <div className="hidden lg:flex items-center gap-5 text-xs font-semibold text-brand-ink-soft ps-5 border-s border-border/70 flex-shrink-0">
+            <div className="hidden lg:flex items-center gap-4 text-xs font-semibold text-brand-ink-soft ps-5 border-s border-border/70 flex-shrink-0">
+              <button
+                type="button"
+                onClick={() => setQuizOpen(true)}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-moss/10 hover:bg-brand-moss/20 text-brand-moss dark:text-brand-sage font-bold cursor-pointer transition-colors border border-brand-moss/30"
+              >
+                <Sparkles size={13} className="text-amber-500 animate-pulse" />
+                <span>{isRTL ? "مستشارك العشبي" : "Apothecary Quiz"}</span>
+              </button>
               <Link to="/about" className="hover:text-brand-terracotta transition-colors py-1">
                 {isRTL ? "عن حاج عرفة" : "About Us"}
               </Link>
@@ -612,6 +819,22 @@ export function Header() {
                     placeholder={t.searchPlaceholder}
                     className="w-full ps-11 pe-4 py-2.5 bg-transparent text-foreground placeholder:text-muted-foreground outline-none text-sm font-medium"
                   />
+                  <button
+                    type="button"
+                    onClick={handleVoiceSearch}
+                    aria-label={
+                      isListening
+                        ? (isRTL ? "جاري الاستماع لصوتك..." : "Listening to your voice...")
+                        : (isRTL ? "البحث الصوتي باللهجة المصرية والعربية" : "Voice search in Arabic or English")
+                    }
+                    className={`me-2 p-2 rounded-full cursor-pointer transition-all flex items-center justify-center min-h-[36px] min-w-[36px] ${
+                      isListening
+                        ? "text-red-600 bg-red-100 dark:bg-red-950/60 animate-pulse ring-2 ring-red-400"
+                        : "text-muted-foreground hover:text-brand-terracotta"
+                    }`}
+                  >
+                    <Mic size={18} />
+                  </button>
                   {searchQuery && (
                     <button
                       type="button"
