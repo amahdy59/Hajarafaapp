@@ -66,13 +66,16 @@ export function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pt-1 pb-4 sm:py-6 flex flex-col gap-8 sm:gap-14">
+      <div className="max-w-[1280px] mx-auto px-3.5 sm:px-6 pt-1.5 pb-4 sm:py-6 flex flex-col gap-8 sm:gap-14">
 
         {/* Hero Banner */}
         {(() => {
           const heroImage = HERO_IMAGES[0]!;
           return (
-            <section className="relative overflow-hidden rounded-[1.5rem] sm:rounded-[1.75rem] border border-border/70 bg-brand-ink shadow-[0_18px_50px_rgba(20,32,26,0.16)] isolate aspect-[5/3] sm:aspect-[16/5] max-h-[260px] sm:max-h-[250px]" aria-labelledby="home-hero-title">
+            <section 
+              className="relative overflow-hidden rounded-2xl sm:rounded-[1.75rem] border border-border/70 bg-brand-ink shadow-elev isolate min-h-[290px] xs:min-h-[310px] sm:min-h-0 sm:aspect-[16/5] sm:max-h-[270px] lg:max-h-[300px]" 
+              aria-labelledby="home-hero-title"
+            >
               <img
                 src={heroImage.src}
                 alt={isRTL ? heroImage.altAr : heroImage.altEn}
@@ -83,44 +86,43 @@ export function Home() {
                 loading="eager"
                 fetchPriority="high"
               />
-          <div className="absolute inset-0 bg-brand-ink/46" aria-hidden="true" />
-          <div
-            className={`absolute inset-0 ${
-              isRTL
-                ? "bg-[linear-gradient(270deg,rgba(13,21,17,0.92)_0%,rgba(13,21,17,0.74)_34%,rgba(13,21,17,0.46)_62%,rgba(13,21,17,0.20)_100%)]"
-                : "bg-[linear-gradient(90deg,rgba(13,21,17,0.92)_0%,rgba(13,21,17,0.74)_34%,rgba(13,21,17,0.46)_62%,rgba(13,21,17,0.20)_100%)]"
-            }`}
-            aria-hidden="true"
-          />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(13,21,17,0.28)_0%,rgba(13,21,17,0.06)_42%,rgba(13,21,17,0.32)_100%)]" aria-hidden="true" />
-          <div className="absolute inset-0 rounded-[1.75rem] ring-1 ring-inset ring-white/18" aria-hidden="true" />
-          <div className="absolute inset-0 flex items-center p-5 sm:p-8 lg:p-10">
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className={`${isRTL ? "me-auto" : ""} max-w-[34rem] select-none text-start`}
-            >
-              <h1
-                id="home-hero-title"
-                className="font-display text-white drop-shadow-[0_2px_5px_rgba(0,0,0,0.72)] sm:whitespace-nowrap"
-                style={{ fontSize: "clamp(1.45rem, 3.8vw, 2.45rem)", lineHeight: 1.12, letterSpacing: "0" }}
-              >
-                {t.heroHeadline}
-              </h1>
-              <p className="text-white/92 mt-3 drop-shadow-[0_1px_4px_rgba(0,0,0,0.68)]" style={{ fontSize: "0.9rem", lineHeight: 1.55, maxWidth: 440 }}>
-                {t.heroSubline}
-              </p>
-              <Link
-                to="/products"
-                className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl bg-[#933A10] px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-[0_10px_24px_rgba(147,58,16,0.35)] transition-all duration-300 hover:scale-[1.02] hover:bg-[#7A2E0C] hover:text-white hover:shadow-[0_14px_30px_rgba(147,58,16,0.42)] active:scale-[0.98] sm:px-7 sm:py-3 sm:text-sm"
-                aria-label={isRTL ? "تسوق جميع المنتجات الطبيعية" : "Explore all natural products"}
-              >
-                {t.explore}
-              </Link>
-            </motion.div>
-          </div>
-        </section>
+              <div className="absolute inset-0 bg-brand-ink/40" aria-hidden="true" />
+              <div
+                className={`absolute inset-0 ${
+                  isRTL
+                    ? "bg-[linear-gradient(270deg,rgba(13,21,17,0.94)_0%,rgba(13,21,17,0.80)_50%,rgba(13,21,17,0.45)_80%,rgba(13,21,17,0.15)_100%)] sm:bg-[linear-gradient(270deg,rgba(13,21,17,0.92)_0%,rgba(13,21,17,0.74)_34%,rgba(13,21,17,0.46)_62%,rgba(13,21,17,0.20)_100%)]"
+                    : "bg-[linear-gradient(90deg,rgba(13,21,17,0.94)_0%,rgba(13,21,17,0.80)_50%,rgba(13,21,17,0.45)_80%,rgba(13,21,17,0.15)_100%)] sm:bg-[linear-gradient(90deg,rgba(13,21,17,0.92)_0%,rgba(13,21,17,0.74)_34%,rgba(13,21,17,0.46)_62%,rgba(13,21,17,0.20)_100%)]"
+                }`}
+                aria-hidden="true"
+              />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(13,21,17,0.28)_0%,rgba(13,21,17,0.06)_42%,rgba(13,21,17,0.32)_100%)]" aria-hidden="true" />
+              <div className="absolute inset-0 rounded-2xl sm:rounded-[1.75rem] ring-1 ring-inset ring-white/18" aria-hidden="true" />
+              <div className="absolute inset-0 flex items-center p-5 xs:p-6 sm:p-8 lg:p-10">
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className={`${isRTL ? "me-auto" : ""} max-w-[21rem] xs:max-w-[24rem] sm:max-w-[34rem] select-none text-start flex flex-col items-start justify-center`}
+                >
+                  <h1
+                    id="home-hero-title"
+                    className="font-display text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)] text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-extrabold sm:whitespace-nowrap leading-[1.2] tracking-tight"
+                  >
+                    {t.heroHeadline}
+                  </h1>
+                  <p className="text-white/95 mt-2.5 sm:mt-3 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)] text-xs xs:text-[13px] sm:text-sm md:text-base leading-relaxed max-w-[22rem] sm:max-w-[440px]">
+                    {t.heroSubline}
+                  </p>
+                  <Link
+                    to="/products"
+                    className="mt-4 sm:mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl sm:rounded-2xl bg-brand-terracotta hover:bg-brand-terracotta-dark text-white px-6 py-2.5 sm:px-7 sm:py-3 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-[0_10px_24px_rgba(147,58,16,0.35)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                    aria-label={isRTL ? "تسوق جميع المنتجات الطبيعية" : "Explore all natural products"}
+                  >
+                    {t.explore}
+                  </Link>
+                </motion.div>
+              </div>
+            </section>
           );
         })()}
 
