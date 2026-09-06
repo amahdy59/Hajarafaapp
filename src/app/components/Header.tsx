@@ -243,36 +243,37 @@ export function Header() {
           scrolled ? "shadow-soft border-border" : "border-border/60"
         }`}
       >
-        <div className="relative h-16 sm:h-[72px] px-4 sm:px-6 max-w-[1280px] mx-auto flex items-center justify-between gap-2 sm:gap-4 lg:gap-6">
-          {/* Mobile Start: Menu toggle button */}
-          <div className="flex items-center justify-start z-10 -ms-1 lg:hidden">
-            <IconButton onClick={() => setMenuOpen(true)} aria-label={t.menu}>
-              <Menu size={20} />
-            </IconButton>
+        <div className="relative h-16 sm:h-[72px] px-3 sm:px-6 max-w-[1280px] mx-auto flex items-center justify-between gap-2 sm:gap-4 lg:gap-6">
+          {/* Start: Hamburger (on < lg) + Brand Logo */}
+          <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0 z-10">
+            <div className="lg:hidden -ms-1">
+              <IconButton onClick={() => setMenuOpen(true)} aria-label={t.menu}>
+                <Menu size={20} />
+              </IconButton>
+            </div>
+
+            <Link
+              to="/"
+              className="flex items-center gap-2 sm:gap-3 select-none no-underline flex-shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-terracotta rounded-lg"
+            >
+              <img
+                src={logoImg}
+                alt={isRTL ? "شعار حاج عرفة" : "Haj Arafa Logo"}
+                width={140}
+                height={48}
+                decoding="async"
+                className="h-9 sm:h-11 md:h-12 w-auto max-w-[115px] sm:max-w-[135px] md:max-w-[150px] object-contain select-none"
+              />
+              <div className="hidden xl:flex items-center">
+                <span className="text-xs text-brand-ink-soft dark:text-zinc-300 font-medium border-s border-border/80 ps-3.5 ms-1 leading-tight select-none">
+                  {isRTL ? "العطارة والأغذية الطبيعية منذ 1968" : "Natural Apothecary Since 1968"}
+                </span>
+              </div>
+            </Link>
           </div>
 
-          {/* Logo & Apothecary Heritage Tagline */}
-          <Link
-            to="/"
-            className="flex items-center gap-3 select-none no-underline z-10 flex-shrink-0 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 lg:static lg:translate-x-0 lg:translate-y-0"
-          >
-            <img
-              src={logoImg}
-              alt={isRTL ? "شعار حاج عرفة" : "Haj Arafa Logo"}
-              width={140}
-              height={48}
-              decoding="async"
-              className="h-10 sm:h-12 w-auto object-contain select-none"
-            />
-            <div className="hidden xl:flex items-center">
-              <span className="text-xs text-brand-ink-soft dark:text-zinc-300 font-medium border-s border-border/80 ps-3.5 ms-1 leading-tight select-none">
-                {isRTL ? "العطارة والأغذية الطبيعية منذ 1968" : "Natural Apothecary Since 1968"}
-              </span>
-            </div>
-          </Link>
-
           {/* Prominent Desktop Search Bar with Category Scopes */}
-          <div className="hidden lg:flex flex-1 max-w-xl xl:max-w-2xl mx-2 relative z-20" ref={desktopSearchRef}>
+          <div className="hidden lg:flex flex-1 max-w-lg xl:max-w-xl 2xl:max-w-2xl mx-2 xl:mx-4 relative z-20" ref={desktopSearchRef}>
             <form onSubmit={submit} className="relative w-full flex items-center">
               <div className="relative w-full flex items-center rounded-2xl bg-card border border-border/80 focus-within:border-brand-terracotta focus-within:ring-4 focus-within:ring-brand-terracotta/15 shadow-sm hover:shadow-soft transition-all h-11">
                 {/* Themed Department Scope Selector Dropdown */}
@@ -552,23 +553,23 @@ export function Header() {
           </div>
 
           {/* End Utility Items */}
-          <div className="flex items-center gap-1.5 sm:gap-2 justify-end z-10 -me-1 sm:-me-0">
-            {/* Loyalty Points Pill */}
+          <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 justify-end z-10 -me-1 sm:-me-0">
+            {/* Loyalty Points Pill (Desktop >= lg) */}
             <motion.button
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
               type="button"
               onClick={() => setLoyaltyModalOpen(true)}
               aria-label={isRTL ? `رصيد نقاط عرفة: ${formatNumber(points)} نقطة` : `Haj Arafa Points: ${formatNumber(points)}`}
-              className="hidden md:inline-flex items-center gap-1.5 h-10 px-3 rounded-full bg-gradient-to-r from-amber-500/10 to-brand-moss/10 dark:from-amber-400/10 dark:to-brand-moss/20 border border-amber-500/30 hover:border-amber-500/60 text-foreground transition-all cursor-pointer select-none text-xs font-bold"
+              className="hidden lg:inline-flex items-center gap-1.5 h-10 px-3 rounded-full bg-gradient-to-r from-amber-500/10 to-brand-moss/10 dark:from-amber-400/10 dark:to-brand-moss/20 border border-amber-500/30 hover:border-amber-500/60 text-foreground transition-all cursor-pointer select-none text-xs font-bold"
             >
               <Award size={15} className="text-amber-500 flex-shrink-0" />
               <span className="text-brand-moss dark:text-amber-400 font-extrabold">{formatNumber(points)}</span>
               <span className="text-[11px] text-muted-foreground font-medium">{isRTL ? "نقطة" : "pts"}</span>
             </motion.button>
 
-            {/* GCC Multi-Currency Dropdown */}
-            <div className="relative hidden sm:block" ref={currencyDropdownRef}>
+            {/* GCC Multi-Currency Dropdown (Tablet & Desktop >= md) */}
+            <div className="relative hidden md:block" ref={currencyDropdownRef}>
               <button
                 type="button"
                 onClick={() => setCurrencyDropdownOpen(prev => !prev)}
@@ -731,59 +732,74 @@ export function Header() {
           </div>
         </div>
 
-        {/* Desktop Category Navigation Rail (Permanent across storefront on desktop) */}
+        {/* Desktop & Tablet Category Navigation Rail (Permanent across storefront on sm/md/lg/xl) */}
         <div className="hidden sm:block relative z-10 border-t border-border/80 bg-background/95 backdrop-blur-md">
-          <div className="max-w-[1280px] mx-auto px-4 sm:px-6 flex items-center justify-between h-11">
-            <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide py-1">
-              <Link
-                to="/products"
-                className={`group flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all select-none flex-shrink-0 ${
-                  location.pathname === "/products" && !searchParams.get("category")
-                    ? "bg-brand-terracotta text-white shadow-sm font-bold"
-                    : "text-foreground hover:bg-muted/80 border border-transparent hover:border-border/60"
-                }`}
-              >
-                <span>📦</span>
-                <span>{isRTL ? "جميع المنتجات" : "All Products"}</span>
-              </Link>
+          <div className="max-w-[1280px] mx-auto px-3 sm:px-6 relative">
+            {/* Edge fades indicating horizontal scrollability */}
+            <div 
+              className="absolute top-0 bottom-0 start-0 w-4 sm:w-6 z-10 pointer-events-none" 
+              style={{ background: `linear-gradient(to ${isRTL ? "left" : "right"}, var(--color-background), transparent)` }} 
+            />
+            <div 
+              className="absolute top-0 bottom-0 end-0 w-6 sm:w-8 z-10 pointer-events-none" 
+              style={{ background: `linear-gradient(to ${isRTL ? "right" : "left"}, var(--color-background), transparent)` }} 
+            />
 
-              {categories.map(cat => {
-                const catName = isRTL && cat.nameAr ? cat.nameAr : cat.name;
-                const active = location.pathname === `/category/${cat.slug}` ||
-                               (location.pathname === "/products" && searchParams.get("category") === cat.slug);
-                return (
-                  <Link
-                    key={cat.id}
-                    to={`/category/${cat.slug}`}
-                    className={`group flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all select-none flex-shrink-0 ${
-                      active
-                        ? "bg-brand-terracotta text-white shadow-sm font-bold"
-                        : "text-foreground hover:bg-muted/80 border border-transparent hover:border-border/60"
-                    }`}
-                  >
-                    <span className="group-hover:scale-110 transition-transform">{cat.icon}</span>
-                    <span>{catName}</span>
-                  </Link>
-                );
-              })}
-            </div>
-
-            {/* Desktop Quick Nav Links on the End */}
-            <div className="hidden lg:flex items-center gap-4 text-xs font-semibold text-brand-ink-soft ps-5 border-s border-border/70 flex-shrink-0">
-              <button
-                type="button"
-                onClick={() => setQuizOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-moss/10 hover:bg-brand-moss/20 text-brand-moss dark:text-brand-sage font-bold cursor-pointer transition-colors border border-brand-moss/30"
+            <div className="flex items-center justify-between h-11">
+              <div 
+                className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide py-1 pe-4"
+                style={{ WebkitOverflowScrolling: "touch" }}
               >
-                <Sparkles size={13} className="text-amber-500 animate-pulse" />
-                <span>{isRTL ? "مستشارك العشبي" : "Apothecary Quiz"}</span>
-              </button>
-              <Link to="/about" className="hover:text-brand-terracotta transition-colors py-1">
-                {isRTL ? "عن حاج عرفة" : "About Us"}
-              </Link>
-              <Link to="/contact" className="hover:text-brand-terracotta transition-colors py-1">
-                {isRTL ? "تواصل معنا" : "Contact"}
-              </Link>
+                <Link
+                  to="/products"
+                  className={`group flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-semibold transition-all select-none flex-shrink-0 ${
+                    location.pathname === "/products" && !searchParams.get("category")
+                      ? "bg-brand-terracotta text-white shadow-sm font-bold"
+                      : "text-foreground hover:bg-muted/80 border border-transparent hover:border-border/60"
+                  }`}
+                >
+                  <span>📦</span>
+                  <span className="whitespace-nowrap">{isRTL ? "جميع المنتجات" : "All Products"}</span>
+                </Link>
+
+                {categories.map(cat => {
+                  const catName = isRTL && cat.nameAr ? cat.nameAr : cat.name;
+                  const active = location.pathname === `/category/${cat.slug}` ||
+                                 (location.pathname === "/products" && searchParams.get("category") === cat.slug);
+                  return (
+                    <Link
+                      key={cat.id}
+                      to={`/category/${cat.slug}`}
+                      className={`group flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-semibold transition-all select-none flex-shrink-0 ${
+                        active
+                          ? "bg-brand-terracotta text-white shadow-sm font-bold"
+                          : "text-foreground hover:bg-muted/80 border border-transparent hover:border-border/60"
+                      }`}
+                    >
+                      <span className="group-hover:scale-110 transition-transform">{cat.icon}</span>
+                      <span className="whitespace-nowrap">{catName}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+
+              {/* Desktop Quick Nav Links on the End */}
+              <div className="hidden lg:flex items-center gap-3 xl:gap-4 text-xs font-semibold text-brand-ink-soft ps-4 xl:ps-5 border-s border-border/70 flex-shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setQuizOpen(true)}
+                  className="flex items-center gap-1.5 px-2.5 xl:px-3 py-1 rounded-full bg-brand-moss/10 hover:bg-brand-moss/20 text-brand-moss dark:text-brand-sage font-bold cursor-pointer transition-colors border border-brand-moss/30 flex-shrink-0"
+                >
+                  <Sparkles size={13} className="text-amber-500 animate-pulse" />
+                  <span className="whitespace-nowrap">{isRTL ? "مستشارك العشبي" : "Apothecary Quiz"}</span>
+                </button>
+                <Link to="/about" className="hover:text-brand-terracotta transition-colors py-1 flex-shrink-0">
+                  {isRTL ? "عن حاج عرفة" : "About Us"}
+                </Link>
+                <Link to="/contact" className="hover:text-brand-terracotta transition-colors py-1 flex-shrink-0">
+                  {isRTL ? "تواصل معنا" : "Contact"}
+                </Link>
+              </div>
             </div>
           </div>
         </div>

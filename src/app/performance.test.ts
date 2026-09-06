@@ -56,10 +56,14 @@ describe("Performance & Asset Health Review Suite", () => {
     expect(content).toContain("404.html");
   });
 
-  it("verifies recently viewed storage cap to prevent localStorage quota exhaustion", async () => {
-    const { MAX_ITEMS } = await import("./hooks/useRecentlyViewed");
-    expect(MAX_ITEMS).toBeDefined();
-    expect(MAX_ITEMS).toBeLessThanOrEqual(10);
-    expect(MAX_ITEMS).toBeGreaterThanOrEqual(4);
+  it("verifies recently viewed storage cap to prevent localStorage quota exhaustion", () => {
+    const hookPath = path.join(__dirname, "hooks/useRecentlyViewed.ts");
+    const content = fs.readFileSync(hookPath, "utf-8");
+    const match = content.match(/MAX_ITEMS\s*=\s*(\d+)/);
+    expect(match).not.toBeNull();
+    const maxItemsStr = match && match[1] ? match[1] : "0";
+    const maxItems = parseInt(maxItemsStr, 10);
+    expect(maxItems).toBeLessThanOrEqual(10);
+    expect(maxItems).toBeGreaterThanOrEqual(4);
   });
 });

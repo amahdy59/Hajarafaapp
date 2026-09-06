@@ -15,15 +15,15 @@ export function ScrollRail({ children, gap = "0.5rem", className = "", showFades
 
   return (
     <div className={`relative ${className}`}>
-      {/* Edge fade — start */}
+      {/* Edge fade — start & end indicators */}
       {showFades && (
         <>
           <div 
-            className="absolute top-0 bottom-0 start-0 w-4 sm:hidden z-10 pointer-events-none" 
+            className="absolute top-0 bottom-0 start-0 w-4 sm:w-7 z-10 pointer-events-none" 
             style={{ background: `linear-gradient(to ${isRTL ? "left" : "right"}, var(--color-background), transparent)` }} 
           />
           <div 
-            className="absolute top-0 bottom-0 end-0 w-6 sm:hidden z-10 pointer-events-none" 
+            className="absolute top-0 bottom-0 end-0 w-5 sm:w-8 z-10 pointer-events-none" 
             style={{ background: `linear-gradient(to ${isRTL ? "right" : "left"}, var(--color-background), transparent)` }} 
           />
         </>

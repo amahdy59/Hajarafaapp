@@ -99,4 +99,42 @@ describe("Responsiveness & Mobile-First Review Suite", () => {
     // Desktop category rail should be scoped to sm/md/lg screens
     expect(content.includes("hidden sm:block") || content.includes("hidden lg:block")).toBe(true);
   });
+
+  it("verifies header avoids absolute logo centering that causes tablet & mobile collisions", () => {
+    const headerPath = path.join(srcAppDir, "components/Header.tsx");
+    const content = fs.readFileSync(headerPath, "utf-8");
+
+    // Must not use absolute left-1/2 on logo
+    expect(content).not.toContain("absolute left-1/2");
+    // Must group hamburger and logo at the start
+    expect(content).toContain("lg:hidden");
+    expect(content).toContain("logoImg");
+  });
+
+  it("verifies header utilities maintain progressive disclosure thresholds", () => {
+    const headerPath = path.join(srcAppDir, "components/Header.tsx");
+    const content = fs.readFileSync(headerPath, "utf-8");
+
+    // Loyalty pill must be scoped to lg to prevent tablet clutter
+    expect(content).toContain("hidden lg:inline-flex");
+    // Currency switcher must be scoped to md to prevent mobile crowding
+    expect(content).toContain("hidden md:block");
+  });
+
+  it("verifies category navigation rail contains edge fade gradients for overflow hinting", () => {
+    const headerPath = path.join(srcAppDir, "components/Header.tsx");
+    const content = fs.readFileSync(headerPath, "utf-8");
+
+    expect(content).toContain("linear-gradient");
+    expect(content).toContain("whitespace-nowrap");
+    expect(content).toContain("overflow-x-auto");
+  });
+
+  it("verifies ScrollRail provides edge fade hints across both mobile and tablet", () => {
+    const scrollRailPath = path.join(srcAppDir, "components/ui/ScrollRail.tsx");
+    const content = fs.readFileSync(scrollRailPath, "utf-8");
+
+    expect(content).toContain("sm:w-7");
+    expect(content).toContain("sm:w-8");
+  });
 });
