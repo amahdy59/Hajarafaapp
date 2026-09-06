@@ -88,7 +88,7 @@ export function CartDrawer() {
                   <span className="text-muted-foreground flex items-center gap-1 font-medium">
                     <Truck size={13} className="text-brand-terracotta" />
                     {totalPrice >= THRESHOLD ? (
-                      <span className="text-emerald-600 dark:text-emerald-400 font-bold">
+                      <span className="text-emerald-800 dark:text-emerald-300 font-bold">
                         {isRTL ? "🎉 شحن مجاني لكافة المحافظات!" : "🎉 Free Express Shipping Unlocked!"}
                       </span>
                     ) : (
@@ -278,7 +278,7 @@ export function CartDrawer() {
                   className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-emerald-500/30 bg-emerald-50/80 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 text-xs font-bold transition-all min-h-[44px] active:scale-[0.98] shadow-sm cursor-pointer"
                   aria-label={isRTL ? "إرسال الطلب عبر واتساب (يفتح في نافذة جديدة)" : "Send order via WhatsApp (opens in a new tab)"}
                 >
-                  <MessageCircle size={15} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+                  <MessageCircle size={15} className="text-emerald-800 dark:text-emerald-300 flex-shrink-0" />
                   <span>{isRTL ? "طلب سريع عبر واتساب" : "Quick Order via WhatsApp"}</span>
                 </button>
                 <Link

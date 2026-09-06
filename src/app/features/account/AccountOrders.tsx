@@ -336,13 +336,13 @@ export function AccountOrders({ orders, onCancelOrder, onSelectTaxInvoice }: Acc
                   </h4>
                   
                   {selectedOrder.status === "cancelled" ? (
-                    <div className="flex items-center gap-3 bg-red-50 dark:bg-red-950/20 border border-red-200/50 dark:border-red-900/30 p-3 rounded-xl">
-                      <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 flex items-center justify-center text-sm font-bold flex-shrink-0">
+                    <div className="flex items-center gap-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/40 p-3 rounded-xl">
+                      <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/60 text-red-800 dark:text-red-200 flex items-center justify-center text-sm font-bold flex-shrink-0">
                         ✕
                       </div>
                       <div>
-                        <p className="text-xs font-bold text-red-700 dark:text-red-400">{isRTL ? "تم إلغاء هذا الطلب" : "This order has been cancelled"}</p>
-                        <p className="text-[10px] text-muted-foreground">{isRTL ? "تمت معالجة الإلغاء بناءً على طلبك" : "The order cancellation has been processed successfully"}</p>
+                        <p className="text-xs font-bold text-red-800 dark:text-red-200">{isRTL ? "تم إلغاء هذا الطلب" : "This order has been cancelled"}</p>
+                        <p className="text-[10px] text-stone-600 dark:text-zinc-400">{isRTL ? "تمت معالجة الإلغاء بناءً على طلبك" : "The order cancellation has been processed successfully"}</p>
                       </div>
                     </div>
                   ) : (
@@ -492,7 +492,7 @@ export function AccountOrders({ orders, onCancelOrder, onSelectTaxInvoice }: Acc
                           }
                         </span>
                       </div>
-                      <div className="flex justify-between text-xs text-red-600 dark:text-red-400">
+                      <div className="flex justify-between text-xs text-red-800 dark:text-red-300 font-medium">
                         <span>{isRTL ? "خصم الكوبون:" : "Discount:"}</span>
                         <span>-{t.currency} {selectedOrder.receipt.discount.toFixed(2)}</span>
                       </div>
@@ -537,7 +537,7 @@ export function AccountOrders({ orders, onCancelOrder, onSelectTaxInvoice }: Acc
                     {isRTL ? "إلغاء الطلب" : "Cancel Order"}
                   </button>
                 ) : selectedOrder.status === "cancelled" ? (
-                  <p className="text-xs text-red-600 dark:text-red-400 font-semibold bg-red-50 dark:bg-red-950/20 px-3 py-1.5 rounded-xl border border-red-200/50 border-dashed">
+                  <p className="text-xs text-red-800 dark:text-red-200 font-semibold bg-red-50 dark:bg-red-950/40 px-3 py-1.5 rounded-xl border border-red-200 dark:border-red-900/40 border-dashed">
                     ⚠️ {isRTL ? "تم إلغاء هذه العملية بنجاح" : "This purchase transaction is cancelled"}
                   </p>
                 ) : (

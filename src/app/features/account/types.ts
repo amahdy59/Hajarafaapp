@@ -121,10 +121,10 @@ export const initialOrders: Order[] = [
 ];
 
 export const statusColors: Record<Order["status"], string> = {
-  delivered: "bg-brand-cream-2 text-brand-sage-dark dark:bg-brand-sage/15 dark:text-brand-sage",
-  shipped: "bg-brand-cream-2 text-brand-forest dark:bg-brand-forest/15 dark:text-brand-forest",
-  processing: "bg-brand-peach text-brand-terracotta dark:bg-brand-terracotta/15 dark:text-brand-terracotta",
-  cancelled: "bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400",
+  delivered: "bg-brand-cream-2 text-brand-moss dark:bg-brand-moss/30 dark:text-brand-sage border border-brand-line/60",
+  shipped: "bg-brand-cream-2 text-brand-forest dark:bg-brand-forest/15 dark:text-brand-forest border border-brand-line/60",
+  processing: "bg-brand-peach text-brand-terracotta dark:bg-brand-terracotta/15 dark:text-brand-terracotta border border-brand-terracotta/20",
+  cancelled: "bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-200 border border-red-200 dark:border-red-900/40",
 };
 
 export const statusTranslations: Record<Order["status"], { en: string; ar: string }> = {

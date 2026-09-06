@@ -248,7 +248,7 @@ export function LoyaltyModal() {
                           </div>
                           <span
                             className={`font-bold whitespace-nowrap ps-2 ${
-                              isPositive ? "text-emerald-600 dark:text-emerald-400" : "text-brand-terracotta"
+                              isPositive ? "text-emerald-800 dark:text-emerald-300" : "text-brand-terracotta"
                             }`}
                           >
                             {isPositive ? `+${formatNumber(tx.points)}` : formatNumber(tx.points)}

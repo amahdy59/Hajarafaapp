@@ -924,7 +924,7 @@ export function Checkout() {
                         className="sr-only peer"
                         aria-label={isRTL ? "تفعيل خصم نقاط عرفة" : "Apply loyalty points discount"}
                       />
-                      <div className="w-9 h-5 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500" />
+                      <div className="w-9 h-5 bg-muted peer-focus:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-brand-terracotta peer-focus-visible:ring-offset-2 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500" />
                     </label>
                   </div>
 
@@ -932,7 +932,7 @@ export function Checkout() {
                     <span className="text-muted-foreground">
                       {isRTL ? "مكافأة هذا الطلب:" : "Earned with this order:"}
                     </span>
-                    <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                    <span className="font-bold text-emerald-800 dark:text-emerald-300">
                       +{formatNumber(earnablePoints)} {isRTL ? "نقطة" : "pts"}
                     </span>
                   </div>

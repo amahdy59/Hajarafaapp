@@ -51,8 +51,11 @@ describe("Design System & WCAG 2.2 AAA Contrast Suite", () => {
       { name: "Gold Tier Badge (Moss Dark on Amber-400)", fg: "#16261C", bg: "#FBBF24", minRatio: 7.0 },
       { name: "Dark Surface Text (Zinc-100 on Dark Surface)", fg: "#F4F4F5", bg: "#0D1511", minRatio: 7.0 },
       { name: "Muted Text Dark (Zinc-300 on Dark Surface)", fg: "#D4D4D8", bg: "#1F2422", minRatio: 7.0 },
+      { name: "Footer Text (Zinc-300 on Dark Canvas)", fg: "#D4D4D8", bg: "#0D1511", minRatio: 7.0 },
       { name: "Cream Surface Body Text (Stone-900 on Stone-100)", fg: "#1C1917", bg: "#F5F3EF", minRatio: 7.0 },
       { name: "Emerald Savings Badge (Emerald-900 on Emerald-100)", fg: "#064E3B", bg: "#D1FAE5", minRatio: 7.0 },
+      { name: "In-Stock Badge (Emerald-900 on Emerald-50)", fg: "#064E3B", bg: "#ECFDF5", minRatio: 7.0 },
+      { name: "Cancelled Badge (Red-800 on Red-50)", fg: "#991B1B", bg: "#FEF2F2", minRatio: 7.0 },
       { name: "Input Placeholders (Zinc-500 on White)", fg: "#71717A", bg: "#FFFFFF", minRatio: 4.5 },
     ];
 

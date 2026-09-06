@@ -183,7 +183,7 @@ export function Footer() {
                     <h3 className="text-xs sm:text-sm font-bold text-zinc-100 leading-tight">
                       {item.title}
                     </h3>
-                    <p className="text-[11px] sm:text-xs text-zinc-400 mt-1 leading-snug">
+                    <p className="text-[11px] sm:text-xs text-zinc-300 mt-1 leading-snug">
                       {item.desc}
                     </p>
                   </div>
@@ -230,7 +230,7 @@ export function Footer() {
                       if (formError) setFormError("");
                     }}
                     placeholder={isArabic ? "أدخل بريدك الإلكتروني..." : "Enter your email address..."}
-                    className="w-full h-11 sm:h-12 rounded-xl bg-white/10 border border-white/15 px-4 text-xs sm:text-sm text-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-amber-200 focus:border-transparent transition-all"
+                    className="w-full h-11 sm:h-12 rounded-xl bg-white/10 border border-white/15 px-4 text-xs sm:text-sm text-white placeholder:text-zinc-300 focus:outline-none focus:ring-2 focus:ring-amber-200 focus:border-transparent transition-all"
                     aria-describedby={formError ? "footer-newsletter-error" : undefined}
                     aria-invalid={Boolean(formError)}
                   />
@@ -278,7 +278,7 @@ export function Footer() {
                 <span id="footer-brand-title" className="font-display font-bold text-xl tracking-wide text-amber-100 group-hover:text-white transition-colors block">
                   {isArabic ? "حاج عرفة" : "Haj Arafa"}
                 </span>
-                <span className="text-[10px] text-zinc-400 uppercase tracking-widest block font-sans">
+                <span className="text-[10px] text-zinc-300 uppercase tracking-widest block font-sans">
                   {isArabic ? "عطارة وأعشاب طبيعية منذ ١٩٦٨" : "Egyptian Apothecary Since 1968"}
                 </span>
               </div>
@@ -429,7 +429,7 @@ export function Footer() {
 
         {/* 4. Bottom Legal & Payment Matrix Bar */}
         <div className="mt-12 sm:mt-16 border-t border-white/10 pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 select-none">
-          <p className="text-[11px] sm:text-xs text-zinc-400 text-center sm:text-start">
+          <p className="text-[11px] sm:text-xs text-zinc-300 text-center sm:text-start">
             © {new Date().getFullYear()} {isArabic ? "حاج عرفة للأعشاب والمنتجات الطبيعية. جميع الحقوق محفوظة." : "Haj Arafa Natural Products. All rights reserved."}
           </p>
 

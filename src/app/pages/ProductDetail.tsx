@@ -653,7 +653,7 @@ export function ProductDetail() {
                   </p>
                 </div>
               </div>
-              <span className="self-start sm:self-auto text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-500/20 px-2.5 py-1 rounded-full">
+              <span className="self-start sm:self-auto text-[11px] font-bold text-emerald-900 dark:text-emerald-200 bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700 px-2.5 py-1 rounded-full">
                 {isRTL ? "وفر ٨٪ عند الشراء معاً" : "Save 8% on Bundle"}
               </span>
             </div>
@@ -808,9 +808,9 @@ export function ProductDetail() {
                         </div>
                         <p className="text-muted-foreground" style={{ fontSize: "0.72rem" }}>{review.date}</p>
                       </div>
-                      <div className="flex">
+                      <div className="flex" role="img" aria-label={isRTL ? `تقييم ${formatNumber(review.rating)} من ٥ نجوم` : `Rating: ${review.rating} out of 5 stars`}>
                         {[...Array(review.rating)].map((_, i) => (
-                          <Star key={i} size={12} className="text-amber-400 fill-amber-400" />
+                          <Star key={i} size={12} className="text-amber-500 fill-amber-500 dark:text-amber-400 dark:fill-amber-400" aria-hidden="true" />
                         ))}
                       </div>
                     </div>
@@ -966,9 +966,9 @@ export function ProductDetail() {
                         </div>
                         <p className="text-muted-foreground text-[11px] mt-0.5">{review.date}</p>
                       </div>
-                      <div className="flex">
+                      <div className="flex" role="img" aria-label={isRTL ? `تقييم ${formatNumber(review.rating)} من ٥ نجوم` : `Rating: ${review.rating} out of 5 stars`}>
                         {[...Array(review.rating)].map((_, i) => (
-                          <Star key={i} size={11} className="text-amber-400 fill-amber-400" />
+                          <Star key={i} size={11} className="text-amber-500 fill-amber-500 dark:text-amber-400 dark:fill-amber-400" aria-hidden="true" />
                         ))}
                       </div>
                     </div>
