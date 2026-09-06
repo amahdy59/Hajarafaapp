@@ -561,7 +561,7 @@ export function Header() {
               type="button"
               onClick={() => setLoyaltyModalOpen(true)}
               aria-label={isRTL ? `رصيد نقاط عرفة: ${formatNumber(points)} نقطة` : `Haj Arafa Points: ${formatNumber(points)}`}
-              className="hidden lg:inline-flex items-center gap-1.5 h-10 px-3 rounded-full bg-gradient-to-r from-amber-500/10 to-brand-moss/10 dark:from-amber-400/10 dark:to-brand-moss/20 border border-amber-500/30 hover:border-amber-500/60 text-foreground transition-all cursor-pointer select-none text-xs font-bold"
+              className="hidden lg:inline-flex items-center gap-1.5 h-11 min-h-[44px] px-3 rounded-full bg-gradient-to-r from-amber-500/10 to-brand-moss/10 dark:from-amber-400/10 dark:to-brand-moss/20 border border-amber-500/30 hover:border-amber-500/60 text-foreground transition-all cursor-pointer select-none text-xs font-bold"
             >
               <Award size={15} className="text-amber-500 flex-shrink-0" />
               <span className="text-brand-moss dark:text-amber-400 font-extrabold">{formatNumber(points)}</span>
@@ -576,7 +576,7 @@ export function Header() {
                 aria-expanded={currencyDropdownOpen}
                 aria-haspopup="listbox"
                 aria-label={isRTL ? "تغيير العملة والدولة" : "Change currency & region"}
-                className="h-10 px-2.5 rounded-full flex items-center gap-1.5 text-foreground hover:bg-muted text-xs font-bold transition-colors cursor-pointer border border-border/70"
+                className="h-11 min-h-[44px] px-2.5 rounded-full flex items-center gap-1.5 text-foreground hover:bg-muted text-xs font-bold transition-colors cursor-pointer border border-border/70"
               >
                 <span className="text-sm">{currencyInfo.flag}</span>
                 <span className="text-[11px] tracking-wide">{currency}</span>
@@ -679,20 +679,22 @@ export function Header() {
               </IconButton>
             </div>
 
-            {/* Wishlist Button */}
-            <IconButton
-              onClick={() => {
-                if (location.pathname === "/account" && searchParams.get("tab") === "wishlist") {
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                } else {
-                  navigate("/account?tab=wishlist");
-                }
-              }}
-              aria-label={t.favourites}
-              badge={wishlistItems.length}
-            >
-              <Heart size={19} />
-            </IconButton>
+            {/* Wishlist Button (viewports >= 360px; accessible in Drawer on <360px) */}
+            <div className="hidden min-[360px]:block">
+              <IconButton
+                onClick={() => {
+                  if (location.pathname === "/account" && searchParams.get("tab") === "wishlist") {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  } else {
+                    navigate("/account?tab=wishlist");
+                  }
+                }}
+                aria-label={t.favourites}
+                badge={wishlistItems.length}
+              >
+                <Heart size={19} />
+              </IconButton>
+            </div>
 
             {/* Cart Button: Full Price Pill on Desktop, Icon on Mobile */}
             <motion.button
