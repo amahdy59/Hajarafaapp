@@ -151,4 +151,53 @@ describe("Code Quality & Automated Code Review Suite", () => {
       expect(gov.deliveryDaysAr).toBeTruthy();
     }
   });
+
+  it("enforces zero stray console.log calls in production application codebase", () => {
+    const consoleLogRegex = /\bconsole\.log\s*\(/g;
+    const violations: { file: string; line: number }[] = [];
+
+    for (const file of allCodeFiles) {
+      const lines = fs.readFileSync(file, "utf-8").split("\n");
+      lines.forEach((line, idx) => {
+        if (consoleLogRegex.test(line) && !line.includes("eslint-disable") && !line.includes("consoleLogRegex")) {
+          violations.push({ file: path.relative(rootDir, file), line: idx + 1 });
+        }
+      });
+    }
+
+    expect(violations).toEqual([]);
+  });
+
+  it("enforces secure external links: all target='_blank' anchors must include rel='noopener noreferrer'", () => {
+    const targetBlankRegex = /target=["']_blank["']/g;
+    const violations: string[] = [];
+
+    for (const file of allCodeFiles) {
+      if (!file.endsWith(".tsx")) continue;
+      const content = fs.readFileSync(file, "utf-8");
+      if (targetBlankRegex.test(content) && !content.includes("noopener") && !content.includes("noreferrer")) {
+        violations.push(path.relative(rootDir, file));
+      }
+    }
+
+    expect(violations).toEqual([]);
+  });
+
+  it("enforces image accessibility: all rendered img tags must define an alt attribute", () => {
+    const imgWithoutAltRegex = /<img\b(?![^>]*\balt=)[^>]*>/gi;
+    const violations: { file: string; line: number }[] = [];
+
+    for (const file of allCodeFiles) {
+      if (!file.endsWith(".tsx")) continue;
+      const lines = fs.readFileSync(file, "utf-8").split("\n");
+      lines.forEach((line, idx) => {
+        if (imgWithoutAltRegex.test(line) && !line.includes("alt=") && !line.includes("imgWithoutAltRegex")) {
+          violations.push({ file: path.relative(rootDir, file), line: idx + 1 });
+        }
+      });
+    }
+
+    expect(violations).toEqual([]);
+  });
 });
+

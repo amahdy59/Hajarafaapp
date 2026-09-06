@@ -16,7 +16,7 @@ const Contact = lazy(() => import("./pages/Contact").then(m => ({ default: m.Con
 const Help = lazy(() => import("./pages/Help").then(m => ({ default: m.Help })));
 const NotFound = lazy(() => import("./pages/NotFound").then(m => ({ default: m.NotFound })));
 
-export const router = createBrowserRouter([
+export const routeDefinitions = [
   {
     path: "/",
     Component: Root,
@@ -37,6 +37,11 @@ export const router = createBrowserRouter([
       { path: "*", Component: NotFound },
     ],
   },
-], {
-  basename: import.meta.env.BASE_URL,
-});
+];
+
+export const router = typeof document !== "undefined"
+  ? createBrowserRouter(routeDefinitions, {
+      basename: import.meta.env.BASE_URL,
+    })
+  : (null as unknown as ReturnType<typeof createBrowserRouter>);
+

@@ -167,11 +167,11 @@ export function LoyaltyModal() {
                   {isRTL ? "مستويات العضوية والمزايا" : "Membership Tiers & Perks"}
                 </h3>
                 <div className="space-y-2">
-                  {LOYALTY_TIERS.map(t => {
-                    const isCurrent = t.id === tier.id;
+                  {LOYALTY_TIERS.map(tierItem => {
+                    const isCurrent = tierItem.id === tier.id;
                     return (
                       <div
-                        key={t.id}
+                        key={tierItem.id}
                         className={`p-3 rounded-2xl border transition-all flex items-center justify-between ${
                           isCurrent
                             ? "border-brand-moss bg-brand-moss/5 dark:bg-brand-moss/10 shadow-sm ring-1 ring-brand-moss"
@@ -180,13 +180,13 @@ export function LoyaltyModal() {
                       >
                         <div className="flex items-center gap-3">
                           <span
-                            className={`w-3 h-3 rounded-full bg-gradient-to-br ${t.color}`}
+                            className={`w-3 h-3 rounded-full bg-gradient-to-br ${tierItem.color}`}
                             aria-hidden="true"
                           />
                           <div>
                             <div className="flex items-center gap-2">
                               <span className="text-xs font-bold text-foreground">
-                                {isRTL ? t.nameAr : t.nameEn}
+                                {isRTL ? tierItem.nameAr : tierItem.nameEn}
                               </span>
                               {isCurrent && (
                                 <span className="text-[10px] bg-brand-moss text-white px-2 py-0.5 rounded-full font-bold">
@@ -195,12 +195,12 @@ export function LoyaltyModal() {
                               )}
                             </div>
                             <p className="text-xs text-muted-foreground mt-0.5">
-                              {isRTL ? t.perksAr : t.perksEn}
+                              {isRTL ? tierItem.perksAr : tierItem.perksEn}
                             </p>
                           </div>
                         </div>
                         <span className="text-xs font-semibold text-muted-foreground whitespace-nowrap">
-                          {formatNumber(t.minPoints)}+ {isRTL ? "نقطة" : "pts"}
+                          {formatNumber(tierItem.minPoints)}+ {isRTL ? "نقطة" : "pts"}
                         </span>
                       </div>
                     );

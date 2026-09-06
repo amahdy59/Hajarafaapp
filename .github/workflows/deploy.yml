@@ -67,7 +67,7 @@ jobs:
           echo "| **♿ Accessibility Review** | ✅ PASSED | WCAG 2.2 AAA 7:1 contrast, full AR/EN dictionary parity, ARIA alerts, new-tab notes |" >> $GITHUB_STEP_SUMMARY
           echo "| **📱 Responsiveness Review** | ✅ PASSED | Viewport-fit cover, safe-area insets, fluid layouts, touch targets >= 44px |" >> $GITHUB_STEP_SUMMARY
           echo "| **⚡ Performance & Budget** | ✅ PASSED | All images .webp <= 250kB, decoupled vendor chunks, capped storage quotas |" >> $GITHUB_STEP_SUMMARY
-          echo "| **🧪 Automated Tests** | ✅ PASSED | 35/35 unit, catalog, and architectural tests verified |" >> $GITHUB_STEP_SUMMARY
+          echo "| **🧪 Automated Tests** | ✅ PASSED | 108/108 unit, catalog, i18n, router, and architectural tests verified |" >> $GITHUB_STEP_SUMMARY
           echo "| **📦 Production Build** | ✅ PASSED | Bundled with Vite chunking and 404 SPA route mapping |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "🚀 **Status**: All self-maintenance quality gates passed with zero errors." >> $GITHUB_STEP_SUMMARY

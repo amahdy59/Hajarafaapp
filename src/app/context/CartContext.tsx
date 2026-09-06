@@ -18,6 +18,57 @@ interface CartContextType {
   setCartOpen: (open: boolean) => void;
 }
 
+export function sanitizeStoredCart(parsed: unknown): CartItem[] {
+  if (Array.isArray(parsed)) {
+    return parsed.filter((item: unknown): item is CartItem => {
+      if (!item || typeof item !== "object") return false;
+      const candidate = item as Partial<CartItem>;
+      return Boolean(
+        candidate.product &&
+        typeof candidate.product === "object" &&
+        typeof candidate.product.id === "string" &&
+        typeof candidate.product.price === "number" &&
+        typeof candidate.quantity === "number" &&
+        candidate.quantity > 0
+      );
+    });
+  }
+  return [];
+}
+
+export function addProductToCart(prev: CartItem[], product: Product, quantity = 1): CartItem[] {
+  if (quantity <= 0) return prev;
+  const existing = prev.find(i => i.product.id === product.id);
+  if (existing) {
+    return prev.map(i =>
+      i.product.id === product.id
+        ? { ...i, quantity: i.quantity + quantity }
+        : i
+    );
+  }
+  return [...prev, { product, quantity }];
+}
+
+export function updateCartItemQuantity(prev: CartItem[], productId: string, quantity: number): CartItem[] {
+  if (quantity <= 0) {
+    return prev.filter(i => i.product.id !== productId);
+  }
+  return prev.map(i => (i.product.id === productId ? { ...i, quantity } : i));
+}
+
+export function removeProductFromCart(prev: CartItem[], productId: string): CartItem[] {
+  return prev.filter(i => i.product.id !== productId);
+}
+
+export function calculateCartTotals(items: CartItem[]): { totalItems: number; totalPrice: number } {
+  const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
+  const totalPrice = items.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
+  return {
+    totalItems,
+    totalPrice: Math.round(totalPrice * 100) / 100,
+  };
+}
+
 const CartContext = createContext<CartContextType | null>(null);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
@@ -26,20 +77,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     try {
       const stored = localStorage.getItem("hajarafa.cart");
       const parsed = stored ? JSON.parse(stored) : [];
-      if (Array.isArray(parsed)) {
-        return parsed.filter((item: unknown): item is CartItem => {
-          if (!item || typeof item !== "object") return false;
-          const candidate = item as Partial<CartItem>;
-          return Boolean(
-            candidate.product &&
-            typeof candidate.product === "object" &&
-            typeof candidate.product.id === "string" &&
-            typeof candidate.product.price === "number" &&
-            typeof candidate.quantity === "number"
-          );
-        });
-      }
-      return [];
+      return sanitizeStoredCart(parsed);
     } catch (e) {
       console.error("Failed to load cart", e);
       return [];
@@ -52,43 +90,26 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [items]);
 
   const addToCart = useCallback((product: Product, quantity = 1) => {
-    setItems(prev => {
-      const existing = prev.find(i => i.product.id === product.id);
-      if (existing) {
-        return prev.map(i =>
-          i.product.id === product.id
-            ? { ...i, quantity: i.quantity + quantity }
-            : i
-        );
-      }
-      return [...prev, { product, quantity }];
-    });
+    setItems(prev => addProductToCart(prev, product, quantity));
     setIsCartOpen(true);
   }, []);
 
   const removeFromCart = useCallback((productId: string) => {
-    setItems(prev => prev.filter(i => i.product.id !== productId));
+    setItems(prev => removeProductFromCart(prev, productId));
   }, []);
 
   const updateQuantity = useCallback((productId: string, quantity: number) => {
-    if (quantity <= 0) {
-      setItems(prev => prev.filter(i => i.product.id !== productId));
-    } else {
-      setItems(prev =>
-        prev.map(i => i.product.id === productId ? { ...i, quantity } : i)
-      );
-    }
+    setItems(prev => updateCartItemQuantity(prev, productId, quantity));
   }, []);
 
   const clearCart = useCallback(() => setItems([]), []);
 
-  const totalItems = useMemo(() => items.reduce((sum, i) => sum + i.quantity, 0), [items]);
-  const totalPrice = useMemo(() => items.reduce((sum, i) => sum + i.product.price * i.quantity, 0), [items]);
+  const totals = useMemo(() => calculateCartTotals(items), [items]);
 
   const value = useMemo<CartContextType>(() => ({
     items, addToCart, removeFromCart, updateQuantity, clearCart,
-    totalItems, totalPrice, isCartOpen, setCartOpen: setIsCartOpen
-  }), [items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalPrice, isCartOpen]);
+    totalItems: totals.totalItems, totalPrice: totals.totalPrice, isCartOpen, setCartOpen: setIsCartOpen
+  }), [items, addToCart, removeFromCart, updateQuantity, clearCart, totals, isCartOpen]);
 
   return (
     <CartContext.Provider value={value}>

@@ -128,21 +128,12 @@ export function LoyaltyProvider({ children }: { children: ReactNode }) {
 
   const tier = useMemo(() => {
     const sorted = [...LOYALTY_TIERS].sort((a, b) => b.minPoints - a.minPoints);
-    const found = sorted.find(t => points >= t.minPoints);
-    const defaultTier: LoyaltyTier = {
-      id: "bronze",
-      nameAr: "برونزي",
-      nameEn: "Bronze",
-      minPoints: 0,
-      perksAr: "جمع نقطة لكل ١٠ ج.م",
-      perksEn: "Earn 1 pt per 10 EGP",
-      color: "from-amber-700 to-amber-900",
-    };
-    return found ?? defaultTier;
+    const found = sorted.find(tier => points >= tier.minPoints);
+    return found ?? LOYALTY_TIERS[0]!;
   }, [points]);
 
   const nextTier = useMemo(() => {
-    return LOYALTY_TIERS.find(t => t.minPoints > points) ?? null;
+    return LOYALTY_TIERS.find(tier => tier.minPoints > points) ?? null;
   }, [points]);
 
   const pointsToNextTier = useMemo(() => {

@@ -12,20 +12,40 @@ interface WishlistContextType {
 
 const WishlistContext = createContext<WishlistContextType | null>(null);
 
+export function sanitizeStoredWishlist(parsed: unknown): Product[] {
+  if (Array.isArray(parsed)) {
+    return parsed.filter((p: unknown): p is Product => {
+      if (!p || typeof p !== "object") return false;
+      const candidate = p as Partial<Product>;
+      return typeof candidate.id === "string" && typeof candidate.price === "number";
+    });
+  }
+  return [];
+}
+
+export function addProductToWishlist(prev: Product[], product: Product): Product[] {
+  return prev.some(p => p.id === product.id) ? prev : [...prev, product];
+}
+
+export function removeProductFromWishlist(prev: Product[], productId: string): Product[] {
+  return prev.filter(p => p.id !== productId);
+}
+
+export function toggleWishlistProduct(prev: Product[], product: Product): { next: Product[]; wasAdded: boolean } {
+  const exists = prev.some(p => p.id === product.id);
+  if (exists) {
+    return { next: prev.filter(p => p.id !== product.id), wasAdded: false };
+  }
+  return { next: [...prev, product], wasAdded: true };
+}
+
 export function WishlistProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<Product[]>(() => {
     if (typeof window === "undefined") return [];
     try {
       const stored = localStorage.getItem("hajarafa.wishlist");
       const parsed = stored ? JSON.parse(stored) : [];
-      if (Array.isArray(parsed)) {
-        return parsed.filter((p: unknown): p is Product => {
-          if (!p || typeof p !== "object") return false;
-          const candidate = p as Partial<Product>;
-          return typeof candidate.id === "string" && typeof candidate.price === "number";
-        });
-      }
-      return [];
+      return sanitizeStoredWishlist(parsed);
     } catch (e) {
       console.error("Failed to load wishlist", e);
       return [];
@@ -37,11 +57,11 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
   }, [items]);
 
   const addToWishlist = useCallback((product: Product) => {
-    setItems(prev => prev.find(p => p.id === product.id) ? prev : [...prev, product]);
+    setItems(prev => addProductToWishlist(prev, product));
   }, []);
 
   const removeFromWishlist = useCallback((productId: string) => {
-    setItems(prev => prev.filter(p => p.id !== productId));
+    setItems(prev => removeProductFromWishlist(prev, productId));
   }, []);
 
   const isWishlisted = useCallback((productId: string) => {
