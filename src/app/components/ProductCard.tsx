@@ -229,7 +229,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
               >
                 <Minus size={14} />
               </button>
-              <span className="font-bold text-xs text-brand-terracotta-dark dark:text-brand-terracotta px-2">
+              <span className="font-bold text-xs text-brand-terracotta-dark dark:text-brand-terracotta px-1 truncate text-center">
                 {quantityInCart} {isRTL ? "في السلة" : "in cart"}
               </span>
               <button

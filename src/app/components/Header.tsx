@@ -379,7 +379,7 @@ export function Header() {
                   }}
                   onFocus={() => setDesktopSearchOpen(true)}
                   placeholder={isRTL ? "ابحث عن عسل، قهوة، بهارات، زيوت طبيعية..." : "Search honey, coffee, spices, natural oils..."}
-                  className="flex-1 h-full px-3.5 bg-transparent text-foreground placeholder:text-muted-foreground text-xs font-medium outline-none"
+                  className="flex-1 min-w-0 h-full px-3.5 bg-transparent text-foreground placeholder:text-muted-foreground text-xs font-medium outline-none"
                 />
 
                 {searchQuery && (
