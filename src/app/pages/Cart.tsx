@@ -15,7 +15,7 @@ const SHIPPING_COST = SHIPPING_CONFIG.flatRate;
 
 export function Cart() {
   const { items, updateQuantity, removeFromCart, totalPrice, totalItems } = useCart();
-  const { t, isRTL, locale } = useAppSettings();
+  const { t, isRTL, locale, formatPrice } = useAppSettings();
   const navigate = useNavigate();
 
   const [couponCode, setCouponCode] = useState("");
@@ -59,7 +59,7 @@ export function Cart() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-6">
+      <div className="max-w-[1280px] mx-auto px-3.5 sm:px-6 py-6">
         <div className="flex items-center gap-3 mb-6">
           <ShoppingBag size={22} className="text-brand-terracotta" />
           <h1 className="text-foreground text-2xl font-bold font-display">{t.shoppingCart}</h1>
@@ -91,7 +91,7 @@ export function Cart() {
                 <div className="bg-brand-peach rounded-2xl p-4 border border-border/50">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-brand-terracotta font-semibold text-sm">
-                      {t.currency} {(SHIPPING_THRESHOLD - totalPrice).toFixed(2)} {t.away}
+                      {formatPrice(SHIPPING_THRESHOLD - totalPrice)} {t.away}
                     </span>
                   </div>
                   <div
@@ -177,11 +177,11 @@ export function Cart() {
                           </div>
                           <div className="text-end">
                             <p className="text-brand-terracotta font-semibold text-sm">
-                              {t.currency} {(item.product.price * item.quantity).toFixed(2)}
+                              {formatPrice(item.product.price * item.quantity)}
                             </p>
                             {item.quantity > 1 && (
                               <p className="text-muted-foreground text-xs">
-                                {t.currency} {item.product.price.toFixed(2)} {isRTL ? "للقطعة" : "each"}
+                                {formatPrice(item.product.price)} {isRTL ? "للقطعة" : "each"}
                               </p>
                             )}
                           </div>
@@ -259,12 +259,12 @@ export function Cart() {
                 <div className="space-y-2 border-t border-border pt-4 text-sm">
                   <div className="flex justify-between text-muted-foreground">
                     <span>{t.subtotal} ({totalItems} {totalItems === 1 ? t.item : t.items})</span>
-                    <span>{t.currency} {totalPrice.toFixed(2)}</span>
+                    <span>{formatPrice(totalPrice)}</span>
                   </div>
                   {couponApplied && (
                     <div className="flex justify-between text-brand-sage-dark">
                       <span>{t.discount} (10%)</span>
-                      <span>-{t.currency} {discount.toFixed(2)}</span>
+                      <span>-{formatPrice(discount)}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-muted-foreground">
@@ -272,12 +272,12 @@ export function Cart() {
                     <span>
                       {shipping === 0
                         ? <span className="text-brand-sage-dark font-medium">{t.free}</span>
-                        : `${t.currency} ${shipping.toFixed(2)}`}
+                        : formatPrice(shipping)}
                     </span>
                   </div>
                   <div className="flex justify-between text-foreground border-t border-border pt-2 font-bold">
                     <span>{t.total}</span>
-                    <span className="text-brand-terracotta">{t.currency} {finalTotal.toFixed(2)}</span>
+                    <span className="text-brand-terracotta">{formatPrice(finalTotal)}</span>
                   </div>
                 </div>
 

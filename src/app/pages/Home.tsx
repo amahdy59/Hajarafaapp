@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { motion } from "motion/react";
-import { Gift, Sparkles, Leaf } from "lucide-react";
+import { Gift, Sparkles, Leaf, Truck, Award, ShieldCheck, CheckCircle2, Star } from "lucide-react";
 import { getProductsByCategory } from "../data/products";
 import { categories } from "../data/categories";
 import { ProductCard } from "../components/ProductCard";
@@ -125,6 +125,55 @@ export function Home() {
             </section>
           );
         })()}
+
+        {/* Apothecary Trust Badges Bar */}
+        <section
+          aria-label={isRTL ? "ضمانات ومزايا حاج عرفة" : "Haj Arafa guarantees and benefits"}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"
+        >
+          {[
+            {
+              icon: Truck,
+              title: t.trustFastShippingTitle,
+              desc: t.trustFastShippingDesc,
+            },
+            {
+              icon: Leaf,
+              title: t.trustPureHerbsTitle,
+              desc: t.trustPureHerbsDesc,
+            },
+            {
+              icon: Award,
+              title: t.trustHeritageTitle,
+              desc: t.trustHeritageDesc,
+            },
+            {
+              icon: ShieldCheck,
+              title: t.trustSecurePayTitle,
+              desc: t.trustSecurePayDesc,
+            },
+          ].map((badge, idx) => {
+            const Icon = badge.icon;
+            return (
+              <div
+                key={idx}
+                className="bg-card dark:bg-zinc-900/60 rounded-2xl p-4 sm:p-5 border border-border/80 shadow-soft flex items-center gap-3.5 group hover:border-brand-terracotta/40 transition-colors duration-200"
+              >
+                <div className="h-11 w-11 rounded-xl bg-brand-peach/60 dark:bg-zinc-800 text-brand-terracotta flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-200">
+                  <Icon size={22} />
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <h3 className="font-display font-bold text-foreground text-xs sm:text-sm leading-tight truncate">
+                    {badge.title}
+                  </h3>
+                  <p className="text-muted-foreground text-[11px] sm:text-xs leading-snug mt-1 line-clamp-2">
+                    {badge.desc}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </section>
 
         {/* 7 Categories Rails & Bento Placement */}
         {categories.map((cat) => {
@@ -269,21 +318,93 @@ export function Home() {
         <GiftHamperModal open={showHamperModal} onClose={() => setShowHamperModal(false)} />
 
         {/* Customer reviews */}
-        <section className="bg-brand-cream-2 rounded-2xl p-6 sm:p-8 border border-border shadow-soft">
-          <h2 className="font-display text-brand-forest dark:text-brand-sage-dark text-center mb-6 font-bold text-xl sm:text-2xl">
-            {t.customerReviews}
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <section
+          aria-labelledby="home-reviews-title"
+          className="bg-brand-cream-2 dark:bg-zinc-900/40 rounded-3xl p-6 sm:p-8 border border-border shadow-soft"
+        >
+          <div className="text-center max-w-xl mx-auto mb-6 sm:mb-8 space-y-1.5">
+            <h2
+              id="home-reviews-title"
+              className="font-display text-brand-forest dark:text-brand-sage-dark font-bold text-xl sm:text-2xl"
+            >
+              {t.customerReviews}
+            </h2>
+            <p className="text-muted-foreground text-xs sm:text-sm">
+              {t.customerReviewsSubtitle}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
             {[
-              { name: "Sarah M.", en: "Outstanding quality — the black seed oil noticeably improved my routine.", ar: "جودة استثنائية — حبة البركة أحدثت فرقاً ملحوظاً." },
-              { name: "Ahmed K.", en: "Authentic Sidr honey, exactly as described. Worth every pound.", ar: "عسل سدر أصلي تماماً كما هو موصوف." },
-              { name: "Emma L.", en: "The rose water is divine — my skin has never felt better.", ar: "ماء الورد رائع — بشرتي لم تشعر بأفضل من ذلك." },
+              {
+                nameAr: "سارة محمود",
+                nameEn: "Sarah M.",
+                cityAr: "الإسكندرية",
+                cityEn: "Alexandria",
+                productAr: "زيت حبة البركة الحبشي",
+                productEn: "Ethiopian Black Seed Oil",
+                textAr: "جودة استثنائية ونقاء لا يقارن — حبة البركة الطبيعية أحدثت فرقاً ملحوظاً في روتين عائلتي اليومي.",
+                textEn: "Outstanding quality and unmatched purity — the black seed oil noticeably improved my daily wellness routine.",
+              },
+              {
+                nameAr: "د. أحمد كمال",
+                nameEn: "Dr. Ahmed K.",
+                cityAr: "القاهرة",
+                cityEn: "Cairo",
+                productAr: "عسل سدر جبلي حر",
+                productEn: "Pure Wild Sidr Honey",
+                textAr: "عسل سدر خام أصلي تماماً كما هو موصوف، رائحة زهرية غنية وقوام كثيف طبيعي. ثقة مستحقة منذ عقود.",
+                textEn: "Authentic raw Sidr honey, exactly as described. Rich floral aroma and thick natural texture. Deserves full trust.",
+              },
+              {
+                nameAr: "إيما لورانس",
+                nameEn: "Emma L.",
+                cityAr: "الجيزة",
+                cityEn: "Giza",
+                productAr: "ماء ورد مقطر طبيعي",
+                productEn: "Pure Distilled Rose Water",
+                textAr: "ماء الورد نقي ومنعش برائحة الورد البلدي الطبيعية — ألطف تونر استخدمته لبشرتي على الإطلاق.",
+                textEn: "The distilled rose water is divine and refreshing — by far the gentlest natural toner for sensitive skin.",
+              },
             ].map((r, i) => (
-              <div key={i} className="bg-card rounded-xl p-4 border border-border shadow-soft">
-                <p className="text-foreground italic mb-3 text-start text-sm leading-relaxed">
-                  "{isRTL ? r.ar : r.en}"
-                </p>
-                <p className="text-brand-forest dark:text-brand-sage-dark text-start font-semibold text-sm">{r.name}</p>
+              <div
+                key={i}
+                className="bg-card rounded-2xl p-5 border border-border shadow-soft flex flex-col justify-between hover:shadow-tactile hover:border-brand-terracotta/30 transition-all duration-200"
+              >
+                <div>
+                  {/* Rating stars & verified badge */}
+                  <div className="flex items-center justify-between gap-2 mb-3">
+                    <div className="flex items-center gap-1" aria-label="5 out of 5 stars">
+                      {[...Array(5)].map((_, s) => (
+                        <Star key={s} size={14} className="fill-amber-400 text-amber-400" />
+                      ))}
+                    </div>
+                    <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-brand-forest dark:text-brand-sage-dark bg-brand-sage/15 dark:bg-brand-sage/25 px-2 py-0.5 rounded-full">
+                      <CheckCircle2 size={11} className="flex-shrink-0" />
+                      <span>{t.verifiedBuyer}</span>
+                    </span>
+                  </div>
+
+                  {/* Review text */}
+                  <p className="text-foreground text-start text-xs sm:text-sm leading-relaxed mb-4">
+                    "{isRTL ? r.textAr : r.textEn}"
+                  </p>
+                </div>
+
+                {/* Customer & Product attribution */}
+                <div className="border-t border-border/60 pt-3 flex flex-col gap-1 text-start">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-brand-forest dark:text-brand-sage-dark font-bold">
+                      {isRTL ? r.nameAr : r.nameEn}
+                    </span>
+                    <span className="text-muted-foreground text-[11px]">
+                      {isRTL ? r.cityAr : r.cityEn}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-brand-terracotta font-medium line-clamp-1">
+                    {t.purchasedTag}: {isRTL ? r.productAr : r.productEn}
+                  </p>
+                </div>
               </div>
             ))}
           </div>

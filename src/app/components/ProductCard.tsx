@@ -174,8 +174,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
 
         {badge && (
           <span
-            className={`absolute top-2.5 sm:top-3.5 start-2.5 sm:start-3.5 z-20 h-[22px] inline-flex items-center px-2 py-0.5 rounded-md border ${badgeCls[badge.tone]} eyebrow shadow-sm hidden sm:inline-flex pointer-events-none`}
-            style={{ fontSize: "9.5px" }}
+            className={`absolute top-2 sm:top-3.5 start-2 sm:start-3.5 z-20 h-[20px] sm:h-[22px] inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-md border ${badgeCls[badge.tone]} eyebrow shadow-sm pointer-events-none text-[8.5px] xs:text-[9px] sm:text-[9.5px] font-bold`}
           >
             {badge.label}
           </span>

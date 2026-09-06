@@ -10,7 +10,7 @@ import { useDialogAccessibility } from "../hooks/useDialogAccessibility";
 
 export function CartDrawer() {
   const { items, isCartOpen, setCartOpen, updateQuantity, removeFromCart, totalPrice, totalItems } = useCart();
-  const { t, isRTL, locale } = useAppSettings();
+  const { t, isRTL, locale, formatPrice } = useAppSettings();
   const navigate = useNavigate();
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -22,7 +22,7 @@ export function CartDrawer() {
 
   const THRESHOLD = SHIPPING_CONFIG.freeThreshold;
   const progressPct = Math.min((totalPrice / THRESHOLD) * 100, 100);
-  const remaining = (THRESHOLD - totalPrice).toFixed(2);
+  const remaining = formatPrice(THRESHOLD - totalPrice);
 
   const handleWhatsAppCartOrder = () => {
     if (items.length === 0) return;
@@ -154,7 +154,7 @@ export function CartDrawer() {
                           <p className="text-muted-foreground" style={{ fontSize: "0.75rem" }}>{item.product.weight}</p>
                           <div className="flex items-center justify-between mt-2">
                             <span className="text-brand-terracotta font-semibold" style={{ fontSize: "0.875rem" }}>
-                              {t.currency} {(item.product.price * item.quantity).toFixed(2)}
+                              {formatPrice(item.product.price * item.quantity)}
                             </span>
                             <div className="flex items-center gap-1.5">
                               <button
@@ -212,7 +212,7 @@ export function CartDrawer() {
                         {t.freeShipping}
                       </span>
                       <span className="text-brand-terracotta font-semibold" style={{ fontSize: "0.8rem" }}>
-                        {t.currency} {remaining} {t.away}
+                        {remaining} {t.away}
                       </span>
                     </div>
                     <div
@@ -256,7 +256,7 @@ export function CartDrawer() {
                 <div className="flex items-center justify-between py-1">
                   <span className="text-muted-foreground" style={{ fontSize: "0.9rem" }}>{t.subtotal}</span>
                   <span className="text-foreground" style={{ fontSize: "0.9rem" }}>
-                    {t.currency} {totalPrice.toFixed(2)}
+                    {formatPrice(totalPrice)}
                   </span>
                 </div>
 

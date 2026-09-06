@@ -377,7 +377,7 @@ export function ProductDetail() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 pt-3 pb-6 sm:py-6">
+      <div className="max-w-[1280px] mx-auto px-3.5 sm:px-6 pt-3 pb-6 sm:py-6">
         {/* Breadcrumb - Desktop only */}
         <nav className="hidden md:flex items-center gap-1.5 mb-6" style={{ fontSize: "0.8rem" }}>
           <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">{t.home}</Link>

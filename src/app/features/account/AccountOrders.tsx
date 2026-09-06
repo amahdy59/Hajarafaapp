@@ -12,7 +12,7 @@ interface AccountOrdersProps {
 }
 
 export function AccountOrders({ orders, onCancelOrder, onSelectTaxInvoice }: AccountOrdersProps) {
-  const { t, isRTL, locale } = useAppSettings();
+  const { t, isRTL, locale, formatPrice } = useAppSettings();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isCopied, setIsCopied] = useState(false);
 
@@ -247,7 +247,7 @@ export function AccountOrders({ orders, onCancelOrder, onSelectTaxInvoice }: Acc
             <div className="flex items-center gap-1.5 justify-between sm:justify-end">
               <span className="text-xs text-muted-foreground sm:hidden">{isRTL ? "الإجمالي" : "Total"}</span>
               <span className="text-sm font-semibold text-brand-terracotta whitespace-nowrap">
-                {t.currency} {order.total.toFixed(2)}
+                {formatPrice(order.total)}
               </span>
             </div>
           </div>
@@ -443,7 +443,7 @@ export function AccountOrders({ orders, onCancelOrder, onSelectTaxInvoice }: Acc
                         </div>
                       </div>
                       <span className="text-xs font-semibold text-foreground font-mono">
-                        {t.currency} {prod.price.toFixed(2)}
+                        {formatPrice(prod.price)}
                       </span>
                     </div>
                   ))}
@@ -481,24 +481,24 @@ export function AccountOrders({ orders, onCancelOrder, onSelectTaxInvoice }: Acc
                     <div className="space-y-2 font-mono">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">{isRTL ? "المجموع الفرعي:" : "Subtotal:"}</span>
-                        <span className="text-foreground font-medium">{t.currency} {selectedOrder.receipt.subtotal.toFixed(2)}</span>
+                        <span className="text-foreground font-medium">{formatPrice(selectedOrder.receipt.subtotal)}</span>
                       </div>
                       <div className="flex justify-between text-xs">
                         <span className="text-muted-foreground">{isRTL ? "الشحن:" : "Shipping:"}</span>
                         <span className="text-foreground font-medium">
                           {selectedOrder.receipt.shipping === 0 
                             ? (isRTL ? "مجاني" : "FREE") 
-                            : `${t.currency} ${selectedOrder.receipt.shipping.toFixed(2)}`
+                            : formatPrice(selectedOrder.receipt.shipping)
                           }
                         </span>
                       </div>
                       <div className="flex justify-between text-xs text-red-800 dark:text-red-300 font-medium">
                         <span>{isRTL ? "خصم الكوبون:" : "Discount:"}</span>
-                        <span>-{t.currency} {selectedOrder.receipt.discount.toFixed(2)}</span>
+                        <span>-{formatPrice(selectedOrder.receipt.discount)}</span>
                       </div>
                       <div className="flex justify-between border-t border-border/80 pt-2 text-sm font-bold text-brand-terracotta">
                         <span className="font-sans select-none">{isRTL ? "الإجمالي الكلي:" : "Total Charged:"}</span>
-                        <span>{t.currency} {selectedOrder.total.toFixed(2)}</span>
+                        <span>{formatPrice(selectedOrder.total)}</span>
                       </div>
                     </div>
                   </div>
