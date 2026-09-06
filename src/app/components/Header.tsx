@@ -7,6 +7,7 @@ import { useAppSettings, CURRENCIES, Currency } from "../context/AppSettingsCont
 import { useLoyalty } from "../context/LoyaltyContext";
 import { SettingsDrawer } from "./SettingsDrawer";
 import { IconButton } from "./ui/IconButton";
+import { CategoryIcon } from "./ui/CategoryIcon";
 import { motion, AnimatePresence } from "motion/react";
 import { categories } from "../data/categories";
 import { products } from "../data/products";
@@ -324,7 +325,7 @@ export function Header() {
                           }`}
                         >
                           <span className="flex items-center gap-2">
-                            <span>📦</span>
+                            <CategoryIcon slug="all" size={14} className={selectedCategoryScope === "all" ? "text-white" : "text-brand-terracotta"} />
                             <span>{isRTL ? "جميع الأقسام" : "All Departments"}</span>
                           </span>
                           {selectedCategoryScope === "all" && <Check size={14} />}
@@ -353,7 +354,12 @@ export function Header() {
                                 }`}
                               >
                                 <span className="flex items-center gap-2 truncate">
-                                  <span>{c.icon}</span>
+                                  <CategoryIcon
+                                    slug={c.slug}
+                                    fallbackEmoji={c.icon}
+                                    size={14}
+                                    className={active ? "text-white" : "text-brand-terracotta flex-shrink-0"}
+                                  />
                                   <span className="truncate">{name}</span>
                                 </span>
                                 {active && <Check size={14} className="flex-shrink-0" />}
@@ -736,61 +742,82 @@ export function Header() {
 
         {/* Desktop & Tablet Category Navigation Rail (Permanent across storefront on sm/md/lg/xl) */}
         <div className="hidden sm:block relative z-10 border-t border-border/80 bg-background/95 backdrop-blur-md">
-          <div className="max-w-[1280px] mx-auto px-3 sm:px-6 relative">
-            {/* Edge fades indicating horizontal scrollability */}
-            <div 
-              className="absolute top-0 bottom-0 start-0 w-4 sm:w-6 z-10 pointer-events-none" 
-              style={{ background: `linear-gradient(to ${isRTL ? "left" : "right"}, var(--color-background), transparent)` }} 
-            />
-            <div 
-              className="absolute top-0 bottom-0 end-0 w-6 sm:w-8 z-10 pointer-events-none" 
-              style={{ background: `linear-gradient(to ${isRTL ? "right" : "left"}, var(--color-background), transparent)` }} 
-            />
+          <div className="max-w-[1280px] mx-auto px-3 sm:px-6">
+            <div className="flex items-center justify-between h-12 py-1">
+              {/* Category Scrollable Track Wrapper with Scoped Edge Fades */}
+              <div className="relative flex-1 min-w-0 flex items-center overflow-hidden">
+                {/* Scoped Start Edge Fade */}
+                <div 
+                  className="absolute top-0 bottom-0 start-0 w-4 sm:w-6 z-10 pointer-events-none" 
+                  style={{ background: `linear-gradient(to ${isRTL ? "left" : "right"}, var(--color-background), transparent)` }} 
+                />
+                {/* Scoped End Edge Fade (inside track, before divider) */}
+                <div 
+                  className="absolute top-0 bottom-0 end-0 w-6 sm:w-8 z-10 pointer-events-none" 
+                  style={{ background: `linear-gradient(to ${isRTL ? "right" : "left"}, var(--color-background), transparent)` }} 
+                />
 
-            <div className="flex items-center justify-between h-11">
-              <div 
-                className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide py-1 pe-4"
-                style={{ WebkitOverflowScrolling: "touch" }}
-              >
-                <Link
-                  to="/products"
-                  className={`group flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-semibold transition-all select-none flex-shrink-0 ${
-                    location.pathname === "/products" && !searchParams.get("category")
-                      ? "bg-brand-terracotta text-white shadow-sm font-bold"
-                      : "text-foreground hover:bg-muted/80 border border-transparent hover:border-border/60"
-                  }`}
+                <nav 
+                  aria-label={isRTL ? "أقسام المتجر السريعة" : "Store quick categories"}
+                  className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide py-1 px-1 pe-6 sm:pe-8 scroll-smooth"
+                  style={{ WebkitOverflowScrolling: "touch" }}
                 >
-                  <span>📦</span>
-                  <span className="whitespace-nowrap">{isRTL ? "جميع المنتجات" : "All Products"}</span>
-                </Link>
-
-                {categories.map(cat => {
-                  const catName = isRTL && cat.nameAr ? cat.nameAr : cat.name;
-                  const active = location.pathname === `/category/${cat.slug}` ||
-                                 (location.pathname === "/products" && searchParams.get("category") === cat.slug);
-                  return (
-                    <Link
-                      key={cat.id}
-                      to={`/category/${cat.slug}`}
-                      className={`group flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-semibold transition-all select-none flex-shrink-0 ${
-                        active
-                          ? "bg-brand-terracotta text-white shadow-sm font-bold"
-                          : "text-foreground hover:bg-muted/80 border border-transparent hover:border-border/60"
+                  {/* All Products Pill */}
+                  <Link
+                    to="/products"
+                    className={`group inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 select-none flex-shrink-0 cursor-pointer min-h-[34px] sm:min-h-[36px] ${
+                      location.pathname === "/products" && !searchParams.get("category")
+                        ? "bg-brand-terracotta text-white border border-brand-terracotta shadow-soft font-bold active:scale-[0.97]"
+                        : "bg-card dark:bg-zinc-800/90 text-foreground/90 hover:text-brand-terracotta border border-border/80 dark:border-zinc-700/80 hover:border-brand-terracotta/40 hover:bg-brand-peach/30 dark:hover:bg-zinc-700/60 shadow-[0_1px_2px_rgba(0,0,0,0.03)] hover:shadow-soft active:scale-[0.97]"
+                    }`}
+                  >
+                    <CategoryIcon
+                      slug="all"
+                      size={14}
+                      className={`transition-transform group-hover:scale-110 ${
+                        location.pathname === "/products" && !searchParams.get("category")
+                          ? "text-white"
+                          : "text-brand-terracotta dark:text-brand-terracotta"
                       }`}
-                    >
-                      <span className="group-hover:scale-110 transition-transform">{cat.icon}</span>
-                      <span className="whitespace-nowrap">{catName}</span>
-                    </Link>
-                  );
-                })}
+                    />
+                    <span className="whitespace-nowrap">{isRTL ? "جميع المنتجات" : "All Products"}</span>
+                  </Link>
+
+                  {categories.map(cat => {
+                    const catName = isRTL && cat.nameAr ? cat.nameAr : cat.name;
+                    const active = location.pathname === `/category/${cat.slug}` ||
+                                   (location.pathname === "/products" && searchParams.get("category") === cat.slug);
+                    return (
+                      <Link
+                        key={cat.id}
+                        to={`/category/${cat.slug}`}
+                        className={`group inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 select-none flex-shrink-0 cursor-pointer min-h-[34px] sm:min-h-[36px] ${
+                          active
+                            ? "bg-brand-terracotta text-white border border-brand-terracotta shadow-soft font-bold active:scale-[0.97]"
+                            : "bg-card dark:bg-zinc-800/90 text-foreground/90 hover:text-brand-terracotta border border-border/80 dark:border-zinc-700/80 hover:border-brand-terracotta/40 hover:bg-brand-peach/30 dark:hover:bg-zinc-700/60 shadow-[0_1px_2px_rgba(0,0,0,0.03)] hover:shadow-soft active:scale-[0.97]"
+                        }`}
+                      >
+                        <CategoryIcon
+                          slug={cat.slug}
+                          fallbackEmoji={cat.icon}
+                          size={14}
+                          className={`transition-transform group-hover:scale-110 ${
+                            active ? "text-white" : "text-brand-terracotta dark:text-brand-terracotta"
+                          }`}
+                        />
+                        <span className="whitespace-nowrap">{catName}</span>
+                      </Link>
+                    );
+                  })}
+                </nav>
               </div>
 
               {/* Desktop Quick Nav Links on the End */}
-              <div className="hidden lg:flex items-center gap-3 xl:gap-4 text-xs font-semibold text-brand-ink-soft ps-4 xl:ps-5 border-s border-border/70 flex-shrink-0">
+              <div className="hidden lg:flex items-center gap-3 xl:gap-4 text-xs font-semibold text-brand-ink-soft ps-3.5 xl:ps-4.5 ms-2 border-s border-border/70 flex-shrink-0">
                 <button
                   type="button"
                   onClick={() => setQuizOpen(true)}
-                  className="flex items-center gap-1.5 px-2.5 xl:px-3 py-1 rounded-full bg-brand-moss/10 hover:bg-brand-moss/20 text-brand-moss dark:text-brand-sage font-bold cursor-pointer transition-colors border border-brand-moss/30 flex-shrink-0"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-moss/10 hover:bg-brand-moss/20 text-brand-moss dark:text-brand-sage font-bold cursor-pointer transition-all duration-200 border border-brand-moss/30 hover:border-brand-moss/50 shadow-sm active:scale-95 flex-shrink-0 min-h-[34px] sm:min-h-[36px]"
                 >
                   <Sparkles size={13} className="text-amber-500 animate-pulse" />
                   <span className="whitespace-nowrap">{isRTL ? "مستشارك العشبي" : "Apothecary Quiz"}</span>
@@ -878,13 +905,14 @@ export function Header() {
                   whileTap={{ scale: 0.94 }}
                   type="button"
                   onClick={() => setSelectedCategoryScope("all")}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex-shrink-0 cursor-pointer ${
+                  className={`px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex-shrink-0 flex items-center gap-1.5 cursor-pointer border ${
                     selectedCategoryScope === "all"
-                      ? "bg-brand-terracotta text-white shadow-sm"
-                      : "bg-muted text-muted-foreground hover:text-foreground"
+                      ? "bg-brand-terracotta text-white border-brand-terracotta shadow-sm font-bold"
+                      : "bg-card dark:bg-zinc-800 text-muted-foreground hover:text-foreground border-border/80 hover:border-brand-terracotta/40"
                   }`}
                 >
-                  {isRTL ? "الكل" : "All"}
+                  <CategoryIcon slug="all" size={13} className={selectedCategoryScope === "all" ? "text-white" : "text-brand-terracotta"} />
+                  <span>{isRTL ? "الكل" : "All"}</span>
                 </motion.button>
                 {categories.map(cat => {
                   const active = selectedCategoryScope === cat.slug;
@@ -895,13 +923,18 @@ export function Header() {
                       key={cat.id}
                       type="button"
                       onClick={() => setSelectedCategoryScope(cat.slug)}
-                      className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex-shrink-0 flex items-center gap-1.5 cursor-pointer ${
+                      className={`px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex-shrink-0 flex items-center gap-1.5 cursor-pointer border ${
                         active
-                          ? "bg-brand-terracotta text-white shadow-sm"
-                          : "bg-muted text-muted-foreground hover:text-foreground"
+                          ? "bg-brand-terracotta text-white border-brand-terracotta shadow-sm font-bold"
+                          : "bg-card dark:bg-zinc-800 text-muted-foreground hover:text-foreground border-border/80 hover:border-brand-terracotta/40"
                       }`}
                     >
-                      <span>{cat.icon}</span>
+                      <CategoryIcon
+                        slug={cat.slug}
+                        fallbackEmoji={cat.icon}
+                        size={13}
+                        className={active ? "text-white" : "text-brand-terracotta"}
+                      />
                       <span>{name}</span>
                     </motion.button>
                   );
