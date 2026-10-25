@@ -5,6 +5,7 @@ import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { SettingsDrawer } from "./SettingsDrawer";
+import { SearchModal } from "./SearchModal";
 import { IconButton } from "./ui/IconButton";
 import { motion, AnimatePresence } from "motion/react";
 import { categories } from "../data/categories";
@@ -15,7 +16,6 @@ export function Header() {
   const { items: wishlistItems } = useWishlist();
   const { theme, setTheme, locale, setLocale, t, isRTL } = useAppSettings();
   const [searchParams] = useSearchParams();
-  const [searchQuery, setSearchQuery] = useState("");
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -30,16 +30,6 @@ export function Header() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const q = searchQuery.trim();
-    if (q) {
-      navigate(`/products?q=${encodeURIComponent(q)}`);
-      setSearchQuery("");
-      setSearchOpen(false);
-    }
-  };
 
   return (
     <>
@@ -63,7 +53,7 @@ export function Header() {
           </div>
 
           <Link to="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center min-w-0 h-14 select-none cursor-pointer w-fit no-underline z-10">
-            <img src={logoImg} alt={isRTL ? "شعار حاج عرفة" : "Haj Arafa Logo"} className="h-9 xs:h-12 sm:h-14 w-auto object-contain max-w-[42vw] sm:max-w-[220px] select-none" />
+            <img src={logoImg} alt="Haj Arafa Logo" className="h-9 xs:h-12 sm:h-14 w-auto object-contain max-w-[42vw] sm:max-w-[220px] select-none" />
           </Link>
 
           <div className="flex items-center gap-0.5 justify-end z-10 -me-2 sm:-me-2.5">
@@ -85,8 +75,8 @@ export function Header() {
                 </span>
               </div>
             </div>
-
-            <div className="relative group">
+            
+            <div className="relative group hidden sm:block">
               <IconButton 
                 onClick={() => setSearchOpen(true)} 
                 aria-label={t.searchPlaceholder}
@@ -182,46 +172,7 @@ export function Header() {
         )}
       </header>
 
-      <AnimatePresence>
-        {searchOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-brand-ink/40 backdrop-blur-sm z-40"
-              onClick={() => setSearchOpen(false)}
-            />
-            <motion.div
-              role="dialog"
-              aria-modal="true"
-              aria-label={t.search}
-              initial={{ y: -12, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -12, opacity: 0 }}
-              transition={{ duration: 0.18 }}
-              className="fixed top-0 inset-x-0 z-50 bg-background safe-area-pt shadow-soft"
-            >
-              <form onSubmit={submit} className="px-4 sm:px-6 py-3 flex items-center gap-2 max-w-[1280px] mx-auto">
-                <div className="relative flex-1 flex items-center bg-input rounded-full border border-border focus-within:border-brand-sage transition-colors">
-                  <Search size={17} className="absolute start-4 text-brand-ink-soft pointer-events-none" />
-                  <input
-                    autoFocus
-                    value={searchQuery}
-                    onChange={e => setSearchQuery(e.target.value)}
-                    placeholder={t.searchPlaceholder}
-                    className="w-full ps-11 pe-4 py-3 bg-transparent text-foreground placeholder:text-brand-ink-soft outline-none"
-                    style={{ fontSize: "0.95rem" }}
-                  />
-                </div>
-                <IconButton type="button" onClick={() => setSearchOpen(false)} aria-label={isRTL ? "إغلاق البحث" : "Close search"}>
-                  <X size={20} />
-                </IconButton>
-              </form>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }

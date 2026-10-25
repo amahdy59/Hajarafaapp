@@ -1,11 +1,11 @@
-import { useState, useEffect, useLayoutEffect } from "react";
+import { useState, useEffect, useLayoutEffect, useMemo } from "react";
 import { useParams, Link } from "react-router";
-import { Heart, ShoppingCart, Share2, ChevronLeft, ChevronDown, Star, Plus, Minus, Leaf, Truck, Shield, RotateCcw, Check } from "lucide-react";
+import { Heart, ShoppingCart, Share2, ChevronLeft, ChevronDown, Star, Plus, Minus, Leaf, Truck, Shield, RotateCcw, Check, Maximize2, X, Sparkles } from "lucide-react";
 import { getProductById, products } from "../data/products";
 import { categories, categoryMapping } from "../data/categories";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
-import { useAppSettings, type Translations } from "../context/AppSettingsContext";
+import { useAppSettings } from "../context/AppSettingsContext";
 import { StarRating } from "../components/StarRating";
 import { ProductCard } from "../components/ProductCard";
 import { toast } from "sonner";
@@ -54,7 +54,7 @@ const getLocalizedWeight = (weight: string, isRTL: boolean) => {
   return toArabicDigits(localized);
 };
 
-const getSpecLabel = (weight: string, t: Translations) => {
+const getSpecLabel = (weight: string, t: any) => {
   const w = weight.toLowerCase();
   if (w.includes("ml") || w.includes("l")) return t.volume;
   if (w.includes("pack") || w.includes("pc")) return t.quantity;
@@ -65,17 +65,52 @@ const getSpecLabel = (weight: string, t: Translations) => {
 export function ProductDetail() {
   const { id } = useParams();
   const product = getProductById(id || "");
-  const { addToCart } = useCart();
+  const { addToCart, items, setCartOpen } = useCart();
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { t, isRTL } = useAppSettings();
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [selectedVariantIdx, setSelectedVariantIdx] = useState(0);
   const [activeTab, setActiveTab] = useState<"description" | "usage" | "reviews">("description");
   const [accordionOpen, setAccordionOpen] = useState({
     description: true,
     usage: false,
     reviews: false,
   });
+
+  const cartItem = items.find(i => i.product.id === product?.id);
+
+  interface SizeVariant {
+    labelEn: string;
+    labelAr: string;
+    multiplier: number;
+  }
+
+  const sizeVariants: SizeVariant[] = useMemo(() => {
+    if (!product) return [];
+    const w = (product.weight || "").toLowerCase();
+    if (w.includes("g") && !w.includes("kg")) {
+      return [
+        { labelEn: "250g", labelAr: "٢٥٠ جم", multiplier: 0.55 },
+        { labelEn: "500g", labelAr: "٥٠٠ جم", multiplier: 1.0 },
+        { labelEn: "1kg (Family)", labelAr: "١ كجم (عائلي)", multiplier: 1.85 },
+      ];
+    }
+    if (w.includes("ml")) {
+      return [
+        { labelEn: "125ml", labelAr: "١٢٥ مل", multiplier: 0.6 },
+        { labelEn: "250ml", labelAr: "٢٥٠ مل", multiplier: 1.0 },
+        { labelEn: "500ml", labelAr: "٥٠٠ مل", multiplier: 1.8 },
+      ];
+    }
+    return [
+      { labelEn: product.weight, labelAr: getLocalizedWeight(product.weight, isRTL), multiplier: 1.0 }
+    ];
+  }, [product, isRTL]);
+
+  const activeVariant = sizeVariants[selectedVariantIdx] || sizeVariants[0];
+  const activePrice = product ? product.price * (activeVariant ? activeVariant.multiplier : 1) : 0;
 
   // Reset UI state when navigating between products.
   useEffect(() => {
@@ -136,9 +171,31 @@ export function ProductDetail() {
     .filter(p => p.categorySlug === product.categorySlug && p.id !== product.id)
     .slice(0, 4);
 
+  const bundleItem = relatedProducts[0];
+  const bundleOriginalTotal = bundleItem ? activePrice + bundleItem.price : 0;
+  const bundleDiscountedTotal = bundleItem ? bundleOriginalTotal * 0.9 : 0;
+
   const handleAddToCart = () => {
-    addToCart(product, quantity);
-    toast.success(`${quantity}× ${isRTL && product.nameAr ? product.nameAr : product.name} ${t.addedToCart}`);
+    if (!product) return;
+    const variantProduct = {
+      ...product,
+      price: activePrice,
+      weight: activeVariant ? (isRTL ? activeVariant.labelAr : activeVariant.labelEn) : product.weight,
+    };
+    addToCart(variantProduct, quantity);
+    toast.success(`${quantity}× ${isRTL && product.nameAr ? product.nameAr : product.name} (${variantProduct.weight}) ${t.addedToCart}`);
+  };
+
+  const handleAddBundle = () => {
+    if (!product || !bundleItem) return;
+    const variantProduct = {
+      ...product,
+      price: activePrice,
+      weight: activeVariant ? (isRTL ? activeVariant.labelAr : activeVariant.labelEn) : product.weight,
+    };
+    addToCart(variantProduct, 1);
+    addToCart(bundleItem, 1);
+    toast.success(isRTL ? "تمت إضافة باقة التوفير بنجاح! 🌿" : "Bundle added with 10% discount! 🌿");
   };
 
   const handleWishlist = () => {
@@ -205,13 +262,22 @@ export function ProductDetail() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="relative aspect-[16/10] sm:aspect-square product-media-surface rounded-2xl sm:rounded-3xl overflow-hidden max-h-[180px] xs:max-h-[220px] sm:max-h-none flex items-center justify-center"
+              onClick={() => setLightboxOpen(true)}
+              className="relative aspect-[16/10] sm:aspect-square product-media-surface rounded-2xl sm:rounded-3xl overflow-hidden max-h-[180px] xs:max-h-[220px] sm:max-h-none flex items-center justify-center cursor-zoom-in group"
             >
               <img
                 src={product.images[activeImage] || product.image}
-                alt={isRTL && product.nameAr ? product.nameAr : product.name}
-                className="w-full h-full object-contain p-3 sm:p-6 mix-blend-multiply dark:mix-blend-normal"
+                alt={product.name}
+                className="w-full h-full object-contain p-3 sm:p-6 mix-blend-multiply dark:mix-blend-normal transition-transform duration-300 group-hover:scale-105"
               />
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setLightboxOpen(true); }}
+                className="absolute bottom-3 end-3 w-8 h-8 rounded-full bg-card/85 backdrop-blur border border-border flex items-center justify-center text-muted-foreground hover:text-foreground opacity-80 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shadow-sm"
+                aria-label="Zoom image"
+              >
+                <Maximize2 size={13} />
+              </button>
               {product.discount && (
                 <span className="absolute top-3 start-3 bg-brand-terracotta-dark dark:bg-brand-terracotta text-white dark:text-brand-cream px-2.5 py-0.5 rounded-full font-bold text-[10px] sm:text-xs">
                   -{product.discount}%
@@ -229,9 +295,7 @@ export function ProductDetail() {
                 {product.images.map((img, i) => (
                   <button
                     key={i}
-                    type="button"
                     onClick={() => setActiveImage(i)}
-                    aria-label={`${isRTL && product.nameAr ? product.nameAr : product.name} - ${i + 1}`}
                     className={`w-11 h-11 sm:w-16 sm:h-16 rounded-lg sm:rounded-xl overflow-hidden border-2 transition-colors product-media-surface ${
                       activeImage === i ? "border-brand-terracotta" : "border-transparent"
                     }`}
@@ -272,23 +336,48 @@ export function ProductDetail() {
               </div>
               <div className="flex items-baseline gap-2 mt-1">
                 <span className="text-brand-terracotta font-extrabold text-2xl sm:text-3xl leading-none">
-                  {t.currency} {product.price.toFixed(2)}
+                  {t.currency} {activePrice.toFixed(2)}
                 </span>
                 {product.originalPrice && (
                   <span className="text-muted-foreground line-through text-xs sm:text-sm">
-                    {t.currency} {product.originalPrice.toFixed(2)}
+                    {t.currency} {(product.originalPrice * (activeVariant ? activeVariant.multiplier : 1)).toFixed(2)}
                   </span>
                 )}
               </div>
             </div>
 
+            {/* Size / Weight Selector */}
+            {sizeVariants.length > 1 && (
+              <div className="space-y-1.5 pt-1">
+                <label className="text-xs font-bold text-foreground block">
+                  {isRTL ? "الحجم / العبوة:" : "Select Size / Volume:"}
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {sizeVariants.map((variant, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setSelectedVariantIdx(idx)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${
+                        selectedVariantIdx === idx
+                          ? "bg-brand-terracotta text-white border-brand-terracotta shadow-sm scale-105"
+                          : "bg-card text-foreground border-border hover:border-brand-sage"
+                      }`}
+                    >
+                      {isRTL ? variant.labelAr : variant.labelEn}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Minimalist Specs Row */}
             <div className="flex flex-wrap items-center gap-3 border-b border-border/40 pb-3 text-xs font-semibold text-foreground select-none">
               <span
                 className="rounded-lg border border-brand-line/60 bg-brand-peach/35 px-2 py-0.5 text-xs font-bold text-brand-terracotta-dark dark:border-brand-sage/35 dark:bg-brand-sage/10 dark:text-brand-sage-dark"
-                aria-label={`${getSpecLabel(product.weight, t)}: ${getLocalizedWeight(product.weight, isRTL)}`}
+                aria-label={`${getSpecLabel(activeVariant ? activeVariant.labelEn : product.weight, t)}: ${activeVariant ? (isRTL ? activeVariant.labelAr : activeVariant.labelEn) : getLocalizedWeight(product.weight, isRTL)}`}
               >
-                {getLocalizedWeight(product.weight, isRTL)}
+                {activeVariant ? (isRTL ? activeVariant.labelAr : activeVariant.labelEn) : getLocalizedWeight(product.weight, isRTL)}
               </span>
               <span className="text-border" aria-hidden="true">|</span>
               <div className="flex min-w-0 items-center gap-1.5 text-foreground">
@@ -352,6 +441,26 @@ export function ProductDetail() {
               </button>
             </div>
 
+            {/* Quality Seals & Guarantees */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 border-t border-border/40 text-[11px]">
+              <div className="flex items-center gap-1.5 p-2 rounded-xl bg-brand-peach/40 dark:bg-zinc-800/50 text-foreground font-semibold">
+                <Leaf size={14} className="text-emerald-700 dark:text-emerald-400 flex-shrink-0" />
+                <span>{isRTL ? "نقي وطبيعي ١٠٠٪" : "100% Raw & Pure"}</span>
+              </div>
+              <div className="flex items-center gap-1.5 p-2 rounded-xl bg-brand-peach/40 dark:bg-zinc-800/50 text-foreground font-semibold">
+                <Shield size={14} className="text-brand-terracotta flex-shrink-0" />
+                <span>{isRTL ? "سلامة الغذاء NFSA" : "NFSA Certified"}</span>
+              </div>
+              <div className="flex items-center gap-1.5 p-2 rounded-xl bg-brand-peach/40 dark:bg-zinc-800/50 text-foreground font-semibold">
+                <Truck size={14} className="text-brand-forest dark:text-brand-sage-dark flex-shrink-0" />
+                <span>{isRTL ? "توصيل ٢٤-٤٨ ساعة" : "Express Delivery"}</span>
+              </div>
+              <div className="flex items-center gap-1.5 p-2 rounded-xl bg-brand-peach/40 dark:bg-zinc-800/50 text-foreground font-semibold">
+                <RotateCcw size={14} className="text-brand-terracotta flex-shrink-0" />
+                <span>{isRTL ? "ضمان استرجاع ١٤ يوم" : "14-Day Returns"}</span>
+              </div>
+            </div>
+
             {/* Key Benefits */}
             <div className="space-y-2 select-none">
               <h2 className="text-brand-ink-soft dark:text-brand-cream/80 text-xs font-bold uppercase tracking-wider">
@@ -407,18 +516,13 @@ export function ProductDetail() {
 
         {/* Tabs - Desktop only */}
         <div className="hidden lg:block bg-card rounded-3xl overflow-hidden mb-10 border border-border">
-          <div role="tablist" aria-label={isRTL ? "تفاصيل المنتج" : "Product details"} className="flex border-b border-border">
+          <div className="flex border-b border-border">
             {(["description", "usage", "reviews"] as const).map(tab => (
               <button
                 key={tab}
-                role="tab"
-                id={`tab-${tab}`}
-                aria-controls={`panel-${tab}`}
-                aria-selected={activeTab === tab}
-                tabIndex={activeTab === tab ? 0 : -1}
                 onClick={() => setActiveTab(tab)}
-                className={`flex-1 py-4 transition-colors relative min-h-[44px] ${
-                  activeTab === tab ? "text-brand-terracotta font-bold" : "text-muted-foreground hover:text-foreground"
+                className={`flex-1 py-4 transition-colors relative ${
+                  activeTab === tab ? "text-brand-terracotta" : "text-muted-foreground hover:text-foreground"
                 }`}
                 style={{ fontSize: "0.875rem" }}
               >
@@ -431,7 +535,7 @@ export function ProductDetail() {
           </div>
           <div className="p-6">
             {activeTab === "description" && (
-              <div role="tabpanel" id="panel-description" aria-labelledby="tab-description">
+              <div>
                 <p className="text-muted-foreground leading-relaxed mb-4" style={{ fontSize: "0.9rem" }}>{product.description}</p>
                 <div className="grid grid-cols-2 gap-4" style={{ fontSize: "0.875rem" }}>
                   {[
@@ -449,7 +553,7 @@ export function ProductDetail() {
               </div>
             )}
             {activeTab === "usage" && (
-              <div role="tabpanel" id="panel-usage" aria-labelledby="tab-usage">
+              <div>
                 <h4 className="text-foreground mb-3">{t.howToUse}</h4>
                 <p className="text-muted-foreground leading-relaxed" style={{ fontSize: "0.875rem" }}>{product.usage}</p>
                 <div className="mt-4 bg-brand-peach border border-brand-terracotta/20 rounded-xl p-4">
@@ -460,7 +564,7 @@ export function ProductDetail() {
               </div>
             )}
             {activeTab === "reviews" && (
-              <div role="tabpanel" id="panel-reviews" aria-labelledby="tab-reviews" className="space-y-4">
+              <div className="space-y-4">
                 <div className="flex items-center gap-4 p-4 bg-brand-peach rounded-2xl">
                   <div className="text-center">
                     <p className="text-brand-terracotta" style={{ fontSize: "2.5rem", lineHeight: 1 }}>{product.rating}</p>
@@ -518,12 +622,8 @@ export function ProductDetail() {
           {/* Description Section */}
           <div className="bg-card rounded-2xl border border-border overflow-hidden">
             <button
-              type="button"
-              id="accordion-btn-description"
-              aria-expanded={accordionOpen.description}
-              aria-controls="accordion-panel-description"
               onClick={() => toggleAccordion("description")}
-              className="w-full flex items-center justify-between p-4 text-start font-semibold text-foreground text-sm sm:text-base min-h-[44px]"
+              className="w-full flex items-center justify-between p-4 text-start font-semibold text-foreground text-sm sm:text-base"
             >
               <span>{tabLabels.description}</span>
               <ChevronDown
@@ -534,12 +634,7 @@ export function ProductDetail() {
               />
             </button>
             {accordionOpen.description && (
-              <div
-                id="accordion-panel-description"
-                role="region"
-                aria-labelledby="accordion-btn-description"
-                className="px-4 pb-5 border-t border-border/50 pt-4"
-              >
+              <div className="px-4 pb-5 border-t border-border/50 pt-4">
                 <p className="text-muted-foreground leading-relaxed mb-4 text-sm sm:text-base">{product.description}</p>
                  <div className="flex flex-col gap-3 text-sm sm:text-base">
                    {[
@@ -561,12 +656,8 @@ export function ProductDetail() {
           {/* How to Use Section */}
           <div className="bg-card rounded-2xl border border-border overflow-hidden">
             <button
-              type="button"
-              id="accordion-btn-usage"
-              aria-expanded={accordionOpen.usage}
-              aria-controls="accordion-panel-usage"
               onClick={() => toggleAccordion("usage")}
-              className="w-full flex items-center justify-between p-4 text-start font-semibold text-foreground text-sm sm:text-base min-h-[44px]"
+              className="w-full flex items-center justify-between p-4 text-start font-semibold text-foreground text-sm sm:text-base"
             >
               <span>{tabLabels.usage}</span>
               <ChevronDown
@@ -577,12 +668,7 @@ export function ProductDetail() {
               />
             </button>
             {accordionOpen.usage && (
-              <div
-                id="accordion-panel-usage"
-                role="region"
-                aria-labelledby="accordion-btn-usage"
-                className="px-4 pb-5 border-t border-border/50 pt-4"
-              >
+              <div className="px-4 pb-5 border-t border-border/50 pt-4">
                 <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">{product.usage}</p>
                 <div className="mt-4 bg-brand-peach border border-brand-terracotta/20 rounded-xl p-4">
                   <p className="text-brand-terracotta text-xs sm:text-sm font-medium">
@@ -596,12 +682,8 @@ export function ProductDetail() {
           {/* Reviews Section */}
           <div className="bg-card rounded-2xl border border-border overflow-hidden">
             <button
-              type="button"
-              id="accordion-btn-reviews"
-              aria-expanded={accordionOpen.reviews}
-              aria-controls="accordion-panel-reviews"
               onClick={() => toggleAccordion("reviews")}
-              className="w-full flex items-center justify-between p-4 text-start font-semibold text-foreground text-sm sm:text-base min-h-[44px]"
+              className="w-full flex items-center justify-between p-4 text-start font-semibold text-foreground text-sm sm:text-base"
             >
               <span>{tabLabels.reviews}</span>
               <ChevronDown
@@ -612,12 +694,7 @@ export function ProductDetail() {
               />
             </button>
             {accordionOpen.reviews && (
-              <div
-                id="accordion-panel-reviews"
-                role="region"
-                aria-labelledby="accordion-btn-reviews"
-                className="px-4 pb-5 border-t border-border/50 pt-4 space-y-4"
-              >
+              <div className="px-4 pb-5 border-t border-border/50 pt-4 space-y-4">
                 <div className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-brand-peach rounded-2xl">
                   <div className="text-center w-full sm:w-auto">
                     <p className="text-brand-terracotta text-3xl font-extrabold" style={{ lineHeight: 1 }}>{product.rating}</p>
@@ -672,6 +749,53 @@ export function ProductDetail() {
           </div>
         </div>
 
+        {/* Frequently Bought Together Bundle */}
+        {bundleItem && (
+          <section className="mb-10 bg-brand-cream-2/70 dark:bg-zinc-900/40 rounded-3xl p-5 sm:p-6 border border-border">
+            <div className="flex items-center gap-2 mb-4">
+              <Sparkles size={18} className="text-brand-terracotta" />
+              <h2 className="text-foreground font-display text-base sm:text-lg font-bold">
+                {isRTL ? "باقة التوفير: اشترِ معاً ووفر ١٠٪" : "Frequently Bought Together (Save 10%)"}
+              </h2>
+            </div>
+            <div className="flex flex-col md:flex-row items-center justify-between gap-5">
+              <div className="flex items-center gap-3 sm:gap-4 flex-wrap justify-center sm:justify-start">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-card p-1.5 border border-border flex items-center justify-center">
+                  <img src={product.image} alt={product.name} className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
+                </div>
+                <span className="text-xl font-bold text-muted-foreground">+</span>
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-card p-1.5 border border-border flex items-center justify-center">
+                  <img src={bundleItem.image} alt={bundleItem.name} className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
+                </div>
+                <div className="text-xs space-y-1 text-center sm:text-start ms-2">
+                  <p className="font-bold text-foreground">
+                    {isRTL && product.nameAr ? product.nameAr : product.name} + {isRTL && bundleItem.nameAr ? bundleItem.nameAr : bundleItem.name}
+                  </p>
+                  <div className="flex items-center gap-2 justify-center sm:justify-start">
+                    <span className="font-extrabold text-brand-terracotta text-sm">
+                      {t.currency} {bundleDiscountedTotal.toFixed(2)}
+                    </span>
+                    <span className="line-through text-muted-foreground text-xs">
+                      {t.currency} {bundleOriginalTotal.toFixed(2)}
+                    </span>
+                    <span className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                      {isRTL ? "وفر ١٠٪" : "Save 10%"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <Button
+                onClick={handleAddBundle}
+                size="md"
+                className="font-bold text-xs h-11 px-5 rounded-xl whitespace-nowrap"
+                leftIcon={<Plus size={15} />}
+              >
+                {isRTL ? "أضف الباقة كاملة للسلة" : "Add Both to Cart"}
+              </Button>
+            </div>
+          </section>
+        )}
+
         {/* Related products */}
         {relatedProducts.length > 0 && (
           <section className="mb-10">
@@ -684,27 +808,66 @@ export function ProductDetail() {
           </section>
         )}
       </div>
-      <div className="fixed inset-x-0 bottom-[calc(4.25rem+env(safe-area-inset-bottom,0px))] z-30 px-4 pb-2 sm:hidden pointer-events-none">
+
+      {/* Mobile Sticky Action Bar */}
+      <div className="fixed inset-x-0 bottom-16 z-30 px-4 pb-2 sm:hidden pointer-events-none">
         <div className="pointer-events-auto mx-auto flex max-w-md items-center gap-2 rounded-2xl border border-border bg-card/96 p-2 shadow-elev backdrop-blur">
           <div className="min-w-0 flex-1">
             <p className="truncate text-xs font-semibold text-foreground">
               {isRTL && product.nameAr ? product.nameAr : product.name}
             </p>
             <p className="text-sm font-extrabold text-brand-terracotta">
-              {t.currency} {product.price.toFixed(2)}
+              {t.currency} {activePrice.toFixed(2)}
             </p>
           </div>
-          <Button
-            onClick={handleAddToCart}
-            size="sm"
-            className="h-11 min-w-[8.75rem] rounded-xl text-sm font-bold"
-            leftIcon={<ShoppingCart size={16} />}
-          >
-            {t.addToCart}
-          </Button>
+          {cartItem ? (
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={() => setCartOpen(true)}
+                size="sm"
+                className="h-10 px-3.5 rounded-xl text-xs font-bold"
+                leftIcon={<ShoppingCart size={15} />}
+              >
+                {isRTL ? "عرض السلة" : "View Cart"}
+              </Button>
+            </div>
+          ) : (
+            <Button
+              onClick={handleAddToCart}
+              size="sm"
+              className="h-11 min-w-[8.75rem] rounded-xl text-sm font-bold"
+              leftIcon={<ShoppingCart size={16} />}
+            >
+              {t.addToCart}
+            </Button>
+          )}
         </div>
       </div>
-      <div className="h-36 sm:h-4" />
+
+      {/* High-Resolution Image Lightbox Modal */}
+      {lightboxOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 cursor-pointer"
+          onClick={() => setLightboxOpen(false)}
+        >
+          <button
+            type="button"
+            onClick={() => setLightboxOpen(false)}
+            className="absolute top-4 end-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
+            aria-label="Close image zoom"
+          >
+            <X size={20} />
+          </button>
+          <img
+            src={product.images[activeImage] || product.image}
+            alt={product.name}
+            className="max-h-[85vh] max-w-[90vw] object-contain rounded-2xl shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
+
+      <div className="h-28 sm:h-4" />
     </div>
   );
 }

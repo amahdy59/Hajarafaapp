@@ -70,9 +70,8 @@ export function Root() {
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:start-4 focus:z-50 focus:px-4 focus:py-2.5 focus:bg-brand-terracotta focus:text-white dark:focus:text-brand-ink focus:rounded-xl focus:shadow-elev focus:outline-none focus:ring-2 focus:ring-ring font-semibold text-sm"
       >
-        {isRTL ? "الانتقال إلى المحتوى الرئيسي" : "Skip to main content"}
+        Skip to main content / الانتقال للمحتوى الرئيسي
       </a>
-
       {!isCheckout && <Header />}
 
       {isCheckout ? (
