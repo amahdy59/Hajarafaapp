@@ -76,4 +76,30 @@ html[dir="rtl"] [data-sonner-toast] [data-close-button] {
   margin-right: 12px !important;
 }
 
+/* Suppress fallback focus outline and halo on inputs that are inside custom focus containers or have explicit outline-none */
+:where(button, a, input, textarea, select).outline-none:focus,
+:where(button, a, input, textarea, select).outline-none:focus-visible,
+:where(button, a, input, textarea, select).focus\:outline-none:focus,
+:where(button, a, input, textarea, select).focus\:outline-none:focus-visible,
+:where(button, a, input, textarea, select).focus-visible\:outline-none:focus,
+:where(button, a, input, textarea, select).focus-visible\:outline-none:focus-visible,
+*:focus-within > input:focus,
+*:focus-within > input:focus-visible,
+*:focus-within input.bg-transparent:focus,
+*:focus-within input.bg-transparent:focus-visible,
+[data-no-focus-ring]:focus,
+[data-no-focus-ring]:focus-visible,
+.no-focus-ring:focus,
+.no-focus-ring:focus-visible {
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+}
 
+/* Remove default WebKit search field inner decorations */
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+}

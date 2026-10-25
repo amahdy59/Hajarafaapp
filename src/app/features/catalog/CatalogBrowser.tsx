@@ -178,6 +178,7 @@ export function CatalogBrowser({
                     onChange={(event) => setSearchQuery(event.target.value)}
                     placeholder={searchPlaceholder}
                     className="w-full h-11 ps-10 pe-10 bg-brand-peach/40 dark:bg-zinc-800/80 border border-brand-terracotta/20 rounded-xl text-foreground placeholder:text-muted-foreground outline-none focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 transition-all text-sm font-semibold"
+                    data-no-focus-ring
                   />
                   {searchQuery && (
                     <button

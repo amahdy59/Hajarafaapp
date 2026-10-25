@@ -45,7 +45,7 @@ export function CartDrawer() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-brand-ink/40 backdrop-blur-sm z-40"
+            className="fixed inset-0 bg-brand-ink/40 backdrop-blur-sm z-50"
             onClick={() => setCartOpen(false)}
           />
           <motion.div
@@ -58,7 +58,7 @@ export function CartDrawer() {
             animate={{ x: 0 }}
             exit={{ x: isRTL ? "-100%" : "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className={`fixed ${isRTL ? "left-0" : "right-0"} top-0 bottom-0 w-full max-w-sm bg-background z-50 flex flex-col shadow-elev border-s border-border`}
+            className={`fixed ${isRTL ? "left-0" : "right-0"} top-0 bottom-0 w-full max-w-sm bg-background z-[51] flex flex-col shadow-elev border-s border-border`}
           >
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-border bg-card">

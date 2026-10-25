@@ -178,7 +178,6 @@
   :where(button, a, input, textarea, select):focus-visible {
     outline: 3px solid var(--ring);
     outline-offset: 3px;
-    border-radius: 6px;
     box-shadow: 0 0 0 5px color-mix(in oklab, var(--ring) 20%, transparent);
   }
 }

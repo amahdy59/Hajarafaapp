@@ -1,7 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Check, ChevronDown } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useAppSettings } from "../../context/AppSettingsContext";
 
 interface DropdownOption {
   value: string;
@@ -23,7 +22,6 @@ export function CustomDropdown({
   className = "",
   label = "Choose an option",
 }: CustomDropdownProps) {
-  const { isRTL } = useAppSettings();
   const reactId = useId();
   const buttonId = `dropdown-button-${reactId}`;
   const listboxId = `dropdown-listbox-${reactId}`;
@@ -159,7 +157,7 @@ export function CustomDropdown({
   };
 
   return (
-    <div ref={containerRef} className={`relative select-none ${className}`}>
+    <div ref={containerRef} className={`relative select-none ${className} ${isOpen ? "z-30" : "z-auto"}`}>
       <label htmlFor={buttonId} className="sr-only">
         {label}
       </label>
@@ -201,9 +199,7 @@ export function CustomDropdown({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.97 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className={`absolute z-40 mt-2 flex max-h-64 w-full flex-col gap-1 overflow-y-auto rounded-2xl border border-brand-terracotta/15 bg-brand-cream p-1.5 shadow-[0_18px_40px_rgba(27,28,26,0.16)] dark:border-white/10 dark:bg-zinc-900 ${
-              isRTL ? "right-0" : "left-0"
-            }`}
+            className="absolute z-50 mt-2 start-0 flex max-h-64 w-full flex-col gap-1 overflow-y-auto rounded-2xl border border-brand-terracotta/15 bg-brand-cream p-1.5 shadow-[0_18px_40px_rgba(27,28,26,0.16)] dark:border-white/10 dark:bg-zinc-900"
           >
             {options.map((option, optionIndex) => {
               const isSelected = option.value === value;

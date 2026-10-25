@@ -237,14 +237,12 @@ export function Header() {
 
   return (
     <>
-      <SettingsDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
-
       <header
         className={`fixed top-0 inset-x-0 z-40 bg-background/95 transition-shadow safe-area-pt border-b ${
           scrolled ? "shadow-soft border-border" : "border-border/60"
         }`}
       >
-        <div className="relative h-16 sm:h-[72px] px-3 sm:px-6 max-w-[1280px] mx-auto flex items-center justify-between gap-2 sm:gap-4 lg:gap-6">
+        <div className="relative z-20 h-16 sm:h-[72px] px-3 sm:px-6 max-w-[1280px] mx-auto flex items-center justify-between gap-2 sm:gap-4 lg:gap-6">
           {/* Start: Hamburger (on < lg) + Brand Logo */}
           <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0 z-10">
             <div className="lg:hidden -ms-1">
@@ -274,14 +272,14 @@ export function Header() {
           </div>
 
           {/* Prominent Desktop Search Bar with Category Scopes */}
-          <div className="hidden lg:flex flex-1 max-w-lg xl:max-w-xl 2xl:max-w-2xl mx-2 xl:mx-4 relative z-20" ref={desktopSearchRef}>
+          <div className={`hidden lg:flex flex-1 max-w-lg xl:max-w-xl 2xl:max-w-2xl mx-2 xl:mx-4 relative ${desktopSearchOpen || scopeDropdownOpen ? "z-30" : "z-20"}`} ref={desktopSearchRef}>
             <form onSubmit={submit} className="relative w-full flex items-center">
               <div className="relative w-full flex items-center rounded-2xl bg-card border border-border/80 focus-within:border-brand-terracotta focus-within:ring-4 focus-within:ring-brand-terracotta/15 shadow-sm hover:shadow-soft transition-all h-11">
                 {/* Themed Department Scope Selector Dropdown */}
-                <div className="relative h-full flex-shrink-0" ref={scopeDropdownRef}>
+                <div className={`relative h-full flex-shrink-0 ${scopeDropdownOpen ? "z-50" : ""}`} ref={scopeDropdownRef}>
                   <button
                     type="button"
-                    onClick={() => setScopeDropdownOpen(prev => !prev)}
+                    onClick={() => { setScopeDropdownOpen(prev => !prev); setCurrencyDropdownOpen(false); setDesktopSearchOpen(false); }}
                     aria-expanded={scopeDropdownOpen}
                     aria-haspopup="listbox"
                     aria-label={isRTL ? "تحديد القسم" : "Select Category"}
@@ -383,9 +381,14 @@ export function Header() {
                     setSearchQuery(e.target.value);
                     setDesktopSearchOpen(true);
                   }}
-                  onFocus={() => setDesktopSearchOpen(true)}
+                  onFocus={() => {
+                    setDesktopSearchOpen(true);
+                    setScopeDropdownOpen(false);
+                    setCurrencyDropdownOpen(false);
+                  }}
                   placeholder={isRTL ? "ابحث عن عسل، قهوة، بهارات، زيوت طبيعية..." : "Search honey, coffee, spices, natural oils..."}
-                  className="flex-1 min-w-0 h-full px-3.5 bg-transparent text-foreground placeholder:text-muted-foreground text-xs font-medium outline-none"
+                  className="flex-1 min-w-0 h-full px-3.5 bg-transparent text-foreground placeholder:text-muted-foreground text-xs font-medium outline-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 shadow-none focus:shadow-none focus-visible:shadow-none"
+                  data-no-focus-ring
                 />
 
                 {searchQuery && (
@@ -559,7 +562,7 @@ export function Header() {
           </div>
 
           {/* End Utility Items */}
-          <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 justify-end z-10 -me-1 sm:-me-0">
+          <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 justify-end relative z-20 -me-1 sm:-me-0">
             {/* Loyalty Points Pill (Desktop >= lg) */}
             <motion.button
               whileHover={{ scale: 1.04 }}
@@ -575,10 +578,10 @@ export function Header() {
             </motion.button>
 
             {/* GCC Multi-Currency Dropdown (Tablet & Desktop >= md) */}
-            <div className="relative hidden md:block" ref={currencyDropdownRef}>
+            <div className={`relative hidden md:block ${currencyDropdownOpen ? "z-50" : ""}`} ref={currencyDropdownRef}>
               <button
                 type="button"
-                onClick={() => setCurrencyDropdownOpen(prev => !prev)}
+                onClick={() => { setCurrencyDropdownOpen(prev => !prev); setScopeDropdownOpen(false); setDesktopSearchOpen(false); }}
                 aria-expanded={currencyDropdownOpen}
                 aria-haspopup="listbox"
                 aria-label={isRTL ? "تغيير العملة والدولة" : "Change currency & region"}
@@ -741,7 +744,7 @@ export function Header() {
         </div>
 
         {/* Desktop & Tablet Category Navigation Rail (Permanent across storefront on sm/md/lg/xl) */}
-        <div className="hidden sm:block relative z-10 border-t border-border/80 bg-background/95 backdrop-blur-md">
+        <div className="hidden sm:block relative z-0 border-t border-border/80 bg-background/95 backdrop-blur-md">
           <div className="max-w-[1280px] mx-auto px-3 sm:px-6">
             <div className="flex items-center justify-between h-12 py-1">
               {/* Category Scrollable Track Wrapper with Scoped Edge Fades */}
@@ -834,6 +837,8 @@ export function Header() {
         </div>
       </header>
 
+      <SettingsDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
+
       <AnimatePresence>
         {searchOpen && (
           <>
@@ -841,7 +846,7 @@ export function Header() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-brand-ink/40 backdrop-blur-sm z-40"
+              className="fixed inset-0 bg-brand-ink/40 backdrop-blur-sm z-50"
               onClick={() => setSearchOpen(false)}
             />
             <motion.div
@@ -852,7 +857,7 @@ export function Header() {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -16, opacity: 0 }}
               transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed top-0 inset-x-0 z-50 bg-background/98 backdrop-blur-2xl safe-area-pt shadow-elev border-b border-border/80"
+              className="fixed top-0 inset-x-0 z-[51] bg-background/98 backdrop-blur-2xl safe-area-pt shadow-elev border-b border-border/80"
             >
               <form onSubmit={submit} className="px-4 sm:px-6 py-3 flex items-center gap-2 max-w-[1280px] mx-auto">
                 <div className="relative flex-1 flex items-center bg-card rounded-2xl border border-border/80 focus-within:border-brand-terracotta focus-within:ring-4 focus-within:ring-brand-terracotta/15 h-12 shadow-sm transition-all">
@@ -862,7 +867,9 @@ export function Header() {
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
                     placeholder={t.searchPlaceholder}
-                    className="w-full ps-11 pe-4 py-2.5 bg-transparent text-foreground placeholder:text-muted-foreground outline-none text-sm font-medium"
+                    type="search"
+                    className="w-full ps-11 pe-4 py-2.5 bg-transparent text-foreground placeholder:text-muted-foreground outline-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 shadow-none focus:shadow-none focus-visible:shadow-none text-sm font-medium"
+                    data-no-focus-ring
                   />
                   <button
                     type="button"
