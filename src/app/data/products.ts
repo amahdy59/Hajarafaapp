@@ -12,6 +12,15 @@ import blackSeedHoneyImg from "../../assets/black_seed_honey.webp";
 import mountainHoneyNutsImg from "../../assets/mountain_honey_nuts.webp";
 import saltedCaramelPopcornImg from "../../assets/salted_caramel_popcorn.webp";
 import babyOilImg from "../../assets/baby_oil.webp";
+import citrusHoneyImg from "../../assets/citrus_honey.webp";
+import blackSeedPouchImg from "../../assets/black_seed_pouch.webp";
+import blackSeedOilImg from "../../assets/black_seed_oil.webp";
+import kabsaSpicesImg from "../../assets/kabsa_spices.webp";
+import hibiscusFlowersImg from "../../assets/hibiscus_flowers.webp";
+import honeycombJarImg from "../../assets/honeycomb_jar.webp";
+import egyptianDukkahImg from "../../assets/egyptian_dukkah.webp";
+import laurelSoapImg from "../../assets/laurel_soap.webp";
+
 
 // Remote CDN optimized local replacements
 import afghanoIncenseImg from "../../assets/afghano_incense.webp";
@@ -383,6 +392,95 @@ export const products: Product[] = [
     benefits: ["Hypoallergenic", "Light scent", "Pediatrician-approved formula"],
     usage: "Massage gently onto baby's skin after bath.",
     weight: "100 ml", origin: "Egypt", inStock: true,
+  },
+  // Authentic Signature Haj Arafa Additions
+  {
+    id: "p25", name: "Egyptian Citrus Blossom Honey", nameAr: "عسل زهور الموالح المصري",
+    category: "Honey", categorySlug: "honey",
+    price: 135, rating: 4.9, reviewCount: 168,
+    image: citrusHoneyImg,
+    images: [citrusHoneyImg],
+    description: "Pure raw honey collected from blossoming orange and lemon groves of the Nile Delta. Light amber, citrus aroma, and naturally soothing.",
+    benefits: ["Rich in Vitamin C", "Pure raw honey", "Soothes throat & cough", "Nile Delta harvest"],
+    usage: "Stir 1-2 tsp into warm water or tea, or drizzle over yogurt and labneh.",
+    weight: "450 g", origin: "Egypt", inStock: true, isBestSeller: true, isOrganic: true,
+  },
+  {
+    id: "p26", name: "Signature Nigella Sativa Seeds", nameAr: "حبة البركة النقية المنقاة",
+    category: "Spices", categorySlug: "spices",
+    price: 48, rating: 4.9, reviewCount: 230,
+    image: blackSeedPouchImg,
+    images: [blackSeedPouchImg],
+    description: "Cleaned, sifted, and hand-selected whole black seeds (Habbat Al-Barakah). The cornerstone of traditional Egyptian apothecary wellness.",
+    benefits: ["Immune system support", "100% triple sifted", "Rich in thymoquinone", "No preservatives"],
+    usage: "Chew half a teaspoon with honey in the morning, or sprinkle over fresh baked breads and cheeses.",
+    weight: "250 g", origin: "Egypt", inStock: true, isBestSeller: true,
+  },
+  {
+    id: "p27", name: "Cold-Pressed Virgin Black Seed Oil", nameAr: "زيت حبة البركة بكر معصور على البارد",
+    category: "Healthy Corner", categorySlug: "healthy-corner",
+    price: 145, rating: 5.0, reviewCount: 185,
+    image: blackSeedOilImg,
+    images: [blackSeedOilImg],
+    description: "First cold press extra-virgin Nigella Sativa oil in amber glass. Unfiltered and unrefined to preserve full therapeutic potency.",
+    benefits: ["First cold-pressed", "High thymoquinone potency", "Therapeutic apothecary grade", "Amber UV-protection glass"],
+    usage: "Take 1 teaspoon daily with honey or warm water, or massage directly into scalp and joints.",
+    weight: "125 ml", origin: "Egypt", inStock: true, isBestSeller: true, isOrganic: true,
+  },
+  {
+    id: "p28", name: "Royal Arabian Kabsa Spice Blend", nameAr: "بهارات الكبسة العربية الفاخرة",
+    category: "Spices", categorySlug: "spices",
+    price: 55, rating: 4.8, reviewCount: 142,
+    image: kabsaSpicesImg,
+    images: [kabsaSpicesImg],
+    description: "Master aromatic apothecary blend combining dried black lime (loomi), green cardamom, cinnamon quills, cloves, and star anise for authentic Gulf rice dishes.",
+    benefits: ["Authentic heritage blend", "Whole ground spices", "No MSG or artificial colors", "Aromatically sealed"],
+    usage: "Add 1-2 tablespoons during meat or chicken sautéing before adding basmati rice.",
+    weight: "150 g", origin: "Egypt", inStock: true, isNew: true,
+  },
+  {
+    id: "p29", name: "Aswan Royal Whole Hibiscus (Karkadeh)", nameAr: "كركديه أسواني ملكي زهرة كاملة",
+    category: "Herbal Drinks", categorySlug: "herbal-drinks",
+    price: 65, rating: 4.9, reviewCount: 310,
+    image: hibiscusFlowersImg,
+    images: [hibiscusFlowersImg],
+    description: "Sun-dried whole dark-ruby calyces harvested in Upper Egypt (Aswan). Yields a deep crimson, tart and refreshing infusion enjoyed hot or cold.",
+    benefits: ["Supports healthy blood pressure", "Sun-dried in Aswan", "Whole unbroken calyces", "Rich in antioxidants"],
+    usage: "Steep 2 tbsp in hot water for 10 minutes, or cold brew overnight and sweeten with clover honey.",
+    weight: "250 g", origin: "Egypt", inStock: true, isBestSeller: true,
+  },
+  {
+    id: "p30", name: "Mountain Honey with Raw Honeycomb", nameAr: "عسل جبلي نقي بقطف الشمع الطبيعي",
+    category: "Honey", categorySlug: "honey",
+    price: 340, originalPrice: 380, discount: 10, rating: 5.0, reviewCount: 95,
+    image: honeycombJarImg,
+    images: [honeycombJarImg],
+    description: "Raw wild mountain honey containing an intact slice of golden beeswax honeycomb freshly cut from the hive. Unprocessed and bursting with royal pollen.",
+    benefits: ["Natural edible honeycomb", "Unfiltered & unheated", "Rich in propolis & pollen", "Exquisite gourmet texture"],
+    usage: "Chew a spoonful of honeycomb wax like natural gum, or spread over aged cheeses and warm flatbread.",
+    weight: "550 g", origin: "Egypt", inStock: true, isNew: true, isOrganic: true,
+  },
+  {
+    id: "p31", name: "Authentic Cairo Heritage Dukkah", nameAr: "دقة مصرية أصيلة بالسمسم والكمون",
+    category: "Spices", categorySlug: "spices",
+    price: 42, rating: 4.8, reviewCount: 178,
+    image: egyptianDukkahImg,
+    images: [egyptianDukkahImg],
+    description: "Traditional Egyptian blend of golden roasted sesame seeds, toasted coriander, cumin, roasted chickpeas, and sea salt. The soul of Egyptian breakfast.",
+    benefits: ["Traditional Egyptian recipe", "Slow roasted seeds", "Rich in fiber & minerals", "No added preservatives"],
+    usage: "Dip crusty baladi bread first in extra virgin olive oil, then generously press into the dukkah.",
+    weight: "180 g", origin: "Egypt", inStock: true, isBestSeller: true,
+  },
+  {
+    id: "p32", name: "Artisanal Laurel & Olive Oil Soap", nameAr: "صابون الغار وزيت الزيتون الحرفي",
+    category: "Cosmetics", categorySlug: "cosmetics",
+    price: 58, rating: 4.9, reviewCount: 114,
+    image: laurelSoapImg,
+    images: [laurelSoapImg],
+    description: "Traditional cold-process bar crafted from cold-pressed virgin olive oil and noble laurel berry oil. Aged for 9 months for mild, hypoallergenic lather.",
+    benefits: ["Aged 9 months", "Hypoallergenic & gentle", "No palm oil or sulfates", "Naturally antibacterial"],
+    usage: "Lather with warm water on face, body, or hair. Keep on a draining soap dish between uses.",
+    weight: "160 g", origin: "Egypt", inStock: true, isNew: true,
   },
 ];
 

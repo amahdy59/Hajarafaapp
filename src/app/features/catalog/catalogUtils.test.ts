@@ -19,7 +19,7 @@ describe("catalogUtils", () => {
       sort: "price-desc",
     });
 
-    expect(results.map((product) => product.id)).toEqual(["p14", "p13", "p11"]);
+    expect(results.map((product) => product.id)).toEqual(["p14", "p29", "p13", "p11"]);
   });
 
   it("counts active filters consistently", () => {

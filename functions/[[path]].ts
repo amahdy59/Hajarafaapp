@@ -1,8 +1,9 @@
 /**
  * Cloudflare Pages Edge Function
  * - Intercepts requests on Cloudflare's Edge network (Cairo, Alexandria, Frankfurt, etc.)
- * - Detects social bots (WhatsApp, Meta/Facebook, Twitter, Telegram)
+ * - Detects social bots (WhatsApp, Meta/Facebook, Twitter, Telegram, LinkedIn)
  * - Injects Open Graph metadata via HTMLRewriter for rich social preview cards
+ * - Enforces Edge security headers
  */
 
 interface PagesFunctionEnv {
@@ -48,28 +49,98 @@ function isBot(userAgent: string | null): boolean {
   return BOT_USER_AGENTS.some((bot) => lower.includes(bot));
 }
 
-// Basic product catalog map for Edge SSR metadata injection
+// Product catalog map for Edge SSR metadata injection
 const EDGE_PRODUCTS: Record<string, { name: string; nameAr: string; price: number; description: string; image: string }> = {
-  "1": {
-    name: "Sidr Mountain Honey",
-    nameAr: "عسل سدر جبلي فاخر",
-    price: 110.0,
-    description: "Pure natural Yemeni Sidr honey with rich floral notes, harvested from natural hives.",
+  "p17": {
+    name: "Yemeni Sidr Mountain Honey",
+    nameAr: "عسل سدر جبلي يمني فاخر",
+    price: 450.0,
+    description: "Pure natural Yemeni Sidr honey with rich caramel and herbal notes, harvested from natural hives.",
     image: "/src/assets/sidr_honey.webp",
   },
-  "2": {
+  "17": {
+    name: "Yemeni Sidr Mountain Honey",
+    nameAr: "عسل سدر جبلي يمني فاخر",
+    price: 450.0,
+    description: "Pure natural Yemeni Sidr honey with rich caramel and herbal notes, harvested from natural hives.",
+    image: "/src/assets/sidr_honey.webp",
+  },
+  "p17b": {
     name: "Black Seed Honey",
-    nameAr: "عسل حبة البركة",
-    price: 95.0,
-    description: "100% natural raw honey infused with pure black seed extract.",
+    nameAr: "عسل حبة البركة المصري",
+    price: 180.0,
+    description: "100% natural raw honey from bees feeding on Nigella Sativa flowers for immunity.",
     image: "/src/assets/black_seed_honey.webp",
   },
-  "3": {
-    name: "Clover Blossom Honey",
-    nameAr: "عسل زهور البرسيم",
+  "p25": {
+    name: "Egyptian Citrus Blossom Honey",
+    nameAr: "عسل زهور الموالح المصري",
+    price: 135.0,
+    description: "Pure raw honey collected from blossoming orange and lemon groves of the Nile Delta.",
+    image: "/src/assets/citrus_honey.webp",
+  },
+  "p26": {
+    name: "Signature Nigella Sativa Seeds",
+    nameAr: "حبة البركة النقية المنقاة",
+    price: 48.0,
+    description: "Cleaned, sifted, and hand-selected whole black seeds (Habbat Al-Barakah).",
+    image: "/src/assets/black_seed_pouch.webp",
+  },
+  "p27": {
+    name: "Cold-Pressed Virgin Black Seed Oil",
+    nameAr: "زيت حبة البركة بكر معصور على البارد",
+    price: 145.0,
+    description: "First cold press extra-virgin Nigella Sativa oil in amber glass. Unfiltered and potent.",
+    image: "/src/assets/black_seed_oil.webp",
+  },
+  "p28": {
+    name: "Royal Arabian Kabsa Spice Blend",
+    nameAr: "بهارات الكبسة العربية الفاخرة",
+    price: 55.0,
+    description: "Master aromatic apothecary blend combining dried black lime, cardamom, quills, and cloves.",
+    image: "/src/assets/kabsa_spices.webp",
+  },
+  "p29": {
+    name: "Aswan Royal Whole Hibiscus (Karkadeh)",
+    nameAr: "كركديه أسواني ملكي زهرة كاملة",
     price: 65.0,
-    description: "Mild, sweet raw clover honey, ideal for daily family wellness.",
-    image: "/src/assets/clover_honey.webp",
+    description: "Sun-dried whole dark-ruby calyces harvested in Upper Egypt. Rich in antioxidants.",
+    image: "/src/assets/hibiscus_flowers.webp",
+  },
+  "p30": {
+    name: "Mountain Honey with Raw Honeycomb",
+    nameAr: "عسل جبلي نقي بقطف الشمع الطبيعي",
+    price: 340.0,
+    description: "Raw wild mountain honey containing an intact slice of golden beeswax honeycomb.",
+    image: "/src/assets/honeycomb_jar.webp",
+  },
+  "p31": {
+    name: "Authentic Cairo Heritage Dukkah",
+    nameAr: "دقة مصرية أصيلة بالسمسم والكمون",
+    price: 42.0,
+    description: "Traditional Egyptian blend of golden roasted sesame seeds, coriander, cumin, and chickpeas.",
+    image: "/src/assets/egyptian_dukkah.webp",
+  },
+  "p32": {
+    name: "Artisanal Laurel & Olive Oil Soap",
+    nameAr: "صابون الغار وزيت الزيتون الحرفي",
+    price: 58.0,
+    description: "Traditional cold-process bar crafted from cold-pressed virgin olive oil and noble laurel berry oil.",
+    image: "/src/assets/laurel_soap.webp",
+  },
+  "p1": {
+    name: "Afghano Incense",
+    nameAr: "بخور أفغانو التراثي",
+    price: 80.0,
+    description: "Smooth, woody Afghano incense sticks crafted in the traditional Egyptian way.",
+    image: "/src/assets/afghano_incense.webp",
+  },
+  "1": {
+    name: "Afghano Incense",
+    nameAr: "بخور أفغانو التراثي",
+    price: 80.0,
+    description: "Smooth, woody Afghano incense sticks crafted in the traditional Egyptian way.",
+    image: "/src/assets/afghano_incense.webp",
   },
 };
 
@@ -82,7 +153,7 @@ export const onRequest = async (context: EventContext): Promise<Response> => {
   if (isBot(userAgent) && url.pathname.startsWith("/products/")) {
     const parts = url.pathname.split("/").filter(Boolean);
     const productId = parts[1];
-    const product = EDGE_PRODUCTS[productId];
+    const product = productId ? EDGE_PRODUCTS[productId] : undefined;
 
     const response = await next();
 
