@@ -5,8 +5,29 @@
  * - Injects Open Graph metadata via HTMLRewriter for rich social preview cards
  */
 
-interface Env {
+interface PagesFunctionEnv {
   VITE_CLOUDFLARE_ZONE_URL?: string;
+  [key: string]: unknown;
+}
+
+interface EventContext {
+  request: Request;
+  next: () => Promise<Response>;
+  env: PagesFunctionEnv;
+  params: Record<string, string | string[]>;
+}
+
+declare class HTMLRewriter {
+  on(
+    selector: string,
+    handlers: {
+      element?: (element: {
+        setInnerContent: (content: string) => void;
+        append: (content: string, options?: { html?: boolean }) => void;
+      }) => void;
+    }
+  ): HTMLRewriter;
+  transform(response: Response): Response;
 }
 
 const BOT_USER_AGENTS = [
@@ -52,7 +73,7 @@ const EDGE_PRODUCTS: Record<string, { name: string; nameAr: string; price: numbe
   },
 };
 
-export const onRequest: any = async (context: any) => {
+export const onRequest = async (context: EventContext): Promise<Response> => {
   const { request, next, env } = context;
   const userAgent = request.headers.get("user-agent");
   const url = new URL(request.url);
@@ -66,7 +87,7 @@ export const onRequest: any = async (context: any) => {
     const response = await next();
 
     if (product) {
-      const zoneUrl = env.VITE_CLOUDFLARE_ZONE_URL || url.origin;
+      const zoneUrl = (env.VITE_CLOUDFLARE_ZONE_URL as string | undefined) || url.origin;
       const imageUrl = `${zoneUrl}${product.image}`;
       const title = `${product.nameAr} | ${product.name} - Haj Arafa`;
       const desc = `${product.description} • السعر: ${product.price} جنيه مصري`;
