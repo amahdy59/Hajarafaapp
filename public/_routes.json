@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "include": [
+    "/products/*",
+    "/category/*",
+    "/api/*"
+  ],
+  "exclude": [
+    "/assets/*",
+    "/*.webp",
+    "/*.png",
+    "/*.jpg",
+    "/*.svg",
+    "/*.ico",
+    "/*.css",
+    "/*.js",
+    "/*.json",
+    "/favicon.ico"
+  ]
+}

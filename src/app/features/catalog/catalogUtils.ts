@@ -1,5 +1,6 @@
 import { categoryMapping } from "../../data/categories";
 import type { Product } from "../../data/products";
+import { matchesArabicOrEnglish } from "../../utils/arabic";
 
 export type CatalogSortOption =
   | "featured"
@@ -64,10 +65,10 @@ export function filterAndSortProducts(
     }
 
     return (
-      product.name.toLowerCase().includes(query) ||
-      product.nameAr?.toLowerCase().includes(query) ||
-      product.category.toLowerCase().includes(query) ||
-      product.description.toLowerCase().includes(query)
+      matchesArabicOrEnglish(product.name, query) ||
+      matchesArabicOrEnglish(product.nameAr, query) ||
+      matchesArabicOrEnglish(product.category, query) ||
+      matchesArabicOrEnglish(product.description, query)
     );
   });
 

@@ -11,6 +11,7 @@ import { DELIVERY_NOTICE, SHIPPING_CONFIG } from "../config/contact";
 import { usePageMeta } from "../hooks/usePageMeta";
 import { EGYPTIAN_GOVERNORATES, getGovernorateById } from "../data/governorates";
 import { InvoiceModal, type InvoiceData } from "../components/InvoiceModal";
+import { CloudflareTurnstile } from "../components/CloudflareTurnstile";
 
 type Step = "shipping" | "payment" | "confirmation";
 export type PaymentMethod = "card" | "instapay" | "vodafone" | "cod";
@@ -845,6 +846,11 @@ export function Checkout() {
                         </div>
                       </div>
                     )}
+
+                    <CloudflareTurnstile
+                      onVerify={() => {}}
+                      isRTL={isRTL}
+                    />
 
                     <div className="flex gap-3">
                       <Button
