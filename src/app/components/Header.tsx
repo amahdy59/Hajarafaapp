@@ -319,7 +319,7 @@ export function Header() {
                           className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-start font-semibold transition-colors cursor-pointer ${
                             selectedCategoryScope === "all"
                               ? "bg-brand-terracotta text-white shadow-sm"
-                              : "text-foreground hover:bg-muted"
+                              : "text-foreground hover:bg-muted dark:text-zinc-200 dark:hover:bg-zinc-800 dark:hover:text-white"
                           }`}
                         >
                           <span className="flex items-center gap-2">
@@ -348,7 +348,7 @@ export function Header() {
                                 className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-start font-semibold transition-colors cursor-pointer ${
                                   active
                                     ? "bg-brand-terracotta text-white shadow-sm"
-                                    : "text-foreground hover:bg-muted"
+                                    : "text-foreground hover:bg-muted dark:text-zinc-200 dark:hover:bg-zinc-800 dark:hover:text-white"
                                 }`}
                               >
                                 <span className="flex items-center gap-2 truncate">
@@ -621,13 +621,13 @@ export function Header() {
                             );
                           }}
                           className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer text-start ${
-                            isCurActive ? "bg-brand-moss text-white shadow-sm" : "text-foreground hover:bg-muted"
+                            isCurActive ? "bg-brand-moss text-white shadow-sm" : "text-foreground hover:bg-muted dark:text-zinc-200 dark:hover:bg-zinc-800"
                           }`}
                         >
                           <span className="flex items-center gap-2">
                             <span>{cur.flag}</span>
                             <span>{isRTL ? cur.countryNameAr : cur.countryNameEn}</span>
-                            <span className={`text-[10px] ${isCurActive ? "text-white/80" : "text-muted-foreground"}`}>
+                            <span className={`text-[10px] ${isCurActive ? "text-white font-medium" : "text-muted-foreground dark:text-zinc-300"}`}>
                               ({curKey})
                             </span>
                           </span>

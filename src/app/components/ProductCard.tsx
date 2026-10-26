@@ -99,7 +99,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
                 <button
                   type="button"
                   onClick={onDecrement}
-                  className="flex h-11 w-8 items-center justify-center rounded-lg text-brand-terracotta hover:bg-brand-peach active:scale-[0.92] transition-transform cursor-pointer"
+                  className="flex h-11 w-8 items-center justify-center rounded-lg text-brand-terracotta hover:bg-brand-peach dark:hover:bg-zinc-700 active:scale-[0.92] transition-transform cursor-pointer"
                   aria-label={isRTL ? `إنقاص كمية ${productName}` : `Decrease quantity of ${product.name}`}
                 >
                   <Minus size={13} />
@@ -110,7 +110,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
                 <button
                   type="button"
                   onClick={onIncrement}
-                  className="flex h-11 w-8 items-center justify-center rounded-lg text-brand-terracotta hover:bg-brand-peach active:scale-[0.92] transition-transform cursor-pointer"
+                  className="flex h-11 w-8 items-center justify-center rounded-lg text-brand-terracotta hover:bg-brand-peach dark:hover:bg-zinc-700 active:scale-[0.92] transition-transform cursor-pointer"
                   aria-label={isRTL ? `زيادة كمية ${productName}` : `Increase quantity of ${product.name}`}
                 >
                   <Plus size={13} />
@@ -223,7 +223,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
               <button
                 type="button"
                 onClick={onDecrement}
-                className="flex h-11 w-11 items-center justify-center rounded-lg text-brand-terracotta hover:bg-brand-peach transition-colors cursor-pointer"
+                className="flex h-11 w-11 items-center justify-center rounded-lg text-brand-terracotta hover:bg-brand-peach dark:hover:bg-zinc-700 transition-colors cursor-pointer"
                 aria-label={isRTL ? `إنقاص كمية ${productName}` : `Decrease quantity of ${product.name}`}
               >
                 <Minus size={14} />
@@ -234,7 +234,7 @@ export const ProductCard = memo(function ProductCard({ product, view = "grid" }:
               <button
                 type="button"
                 onClick={onIncrement}
-                className="flex h-11 w-11 items-center justify-center rounded-lg text-brand-terracotta hover:bg-brand-peach transition-colors cursor-pointer"
+                className="flex h-11 w-11 items-center justify-center rounded-lg text-brand-terracotta hover:bg-brand-peach dark:hover:bg-zinc-700 transition-colors cursor-pointer"
                 aria-label={isRTL ? `زيادة كمية ${productName}` : `Increase quantity of ${product.name}`}
               >
                 <Plus size={14} />

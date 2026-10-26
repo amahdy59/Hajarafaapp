@@ -170,7 +170,7 @@ export function CustomDropdown({
         aria-controls={listboxId}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        className="w-full inline-flex min-h-11 items-center justify-between rounded-xl border border-brand-terracotta/20 bg-brand-peach px-4 py-3 text-start text-sm font-semibold text-brand-terracotta shadow-sm transition-all duration-200 outline-none hover:border-brand-terracotta/40 active:scale-[0.98] focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 dark:bg-zinc-800/80 dark:text-brand-peach"
+        className="w-full inline-flex min-h-11 items-center justify-between rounded-xl border border-border bg-card px-4 py-3 text-start text-sm font-semibold text-foreground shadow-sm transition-all duration-200 outline-none hover:border-brand-terracotta/40 active:scale-[0.98] focus:border-brand-terracotta focus:ring-1 focus:ring-brand-terracotta/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
         onClick={() => {
           if (isOpen) {
             closeMenu();
@@ -183,7 +183,7 @@ export function CustomDropdown({
         <span className="truncate pe-3">{selectedOption?.label}</span>
         <ChevronDown
           size={16}
-          className={`flex-shrink-0 text-brand-terracotta transition-transform duration-300 ${
+          className={`flex-shrink-0 text-brand-terracotta dark:text-zinc-300 transition-transform duration-300 ${
             isOpen ? "rotate-180" : "rotate-0"
           }`}
         />
@@ -199,7 +199,7 @@ export function CustomDropdown({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.97 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute z-50 mt-2 start-0 flex max-h-64 w-full flex-col gap-1 overflow-y-auto rounded-2xl border border-brand-terracotta/15 bg-brand-cream p-1.5 shadow-[0_18px_40px_rgba(27,28,26,0.16)] dark:border-white/10 dark:bg-zinc-900"
+            className="absolute z-50 mt-2 start-0 flex max-h-64 w-full flex-col gap-1 overflow-y-auto rounded-2xl border border-border bg-card p-1.5 shadow-[0_18px_40px_rgba(27,28,26,0.16)] dark:border-zinc-700 dark:bg-zinc-900"
           >
             {options.map((option, optionIndex) => {
               const isSelected = option.value === value;
@@ -216,8 +216,8 @@ export function CustomDropdown({
                     aria-selected={isSelected}
                     className={`flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-left text-sm transition-all duration-150 outline-none ${
                       isSelected
-                        ? "bg-brand-terracotta text-brand-cream shadow-sm dark:text-brand-ink"
-                        : "text-brand-terracotta-dark hover:bg-brand-peach/80 dark:text-brand-peach dark:hover:bg-white/5"
+                        ? "bg-brand-terracotta text-white shadow-sm dark:text-zinc-950 font-bold"
+                        : "text-foreground hover:bg-brand-peach/60 dark:text-zinc-200 dark:hover:bg-zinc-800 dark:hover:text-white font-medium"
                     } ${
                       activeIndex === optionIndex
                         ? "ring-1 ring-brand-terracotta/30"
@@ -228,7 +228,7 @@ export function CustomDropdown({
                     onKeyDown={(event) => handleOptionKeyDown(event, optionIndex)}
                   >
                     <span className="truncate">{option.label}</span>
-                    {isSelected && <Check size={14} className="ms-2 flex-shrink-0" />}
+                    {isSelected && <Check size={14} className="ms-2 flex-shrink-0 text-current" />}
                   </button>
                 </li>
               );

@@ -219,7 +219,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
                 <Link
                   to="/account"
                   onClick={onClose}
-                  className="bg-brand-peach border border-brand-terracotta/20 text-brand-terracotta rounded-2xl p-4 flex items-center justify-between hover:bg-brand-peach/85 transition-colors shadow-soft"
+                  className="bg-brand-peach border border-brand-terracotta/20 text-brand-terracotta dark:bg-zinc-800/80 dark:border-zinc-700 dark:text-[#F7B992] rounded-2xl p-4 flex items-center justify-between hover:bg-brand-peach/85 dark:hover:bg-zinc-800 transition-colors shadow-soft"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-brand-terracotta text-white flex items-center justify-center text-lg font-bold">
@@ -395,7 +395,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
                     </div>
                   </div>
                   {isInstalled ? (
-                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-moss bg-brand-moss/10 px-2.5 py-1 rounded-full flex-shrink-0">
+                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-moss bg-brand-moss/10 dark:text-brand-sage dark:bg-brand-sage/20 px-2.5 py-1 rounded-full flex-shrink-0">
                       <Check size={13} />
                       {t.appInstalled}
                     </span>

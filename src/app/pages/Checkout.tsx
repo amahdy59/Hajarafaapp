@@ -345,7 +345,7 @@ export function Checkout() {
             <p className="text-muted-foreground mb-6" style={{ fontSize: "0.875rem" }}>
               {t.orderConfirmedNote}
             </p>
-            <div className="bg-brand-peach rounded-2xl p-4 mb-6 text-start space-y-3">
+            <div className="bg-brand-peach dark:bg-card border border-brand-terracotta/20 dark:border-border rounded-2xl p-4 mb-6 text-start space-y-3">
               <div className="flex justify-between" style={{ fontSize: "0.875rem" }}>
                 <span className="text-muted-foreground">{t.orderNumber}</span>
                 <span className="text-foreground font-mono">#{orderNumber}</span>
@@ -586,7 +586,7 @@ export function Checkout() {
                       <h2 className="text-foreground" style={{ fontSize: "1.1rem" }}>{t.paymentDetails}</h2>
                     </div>
 
-                    <div className="bg-brand-peach rounded-xl p-3 flex items-center gap-2 text-brand-terracotta" style={{ fontSize: "0.8rem" }}>
+                    <div className="bg-brand-peach dark:bg-card border border-brand-terracotta/20 dark:border-border rounded-xl p-3 flex items-center gap-2 text-brand-terracotta" style={{ fontSize: "0.8rem" }}>
                       <Shield size={15} />
                       {t.paymentSecureNote}
                     </div>
@@ -833,7 +833,7 @@ export function Checkout() {
 
                     {paymentMethod === "cod" && (
                       <div className="pt-2">
-                        <div className="p-4 bg-brand-peach/30 rounded-2xl border border-brand-terracotta/20 flex items-start gap-3">
+                        <div className="p-4 bg-brand-peach/30 dark:bg-card rounded-2xl border border-brand-terracotta/20 dark:border-border flex items-start gap-3">
                           <Banknote size={20} className="text-brand-terracotta flex-shrink-0 mt-0.5" />
                           <div className="space-y-1">
                             <p className="text-xs sm:text-sm font-bold text-foreground">{t.payCOD}</p>

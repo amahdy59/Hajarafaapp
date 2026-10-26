@@ -189,7 +189,7 @@
   --brand-forest: #334537;
   --brand-moss: #223829;
   --brand-moss-dark: #16261C;
-  --brand-terracotta: #83340F;
+  --brand-terracotta: #782F0D;
   --brand-terracotta-dark: #73300E;
   --brand-peach: #F4E7DA;
   --brand-cream: #FBF7F1;
@@ -197,7 +197,7 @@
   --brand-beige: #EFEEEB;
   --brand-line: #D8CEC4;
   --brand-ink: #1B1C1A;
-  --brand-ink-soft: #53483F;
+  --brand-ink-soft: #4C4138;
 
   --primary: var(--brand-terracotta);
   --primary-foreground: #FFFFFF;
@@ -251,8 +251,8 @@
   --brand-forest: #C0D5C2;
   --brand-moss: #385942;
   --brand-moss-dark: #1A2E21;
-  --brand-terracotta: #EAA06D;
-  --brand-terracotta-dark: #F0A978;
+  --brand-terracotta: #F7B992;
+  --brand-terracotta-dark: #F9C5A4;
   --brand-peach: #3D2218;
   --brand-cream: #15191A;
   --brand-cream-2: #1F2422;
@@ -295,6 +295,12 @@
   --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 14px rgba(0, 0, 0, 0.2);
   --shadow-elev: 0 2px 8px rgba(0, 0, 0, 0.4), 0 12px 32px rgba(0, 0, 0, 0.35);
   --shadow-tactile: 0 4px 20px -2px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+/* Native select options contrast in light & dark modes */
+select option {
+  background-color: var(--card);
+  color: var(--foreground);
 }
 
 /* Accessibility overrides for dark mode button/badge text contrast */

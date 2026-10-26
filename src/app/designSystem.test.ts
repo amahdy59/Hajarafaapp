@@ -57,6 +57,25 @@ describe("Design System & WCAG 2.2 AAA Contrast Suite", () => {
       { name: "In-Stock Badge (Emerald-900 on Emerald-50)", fg: "#064E3B", bg: "#ECFDF5", minRatio: 7.0 },
       { name: "Cancelled Badge (Red-800 on Red-50)", fg: "#991B1B", bg: "#FEF2F2", minRatio: 7.0 },
       { name: "Input Placeholders (Zinc-500 on White)", fg: "#71717A", bg: "#FFFFFF", minRatio: 4.5 },
+      // Dropdown Menus & Selects WCAG 2.2 AAA Audits
+      { name: "Dropdown Trigger Light (Foreground on Cream Card)", fg: "#1B1C1A", bg: "#FBF7F1", minRatio: 7.0 },
+      { name: "Dropdown Trigger Dark (Zinc-100 on Zinc-900)", fg: "#F4F4F5", bg: "#18181B", minRatio: 7.0 },
+      { name: "Dropdown Selected Option Light (White on Terracotta)", fg: "#FFFFFF", bg: "#782F0D", minRatio: 7.0 },
+      { name: "Dropdown Selected Option Dark (Zinc-950 on Terracotta Dark)", fg: "#121617", bg: "#F7B992", minRatio: 7.0 },
+      { name: "Dropdown Inactive Option Light (Foreground on Cream Card)", fg: "#1B1C1A", bg: "#FBF7F1", minRatio: 7.0 },
+      { name: "Dropdown Inactive Option Dark (Zinc-200 on Zinc-900)", fg: "#E4E4E7", bg: "#18181B", minRatio: 7.0 },
+      { name: "Dropdown Hover Option Dark (White on Zinc-800)", fg: "#FFFFFF", bg: "#27272A", minRatio: 7.0 },
+      // Brand Tokens across Light & Dark Modes
+      { name: "Terracotta on Light Cream (Light Mode)", fg: "#782F0D", bg: "#FBF7F1", minRatio: 7.0 },
+      { name: "Terracotta on Peach Surface (Light Mode)", fg: "#782F0D", bg: "#F4E7DA", minRatio: 7.0 },
+      { name: "Terracotta Dark Mode on Canvas", fg: "#F7B992", bg: "#15191A", minRatio: 7.0 },
+      { name: "Terracotta Dark Mode on Card", fg: "#F7B992", bg: "#1F2422", minRatio: 7.0 },
+      { name: "Terracotta Dark Mode on Zinc-800 Surface", fg: "#F7B992", bg: "#27272A", minRatio: 7.0 },
+      { name: "Soft Ink Muted on Cream (Light Mode)", fg: "#4C4138", bg: "#FBF7F1", minRatio: 7.0 },
+      { name: "Soft Ink Muted on Cream-2 (Light Mode)", fg: "#4C4138", bg: "#F0EAE0", minRatio: 7.0 },
+      { name: "Soft Ink Muted on Dark Canvas", fg: "#BDB5AD", bg: "#15191A", minRatio: 7.0 },
+      { name: "Soft Ink Muted on Dark Card", fg: "#BDB5AD", bg: "#1F2422", minRatio: 7.0 },
+      { name: "Soft Ink Muted on Dark Zinc-800", fg: "#BDB5AD", bg: "#27272A", minRatio: 7.0 },
     ];
 
     for (const pair of colorPairs) {
@@ -72,5 +91,11 @@ describe("Design System & WCAG 2.2 AAA Contrast Suite", () => {
     expect(cssContent).toContain("input::placeholder");
     expect(cssContent).toContain("textarea::placeholder");
     expect(cssContent).toContain("var(--muted-foreground)");
+  });
+
+  it("verifies native select dropdown accessibility rules in tailwind.css", () => {
+    expect(cssContent).toContain("select option");
+    expect(cssContent).toContain("background-color: var(--card);");
+    expect(cssContent).toContain("color: var(--foreground);");
   });
 });

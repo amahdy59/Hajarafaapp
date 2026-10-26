@@ -203,11 +203,11 @@ export function CatalogBrowser({
                     label={isRTL ? "ترتيب المنتجات" : "Sort products"}
                   />
 
-                  <div className="flex items-center gap-1 bg-brand-peach rounded-lg p-0.5 border border-brand-terracotta/10">
+                  <div className="flex items-center gap-1 bg-brand-peach/50 dark:bg-zinc-800/90 rounded-xl p-1 border border-brand-terracotta/20 dark:border-zinc-700">
                     <button
                       type="button"
                       onClick={() => setView("grid")}
-                      className={`w-11 h-11 rounded-md flex items-center justify-center transition-all ${view === "grid" ? "bg-card shadow-sm text-brand-terracotta" : "text-brand-ink-soft hover:text-brand-terracotta"}`}
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all ${view === "grid" ? "bg-brand-terracotta text-white dark:bg-brand-terracotta dark:text-zinc-950 shadow-sm" : "text-brand-ink-soft dark:text-zinc-300 hover:text-foreground dark:hover:text-white"}`}
                       aria-pressed={view === "grid"}
                       aria-label={isRTL ? "عرض شبكي" : "Grid view"}
                     >
@@ -216,7 +216,7 @@ export function CatalogBrowser({
                     <button
                       type="button"
                       onClick={() => setView("list")}
-                      className={`w-11 h-11 rounded-md flex items-center justify-center transition-all ${view === "list" ? "bg-card shadow-sm text-brand-terracotta" : "text-brand-ink-soft hover:text-brand-terracotta"}`}
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all ${view === "list" ? "bg-brand-terracotta text-white dark:bg-brand-terracotta dark:text-zinc-950 shadow-sm" : "text-brand-ink-soft dark:text-zinc-300 hover:text-foreground dark:hover:text-white"}`}
                       aria-pressed={view === "list"}
                       aria-label={isRTL ? "عرض قائمة" : "List view"}
                     >
@@ -275,11 +275,11 @@ export function CatalogBrowser({
                     {filteredProducts.length} {t.productsFound}
                   </span>
 
-                  <div className="flex items-center gap-1 bg-brand-peach rounded-lg p-0.5 border border-brand-terracotta/10">
+                  <div className="flex items-center gap-1 bg-brand-peach/50 dark:bg-zinc-800/90 rounded-xl p-1 border border-brand-terracotta/20 dark:border-zinc-700">
                     <button
                       type="button"
                       onClick={() => setView("grid")}
-                      className={`min-w-[44px] min-h-[44px] rounded-md flex items-center justify-center transition-all ${view === "grid" ? "bg-card shadow-sm text-brand-terracotta" : "text-brand-ink-soft hover:text-brand-terracotta"}`}
+                      className={`min-w-[44px] min-h-[44px] rounded-lg flex items-center justify-center transition-all ${view === "grid" ? "bg-brand-terracotta text-white dark:bg-brand-terracotta dark:text-zinc-950 shadow-sm" : "text-brand-ink-soft dark:text-zinc-300 hover:text-foreground dark:hover:text-white"}`}
                       aria-pressed={view === "grid"}
                       aria-label={isRTL ? "عرض شبكي" : "Grid view"}
                     >
@@ -288,7 +288,7 @@ export function CatalogBrowser({
                     <button
                       type="button"
                       onClick={() => setView("list")}
-                      className={`min-w-[44px] min-h-[44px] rounded-md flex items-center justify-center transition-all ${view === "list" ? "bg-card shadow-sm text-brand-terracotta" : "text-brand-ink-soft hover:text-brand-terracotta"}`}
+                      className={`min-w-[44px] min-h-[44px] rounded-lg flex items-center justify-center transition-all ${view === "list" ? "bg-brand-terracotta text-white dark:bg-brand-terracotta dark:text-zinc-950 shadow-sm" : "text-brand-ink-soft dark:text-zinc-300 hover:text-foreground dark:hover:text-white"}`}
                       aria-pressed={view === "list"}
                       aria-label={isRTL ? "عرض قائمة" : "List view"}
                     >

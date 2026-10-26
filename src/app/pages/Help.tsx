@@ -124,7 +124,7 @@ export function Help() {
         </div>
 
         {/* Support quick contact banner */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 bg-brand-peach/60 border border-brand-terracotta/10 p-5 rounded-2xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 bg-brand-peach/60 dark:bg-card border border-brand-terracotta/10 dark:border-border p-5 rounded-2xl">
           <div className="space-y-1.5">
             <h3 className="text-brand-forest font-display text-sm sm:text-base">
               {t.needInstantHelp}

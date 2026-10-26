@@ -773,7 +773,7 @@ export function ProductDetail() {
             )}
             {activeTab === "reviews" && (
               <div role="tabpanel" id="panel-reviews" aria-labelledby="tab-reviews" className="space-y-4">
-                <div className="flex items-center gap-4 p-4 bg-brand-peach rounded-2xl">
+                <div className="flex items-center gap-4 p-4 bg-brand-peach dark:bg-card border border-brand-terracotta/15 dark:border-border rounded-2xl">
                   <div className="text-center">
                     <p className="text-brand-terracotta" style={{ fontSize: "2.5rem", lineHeight: 1 }}>{product.rating}</p>
                     <StarRating rating={product.rating} showCount={false} size="md" />
@@ -929,7 +929,7 @@ export function ProductDetail() {
                 aria-labelledby="accordion-btn-reviews"
                 className="px-4 pb-5 border-t border-border/50 pt-4 space-y-4"
               >
-                <div className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-brand-peach rounded-2xl">
+                <div className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-brand-peach dark:bg-card border border-brand-terracotta/15 dark:border-border rounded-2xl">
                   <div className="text-center w-full sm:w-auto">
                     <p className="text-brand-terracotta text-3xl font-extrabold" style={{ lineHeight: 1 }}>{product.rating}</p>
                     <div className="flex justify-center my-1.5">

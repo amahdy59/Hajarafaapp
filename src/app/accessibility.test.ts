@@ -174,5 +174,29 @@ describe("WCAG 2.2 AAA & Accessibility Standards", () => {
     expect(contactContent).toContain('role="alert"');
     expect(cartContent).toContain('role="alert"');
   });
-});
 
+  it("verifies CustomDropdown employs AAA compliant contrast across light and dark modes", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const dropdownPath = path.resolve(__dirname, "components/ui/CustomDropdown.tsx");
+    const dropdownContent = fs.readFileSync(dropdownPath, "utf-8");
+
+    // Trigger must use high-contrast foreground text and dark:text-zinc-100 (never dark brown peach)
+    expect(dropdownContent).not.toContain("dark:text-brand-peach");
+    expect(dropdownContent).toContain("dark:text-zinc-100");
+    expect(dropdownContent).toContain("dark:text-zinc-200");
+    expect(dropdownContent).toContain("dark:hover:text-white");
+    expect(dropdownContent).toContain("text-foreground");
+  });
+
+  it("verifies Catalog view mode toggles maintain high contrast active and inactive states", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const catalogPath = path.resolve(__dirname, "features/catalog/CatalogBrowser.tsx");
+    const catalogContent = fs.readFileSync(catalogPath, "utf-8");
+
+    // Both desktop and mobile view toggles must use high contrast dark:text-zinc-300 and dark:hover:text-white
+    expect(catalogContent).toContain("dark:text-zinc-300");
+    expect(catalogContent).toContain("dark:hover:text-white");
+  });
+});
